@@ -1,4 +1,4 @@
-#Ridge Regression and Lasso Lab from 6.6 of James, Witten, Hastie & Tibshirani
+#My notes for the Lab from Chapter 6 of James, Witten, Hastie & Tibshirani. The code given here is slightly different from that in the book and corrects some errors.
 
 #Requires the packages glmnet and ISLR
 library(glmnet)
@@ -65,8 +65,8 @@ MSE(ridge.pred, y[test])
 RMSE(ridge.pred, y[test])
 
 #How does this compare to the RMSE of simply using the mean of y?
-MSE(mean(y[train]), y.test)
-RMSE(mean(y[train]), y.test)
+MSE(mean(y[train]), y[test])
+RMSE(mean(y[train]), y[test])
 
 #Since larger values of the ridge penalty shrink all coefficients (except the intercept) towards zero, we can get similar behavior by making lambda very large
 ridge.pred <- predict(ridge.mod, s = 10^10, newx = x[test,])
@@ -143,4 +143,55 @@ cbind(ridge.coef, lasso.coef)
 library(pls)
 ?pcr
 
+#Essentially, the syntax of this function is the same as lm but there are some nifty options. If we set scale = TRUE all predictors are standardized before generating the principal components. If we wet validation = "CV" then tenfold cross-validation is used to choose the number of principle components used. We can examine the fit using summary.
+
+#QUESTION: There are discrete predictors in this dataset, right? Doesn't that screw up PCA? 
+
+set.seed(2)
+pcr.fit <- pcr(Salary ~ ., data = Hitters, scale = TRUE, validation = "CV")
+summary(pcr.fit)
+
+#The preceding output gives RMSE. To get MSE use val.type = "MSEP"
+validationplot(pcr.fit)
+
+#It's far from clear how many principal components to use in this example: 1 and 16 are almost identical and neither is very far from 19, which corresponds to simply doing (orthogonalized) OLS!
+
+#The summary function lets us see not just the RMSE from cross-validation for different numbers of principal components, it also gives us the proportion of variance explained: both for X and for y!
+
+#Not we'll try out-of-sample evaluation using our training data, making sure to set the same seed that we used for lasso and ridge
+set.seed(1)
+pcr.fit <- pcr(Salary ~., data = Hitters, subset = train, scale = TRUE, validation = "CV")
+validationplot(pcr.fit, val.type = "MSEP")
+
+#Cross-validation on the training set suggests using 7 principal components. How does this compare to ridge and lasso?
+pcr.pred <- predict(pcr.fit, x[test,-1], ncomp = 7)
+#In the book, the forget to remove the constant term from x which results in an error!
+MSE(pcr.pred, y[test])
+RMSE(pcr.pred, y[test])
+
+#The results are practically identical to those of ridge and hence a little better than those of lasso. The downside of pcr is that we don't get coefficient estimates since each principal component depends on all of the predictors
+
+#Finally, fit pcr to the full dataset
+pcr.fit <- pcr(Salary ~., data = Hitters, scale = TRUE, ncomp = 7)
+#The book has an error in the preceding: it has y ~ x which throws an error
+summary(pcr.fit)
+
+#Partial Least Squares: use the plsr() function in the pls library. The syntax is identical.
+set.seed(1)
+pls.fit <- plsr(Salary ~., data = Hitters, subset = train, scale = TRUE, validation = "CV")
+summary(pls.fit)
+validationplot(pls.fit)
+
+#The validation plot suggests two components
+pls.pred <- predict(pls.fit, x[test,-1], ncomp = 2)
+#again, the book has a mistake and forgets to take out the constant term!
+MSE(pls.pred, y[test])
+RMSE(pls.pred, y[test])
+#This is somewhat worse that pcr, lasso and ridge
+
+#PLS on the full dataset
+pls.fit <- plsr(Salary ~ ., data = Hitters, scale = TRUE, ncomp = 2)
+summary(pls.fit)
+
+#Notice how a two-component pls fit explains about 46.4% of the variation in salary while it takes a seven-component pcr fit to explain 46.69% of the variation in Salary. The reason of the difference is that pcr only looks at x while pcr searches for directions that explain variance in both the predictors and response.
 
