@@ -4,7 +4,7 @@
 library(glmnet)
 library(ISLR)
 
-
+#Load and clean data
 names(Hitters)
 dim(Hitters)
 sum(is.na(Hitters$Salary))
@@ -107,4 +107,40 @@ bestlam.full
 train.lam <- predict(out, type = "coefficients", s = bestlam)[1:20,]
 full.lam <- predict(out, type = "coefficients", s = bestlam.full)[1:20,]
 cbind(train.lam, full.lam)
+
+
+#Now the LASSO. The only change is that we need to set alpha = 1 rather than 0.
+lasso.mod <- glmnet(x[train,], y[train], alpha = 1, lambda = grid)
+plot(lasso.mod)
+
+#The preceding plot shows that, depending on the value of the L1 norm that we impose, LASSO sets some coefficients to be exactly zero. The numbers at the top of the plot indicate the total number of nonzero coefficients. Contrast this with ridge, which does not
+plot(ridge.mod)
+
+#Now we'll try cross-validation to choose lambda for LASSO and compare RMSE to what we got above
+set.seed(1)
+cv.out <- cv.glmnet(x[train,], y[train], alpha = 1)
+plot(cv.out)
+bestlam <- cv.out$lambda.min
+lasso.pred <- predict(lasso.mod, s = bestlam, newx = x[test,])
+MSE(lasso.pred, y[test])
+RMSE(lasso.pred, y[test])
+
+#The results are a little worse than what we got for ridge, but "in the ballpark" (what a great joke!). Unlike ridge, however, LASSO sets many coefficients to zero in this example: 12 to be precise
+out <- glmnet(x, y, alpha = 1, lambda = grid)
+lasso.coef <- predict(out, type = "coefficients", s = bestlam)[1:20,]
+lasso.coef
+round(lasso.coef[lasso.coef != 0], 3)
+
+#We can put these side-by-side with the ridge results as follows:
+out <- glmnet(x, y, alpha = 0)
+ridge.coef <- predict(out, type = "coefficients", s = bestlam)[1:20,]
+cbind(ridge.coef, lasso.coef)
+
+
+#Principle Components Regression
+
+#Here we'll use the function pcr() in the library pls
+library(pls)
+?pcr
+
 
