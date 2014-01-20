@@ -1,0 +1,114 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{todonotes}
+\usepackage{amssymb,amsmath,amsthm,graphicx}
+\usepackage{geometry}
+\usepackage{rotating}
+\usepackage{amssymb, amsmath, amsthm, graphicx} 
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage{threeparttable}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\newtheorem{assump}{Assumption}[section]
+\newtheorem{pro}{Proposition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{ineq}{Inequality}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{rem}{Remark}[section]
+\newtheorem{ex}{Example}[section]
+\theoremstyle{definition}
+\newtheorem{alg}{Algorithm}[section]
+
+
+\begin{document}
+
+\title{``Classical'' Factor Analysis and PCA}
+
+\author{Francis J.\ DiTraglia}
+
+\maketitle 
+
+
+\section{EM Algorithm}
+
+\subsection{Jensen's Inequality}
+Recall that a function is called \emph{convex} if its Hessian matrix is positive semi-definite and \emph{strictly convex} if its Hessian matrix is positive definite. For functions of a single variable the condition is $f''(x)\geq 0 \quad \forall x\in\mathbb{R}$ for \emph{convex} and $f''(x)> 0 \quad \forall x\in\mathbb{R}$ for \emph{strictly convex}. In statistics, one of the most useful results concerning convex functions is \emph{Jensen's Inequality}
+\begin{pro}[Jensen's Inequality]
+ 	Let $f$ be a convex function and $X$ be a random variable. Then $E[f(X)]\geq f(E[X])$. If $f$ is strictly convex then the inequality is strict unless $P(X = E[X]) = 1$, i.e.\ $X$ is a constant. For the equivalent results for concave functions, simply reverse the inequality.
+ \end{pro} 
+
+
+
+
+\subsection{The Idea behind the EM Algorithm}
+
+	$$\ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) = \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z} \right)$$
+where $\mathbf{x}_t$ is observed and $\mathbf{z}_t$ is unobserved. In many interesting models there is no explicit formula for the MLE in terms of the marginal density $p(\mathbf{x}_t;\theta)$ but there \emph{is} an explicit formula in terms of the \emph{joint} density $p(\mathbf{x}_t,\mathbf{z}_t;\theta)$. This is exactly the setting in which the EM algorithm is useful. Rather than directly maximizing $\ell(\theta)$, the EM algorithm proceeds \emph{iteratively} over the following two steps:
+	\begin{description}
+		\item[(E-step)] Construct a \emph{lower bound} for $\ell(\theta)$
+		\item[(M-step)] Optimize the lower bound over $\theta$
+	\end{description}
+Roughly speaking, the EM algorithm converts a single complicated optimization problem into a sequence of simple optimization problems. The trick is to ensure that the resulting sequence of estimators converges to the MLE. Jensen's Inequality is the key. 
+
+Let $f_t(\mathbf{z}_t)$ be \emph{some arbitrary} density function over the support of $\mathbf{z}_t$, that is any function satisfying $f_t(\mathbf{z_t})\geq 0$ and
+	$$\int f_t(\textbf{z}_t) \;d \textbf{z}_t = 1$$
+We have
+	\begin{eqnarray*}
+		 \ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) &=& \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z}_t \right)\\
+		 	&=&  \sum_{t=1}^T \log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)
+	\end{eqnarray*}
+Now we use Jensen's inequality and the fact that $\log$ is a concave function over its domain to find that
+	$$\log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right) \geq \int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t $$
+What's going on here? Since $f_t$ is a \emph{density} the integral inside the parentheses is \emph{an expectation} of a particular function of the argument of integration $\mathbf{z}_t$. The parameter $\theta$ and the observed vector of realizations $\mathbf{x}_t$ are constants with respect to the integration. Substituting the preceding inequality into the sum, we have established that
+	$$\ell(\theta) \geq \sum_{t=1}^T \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+for \emph{any} density function $f_t$. This is the \emph{lower bound} for the likelihood that we will use in the E-step. The question is, how should we choose $f_t$? 
+
+The key idea is to turn the \emph{inequality} into an \emph{equality} at a particular value of $\theta$. Intuitively, we want to ensure that, in a given iteration of the algorithm, the true actual likelihood and the approximating function \emph{agree} at the value of $\theta$ that emerged from the \emph{preceding} iteration. In this way, our sequence of approximating functions will ``trace out a path'' along the true likelihood, ultimately ensuring that the EM algorithm will converge to the MLE. Since $\log$ is in fact \emph{strictly} concave, the only way for Jensen's inequality to hold with equality is if 
+$$\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)} = c$$
+for some constant $c$ that \emph{does not depend} on $\mathbf{z}_t$. The question is, how should we choose $f_t$ to achieve this? Rearranging, integrating, and using the fact that $f_t$ is a density,
+	\begin{eqnarray*}
+		c f_t(\mathbf{z}_t) &=& p(\mathbf{x}_t, \mathbf{z}_t;\theta)\\
+		c \int f_t(\mathbf{z}_t) \; d \mathbf{z}_t &=& \int p(\mathbf{x}_t, \mathbf{z}_t;\theta) \; d \mathbf{z}_t\\
+		c &=& p(\mathbf{x}_t;\theta) 
+	\end{eqnarray*}
+Substituting for $c$, solving for $f_t$ and using the definition of a conditional density we have
+	$$f_t(\textbf{z}_t)= \frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{p(\mathbf{x}_t;\theta)} = p(\textbf{z}_t|\textbf{x}_t;\theta)$$
+In other words, to make the lower bound hold with equality at a particular value of $\theta$, say $\theta^*$, it suffices to set $f_t$ equal to the \emph{conditional} density of $\mathbf{z}_t$ given $\mathbf{x}_t$ \emph{evaulated} at $\theta^*$.
+
+\begin{figure}
+	\caption{Picture of EM algorithm here.}
+\end{figure}
+
+\section{Factor Analysis}
+\subsection{EM for Factor Analysis}
+
+\section{PCA and PPCA}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
