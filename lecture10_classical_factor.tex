@@ -132,7 +132,10 @@ Combining the two inequalities gives $\ell(\theta^{(j+1)}) \geq \ell(\theta^{(j)
 
 Before we proceed, I'll just remind you of some key facts about normal distributions and we'll need below.
 
-\subsection{Multivariate Normal: Marginals and Conditionals}
+\subsection{Facts about the Multivariate Normal Distribution}
+\subsubsection{Linear Combinations}
+Suppose that $X \sim N(\mu, \Sigma)$ and $Y = a + BX$ where $a$ is a vector and $B$ a matrix of constants. Then $Y \sim (a + B\mu, B\Sigma B')$.
+\subsubsection{Marginals and Conditionals}
 Let $X_1$ and $X_2$ be random vectors such that $(X_1' , X_2') \sim N(\mu, \Sigma)$ where
 	$$\mu = \left[\begin{array}{c}
 		\mu_1 \\ \mu_2
@@ -154,21 +157,88 @@ where,
 	\end{eqnarray*}
 
 \subsection{The Factor Analysis Model}
-Classical Factor Analysis specifies a joint distribution on the observable random $p$-vector $X$ and an unobserved or ``latent'' random $k$-vector $Z$, namely
-	\begin{eqnarray*}
-		Z &\sim& N_k(0_k, I_k)\\
-		X|Z &\sim& N_p(\mu + \Lambda Z, \Psi)
-	\end{eqnarray*}
-where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ matrix of parameters and $\Psi$ is a $p\times p$ \emph{diagonal} matrix of parameters. The idea is that $k$ is strictly less than both $p$, the dimension of $X$, and $n$, the sample size. 
-
-An equivalent way to define the classical factor model is as follows:
+Classical Factor Analysis specifies a joint distribution on the observable random $p$-vector $X$ and an unobserved or ``latent'' random $k$-vector $Z$, as follows
 	\begin{eqnarray*}
 		Z &\sim& N_k(0_k, I_k)\\
 		\epsilon &\sim& N(0_p, \Psi)\\
 		Z &\perp& \epsilon\\
 		X &=& \mu + \Lambda Z + \epsilon
 	\end{eqnarray*}
+where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ matrix of parameters called the \emph{factor loading matrix}, and $\Psi$ is a $p\times p$ \emph{diagonal} matrix of parameters. Factor Analysis can be viewed as a ``low rank parameterization'' of a multivariate normal distribution. The idea ois that, while $X$ is a random $p$-vector, its realizations lie \emph{close} to a $k$-dimensional affine subspace: $\Lambda$ maps $Z$ from $\mathbb{R}^k$ to a linear subspace of $\mathbb{R}^p$, $\mu$ shifts this subspace away from the origin, and $\epsilon$ adds axis-aligned Gaussian noise. Hence it makes sense to require that $k$ is strictly less than both $p$, the dimension of $X$, and $T$, the sample size. 
+
+The intution is as follows: Factor Analysis ``forces'' $Z$ to ``explain'' the correlation structure of $X$. This is why $\Psi$ is required to be diagonal. The diagonal elements of $\Psi$ are sometimes called the \emph{idiosyncratic variance terms}, since each corresponds to a \emph{single} component of $X$. 
+\begin{figure}
+	\caption{Picture of Factor Analysis}
+\end{figure}
+
+The factor analysis model implies that the joint distribution of $Z$ and $X$ is normal. Specifically,
+\begin{eqnarray*}
+	\left[\begin{array}{c}
+	Z\\ X
+	\end{array}\right] &=& 
+		\left[\begin{array}{c}
+	0_k\\ \mu
+	\end{array}\right] + \left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+	\end{array}\right]\left[\begin{array}{c}
+		Z \\ \epsilon
+	\end{array} \right]\\
+	& = & \left[\begin{array}{c}
+	0_k\\ \mu
+	\end{array}\right] + \left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+	\end{array}\right]
+	N\left(\left[\begin{array}{c}
+		0_k \\ 0_p
+	\end{array} \right], \left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
+	\end{array}\right]\right)\\
+	&\sim & N\left(\left[\begin{array}{c}
+	0_k \\ \mu
+	\end{array}\right], \left[\begin{array}{cc}
+		I & \Lambda'\\
+		\Lambda & \Lambda \Lambda' + \Psi
+	\end{array} \right] \right)
+\end{eqnarray*}
+The algebra for the variance matrix calculation is as follows:
+	\begin{eqnarray*}
+		V &=& \left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+	\end{array}\right]
+\left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
+	\end{array}\right]
+	\left[\begin{array}{cc}
+		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+	\end{array}\right]'\\
+	&=& \left[ \begin{array}
+		{cc} 
+		I_k & 0_{k\times p}\\
+		\Lambda & \Psi
+	\end{array}\right]\left[\begin{array}{cc}
+		I_k & \Lambda '\\
+		0_{p\times k} & I_{p} 
+	\end{array}\right]\\
+	&=& \left[\begin{array}
+		{cc}
+		I_k & \Lambda' \\
+		\Lambda & \Lambda \Lambda' + \Psi
+	\end{array}\right]
+	\end{eqnarray*}
+
+
+\subsection{The Factor Analysis Model is Not Identified}
+Suppose we want to estimated the parameters $\mu, \Lambda, \Psi$ of the factor analysis model. The first natural question is whether this model is even identified. Unfortunately the answer is no. To see why, suppose that $R$ is an orthogonal matrix, i.e.\ $RR' = R'R = I$. Geometrically, $R$ is a rotation: it leaves the length of any vector $v$ unchanged since
+	$$|| Rv || = \sqrt{(Rv)'(Rv)} = \sqrt{v' R'R v} = \sqrt{v'v} = ||v||$$ 
+From the joint distribution for $X$ and $Z$ that we derived above it follows that the marginal distribution of $X$ is $N(\mu, \Lambda \Lambda' + \Psi)$. Thus if we observe realizations $\mathbf{x}_1, \mathbf{x}_2, \hdots, \mathbf{x}_T$ of a sequence of iid random vectors $X_1, X_2, \hdots, X_T$ the log-likelihood is given by
+	\begin{eqnarray*}
+		\ell(\mu, \Lambda, \Psi) = \log \left[ \prod_{t = 1}^T \frac{\exp \left\{ -\frac{1}{2} \left(\mathbf{x}_t - \mu \right)' \left(\Lambda \Lambda' + \Psi \right)^{-1} \left(\mathbf{x}_t - \mu \right)\right\}}{(2\pi)^{T/2}} \left| \Lambda \Lambda'\right|^{1/2} \right]
+	\end{eqnarray*}
+
+
 \subsection{EM for Factor Analysis}
+
+\section{Mixtures of Factor Analyzers}
 
 \section{PCA and PPCA}
 
