@@ -138,9 +138,36 @@ Let $X_1$ and $X_2$ be random vectors such that $(X_1' , X_2') \sim N(\mu, \Sigm
 		\mu_1 \\ \mu_2
 	\end{array}\right], \quad \Sigma = \left[ \begin{array}{cc}
 	\Sigma_{11} & \Sigma_{12}\\
-	\Sigma_{21} & \Sigma{22}
+	\Sigma_{21} & \Sigma_{22}
 	\end{array}\right]
 	$$
+Then, 
+	\begin{eqnarray*}
+		X_1 &\sim& N(\mu_1, \Sigma_{11})\\
+		X_2 &\sim& N(\mu_2, \Sigma_{22})\\
+		X_1|X_2 &\sim& N(\mu_{1|2}, \Sigma_{1|2})
+	\end{eqnarray*}
+where,
+	\begin{eqnarray*}
+		\mu_{1|2} &=& \mu_1 + \Sigma_{12}\Sigma_{22}^{-1}(X_2 - \mu_2)\\
+		\Sigma_{1|2} &=&\Sigma_{11} - \Sigma_{12} \Sigma_{22}^{-1} \Sigma_{21}
+	\end{eqnarray*}
+
+\subsection{The Factor Analysis Model}
+Classical Factor Analysis specifies a joint distribution on the observable random $p$-vector $X$ and an unobserved or ``latent'' random $k$-vector $Z$, namely
+	\begin{eqnarray*}
+		Z &\sim& N_k(0_k, I_k)\\
+		X|Z &\sim& N_p(\mu + \Lambda Z, \Psi)
+	\end{eqnarray*}
+where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ matrix of parameters and $\Psi$ is a $p\times p$ \emph{diagonal} matrix of parameters. The idea is that $k$ is strictly less than both $p$, the dimension of $X$, and $n$, the sample size. 
+
+An equivalent way to define the classical factor model is as follows:
+	\begin{eqnarray*}
+		Z &\sim& N_k(0_k, I_k)\\
+		\epsilon &\sim& N(0_p, \Psi)\\
+		Z &\perp& \epsilon\\
+		X &=& \mu + \Lambda Z + \epsilon
+	\end{eqnarray*}
 \subsection{EM for Factor Analysis}
 
 \section{PCA and PPCA}
