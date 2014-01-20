@@ -42,7 +42,7 @@
 
 
 \subsection{The Idea behind the EM Algorithm}
-For simplicity, we'll consider an iid setup for now although the EM can be used in situations with dependence
+For simplicity, we'll consider an iid setup for now although the EM can be used in situations with dependence. We'll also suppose that the latent variable is continuous. If it's discrete the idea is exactly the same but the integral is replaced by a sum.
 	$$\ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) = \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z} \right)$$
 where $\mathbf{x}_t$ is observed and $\mathbf{z}_t$ is unobserved. In many interesting models there is no explicit formula for the MLE in terms of the marginal density $p(\mathbf{x}_t;\theta)$ but there \emph{is} an explicit formula in terms of the \emph{joint} density $p(\mathbf{x}_t,\mathbf{z}_t;\theta)$. This is exactly the setting in which the EM algorithm is useful. Rather than directly maximizing $\ell(\theta)$, the EM algorithm proceeds \emph{iteratively} over the following two steps:
 	\begin{description}
@@ -52,7 +52,8 @@ where $\mathbf{x}_t$ is observed and $\mathbf{z}_t$ is unobserved. In many inter
 Roughly speaking, the EM algorithm converts a single complicated optimization problem into a sequence of simple optimization problems. The trick is to ensure that the resulting sequence of estimators converges to the MLE. Jensen's Inequality is the key so I'll briefly remind you of a few importnat facts before proceeding. 
 
 \begin{figure}
-	\caption{Picture of EM algorithm here.}
+	\centering
+	\caption{Picture of the EM Algorithm}
 \end{figure}
 
 \subsection{Jensen's Inequality}
@@ -69,15 +70,15 @@ Let $f_t(\mathbf{z}_t)$ be \emph{some arbitrary} density function over the suppo
 We have
 	\begin{eqnarray*}
 		 \ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) &=& \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z}_t \right)\\
-		 	&=&  \sum_{t=1}^T \log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)
+		 	&=&  \sum_{t=1}^T \log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right)
 	\end{eqnarray*}
 Now we use Jensen's inequality and the fact that $\log$ is a concave function over its domain to find that
-	$$\log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right) \geq \int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t $$
+	$$\log \left(\int f_t(\mathbf{z}_t) \left[\frac{p(\textbf{x}_t,	\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right) \geq \int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t $$
 What's going on here? Since $f_t$ is a \emph{density} the integral inside the parentheses is \emph{an expectation} of a particular function of the argument of integration $\mathbf{z}_t$. The parameter $\theta$ and the observed vector of realizations $\mathbf{x}_t$ are constants with respect to the integration. Substituting the preceding inequality into the sum, we have established that
-	$$\ell(\theta) \geq \sum_{t=1}^T \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+	$$\ell(\theta) \geq \sum_{t=1}^T \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
 for \emph{any} density function $f_t$. This is the \emph{lower bound} for the likelihood that we will use in the E-step. The question is, how should we choose $f_t$? 
 
-The key idea is to turn the \emph{inequality} into an \emph{equality} at a particular value of $\theta$. Intuitively, we want to ensure that, in a given iteration of the algorithm, the true actual likelihood and the approximating function \emph{agree} at the value of $\theta$ that emerged from the \emph{preceding} iteration. In this way, our sequence of approximating functions will ``trace out a path'' along the true likelihood, ultimately ensuring that the EM algorithm will converge to the MLE. Since $\log$ is in fact \emph{strictly} concave, the only way for Jensen's inequality to hold with equality is if 
+The key idea is to turn the \emph{inequality} into an \emph{equality} at a particular value of $\theta$. Intuitively, we want to ensure that, in a given iteration of the algorithm, the  actual likelihood and the lower bound \emph{agree} at the value of $\theta$ that emerged from the \emph{preceding} iteration. In this way, our sequence of approximating functions will ``trace out a path'' along the true likelihood, ultimately ensuring that the EM algorithm will converge to the MLE. Since $\log$ is in fact \emph{strictly} concave, the only way for Jensen's inequality to hold with equality is if 
 $$\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)} = c$$
 for some constant $c$ that \emph{does not depend} on $\mathbf{z}_t$. The question is, how should we choose $f_t$ to achieve this? Rearranging, integrating, and using the fact that $f_t$ is a density,
 	\begin{eqnarray*}
@@ -91,29 +92,55 @@ In other words, to make the lower bound hold with equality at a particular value
 
 \subsection{The Algorithm}
 In the previous subsection we showed that if we set $f_t(\mathbf{z}_t) = p(\textbf{z}_t|\textbf{x}_t;\theta^*)$ then
-	$$\ell(\theta^*) = \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^*)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+	$$\ell(\theta^*) = \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^*)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
 and, more generally for \emph{any} value of $\theta$
-	$$\ell(\theta) \geq \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+	$$\ell(\theta) \geq \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
 by Jensen's Inequality. Now we are ready to state the EM algorithm:
 \begin{alg}[EM Algorithm]
 First select a starting value $\theta^{(1)}$. Then repeat the following two steps repeatedly until convergence
 			\begin{description}
 			 	\item[(E-step)] For each $t$ set $f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t|\mathbf{x}_t; \theta^{(j-1)})$ where $\theta^{(j-1)}$ is the solution from the M-step of the \emph{preceding} iteration. 
 			 	\item[(M-step)] 
-			 		$\displaystyle\theta^{(j)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j-1)}(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$
+			 		$\displaystyle\theta^{(j)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j-1)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$
 			 \end{description}
 If $j = 2$ then $\theta^{(j-1)}$ is simply the starting value $\theta^{(1)}$.
 \end{alg}
 Note that in the M-step the argument $\theta$ over which we maximize \emph{only} enters the expression $p(\textbf{x}_t,\textbf{z}_t;\theta)$. The density $f^{(j-1)}(\mathbf{z}_t)$ does \emph{not} depend on $\theta$, it depends on the \emph{constant} $\theta^{(j-1)}$ that solved the M-step of the \emph{previous iteration}. The amazing thing about the EM algorithm is that it is \emph{guaranteed} to converge to a local maximum of the likelihood function: each successive iteration \emph{monotonically} improves the likelihood as we will see below. This fact along the the way we constructed our lower bound to hold with equality at the value of $\theta$ from the \emph{previous} M-step gives us an excellent tool for debugging our code: simply plot
-	$$\ell(\theta^{(j-1)}) = \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j-1)})}{f_t^{(j-1)}(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$ 
-against $j$. The preceding expression is the \emph{objective function} from the $j$th M-step evaulated at the \emph{solution} from the $(j-1)$th M-step. By construction, this If the plot is equal to the likelihood evaulated at $\theta^{(j-1)}$. If the plot is \emph{not} increasing monotonically in $j$, then there must be a bug in your code.
+	$$\ell(\theta^{(j)}) = \sum_{t = 1}^T  \left(\int f_t^{(j)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j)})}{f_t^{(j)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$ 
+against $j$. The preceding expression is the \emph{objective function} from the $(j+1)$th M-step evaulated at the \emph{solution} from the $j$th M-step. By construction, this If the is equal to the likelihood evaulated at $\theta^{(j)}$. If the plot is \emph{not} increasing monotonically in $j$, then there must be a bug in your code.
 
 \subsection{Why Does the EM Algorithm Converge?}
-Let $\theta^{(j)}$ and $\theta^{(j+1)}$ be two succesive solutions to the M-step of the EM algorithm. We will now show that $\ell(\theta^{(j)}) \leq \theta^{(j+1)}$. In other words, the EM algorithm \emph{monotonically} improves the likelihood in each iteration. Since $\{\theta^{(j)}\}$ is a monotonic sequence, it converges as long as it is bounded (Rudin Theorem 3.14). Since $\ell(\theta^{(1)})$ is a lower bound, if follows that the EM algorithm is \emph{guaranteed} to converge to a local maximum of the likelihood function provided that the likelihood function is bounded above. 
+Let $\theta^{(j)}$ and $\theta^{(j+1)}$ be two succesive solutions to the M-step of the EM algorithm. We will now show that $\ell(\theta^{(j)}) \leq \theta^{(j+1)}$. In other words, the EM algorithm \emph{monotonically} improves the likelihood in each iteration. Since $\{\theta^{(j)}\}$ is a monotonic sequence, it converges as long as it is bounded (Rudin Theorem 3.14). Since $\ell(\theta^{(1)})$ is a lower bound, if follows that the EM algorithm is \emph{guaranteed} to converge to a local maximum of the likelihood function provided that the likelihood function is bounded above. All that remains is to actually demonstrate that $\ell(\theta^{(j)}) \leq \theta^{(j+1)}$.
 
+By definition, 
+	$$\theta^{(j+1)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j)}(\mathbf{z}_t)}\right]d \textbf{z}_t \right)$$ 
+Now let $\tilde{\theta}$ be some arbitrary value of $\theta$. Since $\theta^{(j+1)}$ is the $\arg \max$, evaluating the objective function at $\tilde{\theta}$ cannot yield a greater value than evaluating it at $\theta^{(j+1)}$. Since this holds for \emph{any} $\tilde{\theta}$ it holds in particular for $\theta^{(j)}$. Hence, 
+	\begin{eqnarray*}
+		\sum_{t = 1}^T  \left(\int f_t^{(j)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j+1)})}{f_t^{(j)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right) 
+		&\geq& 
+		\sum_{t = 1}^T  \left(\int f_t^{(j)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j)})}{f_t^{(j)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)\\
+		&=& \ell(\theta^{(j)})
+	\end{eqnarray*}
+since we chose $f^{(j)}_t(\mathbf{z}_t)$ to make Jensen's Inequality strict at $\theta^{(j)}$. Now, recall from above that for \emph{any density} $f_t(\mathbf{z}_t)$ and \emph{any} value of $\theta$,
+	$$\ell(\theta) \geq \sum_{t=1}^T \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
+by Jensen's Inequality. Since this holds in general, it also holds in particular for $\theta = \theta^{(j+1)}$ and $f_t(\mathbf{z}_t)= f_t^{(j)}(\mathbf{z}_t)$. Hence,
+	$$\ell(\theta^{(j+1)}) \geq \sum_{t=1}^T \left(\int f_t^{(j)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j+1)})}{f_t^{(j)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
+Combining the two inequalities gives $\ell(\theta^{(j+1)}) \geq \ell(\theta^{(j)})$ as claimed.
 
 
 \section{Factor Analysis}
+
+Before we proceed, I'll just remind you of some key facts about normal distributions and we'll need below.
+
+\subsection{Multivariate Normal: Marginals and Conditionals}
+Let $X_1$ and $X_2$ be random vectors such that $(X_1' , X_2') \sim N(\mu, \Sigma)$ where
+	$$\mu = \left[\begin{array}{c}
+		\mu_1 \\ \mu_2
+	\end{array}\right], \quad \Sigma = \left[ \begin{array}{cc}
+	\Sigma_{11} & \Sigma_{12}\\
+	\Sigma_{21} & \Sigma{22}
+	\end{array}\right]
+	$$
 \subsection{EM for Factor Analysis}
 
 \section{PCA and PPCA}
