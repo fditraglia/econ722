@@ -40,6 +40,21 @@
 
 \section{EM Algorithm}
 
+
+\subsection{The Idea behind the EM Algorithm}
+For simplicity, we'll consider an iid setup for now although the EM can be used in situations with dependence
+	$$\ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) = \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z} \right)$$
+where $\mathbf{x}_t$ is observed and $\mathbf{z}_t$ is unobserved. In many interesting models there is no explicit formula for the MLE in terms of the marginal density $p(\mathbf{x}_t;\theta)$ but there \emph{is} an explicit formula in terms of the \emph{joint} density $p(\mathbf{x}_t,\mathbf{z}_t;\theta)$. This is exactly the setting in which the EM algorithm is useful. Rather than directly maximizing $\ell(\theta)$, the EM algorithm proceeds \emph{iteratively} over the following two steps:
+	\begin{description}
+		\item[(E-step)] Construct a \emph{lower bound} for $\ell(\theta)$
+		\item[(M-step)] Optimize the lower bound over $\theta$
+	\end{description}
+Roughly speaking, the EM algorithm converts a single complicated optimization problem into a sequence of simple optimization problems. The trick is to ensure that the resulting sequence of estimators converges to the MLE. Jensen's Inequality is the key so I'll briefly remind you of a few importnat facts before proceeding. 
+
+\begin{figure}
+	\caption{Picture of EM algorithm here.}
+\end{figure}
+
 \subsection{Jensen's Inequality}
 Recall that a function is called \emph{convex} if its Hessian matrix is positive semi-definite and \emph{strictly convex} if its Hessian matrix is positive definite. For functions of a single variable the condition is $f''(x)\geq 0 \quad \forall x\in\mathbb{R}$ for \emph{convex} and $f''(x)> 0 \quad \forall x\in\mathbb{R}$ for \emph{strictly convex}. In statistics, one of the most useful results concerning convex functions is \emph{Jensen's Inequality}
 \begin{pro}[Jensen's Inequality]
@@ -48,17 +63,7 @@ Recall that a function is called \emph{convex} if its Hessian matrix is positive
 
 
 
-
-\subsection{The Idea behind the EM Algorithm}
-
-	$$\ell(\theta) = \sum_{t=1}^T \log p(\textbf{x}_t;\theta) = \sum_{t=1}^T \log \left(\int p(\textbf{x}_t,	\textbf{z}_t;\theta)\; d \textbf{z} \right)$$
-where $\mathbf{x}_t$ is observed and $\mathbf{z}_t$ is unobserved. In many interesting models there is no explicit formula for the MLE in terms of the marginal density $p(\mathbf{x}_t;\theta)$ but there \emph{is} an explicit formula in terms of the \emph{joint} density $p(\mathbf{x}_t,\mathbf{z}_t;\theta)$. This is exactly the setting in which the EM algorithm is useful. Rather than directly maximizing $\ell(\theta)$, the EM algorithm proceeds \emph{iteratively} over the following two steps:
-	\begin{description}
-		\item[(E-step)] Construct a \emph{lower bound} for $\ell(\theta)$
-		\item[(M-step)] Optimize the lower bound over $\theta$
-	\end{description}
-Roughly speaking, the EM algorithm converts a single complicated optimization problem into a sequence of simple optimization problems. The trick is to ensure that the resulting sequence of estimators converges to the MLE. Jensen's Inequality is the key. 
-
+\subsection{A Lower Bound for the Likelihood}
 Let $f_t(\mathbf{z}_t)$ be \emph{some arbitrary} density function over the support of $\mathbf{z}_t$, that is any function satisfying $f_t(\mathbf{z_t})\geq 0$ and
 	$$\int f_t(\textbf{z}_t) \;d \textbf{z}_t = 1$$
 We have
@@ -82,11 +87,31 @@ for some constant $c$ that \emph{does not depend} on $\mathbf{z}_t$. The questio
 	\end{eqnarray*}
 Substituting for $c$, solving for $f_t$ and using the definition of a conditional density we have
 	$$f_t(\textbf{z}_t)= \frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{p(\mathbf{x}_t;\theta)} = p(\textbf{z}_t|\textbf{x}_t;\theta)$$
-In other words, to make the lower bound hold with equality at a particular value of $\theta$, say $\theta^*$, it suffices to set $f_t$ equal to the \emph{conditional} density of $\mathbf{z}_t$ given $\mathbf{x}_t$ \emph{evaulated} at $\theta^*$.
+In other words, to make the lower bound hold with equality at a particular value of $\theta$, say $\theta^*$, it suffices to set $f_t$ equal to the \emph{conditional} density of $\mathbf{z}_t$ \emph{given} $\mathbf{x}_t$ \emph{evaluated} at $\theta^*$. Crucially this is a both a probability density and a function of $\mathbf{z}_t$ \emph{only} since we plug in the observed value of $\mathbf{x}_t$.
 
-\begin{figure}
-	\caption{Picture of EM algorithm here.}
-\end{figure}
+\subsection{The Algorithm}
+In the previous subsection we showed that if we set $f_t(\mathbf{z}_t) = p(\textbf{z}_t|\textbf{x}_t;\theta^*)$ then
+	$$\ell(\theta^*) = \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^*)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+and, more generally for \emph{any} value of $\theta$
+	$$\ell(\theta) \geq \sum_{t = 1}^T  \left(\int f_t(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$
+by Jensen's Inequality. Now we are ready to state the EM algorithm:
+\begin{alg}[EM Algorithm]
+First select a starting value $\theta^{(1)}$. Then repeat the following two steps repeatedly until convergence
+			\begin{description}
+			 	\item[(E-step)] For each $t$ set $f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t|\mathbf{x}_t; \theta^{(j-1)})$ where $\theta^{(j-1)}$ is the solution from the M-step of the \emph{preceding} iteration. 
+			 	\item[(M-step)] 
+			 		$\displaystyle\theta^{(j)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j-1)}(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$
+			 \end{description}
+If $j = 2$ then $\theta^{(j-1)}$ is simply the starting value $\theta^{(1)}$.
+\end{alg}
+Note that in the M-step the argument $\theta$ over which we maximize \emph{only} enters the expression $p(\textbf{x}_t,\textbf{z}_t;\theta)$. The density $f^{(j-1)}(\mathbf{z}_t)$ does \emph{not} depend on $\theta$, it depends on the \emph{constant} $\theta^{(j-1)}$ that solved the M-step of the \emph{previous iteration}. The amazing thing about the EM algorithm is that it is \emph{guaranteed} to converge to a local maximum of the likelihood function: each successive iteration \emph{monotonically} improves the likelihood as we will see below. This fact along the the way we constructed our lower bound to hold with equality at the value of $\theta$ from the \emph{previous} M-step gives us an excellent tool for debugging our code: simply plot
+	$$\ell(\theta^{(j-1)}) = \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta^{(j-1)})}{f_t^{(j-1)}(\mathbf{z}_t)}\right]\; d \textbf{z}_t \right)$$ 
+against $j$. The preceding expression is the \emph{objective function} from the $j$th M-step evaulated at the \emph{solution} from the $(j-1)$th M-step. By construction, this If the plot is equal to the likelihood evaulated at $\theta^{(j-1)}$. If the plot is \emph{not} increasing monotonically in $j$, then there must be a bug in your code.
+
+\subsection{Why Does the EM Algorithm Converge?}
+Let $\theta^{(j)}$ and $\theta^{(j+1)}$ be two succesive solutions to the M-step of the EM algorithm. We will now show that $\ell(\theta^{(j)}) \leq \theta^{(j+1)}$. In other words, the EM algorithm \emph{monotonically} improves the likelihood in each iteration. Since $\{\theta^{(j)}\}$ is a monotonic sequence, it converges as long as it is bounded (Rudin Theorem 3.14). Since $\ell(\theta^{(1)})$ is a lower bound, if follows that the EM algorithm is \emph{guaranteed} to converge to a local maximum of the likelihood function provided that the likelihood function is bounded above. 
+
+
 
 \section{Factor Analysis}
 \subsection{EM for Factor Analysis}
