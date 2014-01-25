@@ -334,7 +334,7 @@ so
 and hence
 	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
 
-\todo[inline]{Exchanging integral and derivative in the objective function, deal with terms one at a time, $f$ doesn't depend on paramters, etc...}
+\todo[inline]{Exchanging integral and derivative in the objective function, deal with terms one at a time, $f$ doesn't depend on parameters, etc...}
 
 Differentiating, we have
 	\begin{eqnarray*}
@@ -343,9 +343,33 @@ Differentiating, we have
 		&=& \nabla_\Lambda \left[  \mbox{tr}\left\{\mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)\right\}- \frac{1}{2} \mbox{tr}\left\{ \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right\}\right]\\
 		&=& \nabla_\Lambda \mbox{tr}\left\{ \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)\mathbf{z}_t'\right\}- \frac{1}{2} \nabla_\Lambda \mbox{tr}\left\{  \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \mathbf{z}_t'\right\}
 	\end{eqnarray*}
-where we have used the fact that each term is a scalar, and thus equals its trace, and $\mbox{tr}(AB) = \mbox{tr}(BA)$ with $\mathbf{z}_t$ playing the role of $A$ for each of the two terms. It remains to calculate two matrix derivatives. For the first term we need to calculate $\nabla_A \mbox{tr}(AB)$ where $\Lambda'$ plays the role of $A$ and $\Psi^{-1}(\mathbf{x}_t = \mu)\mathbf{z}_t'$ plats the role of $B$. 
+where we have used the fact that each term is a scalar, and thus equals its trace, and $\mbox{tr}(AB) = \mbox{tr}(BA)$ with $\mathbf{z}_t$ playing the role of $A$.
 
-For the second term we need to calculate $\nabla_A \mbox{tr}(ABA'C)$ where $\Lambda'$ plays the role of $A$
+It remains to calculate two matrix derivatives. For the first term we need to calculate $\nabla_X \mbox{tr}(X'A)$ where $\Lambda$ plays the role of $X$ and $\Psi^{-1}(\mathbf{x}_t - \mu)\mathbf{z}_t'$ plays the role of $A$. It turns out that\footnote{See, inter alia, Peterson \& Pederson (2012) \emph{The Matrix Cookbook}, Section 2.5.1 or the Wikipedia article on Matrix Calculus.} 
+	$$\nabla_X \mbox{tr}(X'A)  = A$$
+For the second term we need to calculate $\nabla_A \mbox{tr}(X'BXC)$ where $\Lambda$ plays the role of $X$, $\Psi^{-1}$ plays the role of $B$, and $\mathbf{z}_t \mathbf{z}_t'$ plays the role of $C$. It turns out that\footnote{See, inter alia, Peterson \& Pederson (2012) \emph{The Matrix Cookbook}, Section 2.5.2 or the Wikipedia article on Matrix Calculus.}
+	$$\mbox{tr}(X'BXC) = BXC + BXC'$$
+Finally, we have,
+	\begin{eqnarray*}
+		\nabla_\Lambda \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) &=& \Psi^{-1} (\textbf{x}_t - \mu)\textbf{z}_t' - \frac{1}{2} \left(\Psi^{-1}\Lambda \textbf{z}_t \textbf{z}_t' +  \Psi^{-1}\Lambda \textbf{z}_t \textbf{z}_t'\right)\\
+		&=&\Psi^{-1} (\textbf{x}_t - \mu)\textbf{z}_t' - \Psi^{-1}\Lambda \textbf{z}_t \textbf{z}_t' 
+	\end{eqnarray*}
+Thus, the first order condition for $\Lambda$ is
+$$\sum_{t = 1}^T \int f_j^{(j-1)}(\mathbf{z}_t) \left[ \Psi^{-1} (\textbf{x}_t - \mu)\textbf{z}_t' - \Psi^{-1}\Lambda \textbf{z}_t \textbf{z}_t' \right] d \mathbf{z}_t = 0$$
+Rearranging,
+	\begin{eqnarray*}
+		 \Psi^{-1} \sum_{t = 1}^T  (\textbf{x}_t - \mu)\int f_j^{(j-1)}(\mathbf{z}_t) \; \textbf{z}_t' \; d \mathbf{z}_t &=&  \Psi^{-1} \Lambda \sum_{t=1}^T \int f_j^{(j-1)}(\mathbf{z}_t)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\\
+		  \sum_{t = 1}^T  (\textbf{x}_t - \mu)\int f_j^{(j-1)}(\mathbf{z}_t) \; \textbf{z}_t' \; d \mathbf{z}_t &=& \Lambda \left(\sum_{t=1}^T \int f_j^{(j-1)}(\mathbf{z}_t)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\right)
+	\end{eqnarray*}
+Solving for $\Lambda$ and substituting the result of the E-step,
+	\begin{eqnarray*}
+		\Lambda^{(j)} &=& \left(\sum_{t = 1}^T  (\textbf{x}_t - \mu)\int f_j^{(j-1)}(\mathbf{z}_t) \; \textbf{z}_t' \; d \mathbf{z}_t\right) \left(\sum_{t=1}^T \int f_j^{(j-1)}(\mathbf{z}_t)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\right)^{-1}\\
+			&=&\left(\sum_{t = 1}^T  (\textbf{x}_t - \mu)\int \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \; \textbf{z}_t' \; d \mathbf{z}_t\right) \left(\sum_{t=1}^T \int \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\right)^{-1}\\
+			&=& \left[\sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)'\right]\left[\sum_{t=1}^T \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)   \right]^{-1}\\
+			&=&\left[\sum_{t=1}^T (\mathbf{x}_t - \mu) \right] \left[\sum_{t=1}^T \right]^{-1}
+	\end{eqnarray*}
+where $\mathcal{N}(\mathbf{z}|\mu, \Sigma)$ denotes a multivariate normal density with argument $\mathbf{z}$, mean $\mu$ and variance matrix $\Sigma$.
+
 \section{PCA and PPCA}
 
 
