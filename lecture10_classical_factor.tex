@@ -269,7 +269,7 @@ The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X
 
 
 \subsection{EM for Classical Factor Analysis}
-Why is this a great problem for EM? If $Z$ were observed this would just a standard multivariate regression problem! 
+\todo[inline]{Why is this a great problem for EM? If $Z$ were observed this would just a standard multivariate regression problem!}
 
 \subsubsection{The E-step: Inferring the Latent Factors} In this step we set $f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t|\mathbf{x}_t; \theta^{(j-1)})$ for each $t$ where $\theta^{(j-1)}$ is the value of $\theta$ that solved the optimization problem from the \emph{preceding} M-step or, if $j=2$, the starting value. In the notation of the factor analysis problem we need to calculate:
 	$$f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t | \mathbf{x}_t; \mu^{(j-1)}, \Lambda^{(j-1)}, \Psi^{(j-1)})$$
@@ -296,18 +296,20 @@ Hence, using the properties of the normal distribution reviewed earlier in this 
 \subsubsection{The M-Step: Optimizing the Lower Bound}
 In this step, we solve 
 	$$\displaystyle\theta^{(j)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j-1)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
-Using the notation of the Factor Analysis Model and rearranging, we can write the objective function for the $j$th M-step as follows:
+Before carrying out the optimization problem, we'll first manipulate the objective function to simplify it and remove constant terms that don't depend on the model parameters. Substituting the notation of the Factor Analysis Model and rearranging, we can write the objective function for the $j$th M-step as follows:
 	\begin{eqnarray*}
 		Q^{(j)}(\mu, \Lambda, \Psi) &=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log \left[ \frac{p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)}{f_t^{(j-1)}(\textbf{z}_t)}\right] d \textbf{z}_t\\
 			&=&	\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \left[\log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi) - \log f_t^{(j-1)}(\textbf{z}_t)\right] d \textbf{z}_t\\
 		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t -\sum_{t=1}^T  \int f_t^{(j-1)}(\textbf{z}_t) \log f_t^{(j-1)}(\textbf{z}_t) \;d \textbf{z}_t\\
-		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t  + \mbox{(constant)}\\
+		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t  + C\\
 		&=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t -\sum_{t=1}^T  \int f_t^{(j-1)}(\textbf{z}_t) \log f_t^{(j-1)}(\textbf{z}_t) \;d \textbf{z}_t\\
 		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log\left[ p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)p(\textbf{z}_t) \right]d \textbf{z}_t  + C\\
 		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t + \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t)\log p(\textbf{z}_t)\; d \mathbf{z}_t + C\\
 		&=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t + C
 	\end{eqnarray*} 
-where $C$ denotes an arbitrary constant and we have used the fact that $p(\mathbf{z}_t)$ \emph{does not depend} on any of the model parameters since $Z \sim N_k(0, I)$. Writing the joint distribution with $X$ as the first block rather than $Z$, we have
+where $C$ denotes an arbitrary constant and we have used the fact that $p(\mathbf{z}_t)$ \emph{does not depend} on any of the model parameters since $Z \sim N_k(0, I)$. 
+
+Writing the joint distribution with $X$ as the first block rather than $Z$, we have
 	\begin{eqnarray*}
 		\left[\begin{array}{c}
 			X\\ Z
@@ -332,6 +334,18 @@ so
 and hence
 	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
 
+\todo[inline]{Exchanging integral and derivative in the objective function, deal with terms one at a time, $f$ doesn't depend on paramters, etc...}
+
+Differentiating, we have
+	\begin{eqnarray*}
+		\nabla_\Lambda \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) &=&  \nabla_\Lambda \left[ \frac{1}{2}(\mathbf{x}_t - \mu)' \Psi^{-1} \Lambda \mathbf{z}_t + \frac{1}{2} \mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)- \frac{1}{2} \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right] \\
+		&=& \nabla_\Lambda \left[  \mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)- \frac{1}{2} \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right]\\
+		&=& \nabla_\Lambda \left[  \mbox{tr}\left\{\mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)\right\}- \frac{1}{2} \mbox{tr}\left\{ \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right\}\right]\\
+		&=& \nabla_\Lambda \mbox{tr}\left\{ \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)\mathbf{z}_t'\right\}- \frac{1}{2} \nabla_\Lambda \mbox{tr}\left\{  \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \mathbf{z}_t'\right\}
+	\end{eqnarray*}
+where we have used the fact that each term is a scalar, and thus equals its trace, and $\mbox{tr}(AB) = \mbox{tr}(BA)$ with $\mathbf{z}_t$ playing the role of $A$ for each of the two terms. It remains to calculate two matrix derivatives. For the first term we need to calculate $\nabla_A \mbox{tr}(AB)$ where $\Lambda'$ plays the role of $A$ and $\Psi^{-1}(\mathbf{x}_t = \mu)\mathbf{z}_t'$ plats the role of $B$. 
+
+For the second term we need to calculate $\nabla_A \mbox{tr}(ABA'C)$ where $\Lambda'$ plays the role of $A$
 \section{PCA and PPCA}
 
 
