@@ -242,7 +242,7 @@ And it leaves the \emph{distance} between any two vectors $v$ and $w$ unchanged 
 	\end{eqnarray*}
 From the joint distribution for $X$ and $Z$ that we derived above it follows that the marginal distribution of $X$ is $N(\mu, \Lambda \Lambda' + \Psi)$. Thus if we observe realizations $\mathbf{x}_1, \mathbf{x}_2, \hdots, \mathbf{x}_T$ of a sequence of iid random vectors $X_1, X_2, \hdots, X_T$ generated from the Factor Analysis model the log-likelihood is given by
 	\begin{eqnarray*}
-		\ell(\mu, \Lambda, \Psi) = \log \left[ \prod_{t = 1}^T \frac{\exp \left\{ -\frac{1}{2} \left(\mathbf{x}_t - \mu \right)' \left(\Lambda \Lambda' + \Psi \right)^{-1} \left(\mathbf{x}_t - \mu \right)\right\}}{(2\pi)^{T/2}\left| \Lambda \Lambda' + \Psi \right|^{1/2}} \right] 
+		\ell(\mu, \Lambda, \Psi) = \log \left[ \prod_{t = 1}^T \frac{\exp \left\{ -\frac{1}{2} \left(\mathbf{x}_t - \mu \right)' \left(\Lambda \Lambda' + \Psi \right)^{-1} \left(\mathbf{x}_t - \mu \right)\right\}}{(2\pi)^{p/2}\left| \Lambda \Lambda' + \Psi \right|^{1/2}} \right] 
 	\end{eqnarray*}
 Now suppose that we evaluate the log-likelihood at $\widetilde{\Lambda}R$ rather than $\Lambda$. Since $\Lambda$ only enters through the outer product $\Lambda \Lambda'$ the likelihood is \emph{unchanged}: 
 	$$\widetilde{\Lambda} \widetilde{\Lambda}' = (\Lambda R)(\Lambda R)' = \Lambda RR' \Lambda' = \Lambda \Lambda'$$
@@ -265,7 +265,15 @@ There are a number of possible solutions to the lack of identification:
 
 
 \subsection{The Latent Factors}
-The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X_T$ under the Factor Analysis Model are called the \emph{latent factors} or the \emph{latent scores}. In some settings the factor scores are given a particular interpretation and we may wish to infer them from the observable data. (Warning: interpreting the factors can be very difficult because of the lack of idenfication of the factor model!) Because this model is Gaussian, we can easily work out the conditional distribution of the latent factors using joint distribution of $(Z',X')'$ written out above and the properties of the normal distribution. Since:
+The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X_T$ under the Factor Analysis Model are called the \emph{latent factors} or the \emph{latent scores}. In some settings the factor scores are given a particular interpretation and we may wish to infer them from the observable data. (Warning: interpreting the factors can be very difficult because of the lack of idenfication of the factor model!) Because this model is Gaussian, we can easily work out the conditional distribution of the latent factors using joint distribution of $(Z',X')'$. Indeed, this is precisely what we'll need to do to implement the EM algorithm, as we'll see below. 
+
+
+\subsection{EM for Classical Factor Analysis}
+Why is this a great problem for EM? If $Z$ were observed this would just a standard multivariate regression problem! 
+
+\subsubsection{The E-step: Inferring the Latent Factors} In this step we set $f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t|\mathbf{x}_t; \theta^{(j-1)})$ for each $t$ where $\theta^{(j-1)}$ is the value of $\theta$ that solved the optimization problem from the \emph{preceding} M-step or, if $j=2$, the starting value. In the notation of the factor analysis problem we need to calculate:
+	$$f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t | \mathbf{x}_t; \mu^{(j-1)}, \Lambda^{(j-1)}, \Psi^{(j-1)})$$
+As we showed above,
 	\begin{eqnarray*}
 		\left[\begin{array}{c}
 			Z\\ X
@@ -279,17 +287,50 @@ The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X
 			\Lambda & \Lambda \Lambda' + \Psi
 		\end{array} \right] \right)
 	\end{eqnarray*}
-We have: 
+Hence, using the properties of the normal distribution reviewed earlier in this document:
 	\begin{eqnarray*}
-		Z_t|X_t &\sim& N_k(\mu_{Z|X}, \Sigma_{Z|X})\\
-		\mu_{Z|X} = 
+		Z|X &\sim& N_k(\mu_{Z|X}, \Sigma_{Z|X})\\
+		\mu_{Z|X} &=& \Lambda' (\Lambda \Lambda' + \Psi)^{-1}(X - \mu) \\
+		\Sigma_{Z|X} &=& I_k - \Lambda'(\Lambda \Lambda' + \Psi)^{-1}\Lambda
 	\end{eqnarray*}
-
-
-\subsection{EM for Factor Analysis}
-
-
-\section{Mixtures of Factor Analyzers}
+\subsubsection{The M-Step: Optimizing the Lower Bound}
+In this step, we solve 
+	$$\displaystyle\theta^{(j)} = \underset{\theta \in \Theta}{\arg \max} \sum_{t = 1}^T  \left(\int f_t^{(j-1)}(\mathbf{z}_t) \log\left[\frac{p(\textbf{x}_t,\textbf{z}_t;\theta)}{f_t^{(j-1)}(\mathbf{z}_t)}\right] d \textbf{z}_t \right)$$
+Using the notation of the Factor Analysis Model and rearranging, we can write the objective function for the $j$th M-step as follows:
+	\begin{eqnarray*}
+		Q^{(j)}(\mu, \Lambda, \Psi) &=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log \left[ \frac{p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)}{f_t^{(j-1)}(\textbf{z}_t)}\right] d \textbf{z}_t\\
+			&=&	\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \left[\log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi) - \log f_t^{(j-1)}(\textbf{z}_t)\right] d \textbf{z}_t\\
+		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t -\sum_{t=1}^T  \int f_t^{(j-1)}(\textbf{z}_t) \log f_t^{(j-1)}(\textbf{z}_t) \;d \textbf{z}_t\\
+		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t  + \mbox{(constant)}\\
+		&=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t, \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t -\sum_{t=1}^T  \int f_t^{(j-1)}(\textbf{z}_t) \log f_t^{(j-1)}(\textbf{z}_t) \;d \textbf{z}_t\\
+		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log\left[ p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)p(\textbf{z}_t) \right]d \textbf{z}_t  + C\\
+		&=&\sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t + \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t)\log p(\textbf{z}_t)\; d \mathbf{z}_t + C\\
+		&=& \sum_{t=1}^T \int f_t^{(j-1)}(\textbf{z}_t) \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi)\;d \textbf{z}_t + C
+	\end{eqnarray*} 
+where $C$ denotes an arbitrary constant and we have used the fact that $p(\mathbf{z}_t)$ \emph{does not depend} on any of the model parameters since $Z \sim N_k(0, I)$. Writing the joint distribution with $X$ as the first block rather than $Z$, we have
+	\begin{eqnarray*}
+		\left[\begin{array}{c}
+			X\\ Z
+		\end{array}\right] 
+		&\sim&  N\left(
+		\left[\begin{array}{c}
+			0_k \\ \mu
+	\end{array}\right], 
+		\left[\begin{array}{cc}
+			 \Lambda \Lambda' + \Psi & \Lambda\\
+			 \Lambda' & I
+		\end{array} \right] \right)
+	\end{eqnarray*}
+Hence, using the properties of normal distributions
+	\begin{eqnarray*}
+		X | Z &\sim& N_p(\mu_{X|Z}, \Sigma_{X|Z})\\
+		\mu_{X|Z} &=& \mu + \Lambda Z \\
+		\Sigma_{X|Z} &=& \Psi
+	\end{eqnarray*}
+so 
+	$$p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = \frac{\exp \left\{-\frac{1}{2}(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t) \right\}}{{(2\pi)^{p/2}\left|\Psi \right|^{1/2}}}$$
+and hence
+	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
 
 \section{PCA and PPCA}
 
