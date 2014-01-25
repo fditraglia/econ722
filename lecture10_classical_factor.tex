@@ -230,8 +230,16 @@ The algebra for the variance matrix calculation is as follows:
 
 
 \subsection{The Factor Analysis Model is Not Identified}
-Suppose we want to estimated the parameters $\mu, \Lambda, \Psi$ of the factor analysis model. The first natural question is whether this model is even identified. Unfortunately the answer is no. To see why, suppose that $R$ is an orthogonal matrix, i.e.\ $RR' = R'R = I$. Geometrically, $R$ is a rotation: it leaves the length of any vector $v$ unchanged since
+Suppose we want to estimated the parameters $\mu, \Lambda, \Psi$ of the factor analysis model. The first natural question is whether this model is even identified. The mean vector $\mu$ doesn't provide any problems for identification since we can always demean $X$ before proceeding. Excluding $\mu$, the factor analysis model has $k(p + 1)$ free parameters: $\Lambda$ is a $p\times k$ matrix and $\Psi$ is a \emph{diagonal} $p\times p$ matrix.
+
+
+Unfortunately the Factor Analysis is not identified as given above. To see why, suppose that $R$ is an orthogonal matrix, i.e.\ $RR' = R'R = I$. Geometrically, $R$ is a rotation: it leaves the length of any vector $v$ unchanged since
 	$$|| Rv || = \sqrt{(Rv)'(Rv)} = \sqrt{v' R'R v} = \sqrt{v'v} = ||v||$$ 
+And it leaves the \emph{distance} between any two vectors $v$ and $w$ unchanged since
+	\begin{eqnarray*}
+		||Rv - Rw|| &=& ||R(v-w)|| = \sqrt{\left[R(v-w) \right]' \left[ R(v-w)\right]}\\
+			&=& \sqrt{(v-w)'R'R(v-w)} = \sqrt{(v-w)'(v-w)} = ||v-w||
+	\end{eqnarray*}
 From the joint distribution for $X$ and $Z$ that we derived above it follows that the marginal distribution of $X$ is $N(\mu, \Lambda \Lambda' + \Psi)$. Thus if we observe realizations $\mathbf{x}_1, \mathbf{x}_2, \hdots, \mathbf{x}_T$ of a sequence of iid random vectors $X_1, X_2, \hdots, X_T$ generated from the Factor Analysis model the log-likelihood is given by
 	\begin{eqnarray*}
 		\ell(\mu, \Lambda, \Psi) = \log \left[ \prod_{t = 1}^T \frac{\exp \left\{ -\frac{1}{2} \left(\mathbf{x}_t - \mu \right)' \left(\Lambda \Lambda' + \Psi \right)^{-1} \left(\mathbf{x}_t - \mu \right)\right\}}{(2\pi)^{T/2}\left| \Lambda \Lambda' + \Psi \right|^{1/2}} \right] 
@@ -241,14 +249,41 @@ Now suppose that we evaluate the log-likelihood at $\widetilde{\Lambda}R$ rather
 We have shown that the matrix of factor loadings is \emph{only identified up to a rotation}. Another way to think about this is in terms of the latent variable $Z$, Since $X = \mu + \Lambda Z + \epsilon$, post-multiplying $\Lambda$ by $R$ is the same as \emph{pre-multiplying} $Z$ by $R$. As explained above, this constitutes a \emph{rotation} of the vector $Z$. But since $Z$ is a \emph{spherical} normal distribution, rotating it cannot change the likelihood.
 
 
-If we merely plan to use Factor Analysis for \emph{prediction} this lack of identification is irrelevant: it does not affect the predictive performance of the model in any way. If we ultimately hope to \emph{interpret} the latent factors, however the lack of identification becomes problematic. There are various ways to get a unique solution for the factor loadings $\Lambda$ that involve making various restrictions on the matrix of factor loadings $\Lambda$. The first question is: how many restrictions do we need?
+If we merely plan to use Factor Analysis for \emph{prediction} this lack of identification is irrelevant: it does not affect the predictive performance of the model in any way. If we ultimately hope to \emph{interpret} the latent factors, however the lack of identification becomes problematic. There are various ways to get a unique solution for the factor loadings $\Lambda$ that involve making various restrictions on the matrix of factor loadings $\Lambda$. The first question is: so how many restrictions do we need?
 
-Since the lack of identication comes from rotational invariance, the first step is to count the number of free parameters in a $k\times k$ rotation matrix. Start with the first column: it has $k-1$ free parameters since the only constraint is that it have length one. The second column must also have length one, but it has the further restriction that it must be orthogonal to the first column. Hence it has $k - 2$ free parameters. Continuing in this way, we see that there are $(k - 1) + (k - 2) + \hdots + (k - k + 1) = k(k-2)/2$ free parameters in a general $k\times k$ rotation matrix. 
+Since the lack of identication comes from rotational invariance, we need to count the number of free parameters in a $k\times k$ rotation matrix. Start with the first column: it has $k-1$ free parameters since the only constraint is that it have length one. The second column must also have length one, but it has the further restriction that it must be orthogonal to the first column. Hence it has $k - 2$ free parameters. Continuing in this way, we see that there are $(k - 1) + (k - 2) + \hdots + (k - k + 1) = k(k-2)/2$ free parameters in a general $k\times k$ rotation matrix. 
 
-The mean vector $\mu$ doesn't provide any problems for identification since we can always demean $X$ before proceeding. Excluding $\mu$, the factor analysis model has $k(p + 1)$ free parameters: $\Lambda$ is a $p\times k$ matrix and $\Psi$ is a \emph{diagonal} $p\times p$ matrix.
+There are a number of possible solutions to the lack of identification:
+	\begin{itemize}
+		\item \textbf{Constraining the columns of $\Lambda$ to be orthonormal} This is essentially how PCA works, as we'll see below.
+		\item \textbf{Constraining $\Lambda$ to be lower triangular} This constraint imposes that the first element of $X$ only depends on the first factor, the second element of $X$ only depends on the first two factors, and so on. In this choice of which variables to list as the first elements of $X$ can make a \emph{big difference}.
+		\item \textbf{Imposing Sparsity on $\Lambda$} There are a number of proposals for ``sparse factor analysis,'' including using LASSO and imposing an $\ell_1$ penalty on the factor loadings. Although this might not completely solve the identification problem, setting many of the elements of $\Lambda$ to exactly zero can partially resolve it. 
+		\item \textbf{Choosing an Informative Rotation Matrix} If you read old textbooks on multivariate statistics, you'll see a number of suggestions, including something called the ``varimax'' method. Typically, these solutions involve some kind of sparsity condition.
+		\item \textbf{Use a Non-Gaussian Distribution for the Factors} The lack of identification in the Factor Analysis Model comes from the rotational invariance of a multivariate normal distribution with an identity covariance matrix. Using a distribution other than the normal can partially eliminate this problem: a Laplace distribution, for example, has diamond-shaped contours. This is the idea behind ``Independent Components Analysis'' (ICA).
+	\end{itemize}
+
+
 
 \subsection{The Latent Factors}
-The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X_T$ under the Factor Analysis Model are called the \emph{latent factors} or the \emph{latent scores}. In some settings the factor scores are given a particular interpretation, although as discussed above this is complicated because of the lack of identification. If we want to \emph{infer} the factor scores from the observable data, we can simply used the properties of the multivariate normal distribution: 
+The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X_T$ under the Factor Analysis Model are called the \emph{latent factors} or the \emph{latent scores}. In some settings the factor scores are given a particular interpretation and we may wish to infer them from the observable data. (Warning: interpreting the factors can be very difficult because of the lack of idenfication of the factor model!) Because this model is Gaussian, we can easily work out the conditional distribution of the latent factors using joint distribution of $(Z',X')'$ written out above and the properties of the normal distribution. Since:
+	\begin{eqnarray*}
+		\left[\begin{array}{c}
+			Z\\ X
+		\end{array}\right] 
+		&\sim&  N\left(
+		\left[\begin{array}{c}
+			0_k \\ \mu
+	\end{array}\right], 
+		\left[\begin{array}{cc}
+			I & \Lambda'\\
+			\Lambda & \Lambda \Lambda' + \Psi
+		\end{array} \right] \right)
+	\end{eqnarray*}
+We have: 
+	\begin{eqnarray*}
+		Z_t|X_t &\sim& N_k(\mu_{Z|X}, \Sigma_{Z|X})\\
+		\mu_{Z|X} = 
+	\end{eqnarray*}
 
 
 \subsection{EM for Factor Analysis}
