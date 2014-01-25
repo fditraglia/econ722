@@ -336,7 +336,8 @@ and hence
 
 \todo[inline]{Exchanging integral and derivative in the objective function, deal with terms one at a time, $f$ doesn't depend on parameters, etc...}
 
-Differentiating, we have
+\paragraph{Updating $\Lambda$:}
+Differentiating, 
 	\begin{eqnarray*}
 		\nabla_\Lambda \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) &=&  \nabla_\Lambda \left[ \frac{1}{2}(\mathbf{x}_t - \mu)' \Psi^{-1} \Lambda \mathbf{z}_t + \frac{1}{2} \mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)- \frac{1}{2} \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right] \\
 		&=& \nabla_\Lambda \left[  \mathbf{z}_t' \Lambda'\Psi^{-1} (\mathbf{x}_t - \mu)- \frac{1}{2} \mathbf{z}_t' \Lambda' \Psi^{-1} \Lambda \mathbf{z}_t \right]\\
@@ -365,10 +366,31 @@ Solving for $\Lambda$ and substituting the result of the E-step,
 	\begin{eqnarray*}
 		\Lambda^{(j)} &=& \left(\sum_{t = 1}^T  (\textbf{x}_t - \mu)\int f_j^{(j-1)}(\mathbf{z}_t) \; \textbf{z}_t' \; d \mathbf{z}_t\right) \left(\sum_{t=1}^T \int f_j^{(j-1)}(\mathbf{z}_t)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\right)^{-1}\\
 			&=&\left(\sum_{t = 1}^T  (\textbf{x}_t - \mu)\int \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \; \textbf{z}_t' \; d \mathbf{z}_t\right) \left(\sum_{t=1}^T \int \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)\; \textbf{z}_t \textbf{z}_t' \; d \mathbf{z}_t\right)^{-1}\\
-			&=& \left[\sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)'\right]\left[\sum_{t=1}^T \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)   \right]^{-1}\\
-			&=&\left[\sum_{t=1}^T (\mathbf{x}_t - \mu) \right] \left[\sum_{t=1}^T \right]^{-1}
+			&=& \left[\sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)'\right]\left[\sum_{t=1}^T \left\{ \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right) \right\}  \right]^{-1}\\
 	\end{eqnarray*}
-where $\mathcal{N}(\mathbf{z}|\mu, \Sigma)$ denotes a multivariate normal density with argument $\mathbf{z}$, mean $\mu$ and variance matrix $\Sigma$.
+where $\mathcal{N}(\mathbf{z}|\mu, \Sigma)$ denotes a multivariate normal density with argument $\mathbf{z}$, mean $\mu$ and variance matrix $\Sigma$ and
+	\begin{eqnarray*}
+		\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} &=& \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}
+		\left(\mathbf{x}_t - \mu^{(j-1)}\right) \\
+		\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}  &=& I_k - \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}\Lambda^{(j-1)}
+	\end{eqnarray*}
+Notice that the M-step update for $\Lambda$ looks what would be the multivariate OLS estimator if $Z$ were observed: $\Lambda' = (Z'Z)^{-1}Z'X$. Since we don't observe $Z$ we substitute its conditional mean given $X$. The only twist is the conditional variance term in the term that serves as the analogue of $(Z'Z)^{-1}$. This accounts for the uncertainty in our estimate of $Z$ based on observing $X$.
+
+\paragraph{Updating $\Psi$:}
+
+
+
+\paragraph{Updating $\mu$:} This is by far the easiest step since it turns out not to depend on $j$!
+
+
+	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
+
+Differentiating:
+ \begin{eqnarray*}
+ 	\nabla_\mu \log p(\mathbf{x}_t)|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
+ 		&=&
+ \end{eqnarray*}
+
 
 \section{PCA and PPCA}
 
