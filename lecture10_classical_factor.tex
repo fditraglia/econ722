@@ -385,10 +385,10 @@ Notice that the M-step update for $\Lambda$ looks what would be the multivariate
 
 	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
 
-Differentiating:
+Differentiating,
  \begin{eqnarray*}
- 	\nabla_\mu \log p(\mathbf{x}_t)|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
- 		&=&
+ 	\nabla_\mu \log p(\mathbf{x}_t|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \nabla_\mu \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
+ 		&=& \nabla_\mu \left(\mathbf{x}_t' \Psi^{-1} \mu - \mathbf{z}_t' \Lambda' \Psi^{-1}\mu - \frac{1}{2} \mu' \Psi^{-1} \mu \right)
  \end{eqnarray*}
 
 
