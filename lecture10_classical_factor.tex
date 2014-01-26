@@ -380,7 +380,7 @@ Notice that the M-step update for $\Lambda$ looks what would be the multivariate
 
 
 
-\paragraph{Updating $\mu$:} This is by far the easiest step since it turns out not to depend on $j$!
+\paragraph{Updating $\mu$:} This is by far the easiest step since it doesn't depend on $j$!
 
 
 	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
@@ -388,9 +388,17 @@ Notice that the M-step update for $\Lambda$ looks what would be the multivariate
 Differentiating,
  \begin{eqnarray*}
  	\nabla_\mu \log p(\mathbf{x}_t|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \nabla_\mu \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
- 		&=& \nabla_\mu \left(\mathbf{x}_t' \Psi^{-1} \mu - \mathbf{z}_t' \Lambda' \Psi^{-1}\mu - \frac{1}{2} \mu' \Psi^{-1} \mu \right)
+ 		&=& \nabla_\mu \left(\mathbf{x}_t' \Psi^{-1} \mu - \mathbf{z}_t' \Lambda' \Psi^{-1}\mu - \frac{1}{2} \mu' \Psi^{-1} \mu \right)\\
+ 		&=& \mathbf{x}_t' \Psi^{-1} - \mathbf{z}_t'\Lambda'\mathbf \Psi^{-1} - \Psi^{-1}\mu
  \end{eqnarray*}
-
+where we have used the results $\nabla_{\mathbf{x}}A \mathbf{x} = A$ and$\nabla_{\mathbf{x}}\mathbf{x}'A \mathbf{x} = (A + A')\mathbf{x}$ along with the fact that $\Psi^{-1}$ is symmetric.\footnote{See, inter alia, Peterson \& Pederson (2012) \emph{The Matrix Cookbook}, Section 2.4.1--2 or the Wikipedia article on Matrix Calculus.} It follows that the first-order condition for $\mu$ is
+$$\sum_{t = 1}^T \int f_j^{(j-1)}(\mathbf{z}_t) \left[\mathbf{x}_t' \Psi^{-1} - \mathbf{z}_t'\Lambda' \Psi^{-1} - \Psi^{-1}\mu \right] d \mathbf{z}_t = 0$$
+Rearranging, using the fact that $f_j^{(j-1)}(\mathbf{z}_t)$ is a density, and substituting the E-step as above,
+	\begin{eqnarray*}
+		\sum_{t=1}^T \left(\int f_j^{(j-1)}(\mathbf{z}_t) d \mathbf{z}_t\right) \mathbf{x}_t' \Psi^{-1} &=& \sum_{t=1}^T\int f_j^{(j-1)}\left( \mathbf{z}_t'\Lambda' \Psi^{-1} + \Psi^{-1}\mu \right) d \mathbf{z}_t\\
+		\left(\sum_{t=1}^T\mathbf{x}_t'\right) \Psi^{-1} &=& \sum_{t=1}^T  \left[\left(\int f_j^{(j-1)} \mathbf{z}_t' \; d \mathbf{z}_t\right)\Lambda' \Psi^{-1} + \left(\int f_j^{(j-1)} \; d \mathbf{z}_t \right)\Psi^{-1} \mu \right]\\
+		\left(T \bar{\mathbf{x}}\right)\Psi^{-1} &=& \sum_{t=1}^T  \left[\left(\int f_j^{(j-1)} \mathbf{z}_t' \; d \mathbf{z}_t\right)\Lambda' \Psi^{-1} +\Psi^{-1} \mu \right]\\
+	\end{eqnarray*}
 
 \section{PCA and PPCA}
 
