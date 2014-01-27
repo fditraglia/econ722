@@ -383,6 +383,8 @@ hence
 	$$ \nabla_\Psi \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2} \left[ \Psi^{-1} - \Psi^{-2}(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \right]$$
 
 
+\todo[inline]{Multiply through to eliminate -1/2 and one of the $\Psi^{-1}$ then should be relatively straightforward to plug in the M-step as before. Just need to impose diagonality at the end since we're carrying around the full $\Psi$ matrix.}
+
 \paragraph{Updating $\mu$:} Differentiating and rearranging, 
  \begin{eqnarray*}
  	\nabla_\mu \log p(\mathbf{x}_t|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \nabla_\mu \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
