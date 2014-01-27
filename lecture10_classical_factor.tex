@@ -370,21 +370,20 @@ Solving for $\Lambda$ and substituting the result of the E-step,
 	\end{eqnarray*}
 where $\mathcal{N}(\mathbf{z}|\mu, \Sigma)$ denotes a multivariate normal density with argument $\mathbf{z}$, mean $\mu$ and variance matrix $\Sigma$ and
 	\begin{eqnarray*}
-		\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} &=& \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}
-		\left(\mathbf{x}_t - \mu^{(j-1)}\right) \\
+		\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} &=& \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1} \left(\mathbf{x}_t - \mu^{(j-1)}\right) \\
 		\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}  &=& I_k - \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}\Lambda^{(j-1)}
 	\end{eqnarray*}
 Notice that the M-step update for $\Lambda$ looks what would be the multivariate OLS estimator if $Z$ were observed: $\Lambda' = (Z'Z)^{-1}Z'X$. Since we don't observe $Z$ we substitute its conditional mean given $X$. The only twist is the conditional variance term in the term that serves as the analogue of $(Z'Z)^{-1}$. This accounts for the uncertainty in our estimate of $Z$ based on observing $X$.
 
-\paragraph{Updating $\Psi$:}
+\paragraph{Updating $\Psi$:} Recall from above that $\Psi$ is a diagonal matrix. Let $\psi_{ii}$ denote its $i$th diagonal element. Since the determinant of a diagonal matrix is simply the product of its diagonal elements and the log of a product equals the sum of the logs, it follows that $\log |\Psi| = \sum_{i=1}^p \log \psi_{ii}$. Similarly, if $c$ is a $p\times 1$ vector then $c' \Psi^{-1} c = \sum_{i=1}^p c_i^2/\psi_{ii}$. It follows that 
+	$$\nabla_\Psi \log |\Psi| = \Psi^{-1}$$
+and
+	$$\nabla_\Psi c' \Psi^{-1} c = - \Psi^{-1} cc' \Psi^{-1} = \Psi^{-2} cc'$$
+hence
+	$$ \nabla_\Psi \log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2} \left[ \Psi^{-1} - \Psi^{-2}(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \right]$$
 
 
-
-\paragraph{Updating $\mu$:} By this point you might have guessed that, since $\bar{x}$ is the MLE for the mean of a normal distribution, we could have simply de-meaned each of the $\bf{x}_t$ before proceeding, thus saving ourselves the trouble of carrying around the parameter vector $\mu$. This turns out to be correct, but for completeness we'll work out the M-step for $\mu$ in full. 
-
-	$$\log p(\textbf{x}_t| \textbf{z}_t;\mu, \Lambda, \Psi) = -\frac{1}{2}\left[  \log |\Psi| + p \log(2\pi) +(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \Psi^{-1} (\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)\right] $$
-
-Differentiating and rearranging, 
+\paragraph{Updating $\mu$:} Differentiating and rearranging, 
  \begin{eqnarray*}
  	\nabla_\mu \log p(\mathbf{x}_t|\mathbf{z}_t;\mu, \Lambda, \Psi) &=& -\frac{1}{2} \nabla_\mu \left( -\mu' \Psi^{-1} \mathbf{x}_t + \mu' \Psi^{-1}\mu + \mu' \Psi^{-1} \Lambda \mathbf{z}_t - \mathbf{x}_t' \Psi^{-1} \mu +  \mathbf{z}_t'\Lambda' \Psi^{-1} \mu  \right)\\
  		&=& \nabla_\mu \left(\mathbf{x}_t' \Psi^{-1} \mu - \mathbf{z}_t' \Lambda' \Psi^{-1}\mu - \frac{1}{2} \mu' \Psi^{-1} \mu \right)\\
@@ -396,9 +395,18 @@ $$\sum_{t = 1}^T \int f_t^{(j-1)}(\mathbf{z}_t) \left[\Psi^{-1}\left(\mathbf{x}_
 Left-multiplying both sides by $\Psi$, using the fact that $f_t^{(j-1)}(\mathbf{z}_t)$ is a density, and substituting the E-step gives
 	\begin{eqnarray*}
 		\sum_{t = 1}^T \left( \mathbf{x}_t - \Lambda \int f_t^{(j-1)}(\mathbf{z}_t) \; \mathbf{z}_t \; d \mathbf{z}_t - \mu\right)   &=& 0\\
- T\bar{x} - \Lambda \sum_{t = 1}^T \int f_t^{(j-1)}(\mathbf{z}_t) \; \mathbf{z}_t \; d\mathbf{z}_t &=& T \mu \\
- 	\bar{x}  - \Lambda \left( \frac{1}{T} \sum_{t=1}^T \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right) &=& \mu
+ T\bar{\mathbf{x}} - \Lambda \sum_{t = 1}^T \int f_t^{(j-1)}(\mathbf{z}_t) \; \mathbf{z}_t \; d\mathbf{z}_t &=& T \mu \\
+ 	\bar{\mathbf{x}}  - \Lambda \left( \frac{1}{T} \sum_{t=1}^T \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right) &=& \mu
 	\end{eqnarray*}
+We see that, provided that conditional expectations $\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}$ sum to zero over $t$, the M-step update for $\mu$ is simply $\mu^{(j)} = \bar{\mathbf{x}}$ which doesn't depend on $j$. From above, 
+	$$\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} = \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1} \left(\mathbf{x}_t - \mu^{(j-1)}\right)$$
+and hence, summing over $t$
+	\begin{eqnarray*}
+		\sum_{t = 1}^T \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} &=& \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1} T\left(\bar{\mathbf{x}} - \mu^{(j-1)} \right)
+ 	\end{eqnarray*}
+So as long as $\mu^{(j-1)} = \bar{\mathbf{x}}$, the conditional expectations will sum to zero so that $\mu^{(j)} = \bar{\mathbf{x}}$. This makes perfect sense: we know that $\bar{\mathbf{x}}$ is the MLE for the mean of a normal distribution and we have shown that if we set $\mu^{(1)} = \bar{\mathbf{x}}$, the M-step will \emph{never update} $\mu$. This is just a very complicated way of saying that we can demean $\mathbf{x}_t$ before carrying out Factor Analysis and then proceed as though $\mu$ were zero. 
+
+\subsubsection{EM for Factor Analysis: Summary of the Algorithm}
 
 \section{PCA and PPCA}
 
