@@ -4,7 +4,6 @@
 \usepackage{amssymb,amsmath,amsthm,graphicx}
 \usepackage{geometry}
 \usepackage{rotating}
-\usepackage{amssymb, amsmath, amsthm, graphicx} 
 \usepackage{multirow}
 \usepackage{setspace}
 \usepackage{enumerate}
@@ -38,7 +37,7 @@
 \maketitle 
 
 \noindent 
-These notes draw on material from Chapters 11--12 of Murphy's \emph{Machine Learning: A Probabilistic Perspective}, and Andrew Ng's lecture notes for CS229 at Stanford.
+These notes draw on material from Chapters 11--12 of Murphy's \emph{Machine Learning: A Probabilistic Perspective}, Andrew Ng's lecture notes for CS229 at Stanford, and Jolliffe's \emph{Principal Component Analysis}.
 
 \section{EM Algorithm}
 
@@ -161,7 +160,7 @@ where,
 \subsection{The Factor Analysis Model}
 Classical Factor Analysis specifies a joint distribution on the observable random $p$-vector $X$ and an unobserved or ``latent'' random $k$-vector $Z$, as follows
 	\begin{eqnarray*}
-		Z &\sim& N_k(0_k, I_k)\\
+		Z &\sim& N_k(0_k, \mathbf{I}_k)\\
 		\epsilon &\sim& N_p(0_p, \Psi)\\
 		Z &\perp& \epsilon\\
 		X &=& \mu + \Lambda Z + \epsilon
@@ -181,19 +180,19 @@ The factor analysis model implies that the joint distribution of $Z$ and $X$ is 
 		\left[\begin{array}{c}
 	0_k\\ \mu
 	\end{array}\right] + \left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+		\mathbf{I}_k & 0_{k\times p} \\ \Lambda & I_{p}
 	\end{array}\right]\left[\begin{array}{c}
 		Z \\ \epsilon
 	\end{array} \right]\\
 	& = & \left[\begin{array}{c}
 	0_k\\ \mu
 	\end{array}\right] + \left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+		\mathbf{I}_k & 0_{k\times p} \\ \Lambda & I_{p}
 	\end{array}\right]
 	N\left(\left[\begin{array}{c}
 		0_k \\ 0_p
 	\end{array} \right], \left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
+		\mathbf{I}_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
 	\end{array}\right]\right)\\
 	&\sim & N\left(\left[\begin{array}{c}
 	0_k \\ \mu
@@ -205,25 +204,25 @@ The factor analysis model implies that the joint distribution of $Z$ and $X$ is 
 The algebra for the variance matrix calculation is as follows:
 	\begin{eqnarray*}
 		V &=& \left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+		\mathbf{I}_k & 0_{k\times p} \\ \Lambda & I_{p}
 	\end{array}\right]
 \left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
+		\mathbf{I}_k & 0_{k\times p} \\ 0_{p\times k} & \Psi
 	\end{array}\right]
 	\left[\begin{array}{cc}
-		I_k & 0_{k\times p} \\ \Lambda & I_{p}
+		\mathbf{I}_k & 0_{k\times p} \\ \Lambda & I_{p}
 	\end{array}\right]'\\
 	&=& \left[ \begin{array}
 		{cc} 
-		I_k & 0_{k\times p}\\
+		\mathbf{I}_k & 0_{k\times p}\\
 		\Lambda & \Psi
 	\end{array}\right]\left[\begin{array}{cc}
-		I_k & \Lambda '\\
+		\mathbf{I}_k & \Lambda '\\
 		0_{p\times k} & I_{p} 
 	\end{array}\right]\\
 	&=& \left[\begin{array}
 		{cc}
-		I_k & \Lambda' \\
+		\mathbf{I}_k & \Lambda' \\
 		\Lambda & \Lambda \Lambda' + \Psi
 	\end{array}\right]
 	\end{eqnarray*}
@@ -291,7 +290,7 @@ Hence, using the properties of the normal distribution reviewed earlier in this 
 	\begin{eqnarray*}
 		Z|X &\sim& N_k(\mu_{Z|X}, \Sigma_{Z|X})\\
 		\mu_{Z|X} &=& \Lambda' (\Lambda \Lambda' + \Psi)^{-1}(X - \mu) \\
-		\Sigma_{Z|X} &=& I_k - \Lambda'(\Lambda \Lambda' + \Psi)^{-1}\Lambda
+		\Sigma_{Z|X} &=& \mathbf{I}_k - \Lambda'(\Lambda \Lambda' + \Psi)^{-1}\Lambda
 	\end{eqnarray*}
 \subsubsection{The M-Step: Optimizing the Lower Bound}
 In this step, we solve 
@@ -371,7 +370,7 @@ Solving for $\Lambda$ and substituting the result of the E-step,
 where $\mathcal{N}(\mathbf{z}|\mu, \Sigma)$ denotes a multivariate normal density with argument $\mathbf{z}$, mean $\mu$ and variance matrix $\Sigma$ and
 	\begin{eqnarray*}
 		\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} &=& \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1} \left(\mathbf{x}_t - \mu^{(j-1)}\right) \\
-		\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}  &=& I_k - \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}\Lambda^{(j-1)}
+		\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}  &=& \mathbf{I}_k - \left(\Lambda^{(j-1)}\right)' \left[\Lambda^{(j-1)} \left(\Lambda^{(j-1)}\right)' + \Psi^{(j-1)}\right]^{-1}\Lambda^{(j-1)}
 	\end{eqnarray*}
 Notice that the M-step update for $\Lambda$ looks what would be the multivariate OLS estimator if $Z$ were observed: $\Lambda' = (Z'Z)^{-1}Z'X$. Since we don't observe $Z$ we substitute its conditional mean given $X$. The only twist is the conditional variance term in the term that serves as the analogue of $(Z'Z)^{-1}$. This accounts for the uncertainty in our estimate of $Z$ based on observing $X$.
 
@@ -410,11 +409,32 @@ So as long as $\mu^{(j-1)} = \bar{\mathbf{x}}$, the conditional expectations wil
 
 \subsubsection{EM for Factor Analysis: Summary of the Algorithm}
 
-\section{PCA and PPCA}
 
 
+\section{Principal Components Analysis}
+If asked to summarize a $k$-dimensional random vector $\mathbf{x}$ our first inclination might be to examine its moments: the mean vector $\boldsymbol{\mu}$ and variance-covariance matrix $\Sigma$. As mentioned above, it might be difficult or impossible to estimate $\Sigma$ if $k$ is large relative to the sample size. More fundamentally, however, even if it were \emph{known} rather than estimated, $\Sigma$ would still be challenging to \emph{interpret} unless $k$ is fairly small. Principal Components Analysis (PCA) is a classical statistical technique that is designed to help us discover ``structure'' in a variance-covariance matrix by considering particular linear combinations of the elements of $\mathbf{x}$. We can apply PCA either to a population covariance matrix or a sample covariance matrix: the basic idea is the same in either case. To bring out some important relationships between ideas we will examine PCA from several different, but equivalent perspectives. To begin, we will consider what is sometimes called the ``analysis view'' of PCA which amounts to solving a simple optimization problem. 
 
+\subsection{The ``Analysis View'' of PCA}
+Suppose that $\boldsymbol{\alpha}$ is a constant vector. Then $\boldsymbol{\alpha}'\mathbf{x}$ is a \emph{scalar} random variable that summarizes $\mathbf{x}$ via a weighted average. The question is, what weights provide an ``interesting'' summary of $\mathbf{x}$? One idea would be to choose $\boldsymbol{\alpha}$ to maximize the variance of the linear combination $\boldsymbol{\alpha}'\mathbf{x}$. Although this idea is appealing, there is an obvious problem: we can make the variance of the linear combination arbitrarily large! To turn this into a well-defined problem, we need to constrain $\boldsymbol{\alpha}$ in some way. There are many possible constraints we could use. PCA imposes a particularly simple one by requiring that $\boldsymbol{\alpha}$ has \emph{unit norm}, in other words $\boldsymbol{\alpha}'\boldsymbol{\alpha} = 1$. 
 
+\paragraph{The First Principal Component} The linear combination $\boldsymbol{\alpha}_1 \mathbf{x}$ formed from the solution to
+	$$\max_{\alpha_1} \; Var(\boldsymbol{\alpha_1}'\mathbf{x})\;  \mbox{ subject to } \; \boldsymbol{\alpha_1}' \boldsymbol{\alpha_1} = 1$$
+is called the \emph{first principal component} of $\Sigma$. For a general linear combination of $\mathbf{x}$ we have
+	\begin{eqnarray*}
+		Var(\boldsymbol{\alpha}'\mathbf{x}) &=& E[\boldsymbol{\alpha}'\mathbf{x}\mathbf{x}'\boldsymbol{\alpha}] - E[\boldsymbol{\alpha}'\mathbf{x}]E[\mathbf{x}'\boldsymbol{\alpha}]\\
+			&=& \boldsymbol{\alpha}\left('E[\mathbf{x}\mathbf{x}'] - E[\mathbf{x}]E[\mathbf{x}'] \right)\boldsymbol{\alpha}'\\
+			&=& \boldsymbol{\alpha}' \Sigma \boldsymbol{\alpha}
+	\end{eqnarray*}
+Thus, to find $\boldsymbol{\alpha}_1$ we maximize the Lagrangian
+	$$\mathcal{L}(\boldsymbol{\alpha}_1 ,\lambda) = \boldsymbol{\alpha}_1'\Sigma \boldsymbol{\alpha}_1 - \lambda(\boldsymbol{\alpha_1}' \boldsymbol{\alpha_1}  - 1)$$
+where $\lambda$ is a \emph{scalar} Lagrange Multiplier since there is only a \emph{one} constraint. The first-order condition for $\mathbf{\alpha}_1$ is
+$$2(\Sigma \boldsymbol{\alpha}_1 - \lambda \boldsymbol{\alpha}_1) = \textbf{0}$$
+since $\Sigma$ is a symmetric matrix.\footnote{In general, $\nabla_{\mathbf{x}} \mathbf{x}' A \mathbf{x} = (A + A')\mathbf{x}$. See, for example, Harville (1997) section 15.3.} Rearranging,
+	$$(\Sigma - \lambda \textbf{I}_k)\boldsymbol{\alpha}_1 = \textbf{0}$$
+so we see at once that $\boldsymbol{\alpha}_1$ must be an \emph{eigenvector} of $\Sigma$ and $\lambda$ the corresponding \emph{eigenvalue}. But which one?
+
+\subsection{Probabilistic PCA}
+Talk about the link between factor analysis and PCA. How they can give different results, etc. Relate via PPCA and the restrictions that lead to ordinary PCA.
 
 
 
