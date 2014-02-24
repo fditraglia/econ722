@@ -431,7 +431,14 @@ where $\lambda$ is a \emph{scalar} Lagrange Multiplier since there is only a \em
 $$2(\Sigma \boldsymbol{\alpha}_1 - \lambda \boldsymbol{\alpha}_1) = \textbf{0}$$
 since $\Sigma$ is a symmetric matrix.\footnote{In general, $\nabla_{\mathbf{x}} \mathbf{x}' A \mathbf{x} = (A + A')\mathbf{x}$. See, for example, Harville (1997) section 15.3.} Rearranging,
 	$$(\Sigma - \lambda \textbf{I}_k)\boldsymbol{\alpha}_1 = \textbf{0}$$
-so we see at once that $\boldsymbol{\alpha}_1$ must be an \emph{eigenvector} of $\Sigma$ and $\lambda$ the corresponding \emph{eigenvalue}. But which one?
+so we see at once that $\boldsymbol{\alpha}_1$ must be an \emph{eigenvector} of $\Sigma$ and $\lambda$ the corresponding \emph{eigenvalue}. But which one? Rearranging the first-order condition for $\boldsymbol{\alpha}_1$ gives
+	$$\Sigma \boldsymbol{\alpha}_1 = \lambda \boldsymbol{\alpha}_1$$
+Substituting this into the objective function, 
+	$$Var(\boldsymbol{\alpha}_1' \textbf{x}) =  \boldsymbol{\alpha}_1' \Sigma \boldsymbol{\alpha}_1 = \boldsymbol{\alpha}_1' \lambda \boldsymbol{\alpha}_1 = \lambda \boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = \lambda$$
+since $\lambda$ is a scalar and $\boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = 1$. In other words, the variance of the first principal component equals $\lambda$. Since this is what we want to \emph{maximize}, we should make $\lambda$ as large as possible. But $\lambda$ must be one of the eigenvalues of $\Sigma$. Therefore, $\boldsymbol{\alpha}_1$ is the eigenvector corresponding to the \emph{largest eigenvalue} of $\Sigma$. Recall that since $\Sigma$ is a variance-covariance matrix, is must be positive semi-definite hence all its eigenvalues must be non-negative.
+
+\paragraph{The Second Principal Component}
+
 
 \subsection{Probabilistic PCA}
 Talk about the link between factor analysis and PCA. How they can give different results, etc. Relate via PPCA and the restrictions that lead to ordinary PCA.
