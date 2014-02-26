@@ -27,5 +27,4 @@
 *.rdb
 *.rdx
 *.tikz
-*.pdf
 __packages
