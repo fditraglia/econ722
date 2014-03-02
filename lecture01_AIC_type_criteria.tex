@@ -34,11 +34,12 @@
 
 \maketitle 
 
-\todo[inline]{Cite various sources for this material here. Direct them to some references on ML asymptotics or provide a quick reminder.}
 
+This material is covered in numerous textbooks and articles. The derivations given here most closely follow Konishi \& Kitagawa (2008) for AIC and TIC, and Burnham and Anderson (2002) for $\mbox{AIC}_c$.  
 
+\todo[inline]{Direct them to some review material on MLE.}
 
-\section{Akaike's Information Criterion}
+\section{Introduction}
 Akaike's Information Criterion (AIC) is often described as summarizing the fit of a model by its maximized Log-likelihood minus a complexity penalty. This is an accurate description of the \emph{formula} for the AIC, but overlooks the deep mathematical ideas that underlie it. The AIC uses an estimate of the Kullback-Leibler divergence to decide which model best approximates the true data generating process.
 
 \todo[inline]{Change $i$ subscripts to $t$ subscripts!}
@@ -132,6 +133,8 @@ In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likeliho
 
 
 
+\section{The AIC and TIC}
+In the previous section we outlined the problem. Now we'll consider a solution that involves constructing an asymptotic approximation to the bias. This leads to the TIC and AIC.
 
 \subsection{An Asymptotic Approximation to the Bias}
 First some notation:
@@ -219,13 +222,13 @@ using the same arguments as in Step 2.
 	
 \subsection{Correcting the Bias}
 Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
-	$$TIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right]$$
+	$$TIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
 The scaling factor of two is traditional, but has no effect on model comparisons.
 
 Akaike's Information Criterion (AIC) uses a slightly different bias correction. Recall that if there exists a $\theta \in \Theta$ such that the true density $g(y)$ equals the model $f(y|\theta)$, then $I(\theta_0)=J(\theta_0)^{-1}$. This is the famous ``Information Matrix Equality.'' In this case, the bias approximation becomes:
 	$$Bias = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\} = \mbox{trace}\left\{ \mathbb{I}_p \right\}=p$$
 that is, the dimension of the parameter vector. Using this as a bias correction yields \textbf{Akaike's Information Criterion}:
-	$$AIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - p \right]$$
+	$$AIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - p \right] = 2\left[ \ell(\theta) - p \right]$$
 Again, it is traditional to multiply by two. Although the TIC and AIC are similar, there are several subtleties:
 	\begin{itemize}
 		\item The AIC is derived assuming that the model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
@@ -249,10 +252,81 @@ The AIC and TIC use an analytical bias correction. Other possibilities:
 	\end{itemize}
 Maximum likelihood estimators can be unstable. If we want to use a different kind of estimator (e.g.\ maximum penalized likelihood) but are still willing to write down a likelihood, we can use the KL divergence for model selection via the Generalized Information Criterion (GIC) of Konishi and Kitagawa, or its bootstrap equivalent (EGIC).
 
+\section{Refinements to the AIC}
+In the derivations above we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider some alternatives that work better in such situations. The first uses \emph{exact} small-sample theory to derive the appropriate bias correction, while the second uses the Bootstrap.
 
-\section{Corrected AIC}
 
-\section{Cavanaugh \& Neath State-Space AIC}
+\subsection{Corrected AIC}
+See Hurvich and Tsai (1989, 1995). The derivation given here follows Burnham \& Anderson (2002).
+
+In our derivation of AIC and TIC, we didn't make any assumptions about the precise form of the data-generating process. We simply relied on large-sample results for MLE. If we're willing to make stronger assumptions, we can derive a refined AIC. Suppose that we have an iid sample of $T$ observations from the following DGP
+	$$y_t = x_t'\beta + \epsilon_t, \quad \epsilon_t \overset{iid}{\sim} N(0, \sigma^2)$$
+where $x_t$ is a $(K-1)$-dimensional vector of regressors. In matrix notation, we have
+	$$y = X\beta + \epsilon$$
+Again we will assume that this is the \emph{true DGP}, so we have
+	$$g(y|X;\theta) = \left[\frac{1}{\sqrt{2\pi}} \right]^{T} \left[\frac{1}{\sigma^2} \right]^{T/2}\exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta)'(y - X\beta)\right\}$$
+hence, up to a constant term, the log-likelihood of the DGP is
+	$$\log\left[g(y|X;\theta)\right] = -\frac{T}{2} \log(\sigma^2) - \frac{1}{2\sigma^2}\left(y - X\beta\right)'\left(y -X\beta\right)$$
+In total there are $K$ parameters to estimate: $\beta$ and $\sigma^2$. The maximum likelihood estimators for this problem are
+\begin{eqnarray*}
+	\widehat{\beta} &=& (X'X)^{-1}X'y\\
+	\widehat{\sigma}^2 &=& \frac{(y - X\widehat{\beta})'(y - X\widehat{\beta})}{T}
+\end{eqnarray*}
+It follows that the maximized log-likehood is
+\begin{eqnarray*}
+	\log\left[g(y|X;\widehat{\theta})\right] &=&  -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{1}{2\widehat{\sigma}^2}(y - X\widehat{\beta})'(y -X\widehat{\beta})\\
+		&=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
+\end{eqnarray*}
+by substituting $T\widehat{\sigma}^2$ for the numerator of the second term.
+
+
+
+\subsection{Better Derivation}
+Suppose that the true DGP is
+	$$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
+where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
+	$$g(\textbf{y}|X;\beta_0, \sigma^2_0) = \left(2\pi\sigma_0^2\right)^{-T/2} \exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta_0)'(y - X\beta_0)\right\}$$
+and the log-likelihood is
+	$$\log\left[g(\textbf{y}|X;\beta_0, \sigma_0^2)\right] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)$$
+To keep the notation from getting out of control, we'll use the shorthand $\log[g(\mathbf{y})]$ for this quantity. Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model. We have
+	$$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] =  -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
+
+\begin{eqnarray*}
+	\int \log\left[\frac{g(\mathbf{y})}{f(\mathbf{y})} \right]g(\mathbf{y}) \;d\mathbf{y}  &=& \int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} - \int \log[f(\mathbf{y})]g(\mathbf{y}) \; d \mathbf{y}\\
+	 &\vdots& \\
+	 &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)
+\end{eqnarray*}
+
+
+
+\begin{eqnarray*}
+	\int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} &=& \int \left[-\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right) \right] g(\mathbf{y})\; d\mathbf{y}\\
+	&=& -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) -  \frac{1}{2\sigma_0^2} E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)\right]\\
+	&=& -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) -  \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)\left(\textbf{y} -X\beta_0\right)'\right]\right\}\\
+	&=& -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) -  \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ Var(\mathbf{y}|X)\right\}\\
+	&=& -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) -  \frac{1}{2\sigma_0^2}\left(T \sigma_0^2)\\
+	&=& -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) -  \frac{T}{2}
+\end{eqnarray*}
+\subsection{Cavanaugh \& Neath State-Space AIC}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
