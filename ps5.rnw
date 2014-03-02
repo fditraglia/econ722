@@ -1,0 +1,61 @@
+\documentclass[addpoints,12pt]{exam}
+\usepackage{amsmath, amssymb}
+\linespread{1.1}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{multirow}
+%\boxedpoints
+%\pointsinmargin
+
+
+
+%-------------------DON'T CHANGE---------------------%
+%The following is needed to prevent a conflict between knitr and the exam class involving the package ``framed.''
+<<include=FALSE>>= 
+knit_hooks$set(document=function(x){ 
+  sub('\\usepackage{framed}', '', x, fixed=TRUE) 
+}) 
+@ 
+
+%This keeps images from being too big, centers them, and makes sure we use pdf images
+<<include=FALSE>>=
+opts_chunk$set(fig.width=4, fig.height=4, fig.align='center',dev='pdf')
+@
+
+%Change the default width of the output to fit within the solution boxes
+<<include=FALSE>>=
+options(width = 60)
+@
+%-------------------DON'T CHANGE---------------------%
+
+
+%\printanswers
+%\noprintanswers
+
+\title{Problem Set \# 5}
+\author{Econ 722}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{questions}
+
+
+
+\question Derive KL divergence between two normal RVs. Make some pictures.
+
+\question Simulation study of various model selection criteria in a simple time series setting. 
+
+\question Something to show how the AIC can get things wrong when p is large relative to n.
+
+\question Derive a simple version of the Focused Info Criterion or maybe the Schorfheide VAR criterion.
+
+
+
+\end{questions}
+
+
+\end{document}
