@@ -295,7 +295,7 @@ To keep the notation from getting out of control, we'll use the shorthand $\log[
 	KL(g;f)&=& \int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} - \int \log[f(\mathbf{y})]g(\mathbf{y}) \; d \mathbf{y} =  A - B 
 \end{eqnarray*}
 
-
+	$$KL(g;f) =  \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
 
 \begin{eqnarray*}
 	A &=&\int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} \\
@@ -331,10 +331,17 @@ To keep the notation from getting out of control, we'll use the shorthand $\log[
 Hence,
 \begin{eqnarray*}
 	B &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right) \left[ T\sigma_0^2 + (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\right]\\
-		&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right]
+		&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
+\end{eqnarray*}
+Therefore,
+\begin{eqnarray*}
+	KL(g;f) &=& A - B\\
+		&=& \left\{ -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) +  1 \right]\right\}\\
+		&& \quad - \; \left\{ -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1) \right\}\\
+	&=& -\frac{T}{2} \left[ \log(\sigma_0^2) + 1 - \log(\sigma_1^2)  - \frac{\sigma_0^2}{\sigma_1^2}\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\\
+	&=& \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2}  - \log\left(\frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
 \end{eqnarray*}
 
-	$$KL(g;f) =  \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
 
 \subsection{Cavanaugh \& Neath State-Space AIC}
 
