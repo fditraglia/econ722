@@ -207,26 +207,10 @@ Again, it is traditional to multiply by two. Although the TIC and AIC are simila
 		\item It has been argued that for models where the Information Matrix is not satisfied, the AIC will still be close to the TIC. (The log-likelihood term should dominate the bias correction in such situations.)
 	\end{itemize}
 
-\subsection{Friends of AIC}
-Recall the idea behind the AIC:
-	\begin{enumerate}
-		\item Use the KL divergence to choose a model.
-		\item Suffices to compare Expected Log-likelihoods. 
-		\item Sample analogue, maximized log-likelihood, requires a bias correction.
-	\end{enumerate}
-The AIC and TIC use an analytical bias correction. Other possibilities:
-	\begin{itemize}
-		\item Cross-Validation
-		\item Bootstrap Information Criterion (EIC)
-	\end{itemize}
-Maximum likelihood estimators can be unstable. If we want to use a different kind of estimator (e.g.\ maximum penalized likelihood) but are still willing to write down a likelihood, we can use the KL divergence for model selection via the Generalized Information Criterion (GIC) of Konishi and Kitagawa, or its bootstrap equivalent (EGIC).
 
-\section{Refinements to the AIC}
-In the derivations above we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider some alternatives that work better in such situations. The first uses \emph{exact} small-sample theory to derive the appropriate bias correction, while the second uses the Bootstrap.
-
-
-\subsection{Corrected AIC}
-This is based on the derivation in Hurvich \& Tsai (1989). Suppose that the true DGP is
+\section{The Corrected AIC}
+In the derivations above we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
+_c$, of Hurvich and Tsai (1989). Suppose that the true DGP is a linear regression model:
 	$$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
 where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
 	$$g(\textbf{y}|X;\beta_0, \sigma^2_0) = \left(2\pi\sigma_0^2\right)^{-T/2} \exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta_0)'(y - X\beta_0)\right\}$$
@@ -235,12 +219,13 @@ and the log-likelihood is
 To keep the notation from getting out of control, we'll use the shorthand $\log[g(\mathbf{y})]$ for this quantity. Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. We have
 	$$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] =  -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
 
+Since we've specified the density from which the data were generated as well as the density of the approximating model, we can directly compute the KL divergence. It will turn out that
+	$$KL(g;f) =  \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
+We'll show this in three steps. First we write
 \begin{eqnarray*}
 	KL(g;f)&=& \int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} - \int \log[f(\mathbf{y})]g(\mathbf{y}) \; d \mathbf{y} =  A - B 
 \end{eqnarray*}
-
-	$$KL(g;f) =  \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
-
+Next, we compute $A$ 
 \begin{eqnarray*}
 	A &=&\int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} \\
 	&=& \int \left[-\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right) \right] g(\mathbf{y})\; d\mathbf{y}\\
@@ -250,7 +235,7 @@ To keep the notation from getting out of control, we'll use the shorthand $\log[
 	&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] -  \frac{1}{2\sigma_0^2}\left(T \sigma_0^2\right)\\
 	&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) +  1 \right]
 \end{eqnarray*}
-
+Calculating $B$ is more involved because of the last term, which we'll call $C$
 
 \begin{eqnarray*}
 	B &=& \int \log[f(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y}\\
