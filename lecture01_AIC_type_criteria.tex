@@ -257,7 +257,7 @@ In the derivations above we used asymptotic theory to derive an analytical bias 
 
 
 \subsection{Corrected AIC}
-See Hurvich and Tsai (1989, 1995). The derivation given here follows Burnham \& Anderson (2002).
+This section covers Hurvich \& Tsai (1989).
 
 In our derivation of AIC and TIC, we didn't make any assumptions about the precise form of the data-generating process. We simply relied on large-sample results for MLE. If we're willing to make stronger assumptions, we can derive a refined AIC. Suppose that we have an iid sample of $T$ observations from the following DGP
 	$$y_t = x_t'\beta + \epsilon_t, \quad \epsilon_t \overset{iid}{\sim} N(0, \sigma^2)$$
@@ -343,11 +343,13 @@ Therefore,
 \end{eqnarray*}
 
 
-\subsection{Cavanaugh \& Neath State-Space AIC}
+\begin{eqnarray*}
+	\widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2}  - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
+\end{eqnarray*}
 
-
-
-
+\begin{eqnarray*}
+	E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{  E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right]  - \log(\sigma_0^2) - E\left[\log(\widehat{\sigma}^2)\right] + E\left[\left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right) \right] \right\}
+\end{eqnarray*}
 
 
 
