@@ -25,6 +25,7 @@
 \theoremstyle{definition}
 \newtheorem{alg}{Algorithm}[section]
 
+\linespread{1.3}
 
 \begin{document}
 
@@ -34,113 +35,82 @@
 
 \maketitle 
 
-
-This material is covered in numerous textbooks and articles. The derivations given here most closely follow Konishi \& Kitagawa (2008) for AIC and TIC, and Burnham and Anderson (2002) for $\mbox{AIC}_c$.  
-
-\todo[inline]{Direct them to some review material on MLE.}
+ 
 
 \section{Introduction}
-Akaike's Information Criterion (AIC) is often described as summarizing the fit of a model by its maximized Log-likelihood minus a complexity penalty. This is an accurate description of the \emph{formula} for the AIC, but overlooks the deep mathematical ideas that underlie it. The AIC uses an estimate of the Kullback-Leibler divergence to decide which model best approximates the true data generating process.
-
-\todo[inline]{Change $i$ subscripts to $t$ subscripts!}
-
-\subsection{Notation etc.}
-The ideas presented here apply to arbitrary ML models, but to keep the notation simple, we consider only a scalar random variable $Y$ without conditioning on covariates. We also restrict attention to the iid setting.  The notation is as follows:
-		\begin{itemize}
-			\item Parametric Model: $f\left(y,\theta\right)$, sometimes abbreviated $f(y)$
-			\item $\theta$ is a $p$-dimensional vector of parameters
-			\item $Y_1, Y_2, \hdots Y_n$ are iid 
-			\item Log-likelihood of sample: $\ell(\theta) = \sum_{i=1}^n \log{f\left(y_i,\theta\right)}$
-		\end{itemize}
+Akaike's Information Criterion (AIC) summarizes the quality of a model by trading fit, measured by the maximized log likelihood, against complexity, measured by the number of estimated parameters. But where does this complexity penalty come from? In these notes we'll take a closer look at the AIC along with two related information criteria: Takeuichi's Information Criterion (TIC), and the Corrected AIC (AIC$_c$) of Hurvich and Tsai (1989). All three are based on approximations to the \textbf{Kullback-Leibler Divergence}, a fundamental quantity from information theory that is inextricably linked to maximum likelihood information. 
 
 
 \subsection{Kullback-Leibler Divergence}
-Consider the following setup:
-	\begin{itemize}
-		\item Truth: $Y_1, Y_2, \hdots Y_n \sim \mbox{ iid } g(y)$
-		\item Model: $f(y)$
-		\item Question: How well does $f$ approximate $g$?
-	\end{itemize}
-To find the best approximation to $g$, we might consider a number of models and choose the one that minimizes some measure of discrepancy. One such measure is the Kullback-Leibler Divergence. Let $E_G$ denote expectation with respect to the true, unknown density $g(y)$.
+Suppose that $\mathbf{y}$ is a $T$-dimensional random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
+
 
 \begin{defn}[KL Divergence]
-The Kullback-Leibler divergence from $g(y)$ to $f(y)$ is given by
-	$$KL(g;f) = E_G \left[ \log{\left\{\frac{g(Y)}{f(Y)}\right\}}\right]= E_G\left[ \log{g(Y)}\right] - E_G\left[ \log{f(Y)} \right]$$
-The quantity $E_G\left[ \log{f(Y)} \right]$ is called the Expected Log-likelihood.
+Let $E_G$ denote expectation with respect to the true, unknown data density $g$. Then the Kullback-Leibler divergence from $g$ to $f$ is given by
+	$$KL(g;f) = E_G \left[ \log{\left\{\frac{g(\textbf{y})}{f(\textbf{y})}\right\}}\right]= E_G\left[ \log{g(\textbf{y})}\right] - E_G\left[ \log{f(\textbf{y})} \right]$$
+The quantity $E_G\left[ \log{f(\mathbf{y})} \right]$ is called the Expected Log-likelihood.
 \end{defn}
 
-\paragraph{Properties of KL Divergence}
+\paragraph{Key Features of the KL Divergence}
+There are several important features to note about the KL divergence:
 	\begin{enumerate}
-		\item It is \emph{not} a metric: $KL(g;f) \neq KL(f;g)$
-		\item $KL(g;f) \geq 0$ with equality iff $f=g$
-		
-		Since $\log$ is a concave function, $-\log$ is convex. Thus
+		\item It is \emph{not} symmetric: $KL(g;f)\neq KL(f;g)$. Hence, the KL divergence is \emph{not} a distance function (metric).
+		\item $KL(g;f) \geq 0$ with equality iff $f=g$. To see why, recall that, since $\log$ is a concave function, $-\log$ is convex. Thus
 			\begin{eqnarray*}
-			KL(g;f) &=&  E_G \left[ \log{\left\{\frac{g(Y)}{f(Y)}\right\}}\right] = E_G \left[- \log{\left\{\frac{f(Y)}{g(Y)}\right\}}\right]\\\\
-				&\geq& -\log{\left\{E_G\left[ \frac{f(Y)}{g(Y)} \right]\right\}} = -\log{\left(\int g(y) \frac{f(y)}{g(y)} dy  \right)}\\\\
-				&=&  -\log{\left(\int f(y) dy  \right)} = -\log{(1)} = 0
+			KL(g;f) &=&  E_G \left[ \log{\left\{\frac{g(\mathbf{y})}{f(\mathbf{y})}\right\}}\right] = E_G \left[- \log{\left\{\frac{f(\mathbf{y})}{g(\mathbf{y})}\right\}}\right]\\\\
+				&\geq& -\log{\left\{E_G\left[ \frac{f(\mathbf{y})}{g(\mathbf{y})} \right]\right\}} = -\log{\left(\int g(\mathbf{y}) \frac{f(\mathbf{y})}{g(\mathbf{y})} \; d \mathbf{y}  \right)}\\\\
+				&=&  -\log{\left(\int f(\mathbf{y}) \;d \mathbf{y} \right)} = -\log{(1)} = 0
 			\end{eqnarray*} 
-		by Jensen's Inequality. The inequality is strict only for a non-degenerate random variable and a strictly convex function. Since $-\log$ is strictly convex, the only way to make the inequality strict is for $f(Y)/g(Y)$ to be degenerate. This occurs precisely when $f=g$.
+		by Jensen's Inequality. The inequality is strict only for a non-degenerate random variable and a strictly convex function. Since $-\log$ is strictly convex, the only way to make the inequality strict is for $f(\mathbf{y})/g(\mathbf{y})$ to be degenerate. This occurs precisely when $f=g$ almost everywhere.
 		
-		\item \emph{Maximize Expected Log-likelihood $\iff$ Minimize KL Divergence}
+		\item Minimizing the KL divergence $KL(g;f)$ is \emph{equivalent} to maximizing the Expected Log-Likelihood $E_G[\log f(\mathbf{y})]$. This is because the first term in the KL divergence is a constant: it in no way depends on the model $f(\mathbf{y})$. The expected Log-likelihood enters negatively:
+		$$KL(g;f) = E_G\left[ \log{g(\textbf{y})}\right] - E_G\left[ \log{f(\textbf{y})} \right]$$ 
+		Thus, if we can find a way to estimate the Expected Log-likelihood, we can use the KL divergence for model selection: the larger the Expected Log-likelihood, the smaller the KL divergence, and the better the model.
 		
-		The first term in the KL divergence is a constant: it in no way depends on the model $f(y)$. The expected Log-likelihood enters negatively:
-		$$KL(g;f) = E_G\left[ \log{g(Y)}\right] - E_G\left[ \log{f(Y)} \right]$$ 
-		Thus, if we can find a way to estimate the Expected Log-likelihood, we can use the KL divergence for model selection: the larger the Expected Log-likelihood, the smaller the KL divergence, and hence the better the model.
-		
-		\item The KL divergence equals the negative of \textbf{Boltzmann's Entropy} from Statistical Mechanics. Accordingly, it represents the \emph{information lost} when $g(y)$ is encoded by $f(y)$.
+		\item The KL divergence equals the negative of \textbf{Boltzmann's Entropy} from Statistical Mechanics. Accordingly, it represents the \emph{information lost} when $g(\mathbf{y})$ is encoded by $f(\mathbf{y})$.
 	\end{enumerate}
 
 \subsection{Relationship of MLE to KL}
-Parameterize $f$ by $\theta$. Then the expected Log-likelihood can be written as:
-	$$E_G\left[\log{f(Y,\theta)}  \right] = \int \log{f(y,\theta)}dG(y)$$
-Unfortunately, $G$ is unknown. (Remember: $G$ is the true data-generating process.) Replacing $G$ with the empirical distribution $\hat{G}$ yields the estimator:
-	$$E_{\hat{G}}\left[\log{f(Y,\theta)}  \right] = \frac{1}{n}\sum_{i=1}^n \log{f(y_i, \theta)} = \frac{1}{n}\ell(\theta)$$
-By the Weak Law of Large Numbers for iid observations
-	$$\frac{1}{n} \ell(\theta) \overset{p}{\rightarrow} E_G\left[ \log{f(Y,\theta)} \right]$$
-Under the standard regularity conditions (see Newey and McFadden) we can strengthen this result to show that
-	$$\hat{\theta} = \arg \max_{\theta \in \Theta} \frac{1}{n}\ell(\theta) \overset{p}{\rightarrow} \arg \max_{\theta \in \Theta} E_G\left[ \log{f(Y,\theta)}\right]$$
-Since minimizing the KL divergence is the same as maximizing the expected log-likelihood:
+It turns out that the KL divergence is inextricably linked to maximum likelihood estimation. To make the points a little clearer, I'll assume from now on that $\mathbf{y}$ consists of iid observations $y_t$ for $t = 1, \hdots, T$. This is not in fact necessary for any of the derivations that follow, but it simplifies the notation. Since the expected log likelihood $E_G\left[\log{f(Y,\theta)}  \right]$ is unknown, we might try to approximate it using the sample analogue
+	$$E_{\widehat{G}}\left[\log{f(\textbf{y},\theta)}  \right] = \frac{1}{T}\sum_{t=1}^T \log{f(y_t, \theta)} = \frac{1}{T}\ell(\theta)$$
+where we have replaced $G$ with the empirical distribution $\widehat{G}$. Now, by the Weak Law of Large Numbers for iid observations
+	$$\frac{1}{T} \ell(\theta) \overset{p}{\rightarrow} E_G\left[ \log{f(\textbf{y},\theta)} \right]$$
+Under the standard regularity conditions (see Newey and McFadden, 1994) we can strengthen this result to show that
+	$$\hat{\theta} = \arg \max_{\theta \in \Theta} \frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} \arg \max_{\theta \in \Theta} E_G\left[ \log{f(\textbf{y},\theta)}\right]$$
+Since minimizing the KL divergence is the same as maximizing the expected log-likelihood we have the following result:
 \begin{pro}
-The ML estimator $\hat{\theta}$ converges in probability to the value of $\theta$ that minimizes the KL divergence from unknown true density $g(y)$ to the parametric family $f(y,\theta)$. When $g(y)=f(y,\theta)$ for some value of $\theta$, the divergence is minimized at zero.
+The ML estimator $\hat{\theta}$ converges in probability to the value of $\theta$ that minimizes the KL divergence from unknown true density $g(\mathbf{y})$ to the parametric family $f(\mathbf{y}|\theta)$. When $g(\mathbf{y})=f(\mathbf{y}|\theta)$ for some value of $\theta \in \Theta$, the divergence is minimized at zero.
 \end{pro}
 
 
 \subsection{A Na\"{i}ve Information Criterion} 
-If $g(y)$ were known, we could choose between two parametric models $f(y,\theta)$ and $h(y,\gamma)$ by comparing maximized Log-likelihoods. Define
+If $g(\mathbf{y})$ were known, we could choose between two parametric models $f(\mathbf{y}|\theta)$ and $h(\mathbf{y}|\gamma)$ by comparing maximized Log-likelihoods. Define
 	\begin{eqnarray*}
-	\theta_0 &=&  \arg \max_{\theta \in \Theta} E_G\left[ \log{f(Y,\theta)} \right]\\
-	\gamma_0 &=&  \arg \max_{\gamma\in \Gamma} E_G\left[ \log{h(Y,\gamma)} \right]
+	\theta_0 &=&  \arg \max_{\theta \in \Theta} E_G\left[ \log{f(\mathbf{y},\theta)} \right]\\
+	\gamma_0 &=&  \arg \max_{\gamma\in \Gamma} E_G\left[ \log{h(\mathbf{y},\gamma)} \right]
 	\end{eqnarray*}
-If $E_G\left[ \log{f(Y,\theta_0)} \right] > E_G\left[ \log{h(Y,\gamma_0)} \right]$, then the KL divergence from $g(y)$ to the parametric family $f_\theta$ is smaller than that from $g(y)$ to $h_\gamma$.
+If $E_G\left[ \log{f(\mathbf{y},\theta_0)} \right] > E_G\left[ \log{h(\mathbf{y},\gamma_0)} \right]$, then the KL divergence from $g(\mathbf{y})$ to the parametric family $f_\theta$ is smaller than that from $g(\mathbf{y})$ to $h_\gamma$. Now, we know from above that $\hat{\theta} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(Y,\theta)} \right]$. Of course, $T$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? Unfortunately, $\ell(\hat{\theta})$ is a \emph{biased estimator of the expected log likelihood} because is uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{t=1}^T \log{ f(y_t,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.
 
-From the previous subsection, we know that $\hat{\theta}_{ML} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{n}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(Y,\theta)} \right]$. Of course, $n$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? \emph{BECAUSE IT'S BIASED!}
-
-\subsection{Intuition for the Bias}
-The basic problem is that $\ell(\hat{\theta})$ uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{i=1}^n \log{ f(y_i,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.\footnote{This is similar in spirit is the \emph{post hoc contrast}: measuring two groups on a number of dimensions, choosing the dimension along which they differ the most, and carrying out a $t$-test on this dimension. What a surprise; the result is significant!}
-
-Since $\theta_0$ is the population minimizer of the KL divergence from $g$ to $f_\theta$, 
+We can see this as follows. Since $\theta_0$ is the population minimizer of the KL divergence from $g$ to $f_\theta$, we have
 	\begin{eqnarray*}
-		KL\left[ g(y);f(y,\theta) \right] &\geq& KL\left[ g(y);f(y,\theta_0) \right]\\
-		E_G\left[  \log{g(Y)}\right] - E_G\left[ \log{f(Y,\theta)} \right] &\geq& E_G\left[  \log{g(Y)}\right] - E_G\left[ \log{f(Y,\theta_0)} \right]\\
-	  E_G\left[ \log{f(Y,\theta)} \right] &\leq&  E_G\left[ \log{f(Y,\theta_0)} \right]\
+		KL\left[ g(\mathbf{y});f(\mathbf{y},\theta) \right] &\geq& KL\left[ g(\mathbf{y});f(\mathbf{y},\theta_0) \right]\\
+		E_G\left[  \log{g(\mathbf{y})}\right] - E_G\left[ \log{f(\mathbf{y},\theta)} \right] &\geq& E_G\left[  \log{g(\mathbf{y})}\right] - E_G\left[ \log{f(\mathbf{y},\theta_0)} \right]\\
+	  E_G\left[ \log{f(\mathbf{y},\theta)} \right] &\leq&  E_G\left[ \log{f(\mathbf{y},\theta_0)} \right]
 	\end{eqnarray*}
-for all $\theta \in \Theta$. Recall that $\frac{1}{n}\ell(\theta) = E_{\hat{G}}\left[ \log{f(Y,\theta)}\right]$. By the definition of the maximum likelihood estimate, $\ell(\hat{\theta})\geq\ell(\theta_0)$. Thus,
-		 $$E_{\hat{G}}\left[ \log{f(Y,\hat{\theta})}\right]\geq  E_{\hat{G}}\left[ \log{f\left(Y,\theta_0\right)}\right] $$
-In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood.
-
-\emph{What we should be evaluating is the likelihood at a \textbf{new} set of observations not used to estimate $\hat{\theta}$.}
+for all $\theta \in \Theta$. Recall that $\frac{1}{T}\ell(\theta) = E_{\widehat{G}}\left[ \log{f(\mathbf{y},\theta)}\right]$. By the definition of the maximum likelihood estimate, $\ell(\hat{\theta})\geq\ell(\theta_0)$. Thus,
+		 $$E_{\widehat{G}}\left[ \log{f(\mathbf{y},\hat{\theta})}\right]\geq  E_{\widehat{G}}\left[ \log{f\left(\mathbf{y},\theta_0\right)}\right] $$
+In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$.
 
 
 
 \section{The AIC and TIC}
-In the previous section we outlined the problem. Now we'll consider a solution that involves constructing an asymptotic approximation to the bias. This leads to the TIC and AIC.
+In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
 
 \subsection{An Asymptotic Approximation to the Bias}
 First some notation:
 	\begin{itemize}
 		\item Make the sample size and the dependence of $\hat{\theta}$ on the data explicit by writing
-	$$\log{f\left(\left.\mathbf{y}_n\right|\hat{\theta}(\mathbf{y}_n)\right)} = \sum_{i=1}^n \log{f(y_i|\hat{\theta})}$$
+	$$\log{f\left(\left.\mathbf{y}_n\right|\hat{\theta}(\mathbf{y}_n)\right)} = \sum_{t=1}^T \log{f(y_t|\hat{\theta})}$$
 		\item Let $E_{G(\mathbf{y}_n)}$ denote expectation with respect to the joint distribution of $\mathbf{Y}^{(n)} = (Y_1, \hdots, Y_n)'$. The realizations of this random vector are $\mathbf{y}_n = y_1, \hdots, y_n$.
 		\item Let $\mathbf{Z}^{(n)} = (Z_1, \hdots, Z_n)'$ be a collection of iid random variables with the same distribution as $\mathbf{Y}^{(n)}$ that were \emph{not} used to estimate $\hat{\theta}$. (Assume that $\mathbf{Z}^{(n)}$ and $\mathbf{Y}^{(n)}$ are mutually independent.) Let $G(\mathbf{z}_n)$ denote expectation with respect to the joint distribution of $\mathbf{Z}^{(n)}$.
 		\item The bias of the maximized Log-likelihood as an estimator of the expected Log-likelihood is given by
@@ -207,7 +177,7 @@ Thus,
 where $\tilde{\theta}$ is between $\hat{\theta}$ and $\theta_0$, so we have
 	$$ \ell(\hat{\theta}) - \ell(\theta_0)  = \frac{1}{2} \sqrt{n}\left( \theta - \hat{\theta} \right)'\left[ - \frac{1}{n} \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \right]\sqrt{n}\left( \theta - \hat{\theta} \right)$$
 By the WLLN for iid observations, we know that for fixed $\theta$
-	$$- \frac{1}{n} \frac{\partial^2  \ell(\theta)}{\partial \theta \partial \theta'} = -\frac{1}{n}\sum_{i=1}^n \frac{\partial^2}{\partial \theta \partial \theta'}\log{f(y_i|\theta)}\overset{p}{\rightarrow} J(\theta)$$
+	$$- \frac{1}{n} \frac{\partial^2  \ell(\theta)}{\partial \theta \partial \theta'} = -\frac{1}{n}\sum_{t=1}^T \frac{\partial^2}{\partial \theta \partial \theta'}\log{f(y_t|\theta)}\overset{p}{\rightarrow} J(\theta)$$
 Furthermore, by the standard consistency result for MLE $\hat{\theta} \rightarrow \theta_0$. Thus, by a Uniform WLLN,
 	$$- \frac{1}{n} \frac{\partial^2  \ell(\hat{\theta})}{\partial \theta \partial \theta'}\overset{p}{\rightarrow} J(\theta_0)$$
 It follows that 	
@@ -222,13 +192,13 @@ using the same arguments as in Step 2.
 	
 \subsection{Correcting the Bias}
 Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
-	$$TIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
+	$$TIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
 The scaling factor of two is traditional, but has no effect on model comparisons.
 
 Akaike's Information Criterion (AIC) uses a slightly different bias correction. Recall that if there exists a $\theta \in \Theta$ such that the true density $g(y)$ equals the model $f(y|\theta)$, then $I(\theta_0)=J(\theta_0)^{-1}$. This is the famous ``Information Matrix Equality.'' In this case, the bias approximation becomes:
 	$$Bias = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\} = \mbox{trace}\left\{ \mathbf{I}_p \right\}=p$$
 that is, the dimension of the parameter vector. Using this as a bias correction yields \textbf{Akaike's Information Criterion}:
-	$$AIC = 2\left[ \sum_{i=1}^n \log{f\left( y_i | \hat{\theta} \right)} - p \right] = 2\left[ \ell(\theta) - p \right]$$
+	$$AIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - p \right] = 2\left[ \ell(\theta) - p \right]$$
 Again, it is traditional to multiply by two. Although the TIC and AIC are similar, there are several subtleties:
 	\begin{itemize}
 		\item The AIC is derived assuming that the model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
