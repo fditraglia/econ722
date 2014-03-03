@@ -235,15 +235,14 @@ Next, we compute $A$
 	&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] -  \frac{1}{2\sigma_0^2}\left(T \sigma_0^2\right)\\
 	&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) +  1 \right]
 \end{eqnarray*}
-Calculating $B$ is more involved because of the last term, which we'll call $C$
-
+Calculating $B$ is more involved because of the third term which we'll call $C$
 \begin{eqnarray*}
 	B &=& \int \log[f(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y}\\
 	&=& \int \left[ -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right) \right] g(\mathbf{y})\;  d \mathbf{y}\\
 		&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right]- \frac{1}{2\sigma_1^2}E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
 		&=&  -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right)C
 \end{eqnarray*}
-
+To calculate $C$ we'll add and subtract $X\beta_0$ as follows 
 \begin{eqnarray*}
 	C &=& E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
 		&=&E_{\mathbf{y}|X}\left[\left\{ \left(\mathbf{y} - X\beta_0\right) + X\left(\beta_0 - \beta_1\right)\right\}'\left\{ \left(\mathbf{y} - X\beta_0\right)+ X\left(\beta_0 - \beta_1\right)\right\} \right]\\ 
