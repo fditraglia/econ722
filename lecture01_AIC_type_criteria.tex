@@ -42,7 +42,7 @@ Akaike's Information Criterion (AIC) summarizes the quality of a model by tradin
 
 
 \subsection{Kullback-Leibler Divergence}
-Suppose that $\mathbf{y}$ is a $T$-dimensional random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
+Suppose that $\mathbf{y}$ is a random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
 
 
 \begin{defn}[KL Divergence]
@@ -71,8 +71,8 @@ There are several important features to note about the KL divergence:
 	\end{enumerate}
 
 \subsection{Relationship of MLE to KL}
-It turns out that the KL divergence is inextricably linked to maximum likelihood estimation. To make the points a little clearer, I'll assume from now on that $\mathbf{y}$ consists of iid observations $y_t$ for $t = 1, \hdots, T$. This is not in fact necessary for any of the derivations that follow, but it simplifies the notation. Since the expected log likelihood $E_G\left[\log{f(Y,\theta)}  \right]$ is unknown, we might try to approximate it using the sample analogue
-	$$E_{\widehat{G}}\left[\log{f(\textbf{y},\theta)}  \right] = \frac{1}{T}\sum_{t=1}^T \log{f(y_t, \theta)} = \frac{1}{T}\ell(\theta)$$
+It turns out that the KL divergence is inextricably linked to maximum likelihood estimation. To make the points a little clearer, I'll assume from now on that $\mathbf{y}$ consists of iid observations $Y_t$ for $t = 1, \hdots, T$. This is not in fact necessary for any of the derivations that follow, but it simplifies the notation. Since the expected log likelihood is unknown, we might try to approximate it using the sample analogue
+	$$E_{\widehat{G}}\left[\log{f(\textbf{y},\theta)}  \right] = \frac{1}{T}\sum_{t=1}^T \log{f(Y_t, \theta)} = \frac{1}{T}\ell(\theta)$$
 where we have replaced $G$ with the empirical distribution $\widehat{G}$. Now, by the Weak Law of Large Numbers for iid observations
 	$$\frac{1}{T} \ell(\theta) \overset{p}{\rightarrow} E_G\left[ \log{f(\textbf{y},\theta)} \right]$$
 Under the standard regularity conditions (see Newey and McFadden, 1994) we can strengthen this result to show that
@@ -89,7 +89,7 @@ If $g(\mathbf{y})$ were known, we could choose between two parametric models $f(
 	\theta_0 &=&  \arg \max_{\theta \in \Theta} E_G\left[ \log{f(\mathbf{y},\theta)} \right]\\
 	\gamma_0 &=&  \arg \max_{\gamma\in \Gamma} E_G\left[ \log{h(\mathbf{y},\gamma)} \right]
 	\end{eqnarray*}
-If $E_G\left[ \log{f(\mathbf{y},\theta_0)} \right] > E_G\left[ \log{h(\mathbf{y},\gamma_0)} \right]$, then the KL divergence from $g(\mathbf{y})$ to the parametric family $f_\theta$ is smaller than that from $g(\mathbf{y})$ to $h_\gamma$. Now, we know from above that $\hat{\theta} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(Y,\theta)} \right]$. Of course, $T$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? Unfortunately, $\ell(\hat{\theta})$ is a \emph{biased estimator of the expected log likelihood} because is uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{t=1}^T \log{ f(y_t,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.
+If $E_G\left[ \log{f(\mathbf{y},\theta_0)} \right] > E_G\left[ \log{h(\mathbf{y},\gamma_0)} \right]$, then the KL divergence from $g(\mathbf{y})$ to the parametric family $f_\theta$ is smaller than that from $g(\mathbf{y})$ to $h_\gamma$. Now, we know from above that $\hat{\theta} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(\mathbf{y},\theta)} \right]$. Of course, $T$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? Unfortunately, $\ell(\hat{\theta})$ is a \emph{biased estimator of the expected log likelihood} because is uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{t=1}^T \log{ f(Y_t,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.
 
 We can see this as follows. Since $\theta_0$ is the population minimizer of the KL divergence from $g$ to $f_\theta$, we have
 	\begin{eqnarray*}
@@ -99,9 +99,19 @@ We can see this as follows. Since $\theta_0$ is the population minimizer of the 
 	\end{eqnarray*}
 for all $\theta \in \Theta$. Recall that $\frac{1}{T}\ell(\theta) = E_{\widehat{G}}\left[ \log{f(\mathbf{y},\theta)}\right]$. By the definition of the maximum likelihood estimate, $\ell(\hat{\theta})\geq\ell(\theta_0)$. Thus,
 		 $$E_{\widehat{G}}\left[ \log{f(\mathbf{y},\hat{\theta})}\right]\geq  E_{\widehat{G}}\left[ \log{f\left(\mathbf{y},\theta_0\right)}\right] $$
-In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$. But why would this work? Suppose we have a \emph{second} dataset $\mathbf{z}$ drawn from the same DGP that is \emph{independent} of $\mathbf{y}$. To make the dependence of $\widehat{\theta}$ on $\mathbf{y}$ explicit, we'll write it as $\widehat{\theta}_{\mathbf{y}}$. Similarly, we'll define $E_{\widehat{G}(\mathbf{y})}$ as the expectation with respect to the empirical measure of $\mathbf{y}$, i.e.\ the sample mean, and $E_{\widehat{G}(\mathbf{z})}$ as the corresponding expectation based on $\mathbf{z}$. Now, since it was estimated from $\mathbf{y}$ rather than $\mathbf{z}$,  $\widehat{\theta}_{\mathbf{y}}$ is \emph{not} the MLE for $\mathbf{z}$. Therefore $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\widehat{\theta}_{\mathbf{y}})\right]$ is \emph{not necessarily} greater than $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\theta_0)\right]$ hence the over-optimism bias does not arise.
+In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Thus, the sample analogue is \emph{overly optimistic}.
 
-\section{Better Derivation}
+\section{The AIC and TIC}
+In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an approximate expression for the bias so that we can correct it.
+
+To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
+
+\subsection{Fundamental Expansion for MLE}
+
+
+% Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$. But why would this work? Suppose we have a \emph{second} dataset $\mathbf{z}$ drawn from the same DGP that is \emph{independent} of $\mathbf{y}$. To make the dependence of $\widehat{\theta}$ on $\mathbf{y}$ explicit, we'll write it as $\widehat{\theta}_{\mathbf{y}}$. Similarly, we'll define $E_{\widehat{G}(\mathbf{y})}$ as the expectation with respect to the empirical measure of $\mathbf{y}$, i.e.\ the sample mean, and $E_{\widehat{G}(\mathbf{z})}$ as the corresponding expectation based on $\mathbf{z}$. Now, since it was estimated from $\mathbf{y}$ rather than $\mathbf{z}$,  $\widehat{\theta}_{\mathbf{y}}$ is \emph{not} the MLE for $\mathbf{z}$. Therefore $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\widehat{\theta}_{\mathbf{y}})\right]$ is \emph{not necessarily} greater than $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\theta_0)\right]$ hence the over-optimism bias does not arise.
+
+% \section{Better Derivation}
 
 \paragraph{Fundamental Expansion for MLE}
 Under standard regularity conditions,
