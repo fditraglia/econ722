@@ -101,6 +101,57 @@ for all $\theta \in \Theta$. Recall that $\frac{1}{T}\ell(\theta) = E_{\widehat{
 		 $$E_{\widehat{G}}\left[ \log{f(\mathbf{y},\hat{\theta})}\right]\geq  E_{\widehat{G}}\left[ \log{f\left(\mathbf{y},\theta_0\right)}\right] $$
 In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$. But why would this work? Suppose we have a \emph{second} dataset $\mathbf{z}$ drawn from the same DGP that is \emph{independent} of $\mathbf{y}$. To make the dependence of $\widehat{\theta}$ on $\mathbf{y}$ explicit, we'll write it as $\widehat{\theta}_{\mathbf{y}}$. Similarly, we'll define $E_{\widehat{G}(\mathbf{y})}$ as the expectation with respect to the empirical measure of $\mathbf{y}$, i.e.\ the sample mean, and $E_{\widehat{G}(\mathbf{z})}$ as the corresponding expectation based on $\mathbf{z}$. Now, since it was estimated from $\mathbf{y}$ rather than $\mathbf{z}$,  $\widehat{\theta}_{\mathbf{y}}$ is \emph{not} the MLE for $\mathbf{z}$. Therefore $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\widehat{\theta}_{\mathbf{y}})\right]$ is \emph{not necessarily} greater than $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\theta_0)\right]$ hence the over-optimism bias does not arise.
 
+\section{Better Derivation}
+
+\paragraph{Fundamental Expansion for MLE}
+Under standard regularity conditions,
+	$$\widehat{\theta} = \theta_0 + J^{-1} \bar{U}_T + o_p(T^{-1/2})$$
+where $\theta_0$ is value of $\theta$ that minimizes $KL(g; f_\theta)$ and
+	\begin{eqnarray*}
+		J &=& -E_G \left[ \frac{\partial^2 \log f(Y|\theta)}{\partial \theta \partial \theta'}\right]\\
+		\bar{U}_T &=& \frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t|\theta_0)}{\partial\theta}
+	\end{eqnarray*}
+By the CLT, $\sqrt{T}\; \bar{U}_T \overset{d}{\rightarrow} U$ where $U\sim N_p(0, K)$ and
+	$$K = Var_G \left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta}\right] = E_G\left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta} \frac{\partial \log f(Y|\theta_0)}{\partial\theta'}\right]$$
+Returning to $\widehat{\theta}$, we have
+	$$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) = \sqrt{T} \; J^{-1} \bar{U}_T + o_p(1) \overset{d}{\rightarrow} J^{-1} U \sim N_p(0, J^{-1}KJ^{-1})$$
+Note that when $g = f_\theta$ for some $\theta$, $K = J$ by the information matrix equality so the variance simplifies to $J^{-1}$.
+
+\paragraph{Estimated the Expected Log-Likelihood}
+What we really want to evaluate is the expected log likelihood
+	$$E_G[\log f(Y|\theta_0)] = \int g(y) \log f(y|\theta_0) \; dy$$
+The problem is, we don't know $\theta_0$. If we had an estimate $\widehat{\theta}$ and knew $g$, then we could approximate the integral as
+$$\int g(y) \log f(y|\theta_0) \; dy \approx \int g(y) \log f(y|\widehat{\theta}) \; dy$$
+by plugging in. The problem is that we don'w know $g$. What if we were to try the sample analogue: the maximized log likelihood $\ell_T(\widehat{\theta})/T$. It turns out this is biased: it is in fact overly optimistic.
+
+\todo[inline]{Explain why by rearranging from above.}
+
+We'll write the bias relative to the infeasible plug-in estimator
+$$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
+
+It turns out that we can expand as follows
+\begin{eqnarray*}
+	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
+\end{eqnarray*}
+where
+$$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+Now, $E[\bar{Z}_T] = 0$. And from above we know that 
+$$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} J^{-1}U$$
+hence
+	$$T\left(\widehat{\theta} - \theta_0 \right)'J\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} U' J^{-1} U$$
+This suggests the approximation 
+	$$E[Bias] \approx T^{-1} E[U'J^{-1}U]$$
+where the expectation is averaging over the sampling distribution of $\widehat{\theta}$.
+We have
+	\begin{eqnarray*}
+		E[U'J^{-1}U] &=& E\left[\mbox{trace} \left\{ U'J^{-1}U\right\} \right] = E\left[\mbox{trace} \left\{ J^{-1}UU'\right\} \right]\\
+			&=& \mbox{trace}\left\{ E[J^{-1}UU']\right\} = \mbox{trace}\left\{J^{-1} E[UU']\right\} \\
+			&=&\mbox{trace}\left\{ J^{-1} K\right\}
+	\end{eqnarray*}
+Since
+	$$E[UU'] = Var(U) + E[U]E[U]' = Var(U)$$
+because $E[U] = 0$. Thus, we have the bias correction:
+
 
 \section{The AIC and TIC}
 In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
