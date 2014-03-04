@@ -26,6 +26,8 @@
 \newtheorem{alg}{Algorithm}[section]
 
 
+\linespread{1.3}
+
 \begin{document}
 
 \title{Lecture 2: Various Model Selection Criteria}
@@ -38,7 +40,7 @@
 
 
 \section{The Corrected AIC}
-In the derivations above we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
+To derive the TIC and AIC we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
 _c$, of Hurvich and Tsai (1989). Suppose that the true DGP is a linear regression model:
 $$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
 where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
@@ -99,9 +101,28 @@ But this way of writing things uses the \emph{opposite} sign convention from AIC
 $$AIC^* = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
 where \emph{smaller} values now indicate a better model.
 
+\section{Simulation-Based Model selection}
+
+\subsection{Bootstrap Model Selection}
+There's a state-space paper here as well. Need to talk about block bootstrap. Mention that we're going to learn more about this when we look at Bagging later in the semester.
+
+\subsection{Cross-Validation}
+Talk about time series version and Racine paper.
+
+\section{Some other Model Selection Criteria}
+\subsection{Hannan-Quinn}
+\subsection{Final Prediction Error}
+\subsection{Mallow's $C_p$}
 
 
-\section{Bayesian Information Criterion (BIC)}
+
+
+\section{Time Series Examples}
+Reference McQuarrie and Tsai among others. Also the paper by Ng and Renault. 
+
+\newpage
+
+\section*{Addendum: Bayesian Information Criterion}
 Since Frank2 talked about this in his part of the course, I won't discuss this derivation in class but I wanted to provide the details for completeness. As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
 
 \subsection{Overview of the BIC}
@@ -110,6 +131,7 @@ Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-samp
 		\item Begin with a uniform prior on the set of candidate models so that it suffices to maximize the Marginal Likelihood.
 		\item The BIC is a large sample approximation to the Marginal Likelihood:
 		$$\int \pi(\theta_i)f_i(\mathbf{y}|\theta_i)d\theta_i$$
+		where $i$ indexes models $M_i$ in a set $\mathcal{M}$.
 		\item As usual when Bayesian procedures are subjected to Frequentist asymptotics, the priors on parameters vanish in the limit.
 		\item We proceed by a \emph{Laplace Approximation} to the Marginal Likelihood
 	\end{enumerate}
@@ -203,20 +225,5 @@ The first two terms are $O_p(n)$ and $O_p(\log{n})$, while the last three are $O
 	$$BIC(M_i) = 2\log{f_i(\mathbf{y}|\hat{\theta}_i)} - p\log{n}$$
 We choose the model $M_i$ for which $BIC(M_i)$ is largest. Notice that the prior on the parameter, $\pi(\theta)$, drops out in the limit, and recall that we began by putting a uniform prior on the \emph{models} under consideration. 
 
-\section{Hannan-Quinn}
-
-\section{Final Prediction Error}
-
-\section{Mallow's $C_p$}
-
-\section{Cross-Validation}
-Talk about time series version and Racine paper.
-
-\section{Bootstrap Model Selection}
-There's a state-space paper here as well. Need to talk about block bootstrap. Mention that we're going to learn more about this when we look at Bagging later in the semester.
-
-
-\section{Some Time Series Examples}
-Reference McQuarrie and Tsai among others. Also the paper by Ng and Renault. 
 
 \end{document}
