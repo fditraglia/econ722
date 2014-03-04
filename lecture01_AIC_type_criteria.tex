@@ -134,32 +134,45 @@ There are two problems. First, we don't know $\theta_0$. Of course we do have an
 $$\int g(y) \log f(y|\theta_0) \; dy \approx \int g(y) \log f(y|\widehat{\theta}) \; dy$$
 Even with this approximation, however, we still don't know $g$, the true data density. As discussed above, trying to replace this integral with the sample analogue $\ell_T(\widehat{\theta})/T$, the maximized log-likelihood, introduces a bias. So what can we do? The idea behind the AIC and TIC is to \emph{estimate} this bias, which we'll write relative to the infeasible plug-in estimator. In other words:
 $$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
-Now, as it turns out, we can expand the bias expression as follows
+Now, as it turns out, we can expand the bias expression as follows\footnote{For details on how this expansion is derived, see the next subsection.}
 \begin{eqnarray*}
 	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
 \end{eqnarray*}
 where
 $$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
-
-
-
-Now, $E[\bar{Z}_T] = 0$. And from above we know that 
+Now, recall that the bias expression depends on $\widehat{\theta}$ which is a random variable since it depends on the sample data. To address this, we will attempt to approximate the \emph{expectation} of the bias term, where, again, the expectation is taken over the sampling distribution of $\widehat{\theta}$. Using our asymptotic expansion:
+	$$E[Bias] \approx E[\bar{Z}_T] + E[(\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0)]$$
+Since $E[\bar{Z}_T] = 0$, this becomes
+$$E[Bias] \approx E[(\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0)]$$
+Now, using the fundamental expansion for MLE from above
 $$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} J^{-1}U$$
 hence
 	$$T\left(\widehat{\theta} - \theta_0 \right)'J\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} U' J^{-1} U$$
-This suggests the approximation 
+which suggests the approximation
 	$$E[Bias] \approx T^{-1} E[U'J^{-1}U]$$
-where the expectation is averaging over the sampling distribution of $\widehat{\theta}$.
-We have
+Finally, using the almost magical properties of the trace operator, we have
 	\begin{eqnarray*}
 		E[U'J^{-1}U] &=& E\left[\mbox{trace} \left\{ U'J^{-1}U\right\} \right] = E\left[\mbox{trace} \left\{ J^{-1}UU'\right\} \right]\\
 			&=& \mbox{trace}\left\{ E[J^{-1}UU']\right\} = \mbox{trace}\left\{J^{-1} E[UU']\right\} \\
 			&=&\mbox{trace}\left\{ J^{-1} K\right\}
 	\end{eqnarray*}
-Since
-	$$E[UU'] = Var(U) + E[U]E[U]' = Var(U)$$
-because $E[U] = 0$. Thus, we have the bias correction:
+Thus, we have the bias correction:
 
+\subsection{Derivation of the Bias Expansion}
+Above we asserted that the bias term
+$$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
+can be expanded according to
+\begin{eqnarray*}
+	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
+\end{eqnarray*}
+where
+$$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+To see why this is the case, we employ two second-order Taylor Expansions. First,
+\begin{eqnarray*}
+	\int g(y) \log f(y|\widehat{\theta}) dy &=& \int g(y) \log f(y|\theta_0) \; dy \\
+	&&+ \;\int g(y) \frac{\partial \log f(y|\theta_0)}{\partial \theta}\; dy \\
+		&& + \; 
+\end{eqnarray*}
 
 \section{The AIC and TIC}
 In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
