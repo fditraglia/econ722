@@ -164,6 +164,7 @@ as $n\rightarrow \infty$ where
 	I(\theta_0) &=&E_{G(z)}\left[ \frac{\partial \log{f(Z|\theta)}}{\partial \theta} \;\frac{\partial \log{f(Z|\theta)}}{\partial \theta'} \right]\\\\
 	J(\theta_0) &=& - E_{G(z)}\left[ \frac{\partial^2  \log{f(Z|\theta)}}{\partial \theta \partial \theta'}\right]
 	\end{eqnarray*}
+<<<<<<< HEAD
 Thus, assuming the necessary regularity conditions to ensure that the remainder is indeed of small order, as $n\rightarrow \infty$ we have
 	$$D_3 \rightarrow \frac{1}{2} \mbox{trace}\left\{ J(\theta_0) J(\theta_0)^{-1}I(\theta_0)J(\theta_0)^{-1}  \right\} = \frac{1}{2}\mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
 
@@ -189,6 +190,31 @@ using the same arguments as in Step 2.
 \paragraph{Finally The Bias:} Combining the three steps, we have
 	$$Bias = D_1 + D_2 + D_3 = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
 	
+=======
+Thus, we approximate the expected bias by $T^{-1}\mbox{trace}\left\{ J^{-1} K\right\}$. Finally, we correct the bias of the maximized log-likelihood and approximate the expected log likelihood by
+	$$E_G[\log f(Y|\theta_0)]\approx \frac{\ell(\widehat{\theta})}{T} - \frac{\mbox{trace}\left\{ J^{-1} K\right\}}{T}$$
+multiplying through by $2/T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
+	$$TIC = 2\left[\ell(\widehat{\theta}) - \mbox{trace}\left\{ \widehat{J}^{-1} \widehat{K}\right\} \right]$$
+The scaling is, of course, arbitrary but this particular choice is traditional.
+
+\subsection{Derivation of the Bias Expansion}
+Above we asserted that the bias term
+$$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
+can be expanded according to
+\begin{eqnarray*}
+	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
+\end{eqnarray*}
+where
+$$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+To see why this is the case, we employ two second-order Taylor Expansions. First,
+\begin{eqnarray*}
+	\int g(y) \log f(y|\widehat{\theta}) dy &=& \int g(y) \log f(y|\theta_0) \; dy \\
+	&&+ \;\int g(y) \frac{\partial \log f(y|\theta_0)}{\partial \theta}\; dy \\
+		&& + \; 
+\end{eqnarray*}
+
+% 
+>>>>>>> parent of c11d6ad... finished everything except the derivation of the bias expansion
 \subsection{Correcting the Bias}
 Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
 	$$TIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
