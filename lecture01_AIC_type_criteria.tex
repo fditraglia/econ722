@@ -160,7 +160,22 @@ Thus, we approximate the expected bias by $T^{-1}\mbox{trace}\left\{ J^{-1} K\ri
 	$$E_G[\log f(Y|\theta_0)]\approx \frac{\ell(\widehat{\theta})}{T} - \frac{\mbox{trace}\left\{ J^{-1} K\right\}}{T}$$
 multiplying through by $2/T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
 	$$TIC = 2\left[\ell(\widehat{\theta}) - \mbox{trace}\left\{ \widehat{J}^{-1} \widehat{K}\right\} \right]$$
-The scaling is, of course, arbitrary but this particular choice is traditional.
+The scaling is, of course, arbitrary but this particular choice is traditional. If there is a $\theta \in \Theta$ such that $g(y) = f(y|\theta)$ then the information matrix equality holds and $J^{-1} = K$. In this case $\mbox{trace}\left\{ J^{-1} K\right\} = \mbox{trace}\{\mathbf{I}_p\} = p$. Using this quantity as the bias correction yields \textbf{Akaike's Information Criterion}
+	$$AIC = 2 \left[\ell(\widehat{\theta}) - p \right]$$
+Although the TIC and AIC are similar, there are several subtleties:
+	\begin{enumerate}
+		\item The bias correction for the AIC is derived under the assumption that the approximating model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
+		\item It has been argued that for models where the Information Matrix is not satisfied, the AIC will still be close to the TIC. (The log-likelihood term should dominate the bias correction in such situations.)
+		\item Typically, the matrices $K$ and $J$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements). In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
+	\end{enumerate}
+
+\subsection{An Important Caveat}
+To derive the TIC and AIC, we used the following expansion for the bias term
+$$Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})$$
+This holds under standard regularity conditions.
+(For details on its derivation, see the next subsection.) However, we employed a bit of sleight of hand when we proceeded to approximate the expected bias using the mean of the limiting random variable $U'J^{-1}U$. For example, the expectation of ``truth'' relative to which the bias is calculated, namely
+	$$E_G\left[\int g(y) \log f(y|\widehat{\theta})\; dy\right]$$
+does not exist in all cases. The bias correction remains reasonable in this case, as we see from the asymptotic expansion, but strictly speaking it doesn't make sense to talk about equating means.
 
 \subsection{Derivation of the Bias Expansion}
 Above we asserted that the bias term
@@ -171,31 +186,13 @@ can be expanded according to
 \end{eqnarray*}
 where
 $$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
-To see why this is the case, we employ two second-order Taylor Expansions. First,
-\begin{eqnarray*}
-	\int g(y) \log f(y|\widehat{\theta}) dy &=& \int g(y) \log f(y|\theta_0) \; dy \\
-	&&+ \;\int g(y) \frac{\partial \log f(y|\theta_0)}{\partial \theta}\; dy \\
-		&& + \; 
-\end{eqnarray*}
-
-% 
-\subsection{Correcting the Bias}
-Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
-	$$TIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
-The scaling factor of two is traditional, but has no effect on model comparisons.
-
-Akaike's Information Criterion (AIC) uses a slightly different bias correction. Recall that if there exists a $\theta \in \Theta$ such that the true density $g(y)$ equals the model $f(y|\theta)$, then $I(\theta_0)=J(\theta_0)^{-1}$. This is the famous ``Information Matrix Equality.'' In this case, the bias approximation becomes:
-	$$Bias = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\} = \mbox{trace}\left\{ \mathbf{I}_p \right\}=p$$
-that is, the dimension of the parameter vector. Using this as a bias correction yields \textbf{Akaike's Information Criterion}:
-	$$AIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - p \right] = 2\left[ \ell(\theta) - p \right]$$
-Again, it is traditional to multiply by two. Although the TIC and AIC are similar, there are several subtleties:
-	\begin{itemize}
-		\item The AIC is derived assuming that the model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
-		\item Typically, the matrices $I(\theta_0)$ and $J(\theta_0)$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements).
-		\item In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. 
-		\item Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
-		\item It has been argued that for models where the Information Matrix is not satisfied, the AIC will still be close to the TIC. (The log-likelihood term should dominate the bias correction in such situations.)
-	\end{itemize}
+\todo[inline]{Fill in later, or perhaps assign as question on the problem set!}
+% To see why this is the case, we employ two second-order Taylor Expansions. First,
+% \begin{eqnarray*}
+% 	\int g(y) \log f(y|\widehat{\theta}) dy &=& \int g(y) \log f(y|\theta_0) \; dy \\
+% 	&&+ \;\int g(y) \frac{\partial \log f(y|\theta_0)}{\partial \theta}\; dy \\
+% 		&& + \; 
+% \end{eqnarray*}
 
 
 \section{The Corrected AIC}
