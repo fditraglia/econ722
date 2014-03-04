@@ -210,54 +210,8 @@ $$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] = -\frac{T}{2}\log(2\pi) -\frac{T}{2
 
 Since we've specified the density from which the data were generated as well as the density of the approximating model, we can directly compute the KL divergence. It will turn out that
 $$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
-We'll show this in three steps. First we write
-% \begin{eqnarray*}
-% KL(g;f)&=& \int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} - \int \log[f(\mathbf{y})]g(\mathbf{y}) \; d \mathbf{y} = A - B
-% \end{eqnarray*}
-% Next, we compute $A$
-% \begin{eqnarray*}
-% A &=&\int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} \\
-% &=& \int \left[-\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right) \right] g(\mathbf{y})\; d\mathbf{y}\\
-% &=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2} E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)\right]\\
-% &=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)\left(\textbf{y} -X\beta_0\right)'\right]\right\}\\
-% &=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ Var(\mathbf{y}|X)\right\}\\
-% &=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\left(T \sigma_0^2\right)\\
-% &=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) + 1 \right]
-% \end{eqnarray*}
-% Calculating $B$ is more involved because of the third term which we'll call $C$
-% \begin{eqnarray*}
-% B &=& \int \log[f(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y}\\
-% &=& \int \left[ -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right) \right] g(\mathbf{y})\; d \mathbf{y}\\
-% &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right]- \frac{1}{2\sigma_1^2}E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
-% &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right)C
-% \end{eqnarray*}
-% To calculate $C$ we'll add and subtract $X\beta_0$ as follows
-% \begin{eqnarray*}
-% C &=& E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
-% &=&E_{\mathbf{y}|X}\left[\left\{ \left(\mathbf{y} - X\beta_0\right) + X\left(\beta_0 - \beta_1\right)\right\}'\left\{ \left(\mathbf{y} - X\beta_0\right)+ X\left(\beta_0 - \beta_1\right)\right\} \right]\\
-% &=& E_{\mathbf{y}|X}\left[\left(\mathbf{y} - X\beta_0\right)'\left(\mathbf{y} - X\beta_0\right)\right] \\
-% &&\quad +\; E_{\mathbf{y}|X}\left[\left(\mathbf{y} -X\beta_0\right)'X\left(\beta_0 - \beta_1\right)\right] \\
-% && \quad +\; E_{\mathbf{y}|X}\left\{\left[X\left(\beta_0 -\beta_1 \right) \right]'\left(\mathbf{y} - X\beta_0 \right)\right\} \\
-% && \quad + \;E_{\mathbf{y}|X}\left[\left\{X\left(\beta_0 - \beta_1\right)\right\}'\left\{X\left(\beta_0 - \beta_1\right)\right\} \right]\\
-% &=& Var(\mathbf{y}|X)\\
-% &&\quad +\; E_{\mathbf{y}|X}\left[\mathbf{y} - X\beta_0 \right]'X(\beta_0 -\beta_1) \\
-% && \quad + \;(\beta_0 -\beta_1)'X'E_{\mathbf{y}|X}\left[\mathbf{y} - X\beta_0 \right] \\
-% && \quad + \; (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\\
-% &=& T\sigma_0^2 + 0 + 0 + (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
-% \end{eqnarray*}
-% Hence,
-% \begin{eqnarray*}
-% B &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right) \left[ T\sigma_0^2 + (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\right]\\
-% &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
-% \end{eqnarray*}
-% Therefore,
-% \begin{eqnarray*}
-% KL(g;f) &=& A - B\\
-% &=& \left\{ -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) + 1 \right]\right\}\\
-% && \quad - \; \left\{ -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1) \right\}\\
-% &=& -\frac{T}{2} \left[ \log(\sigma_0^2) + 1 - \log(\sigma_1^2) - \frac{\sigma_0^2}{\sigma_1^2}\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\\
-% &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
-% \end{eqnarray*}
+\todo[inline]{You will show this on the problem set!}
+
 We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
 \begin{eqnarray*}
 \widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
