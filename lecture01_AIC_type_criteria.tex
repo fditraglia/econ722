@@ -42,7 +42,7 @@ Akaike's Information Criterion (AIC) summarizes the quality of a model by tradin
 
 
 \subsection{Kullback-Leibler Divergence}
-Suppose that $\mathbf{y}$ is a $T$-dimensional random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
+Suppose that $\mathbf{y}$ is a random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
 
 
 \begin{defn}[KL Divergence]
@@ -71,8 +71,8 @@ There are several important features to note about the KL divergence:
 	\end{enumerate}
 
 \subsection{Relationship of MLE to KL}
-It turns out that the KL divergence is inextricably linked to maximum likelihood estimation. To make the points a little clearer, I'll assume from now on that $\mathbf{y}$ consists of iid observations $y_t$ for $t = 1, \hdots, T$. This is not in fact necessary for any of the derivations that follow, but it simplifies the notation. Since the expected log likelihood $E_G\left[\log{f(Y,\theta)}  \right]$ is unknown, we might try to approximate it using the sample analogue
-	$$E_{\widehat{G}}\left[\log{f(\textbf{y},\theta)}  \right] = \frac{1}{T}\sum_{t=1}^T \log{f(y_t, \theta)} = \frac{1}{T}\ell(\theta)$$
+It turns out that the KL divergence is inextricably linked to maximum likelihood estimation. To make the points a little clearer, I'll assume from now on that $\mathbf{y}$ consists of iid observations $Y_t$ for $t = 1, \hdots, T$. This is not in fact necessary for any of the derivations that follow, but it simplifies the notation. Since the expected log likelihood is unknown, we might try to approximate it using the sample analogue
+	$$E_{\widehat{G}}\left[\log{f(\textbf{y},\theta)}  \right] = \frac{1}{T}\sum_{t=1}^T \log{f(Y_t, \theta)} = \frac{1}{T}\ell(\theta)$$
 where we have replaced $G$ with the empirical distribution $\widehat{G}$. Now, by the Weak Law of Large Numbers for iid observations
 	$$\frac{1}{T} \ell(\theta) \overset{p}{\rightarrow} E_G\left[ \log{f(\textbf{y},\theta)} \right]$$
 Under the standard regularity conditions (see Newey and McFadden, 1994) we can strengthen this result to show that
@@ -89,7 +89,7 @@ If $g(\mathbf{y})$ were known, we could choose between two parametric models $f(
 	\theta_0 &=&  \arg \max_{\theta \in \Theta} E_G\left[ \log{f(\mathbf{y},\theta)} \right]\\
 	\gamma_0 &=&  \arg \max_{\gamma\in \Gamma} E_G\left[ \log{h(\mathbf{y},\gamma)} \right]
 	\end{eqnarray*}
-If $E_G\left[ \log{f(\mathbf{y},\theta_0)} \right] > E_G\left[ \log{h(\mathbf{y},\gamma_0)} \right]$, then the KL divergence from $g(\mathbf{y})$ to the parametric family $f_\theta$ is smaller than that from $g(\mathbf{y})$ to $h_\gamma$. Now, we know from above that $\hat{\theta} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(Y,\theta)} \right]$. Of course, $T$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? Unfortunately, $\ell(\hat{\theta})$ is a \emph{biased estimator of the expected log likelihood} because is uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{t=1}^T \log{ f(y_t,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.
+If $E_G\left[ \log{f(\mathbf{y},\theta_0)} \right] > E_G\left[ \log{h(\mathbf{y},\gamma_0)} \right]$, then the KL divergence from $g(\mathbf{y})$ to the parametric family $f_\theta$ is smaller than that from $g(\mathbf{y})$ to $h_\gamma$. Now, we know from above that $\hat{\theta} \overset{p}{\rightarrow} \theta_{0}$. Further, $\frac{1}{T}\ell(\theta) \overset{p}{\rightarrow} E_G\left[\log{f(\mathbf{y},\theta)} \right]$. Of course, $T$ will be constant across models, so why not use the maximized sample likelihood $\ell(\hat{\theta})$ for model comparison? Unfortunately, $\ell(\hat{\theta})$ is a \emph{biased estimator of the expected log likelihood} because is uses the data twice: first to estimate $\hat{\theta}$ and then directly in the sum $\sum_{t=1}^T \log{ f(Y_t,\hat{\theta})}$. Because $\hat{\theta}$ was chosen to conform to the idiosyncrasies of the data at hand, $\ell(\hat{\theta})$ is overly optimistic.
 
 We can see this as follows. Since $\theta_0$ is the population minimizer of the KL divergence from $g$ to $f_\theta$, we have
 	\begin{eqnarray*}
@@ -99,113 +99,100 @@ We can see this as follows. Since $\theta_0$ is the population minimizer of the 
 	\end{eqnarray*}
 for all $\theta \in \Theta$. Recall that $\frac{1}{T}\ell(\theta) = E_{\widehat{G}}\left[ \log{f(\mathbf{y},\theta)}\right]$. By the definition of the maximum likelihood estimate, $\ell(\hat{\theta})\geq\ell(\theta_0)$. Thus,
 		 $$E_{\widehat{G}}\left[ \log{f(\mathbf{y},\hat{\theta})}\right]\geq  E_{\widehat{G}}\left[ \log{f\left(\mathbf{y},\theta_0\right)}\right] $$
-In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$. But why would this work? Suppose we have a \emph{second} dataset $\mathbf{z}$ drawn from the same DGP that is \emph{independent} of $\mathbf{y}$. To make the dependence of $\widehat{\theta}$ on $\mathbf{y}$ explicit, we'll write it as $\widehat{\theta}_{\mathbf{y}}$. Similarly, we'll define $E_{\widehat{G}(\mathbf{y})}$ as the expectation with respect to the empirical measure of $\mathbf{y}$, i.e.\ the sample mean, and $E_{\widehat{G}(\mathbf{z})}$ as the corresponding expectation based on $\mathbf{z}$. Now, since it was estimated from $\mathbf{y}$ rather than $\mathbf{z}$,  $\widehat{\theta}_{\mathbf{y}}$ is \emph{not} the MLE for $\mathbf{z}$. Therefore $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\widehat{\theta}_{\mathbf{y}})\right]$ is \emph{not necessarily} greater than $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\theta_0)\right]$ hence the over-optimism bias does not arise.
-
+In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Thus, the sample analogue is \emph{overly optimistic}.
 
 \section{The AIC and TIC}
-In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
+In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an approximate expression for the bias so that we can correct it.
 
-\subsection{An Asymptotic Approximation to the Bias}
-First some notation:
-	\begin{itemize}
-		\item Make the sample size and the dependence of $\hat{\theta}$ on the data explicit by writing
-	$$\log{f\left(\left.\mathbf{y}_n\right|\hat{\theta}(\mathbf{y}_n)\right)} = \sum_{t=1}^T \log{f(y_t|\hat{\theta})}$$
-		\item Let $E_{G(\mathbf{y}_n)}$ denote expectation with respect to the joint distribution of $\mathbf{Y}^{(n)} = (Y_1, \hdots, Y_n)'$. The realizations of this random vector are $\mathbf{y}_n = y_1, \hdots, y_n$.
-		\item Let $\mathbf{Z}^{(n)} = (Z_1, \hdots, Z_n)'$ be a collection of iid random variables with the same distribution as $\mathbf{Y}^{(n)}$ that were \emph{not} used to estimate $\hat{\theta}$. (Assume that $\mathbf{Z}^{(n)}$ and $\mathbf{Y}^{(n)}$ are mutually independent.) Let $G(\mathbf{z}_n)$ denote expectation with respect to the joint distribution of $\mathbf{Z}^{(n)}$.
-		\item The bias of the maximized Log-likelihood as an estimator of the expected Log-likelihood is given by
-	$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  E_{G(\mathbf{z}_n)}\left\{  \log{f\left(\left.\mathbf{Z}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
-\end{itemize}
+To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
 
-
-\paragraph{Calculating the Bias:} Since $Z_1, \hdots, Z_n$ are iid, the expectation with respect to $G(\mathbf{z}_n)$ simplifies, and we can write
-			$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
-where $Z$ is any of the $Z_1, \hdots, Z_n$ and $G(z)$ is its \emph{marginal} distribution. We expand the bias into $D_1 + D_2 + D_3$ where
+\subsection{Fundamental Expansion for MLE}
+Under standard regularity conditions, see for example Newey and McFadden (1994), the maximum likelihood estimator $\widehat{\theta}$ can be expanded as
+	$$\widehat{\theta} = \theta_0 + J^{-1} \bar{U}_T + o_p(T^{-1/2})$$
+where $\theta_0$ is value of $\theta$ that minimizes $KL$ divergence from $g$ to the parametric family of distributions $f(y|\theta)$ and
 	\begin{eqnarray*}
-		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\\\
-		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)} - nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} \right]\\\\
-		D_3 &=& E_{G(\mathbf{y}_n)}\left[ nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\}  -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\} \right]
+		J &=& -E_G \left[ \frac{\partial^2 \log f(Y|\theta)}{\partial \theta \partial \theta'}\right]\\
+		\bar{U}_T &=& \frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t|\theta_0)}{\partial\theta}
 	\end{eqnarray*}
-Now consider each part separately.
-
-\paragraph{Step 1: Calculation of $D_2$} This is the easiest part as it involves no estimators. Note first that $E_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ is a constant, so that
+Now, by the CLT, $\sqrt{T}\; \bar{U}_T \overset{d}{\rightarrow} U$ where $U\sim N_p(0, K)$ and
+	$$K = Var_G \left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta}\right] = E_G\left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta} \frac{\partial \log f(Y|\theta_0)}{\partial\theta'}\right]$$
+Hence,
 	\begin{eqnarray*}
-		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right] - nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
-		&=& n E_{G(y)}\left[ \log{f(Y|\theta_0)} \right] -  nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
-		&=& 0
+		\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) &=& \sqrt{T} \; J^{-1} \bar{U}_T + o_p(1) \\
+		&\overset{d}{\rightarrow}& J^{-1} U\\
+		 &\sim& N_p(0, J^{-1}KJ^{-1})
 	\end{eqnarray*}
-where we have used the fact that $Y_1, \hdots, Y_n$ are iid and that $Y$ and $Z$ have the same distribution. 
+Note that when $g = f_\theta$ for some $\theta$, we have $K = J$ by the information matrix equality so the variance simplifies to $J^{-1}$.
 
 
-\paragraph{Step 2: Calculation of $D_3$} Define $\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right] $ and Taylor expand around $\theta_0$, the solution to the population moment condition
-	$$E_{G(z)}\left[ \frac{\partial}{\partial \theta}  \log{f(z|\theta)} \right]=0$$
-yielding
-	$$\eta(\hat{\theta})= \eta(\theta_0) + \left( \hat{\theta} - \theta_0 \right)' \frac{\partial \eta(\theta_0)}{\partial \theta} + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right)  \frac{\partial^2 \eta(\theta_0)}{\partial \theta \partial \theta'}\left( \hat{\theta} - \theta_0 \right) + o_p(1)$$
-Now, under the appropriate regularity conditions (Lebesgue Dominated Convergence) we can exchange the order of expectation and differentiation, so that
-	$$ \frac{\partial \eta(\theta_0)}{\partial \theta} =  \frac{\partial}{\partial \theta} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]=  E_{G(z)}\left[\frac{\partial}{\partial \theta} \log{f(z|\theta_0)} \right]=0$$
-by the definition of $\theta_0$ as the solution to the population moment condition. Substituting this into the Taylor Expansion, and assuming further that we may exchange the \emph{second} derivative and expectation with respect to $G(z)$, we have
+\subsection{Estimating the Expected Log Likelihood}
+To carry out model selection based on the KL divergence, we need to estimate the expected log likelihood. Under the iid assumption,
+	$$E_G[\log f(\mathbf{y}|\theta_0)] = E_G\left[\sum_{t=1}^T f(Y|\theta_0) \right] = T \; E_G[\log f(Y|\theta_0)]$$
+so it is sufficient to work with the expected log likelihood of a single representative observation $Y$. Written as an integral,
+	$$E_G[\log f(Y|\theta_0)] = \int g(y) \log f(y|\theta_0) \; dy$$
+There are two problems. First, we don't know $\theta_0$. Of course we do have an estimator $\widehat{\theta}$, so we might consider simply plugging it in to yield
+$$\int g(y) \log f(y|\theta_0) \; dy \approx \int g(y) \log f(y|\widehat{\theta}) \; dy$$
+Even with this approximation, however, we still don't know $g$, the true data density. As discussed above, trying to replace this integral with the sample analogue $\ell_T(\widehat{\theta})/T$, the maximized log-likelihood, introduces a bias. So what can we do? The idea behind the AIC and TIC is to \emph{estimate} this bias, which we'll write relative to the infeasible plug-in estimator. In other words:
+$$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
+Now, as it turns out, we can expand the bias expression as follows\footnote{For details on how this expansion is derived, see the next subsection.}
+\begin{eqnarray*}
+	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
+\end{eqnarray*}
+where
+$$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+Now, recall that the bias expression depends on $\widehat{\theta}$ which is a random variable since it depends on the sample data. To address this, we will attempt to approximate the \emph{expectation} of the bias term, where, again, the expectation is taken over the sampling distribution of $\widehat{\theta}$. Using our asymptotic expansion:
+	$$E[Bias] \approx E[\bar{Z}_T] + E[(\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0)]$$
+Since $E[\bar{Z}_T] = 0$, this becomes
+$$E[Bias] \approx E[(\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0)]$$
+Now, using the fundamental expansion for MLE from above
+$$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} J^{-1}U$$
+hence
+	$$T\left(\widehat{\theta} - \theta_0 \right)'J\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} U' J^{-1} U$$
+which suggests the approximation
+	$$E[Bias] \approx T^{-1} E[U'J^{-1}U]$$
+Finally, using the almost magical properties of the trace operator, we have
 	\begin{eqnarray*}
-		\eta(\hat{\theta}) &=& \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' \frac{\partial^2 }{\partial \theta \partial \theta'} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)\\
-			&=&  \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)
+		E[U'J^{-1}U] &=& E\left[\mbox{trace} \left\{ U'J^{-1}U\right\} \right] = E\left[\mbox{trace} \left\{ J^{-1}UU'\right\} \right]\\
+			&=& \mbox{trace}\left\{ E[J^{-1}UU']\right\} = \mbox{trace}\left\{J^{-1} E[UU']\right\} \\
+			&=&\mbox{trace}\left\{ J^{-1} K\right\}
 	\end{eqnarray*}
-Thus, defining 
-	$$J(\theta_0) = -E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]$$
-we see that
-	$$\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\theta_0\right)} \right] - \frac{1}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)$$
-Substituting this expansion for $ E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right]$ into the expression for $D_3$ cancels the leading first term $nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ in the expectation so that (remember that $\hat{\theta}$ is a function of $\mathbf{y}_n$ and thus, so is $o_p(1)$)
-	\begin{eqnarray*}
-		D_3 &=& E_{G(\mathbf{y}_n)}\left[  \frac{n}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)  \right]\\
-		&=& \frac{1}{2} E_{G(\mathbf{y}_n)}\left[ \mbox{trace}\left\{n\left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) \right\} \right] +o_p(1)\\
-			&=& \frac{1}{2}\mbox{trace}\left\{J(\theta_0) E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\right\} +o_p(1)
-	\end{eqnarray*}
-where we have used the facts that: (1) a scalar equals its trace, (2) multiplication within the trace operator is commutative provided that the products remain conformable, (3) trace and expectation can be exchanged because both are linear operators, and (4) $J(\theta_0)$ is a constant with respect to $E_{G(\mathbf{y}_n)}$. We know that
-	$$E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\rightarrow J^{-1}(\theta_0) I(\theta_0)J^{-1}(\theta_0)$$
-as $n\rightarrow \infty$ where
-	\begin{eqnarray*}
-	I(\theta_0) &=&E_{G(z)}\left[ \frac{\partial \log{f(Z|\theta)}}{\partial \theta} \;\frac{\partial \log{f(Z|\theta)}}{\partial \theta'} \right]\\\\
-	J(\theta_0) &=& - E_{G(z)}\left[ \frac{\partial^2  \log{f(Z|\theta)}}{\partial \theta \partial \theta'}\right]
-	\end{eqnarray*}
-Thus, assuming the necessary regularity conditions to ensure that the remainder is indeed of small order, as $n\rightarrow \infty$ we have
-	$$D_3 \rightarrow \frac{1}{2} \mbox{trace}\left\{ J(\theta_0) J(\theta_0)^{-1}I(\theta_0)J(\theta_0)^{-1}  \right\} = \frac{1}{2}\mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
-
-
-
-\paragraph{Step 3: Calculation of $D_1$} Taylor expand $\ell(\theta_0) = \log{f\left(\mathbf{y}_n| \theta_0\right)}$ around $\hat{\theta}$, noting that by the definition of the MLE, 
-	$$\frac{\partial \ell(\hat{\theta})}{\partial \theta} = 0$$
-Thus,
-	$$\ell(\theta_0) = \ell(\hat{\theta}) + \frac{1}{2} \left( \theta - \hat{\theta} \right)' \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta} \right)$$
-where $\tilde{\theta}$ is between $\hat{\theta}$ and $\theta_0$, so we have
-	$$ \ell(\hat{\theta}) - \ell(\theta_0)  = \frac{1}{2} \sqrt{n}\left( \theta - \hat{\theta} \right)'\left[ - \frac{1}{n} \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \right]\sqrt{n}\left( \theta - \hat{\theta} \right)$$
-By the WLLN for iid observations, we know that for fixed $\theta$
-	$$- \frac{1}{n} \frac{\partial^2  \ell(\theta)}{\partial \theta \partial \theta'} = -\frac{1}{n}\sum_{t=1}^T \frac{\partial^2}{\partial \theta \partial \theta'}\log{f(y_t|\theta)}\overset{p}{\rightarrow} J(\theta)$$
-Furthermore, by the standard consistency result for MLE $\hat{\theta} \rightarrow \theta_0$. Thus, by a Uniform WLLN,
-	$$- \frac{1}{n} \frac{\partial^2  \ell(\hat{\theta})}{\partial \theta \partial \theta'}\overset{p}{\rightarrow} J(\theta_0)$$
-It follows that 	
-	\begin{eqnarray*}
-		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\
-			&=& E_{G(\mathbf{y}_n)}\left[ \ell(\hat{\theta}) - \ell(\theta_0) \right]\\
-			&\rightarrow& \frac{1}{2} \mbox{trace}\left\{ I(\theta_0) J(\theta_0)^{-1} \right\}
-	\end{eqnarray*}
-using the same arguments as in Step 2.  
-\paragraph{Finally The Bias:} Combining the three steps, we have
-	$$Bias = D_1 + D_2 + D_3 = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
-	
-\subsection{Correcting the Bias}
-Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
-	$$TIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - \mbox{trace}(\hat{I}\hat{J}^{-1}) \right] = 2 \left[\ell(\theta) - \mbox{trace}\left(\widehat{I}\widehat{J}^{-1}\right) \right]$$
-The scaling factor of two is traditional, but has no effect on model comparisons.
-
-Akaike's Information Criterion (AIC) uses a slightly different bias correction. Recall that if there exists a $\theta \in \Theta$ such that the true density $g(y)$ equals the model $f(y|\theta)$, then $I(\theta_0)=J(\theta_0)^{-1}$. This is the famous ``Information Matrix Equality.'' In this case, the bias approximation becomes:
-	$$Bias = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\} = \mbox{trace}\left\{ \mathbf{I}_p \right\}=p$$
-that is, the dimension of the parameter vector. Using this as a bias correction yields \textbf{Akaike's Information Criterion}:
-	$$AIC = 2\left[ \sum_{t=1}^T \log{f\left( y_t | \hat{\theta} \right)} - p \right] = 2\left[ \ell(\theta) - p \right]$$
-Again, it is traditional to multiply by two. Although the TIC and AIC are similar, there are several subtleties:
-	\begin{itemize}
-		\item The AIC is derived assuming that the model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
-		\item Typically, the matrices $I(\theta_0)$ and $J(\theta_0)$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements).
-		\item In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. 
-		\item Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
+Thus, we approximate the expected bias by $T^{-1}\mbox{trace}\left\{ J^{-1} K\right\}$. Finally, we correct the bias of the maximized log-likelihood and approximate the expected log likelihood by
+	$$E_G[\log f(Y|\theta_0)]\approx \frac{\ell(\widehat{\theta})}{T} - \frac{\mbox{trace}\left\{ J^{-1} K\right\}}{T}$$
+multiplying through by $2/T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
+	$$TIC = 2\left[\ell(\widehat{\theta}) - \mbox{trace}\left\{ \widehat{J}^{-1} \widehat{K}\right\} \right]$$
+The scaling is, of course, arbitrary but this particular choice is traditional. If there is a $\theta \in \Theta$ such that $g(y) = f(y|\theta)$ then the information matrix equality holds and $J^{-1} = K$. In this case $\mbox{trace}\left\{ J^{-1} K\right\} = \mbox{trace}\{\mathbf{I}_p\} = p$. Using this quantity as the bias correction yields \textbf{Akaike's Information Criterion}
+	$$AIC = 2 \left[\ell(\widehat{\theta}) - p \right]$$
+Although the TIC and AIC are similar, there are several subtleties:
+	\begin{enumerate}
+		\item The bias correction for the AIC is derived under the assumption that the approximating model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
 		\item It has been argued that for models where the Information Matrix is not satisfied, the AIC will still be close to the TIC. (The log-likelihood term should dominate the bias correction in such situations.)
-	\end{itemize}
+		\item Typically, the matrices $K$ and $J$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements). In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
+	\end{enumerate}
+
+\subsection{An Important Caveat}
+To derive the TIC and AIC, we used the following expansion for the bias term
+$$Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})$$
+This holds under standard regularity conditions.
+(For details on its derivation, see the next subsection.) However, we employed a bit of sleight of hand when we proceeded to approximate the expected bias using the mean of the limiting random variable $U'J^{-1}U$. For example, the expectation of ``truth'' relative to which the bias is calculated, namely
+	$$E_G\left[\int g(y) \log f(y|\widehat{\theta})\; dy\right]$$
+does not exist in all cases. The bias correction remains reasonable in this case, as we see from the asymptotic expansion, but strictly speaking it doesn't make sense to talk about equating means.
+
+\subsection{Derivation of the Bias Expansion}
+Above we asserted that the bias term
+$$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
+can be expanded according to
+\begin{eqnarray*}
+	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
+\end{eqnarray*}
+where
+$$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+\todo[inline]{Fill in later, or perhaps assign as question on the problem set!}
+% To see why this is the case, we employ two second-order Taylor Expansions. First,
+% \begin{eqnarray*}
+% 	\int g(y) \log f(y|\widehat{\theta}) dy &=& \int g(y) \log f(y|\theta_0) \; dy \\
+% 	&&+ \;\int g(y) \frac{\partial \log f(y|\theta_0)}{\partial \theta}\; dy \\
+% 		&& + \; 
+% \end{eqnarray*}
 
 
 \section{The Corrected AIC}
@@ -301,7 +288,7 @@ Putting all the pieces together,
 Since $\log(\widehat{\sigma}^2)$ is an unbiased estimator of $E[\log(\widehat{\sigma}^2)]$, substituting this give us an unbiased estimator of $E\left[\widehat{KL}(g;f) \right]$ as desired. 
 The only terms that vary across candidate models are the first and the third. Moreover, the multiplicative factor of $T/2$ does not affect model selection. Hence, the criterion is
 	$$AIC_c = \log(\widehat{\sigma}^2) + \frac{T + k}{T - k -2}$$
-So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
+Note that the way this expression is written, \emph{smaller} values indicate a better model. So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
 \begin{eqnarray*}
 	\widehat{\beta} &=& (X'X)^{-1}X'\mathbf{y}\\
 	\widehat{\sigma}^2 &=& \frac{(\mathbf{y} - X\widehat{\beta})'(\mathbf{y} - X\widehat{\beta})}{T}
@@ -312,10 +299,10 @@ It follows that the maximized log-likehood is
 		&=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
 \end{eqnarray*}
 by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is 
-	$$AIC = 2\left(\ell(\widehat{\theta}) - p \right) = -T\log(\widehat{\sigma}^2) - T - 2p $$
-
-\todo[inline]{Check the convention for signs, but in units comparable to $AIC_c$.}
-
+	$$AIC = 2\left(\ell(\widehat{\theta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
+But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
+	$$AIC^* = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
+where \emph{smaller} values now indicate a better model. 
 
 
 
