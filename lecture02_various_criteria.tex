@@ -28,14 +28,81 @@
 
 \begin{document}
 
-\title{Various Model Selection Criteria}
+\title{Lecture 2: Various Model Selection Criteria}
 
 \author{Francis J.\ DiTraglia}
 
 \maketitle 
 
+
+
+
+\section{The Corrected AIC}
+In the derivations above we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
+_c$, of Hurvich and Tsai (1989). Suppose that the true DGP is a linear regression model:
+$$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
+where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
+$$g(\textbf{y}|X;\beta_0, \sigma^2_0) = \left(2\pi\sigma_0^2\right)^{-T/2} \exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta_0)'(y - X\beta_0)\right\}$$
+and the log-likelihood is
+$$\log\left[g(\textbf{y}|X;\beta_0, \sigma_0^2)\right] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)$$
+To keep the notation from getting out of control, we'll use the shorthand $\log[g(\mathbf{y})]$ for this quantity. Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. We have
+$$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
+
+Since we've specified the density from which the data were generated as well as the density of the approximating model, we can directly compute the KL divergence. It will turn out that
+$$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
+\todo[inline]{You will show this on the problem set!}
+
+We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
+\begin{eqnarray*}
+\widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
+\end{eqnarray*}
+We still have two problems. First, we haven't been entirely clear about what $\beta_1$ and $\sigma_1$ are. At the moment, they seem to be something like ``pseudo-true'' values. Second, and more importantly, we don't know $\beta_0$ and $\sigma_0^2$ so we can't use the preceding expression to compare models.
+
+Hurvich and Tsai (1989) address both of these problems with the assumption that all models under consideration are \emph{at least correctly specified}. That is, while they may include a regressor whose coefficient is in fact zero, they do not exclude any regressors with a non-zero coefficient. This is the same assumption that we used above to reduce TIC to AIC. Under this assumption, $\beta_1$ and $\sigma_1^2$ \emph{are precisely the same} as $\beta_0$ and $\sigma_0^2$. More importantly, we can use all of the standard results for the exact finite sample distribution of regression estimators to help us. The idea is to construct an \emph{unbiased} estimator of the KL divergence. Taking expecations and rearranging slightly, we have
+\begin{eqnarray*}
+E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{ E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1 \right\}\\
+&& \quad + \; \frac{1}{2}E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right]
+\end{eqnarray*}
+Now, under our assumptions $T\widehat{\sigma}^2/\sigma_0^2 \sim \chi^2_{T-k}$ where $k$ is the number of estimated coefficients in $\widehat{\beta}$. Further, if $Z \sim \chi^2_\nu$ then $E[1/Z] = 1/(\nu-2)$. It follows that
+$$E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] = E\left[\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right] = \frac{T}{T - k - 2}$$
+We can rewrite the final term similarly:
+$$E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right] = E\left[\left(\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right)\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \right]$$
+Under our assumptions the two terms in the product are independent, so we can break apart the expectation. First, we have
+$$E\left[\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right] = \frac{T}{T - k - 2}$$
+as above. For the second part,
+$$\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \sim \chi^2_k$$
+and hence
+$$E\left[\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \right] = k$$
+Putting all the pieces together,
+\begin{eqnarray*}
+E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{ E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] + \log(\sigma_0^2) - E\left[\log(\widehat{\sigma}^2)\right] -1 \right\}\\
+&& \quad + \; \frac{1}{2}E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right]\\
+&=& \frac{T}{2} \left( \frac{T}{T-k-2} - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1\right) + \frac{T}{2}\left(\frac{k}{T - k -2}\right)\\
+&=& \frac{T}{2} \left(\frac{T + k}{T - k -2} - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1\right)
+\end{eqnarray*}
+Since $\log(\widehat{\sigma}^2)$ is an unbiased estimator of $E[\log(\widehat{\sigma}^2)]$, substituting this give us an unbiased estimator of $E\left[\widehat{KL}(g;f) \right]$ as desired.
+The only terms that vary across candidate models are the first and the third. Moreover, the multiplicative factor of $T/2$ does not affect model selection. Hence, the criterion is
+$$AIC_c = \log(\widehat{\sigma}^2) + \frac{T + k}{T - k -2}$$
+Note that the way this expression is written, \emph{smaller} values indicate a better model. So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
+\begin{eqnarray*}
+\widehat{\beta} &=& (X'X)^{-1}X'\mathbf{y}\\
+\widehat{\sigma}^2 &=& \frac{(\mathbf{y} - X\widehat{\beta})'(\mathbf{y} - X\widehat{\beta})}{T}
+\end{eqnarray*}
+It follows that the maximized log-likehood is
+\begin{eqnarray*}
+\log\left[f(\mathbf{y}|X;\widehat{\theta})\right] &=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{1}{2\widehat{\sigma}^2}(y - X\widehat{\beta})'(y -X\widehat{\beta})\\
+&=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
+\end{eqnarray*}
+by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is
+$$AIC = 2\left(\ell(\widehat{\theta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
+But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
+$$AIC^* = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
+where \emph{smaller} values now indicate a better model.
+
+
+
 \section{Bayesian Information Criterion (BIC)}
-As in the derivation of AIC, simplify by looking only at a scalar random variable and ignoring dependence etc. Results are still generally true but this simplifies the notation.
+Since Frank2 talked about this in his part of the course, I won't discuss this derivation in class but I wanted to provide the details for completeness. As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
 
 \subsection{Overview of the BIC}
 Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-sample Frequentist \emph{approximation} to Bayesian model selection:
