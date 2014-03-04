@@ -156,7 +156,11 @@ Finally, using the almost magical properties of the trace operator, we have
 			&=& \mbox{trace}\left\{ E[J^{-1}UU']\right\} = \mbox{trace}\left\{J^{-1} E[UU']\right\} \\
 			&=&\mbox{trace}\left\{ J^{-1} K\right\}
 	\end{eqnarray*}
-Thus, we have the bias correction:
+Thus, we approximate the expected bias by $T^{-1}\mbox{trace}\left\{ J^{-1} K\right\}$. Finally, we correct the bias of the maximized log-likelihood and approximate the expected log likelihood by
+	$$E_G[\log f(Y|\theta_0)]\approx \frac{\ell(\widehat{\theta})}{T} - \frac{\mbox{trace}\left\{ J^{-1} K\right\}}{T}$$
+multiplying through by $2/T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
+	$$TIC = 2\left[\ell(\widehat{\theta}) - \mbox{trace}\left\{ \widehat{J}^{-1} \widehat{K}\right\} \right]$$
+The scaling is, of course, arbitrary but this particular choice is traditional.
 
 \subsection{Derivation of the Bias Expansion}
 Above we asserted that the bias term
@@ -174,92 +178,92 @@ To see why this is the case, we employ two second-order Taylor Expansions. First
 		&& + \; 
 \end{eqnarray*}
 
-\section{The AIC and TIC}
-In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
+% \section{The AIC and TIC}
+% In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an expression for the bias so that we can correct for it.
 
-\subsection{An Asymptotic Approximation to the Bias}
-First some notation:
-	\begin{itemize}
-		\item Make the sample size and the dependence of $\hat{\theta}$ on the data explicit by writing
-	$$\log{f\left(\left.\mathbf{y}_n\right|\hat{\theta}(\mathbf{y}_n)\right)} = \sum_{t=1}^T \log{f(y_t|\hat{\theta})}$$
-		\item Let $E_{G(\mathbf{y}_n)}$ denote expectation with respect to the joint distribution of $\mathbf{Y}^{(n)} = (Y_1, \hdots, Y_n)'$. The realizations of this random vector are $\mathbf{y}_n = y_1, \hdots, y_n$.
-		\item Let $\mathbf{Z}^{(n)} = (Z_1, \hdots, Z_n)'$ be a collection of iid random variables with the same distribution as $\mathbf{Y}^{(n)}$ that were \emph{not} used to estimate $\hat{\theta}$. (Assume that $\mathbf{Z}^{(n)}$ and $\mathbf{Y}^{(n)}$ are mutually independent.) Let $G(\mathbf{z}_n)$ denote expectation with respect to the joint distribution of $\mathbf{Z}^{(n)}$.
-		\item The bias of the maximized Log-likelihood as an estimator of the expected Log-likelihood is given by
-	$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  E_{G(\mathbf{z}_n)}\left\{  \log{f\left(\left.\mathbf{Z}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
-\end{itemize}
-
-
-\paragraph{Calculating the Bias:} Since $Z_1, \hdots, Z_n$ are iid, the expectation with respect to $G(\mathbf{z}_n)$ simplifies, and we can write
-			$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
-where $Z$ is any of the $Z_1, \hdots, Z_n$ and $G(z)$ is its \emph{marginal} distribution. We expand the bias into $D_1 + D_2 + D_3$ where
-	\begin{eqnarray*}
-		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\\\
-		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)} - nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} \right]\\\\
-		D_3 &=& E_{G(\mathbf{y}_n)}\left[ nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\}  -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\} \right]
-	\end{eqnarray*}
-Now consider each part separately.
-
-\paragraph{Step 1: Calculation of $D_2$} This is the easiest part as it involves no estimators. Note first that $E_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ is a constant, so that
-	\begin{eqnarray*}
-		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right] - nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
-		&=& n E_{G(y)}\left[ \log{f(Y|\theta_0)} \right] -  nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
-		&=& 0
-	\end{eqnarray*}
-where we have used the fact that $Y_1, \hdots, Y_n$ are iid and that $Y$ and $Z$ have the same distribution. 
+% \subsection{An Asymptotic Approximation to the Bias}
+% First some notation:
+% 	\begin{itemize}
+% 		\item Make the sample size and the dependence of $\hat{\theta}$ on the data explicit by writing
+% 	$$\log{f\left(\left.\mathbf{y}_n\right|\hat{\theta}(\mathbf{y}_n)\right)} = \sum_{t=1}^T \log{f(y_t|\hat{\theta})}$$
+% 		\item Let $E_{G(\mathbf{y}_n)}$ denote expectation with respect to the joint distribution of $\mathbf{Y}^{(n)} = (Y_1, \hdots, Y_n)'$. The realizations of this random vector are $\mathbf{y}_n = y_1, \hdots, y_n$.
+% 		\item Let $\mathbf{Z}^{(n)} = (Z_1, \hdots, Z_n)'$ be a collection of iid random variables with the same distribution as $\mathbf{Y}^{(n)}$ that were \emph{not} used to estimate $\hat{\theta}$. (Assume that $\mathbf{Z}^{(n)}$ and $\mathbf{Y}^{(n)}$ are mutually independent.) Let $G(\mathbf{z}_n)$ denote expectation with respect to the joint distribution of $\mathbf{Z}^{(n)}$.
+% 		\item The bias of the maximized Log-likelihood as an estimator of the expected Log-likelihood is given by
+% 	$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  E_{G(\mathbf{z}_n)}\left\{  \log{f\left(\left.\mathbf{Z}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
+% \end{itemize}
 
 
-\paragraph{Step 2: Calculation of $D_3$} Define $\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right] $ and Taylor expand around $\theta_0$, the solution to the population moment condition
-	$$E_{G(z)}\left[ \frac{\partial}{\partial \theta}  \log{f(z|\theta)} \right]=0$$
-yielding
-	$$\eta(\hat{\theta})= \eta(\theta_0) + \left( \hat{\theta} - \theta_0 \right)' \frac{\partial \eta(\theta_0)}{\partial \theta} + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right)  \frac{\partial^2 \eta(\theta_0)}{\partial \theta \partial \theta'}\left( \hat{\theta} - \theta_0 \right) + o_p(1)$$
-Now, under the appropriate regularity conditions (Lebesgue Dominated Convergence) we can exchange the order of expectation and differentiation, so that
-	$$ \frac{\partial \eta(\theta_0)}{\partial \theta} =  \frac{\partial}{\partial \theta} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]=  E_{G(z)}\left[\frac{\partial}{\partial \theta} \log{f(z|\theta_0)} \right]=0$$
-by the definition of $\theta_0$ as the solution to the population moment condition. Substituting this into the Taylor Expansion, and assuming further that we may exchange the \emph{second} derivative and expectation with respect to $G(z)$, we have
-	\begin{eqnarray*}
-		\eta(\hat{\theta}) &=& \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' \frac{\partial^2 }{\partial \theta \partial \theta'} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)\\
-			&=&  \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)
-	\end{eqnarray*}
-Thus, defining 
-	$$J(\theta_0) = -E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]$$
-we see that
-	$$\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\theta_0\right)} \right] - \frac{1}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)$$
-Substituting this expansion for $ E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right]$ into the expression for $D_3$ cancels the leading first term $nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ in the expectation so that (remember that $\hat{\theta}$ is a function of $\mathbf{y}_n$ and thus, so is $o_p(1)$)
-	\begin{eqnarray*}
-		D_3 &=& E_{G(\mathbf{y}_n)}\left[  \frac{n}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)  \right]\\
-		&=& \frac{1}{2} E_{G(\mathbf{y}_n)}\left[ \mbox{trace}\left\{n\left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) \right\} \right] +o_p(1)\\
-			&=& \frac{1}{2}\mbox{trace}\left\{J(\theta_0) E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\right\} +o_p(1)
-	\end{eqnarray*}
-where we have used the facts that: (1) a scalar equals its trace, (2) multiplication within the trace operator is commutative provided that the products remain conformable, (3) trace and expectation can be exchanged because both are linear operators, and (4) $J(\theta_0)$ is a constant with respect to $E_{G(\mathbf{y}_n)}$. We know that
-	$$E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\rightarrow J^{-1}(\theta_0) I(\theta_0)J^{-1}(\theta_0)$$
-as $n\rightarrow \infty$ where
-	\begin{eqnarray*}
-	I(\theta_0) &=&E_{G(z)}\left[ \frac{\partial \log{f(Z|\theta)}}{\partial \theta} \;\frac{\partial \log{f(Z|\theta)}}{\partial \theta'} \right]\\\\
-	J(\theta_0) &=& - E_{G(z)}\left[ \frac{\partial^2  \log{f(Z|\theta)}}{\partial \theta \partial \theta'}\right]
-	\end{eqnarray*}
-Thus, assuming the necessary regularity conditions to ensure that the remainder is indeed of small order, as $n\rightarrow \infty$ we have
-	$$D_3 \rightarrow \frac{1}{2} \mbox{trace}\left\{ J(\theta_0) J(\theta_0)^{-1}I(\theta_0)J(\theta_0)^{-1}  \right\} = \frac{1}{2}\mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
+% \paragraph{Calculating the Bias:} Since $Z_1, \hdots, Z_n$ are iid, the expectation with respect to $G(\mathbf{z}_n)$ simplifies, and we can write
+% 			$$Bias = E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\}\right]$$
+% where $Z$ is any of the $Z_1, \hdots, Z_n$ and $G(z)$ is its \emph{marginal} distribution. We expand the bias into $D_1 + D_2 + D_3$ where
+% 	\begin{eqnarray*}
+% 		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\\\
+% 		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)} - nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} \right]\\\\
+% 		D_3 &=& E_{G(\mathbf{y}_n)}\left[ nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\}  -  nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)}\right\} \right]
+% 	\end{eqnarray*}
+% Now consider each part separately.
+
+% \paragraph{Step 1: Calculation of $D_2$} This is the easiest part as it involves no estimators. Note first that $E_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ is a constant, so that
+% 	\begin{eqnarray*}
+% 		D_2 &=& E_{G(\mathbf{y}_n)}\left[  \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right] - nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
+% 		&=& n E_{G(y)}\left[ \log{f(Y|\theta_0)} \right] -  nE_{G(z)}\left[  \log{f\left(\left.Z\right|\theta_0\right)}\right] \\
+% 		&=& 0
+% 	\end{eqnarray*}
+% where we have used the fact that $Y_1, \hdots, Y_n$ are iid and that $Y$ and $Z$ have the same distribution. 
+
+
+% \paragraph{Step 2: Calculation of $D_3$} Define $\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right] $ and Taylor expand around $\theta_0$, the solution to the population moment condition
+% 	$$E_{G(z)}\left[ \frac{\partial}{\partial \theta}  \log{f(z|\theta)} \right]=0$$
+% yielding
+% 	$$\eta(\hat{\theta})= \eta(\theta_0) + \left( \hat{\theta} - \theta_0 \right)' \frac{\partial \eta(\theta_0)}{\partial \theta} + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right)  \frac{\partial^2 \eta(\theta_0)}{\partial \theta \partial \theta'}\left( \hat{\theta} - \theta_0 \right) + o_p(1)$$
+% Now, under the appropriate regularity conditions (Lebesgue Dominated Convergence) we can exchange the order of expectation and differentiation, so that
+% 	$$ \frac{\partial \eta(\theta_0)}{\partial \theta} =  \frac{\partial}{\partial \theta} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]=  E_{G(z)}\left[\frac{\partial}{\partial \theta} \log{f(z|\theta_0)} \right]=0$$
+% by the definition of $\theta_0$ as the solution to the population moment condition. Substituting this into the Taylor Expansion, and assuming further that we may exchange the \emph{second} derivative and expectation with respect to $G(z)$, we have
+% 	\begin{eqnarray*}
+% 		\eta(\hat{\theta}) &=& \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' \frac{\partial^2 }{\partial \theta \partial \theta'} E_{G(z)}\left[ \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)\\
+% 			&=&  \eta(\theta_0) + \frac{1}{2}\left( \hat{\theta} - \theta_0 \right) ' E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]\left( \hat{\theta} - \theta_0 \right) + o_p(1)
+% 	\end{eqnarray*}
+% Thus, defining 
+% 	$$J(\theta_0) = -E_{G(z)}\left[ \frac{\partial^2 }{\partial \theta \partial \theta'} \log{f(z|\theta_0)} \right]$$
+% we see that
+% 	$$\eta(\hat{\theta}) = E_{G(z)}\left[ \log{f\left(z|\theta_0\right)} \right] - \frac{1}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)$$
+% Substituting this expansion for $ E_{G(z)}\left[ \log{f\left(z|\hat{\theta}(\mathbf{Y}^{(n)})\right)} \right]$ into the expression for $D_3$ cancels the leading first term $nE_{G(z)}\left\{  \log{f\left(\left.Z\right|\theta_0\right)}\right\} $ in the expectation so that (remember that $\hat{\theta}$ is a function of $\mathbf{y}_n$ and thus, so is $o_p(1)$)
+% 	\begin{eqnarray*}
+% 		D_3 &=& E_{G(\mathbf{y}_n)}\left[  \frac{n}{2} \left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) + o_p(1)  \right]\\
+% 		&=& \frac{1}{2} E_{G(\mathbf{y}_n)}\left[ \mbox{trace}\left\{n\left( \hat{\theta}- \theta_0\right)'J(\theta_0)\left(\hat{\theta}- \theta_0\right) \right\} \right] +o_p(1)\\
+% 			&=& \frac{1}{2}\mbox{trace}\left\{J(\theta_0) E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\right\} +o_p(1)
+% 	\end{eqnarray*}
+% where we have used the facts that: (1) a scalar equals its trace, (2) multiplication within the trace operator is commutative provided that the products remain conformable, (3) trace and expectation can be exchanged because both are linear operators, and (4) $J(\theta_0)$ is a constant with respect to $E_{G(\mathbf{y}_n)}$. We know that
+% 	$$E_{G(\mathbf{y}_n)}\left[\sqrt{n} \left( \hat{\theta}- \theta_0\right)\sqrt{n}\left(\hat{\theta}- \theta_0\right)' \right]\rightarrow J^{-1}(\theta_0) I(\theta_0)J^{-1}(\theta_0)$$
+% as $n\rightarrow \infty$ where
+% 	\begin{eqnarray*}
+% 	I(\theta_0) &=&E_{G(z)}\left[ \frac{\partial \log{f(Z|\theta)}}{\partial \theta} \;\frac{\partial \log{f(Z|\theta)}}{\partial \theta'} \right]\\\\
+% 	J(\theta_0) &=& - E_{G(z)}\left[ \frac{\partial^2  \log{f(Z|\theta)}}{\partial \theta \partial \theta'}\right]
+% 	\end{eqnarray*}
+% Thus, assuming the necessary regularity conditions to ensure that the remainder is indeed of small order, as $n\rightarrow \infty$ we have
+% 	$$D_3 \rightarrow \frac{1}{2} \mbox{trace}\left\{ J(\theta_0) J(\theta_0)^{-1}I(\theta_0)J(\theta_0)^{-1}  \right\} = \frac{1}{2}\mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
 
 
 
-\paragraph{Step 3: Calculation of $D_1$} Taylor expand $\ell(\theta_0) = \log{f\left(\mathbf{y}_n| \theta_0\right)}$ around $\hat{\theta}$, noting that by the definition of the MLE, 
-	$$\frac{\partial \ell(\hat{\theta})}{\partial \theta} = 0$$
-Thus,
-	$$\ell(\theta_0) = \ell(\hat{\theta}) + \frac{1}{2} \left( \theta - \hat{\theta} \right)' \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta} \right)$$
-where $\tilde{\theta}$ is between $\hat{\theta}$ and $\theta_0$, so we have
-	$$ \ell(\hat{\theta}) - \ell(\theta_0)  = \frac{1}{2} \sqrt{n}\left( \theta - \hat{\theta} \right)'\left[ - \frac{1}{n} \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \right]\sqrt{n}\left( \theta - \hat{\theta} \right)$$
-By the WLLN for iid observations, we know that for fixed $\theta$
-	$$- \frac{1}{n} \frac{\partial^2  \ell(\theta)}{\partial \theta \partial \theta'} = -\frac{1}{n}\sum_{t=1}^T \frac{\partial^2}{\partial \theta \partial \theta'}\log{f(y_t|\theta)}\overset{p}{\rightarrow} J(\theta)$$
-Furthermore, by the standard consistency result for MLE $\hat{\theta} \rightarrow \theta_0$. Thus, by a Uniform WLLN,
-	$$- \frac{1}{n} \frac{\partial^2  \ell(\hat{\theta})}{\partial \theta \partial \theta'}\overset{p}{\rightarrow} J(\theta_0)$$
-It follows that 	
-	\begin{eqnarray*}
-		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\
-			&=& E_{G(\mathbf{y}_n)}\left[ \ell(\hat{\theta}) - \ell(\theta_0) \right]\\
-			&\rightarrow& \frac{1}{2} \mbox{trace}\left\{ I(\theta_0) J(\theta_0)^{-1} \right\}
-	\end{eqnarray*}
-using the same arguments as in Step 2.  
-\paragraph{Finally The Bias:} Combining the three steps, we have
-	$$Bias = D_1 + D_2 + D_3 = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
+% \paragraph{Step 3: Calculation of $D_1$} Taylor expand $\ell(\theta_0) = \log{f\left(\mathbf{y}_n| \theta_0\right)}$ around $\hat{\theta}$, noting that by the definition of the MLE, 
+% 	$$\frac{\partial \ell(\hat{\theta})}{\partial \theta} = 0$$
+% Thus,
+% 	$$\ell(\theta_0) = \ell(\hat{\theta}) + \frac{1}{2} \left( \theta - \hat{\theta} \right)' \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta} \right)$$
+% where $\tilde{\theta}$ is between $\hat{\theta}$ and $\theta_0$, so we have
+% 	$$ \ell(\hat{\theta}) - \ell(\theta_0)  = \frac{1}{2} \sqrt{n}\left( \theta - \hat{\theta} \right)'\left[ - \frac{1}{n} \frac{\partial^2  \ell(\tilde{\theta})}{\partial \theta \partial \theta'} \right]\sqrt{n}\left( \theta - \hat{\theta} \right)$$
+% By the WLLN for iid observations, we know that for fixed $\theta$
+% 	$$- \frac{1}{n} \frac{\partial^2  \ell(\theta)}{\partial \theta \partial \theta'} = -\frac{1}{n}\sum_{t=1}^T \frac{\partial^2}{\partial \theta \partial \theta'}\log{f(y_t|\theta)}\overset{p}{\rightarrow} J(\theta)$$
+% Furthermore, by the standard consistency result for MLE $\hat{\theta} \rightarrow \theta_0$. Thus, by a Uniform WLLN,
+% 	$$- \frac{1}{n} \frac{\partial^2  \ell(\hat{\theta})}{\partial \theta \partial \theta'}\overset{p}{\rightarrow} J(\theta_0)$$
+% It follows that 	
+% 	\begin{eqnarray*}
+% 		D_1 &=& E_{G(\mathbf{y}_n)}\left[ \log{f\left(\left.\mathbf{Y}^{(n)}\right|\hat{\theta}\left(\mathbf{Y}^{(n)}\right)\right)} - \log{f\left( \mathbf{Y}^{(n)}|\theta_0 \right)}\right]\\
+% 			&=& E_{G(\mathbf{y}_n)}\left[ \ell(\hat{\theta}) - \ell(\theta_0) \right]\\
+% 			&\rightarrow& \frac{1}{2} \mbox{trace}\left\{ I(\theta_0) J(\theta_0)^{-1} \right\}
+% 	\end{eqnarray*}
+% using the same arguments as in Step 2.  
+% \paragraph{Finally The Bias:} Combining the three steps, we have
+% 	$$Bias = D_1 + D_2 + D_3 = \mbox{trace}\left\{ I(\theta_0)J(\theta_0)^{-1} \right\}$$
 	
 \subsection{Correcting the Bias}
 Now that we have an asymptotic approximation to the bias of the maximized likelihood as an estimator of the expected log-likelihood, we can correct it. Suppose that we have consistent estimators $\hat{I}$ and $\hat{J}$ of $I(\theta_0)$ and $J(\theta_0)$. Then, by the Continuous Mapping Theorem $\hat{b}=\mbox{trace}(\hat{I}\hat{J}^{-1})$ is a consistent estimator of the bias term. Recall that the maximized log-likelihood is biased \emph{upwards}, hence to correct it we need to subtract this quantity. This estimate yields \textbf{Takeuchi's Information Criterion} (TIC):
