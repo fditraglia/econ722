@@ -107,44 +107,42 @@ In the previous section we explained that using the KL divergence to do model se
 To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
 
 \subsection{Fundamental Expansion for MLE}
-
-
-% Ideally, what we want to do is evaluate the likelihood at a \emph{new} set of observations not used to estimate $\hat{\theta}$. But why would this work? Suppose we have a \emph{second} dataset $\mathbf{z}$ drawn from the same DGP that is \emph{independent} of $\mathbf{y}$. To make the dependence of $\widehat{\theta}$ on $\mathbf{y}$ explicit, we'll write it as $\widehat{\theta}_{\mathbf{y}}$. Similarly, we'll define $E_{\widehat{G}(\mathbf{y})}$ as the expectation with respect to the empirical measure of $\mathbf{y}$, i.e.\ the sample mean, and $E_{\widehat{G}(\mathbf{z})}$ as the corresponding expectation based on $\mathbf{z}$. Now, since it was estimated from $\mathbf{y}$ rather than $\mathbf{z}$,  $\widehat{\theta}_{\mathbf{y}}$ is \emph{not} the MLE for $\mathbf{z}$. Therefore $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\widehat{\theta}_{\mathbf{y}})\right]$ is \emph{not necessarily} greater than $E_{\widehat{G}(\mathbf{z})}\left[\log f(\mathbf{z}|\theta_0)\right]$ hence the over-optimism bias does not arise.
-
-% \section{Better Derivation}
-
-\paragraph{Fundamental Expansion for MLE}
-Under standard regularity conditions,
+Under standard regularity conditions, see for example Newey and McFadden (1994), the maximum likelihood estimator $\widehat{\theta}$ can be expanded as
 	$$\widehat{\theta} = \theta_0 + J^{-1} \bar{U}_T + o_p(T^{-1/2})$$
-where $\theta_0$ is value of $\theta$ that minimizes $KL(g; f_\theta)$ and
+where $\theta_0$ is value of $\theta$ that minimizes $KL$ divergence from $g$ to the parametric family of distributions $f(y|\theta)$ and
 	\begin{eqnarray*}
 		J &=& -E_G \left[ \frac{\partial^2 \log f(Y|\theta)}{\partial \theta \partial \theta'}\right]\\
 		\bar{U}_T &=& \frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t|\theta_0)}{\partial\theta}
 	\end{eqnarray*}
-By the CLT, $\sqrt{T}\; \bar{U}_T \overset{d}{\rightarrow} U$ where $U\sim N_p(0, K)$ and
+Now, by the CLT, $\sqrt{T}\; \bar{U}_T \overset{d}{\rightarrow} U$ where $U\sim N_p(0, K)$ and
 	$$K = Var_G \left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta}\right] = E_G\left[ \frac{\partial \log f(Y|\theta_0)}{\partial\theta} \frac{\partial \log f(Y|\theta_0)}{\partial\theta'}\right]$$
-Returning to $\widehat{\theta}$, we have
-	$$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) = \sqrt{T} \; J^{-1} \bar{U}_T + o_p(1) \overset{d}{\rightarrow} J^{-1} U \sim N_p(0, J^{-1}KJ^{-1})$$
-Note that when $g = f_\theta$ for some $\theta$, $K = J$ by the information matrix equality so the variance simplifies to $J^{-1}$.
+Hence,
+	\begin{eqnarray*}
+		\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) &=& \sqrt{T} \; J^{-1} \bar{U}_T + o_p(1) \\
+		&\overset{d}{\rightarrow}& J^{-1} U\\
+		 &\sim& N_p(0, J^{-1}KJ^{-1})
+	\end{eqnarray*}
+Note that when $g = f_\theta$ for some $\theta$, we have $K = J$ by the information matrix equality so the variance simplifies to $J^{-1}$.
 
-\paragraph{Estimated the Expected Log-Likelihood}
-What we really want to evaluate is the expected log likelihood
+
+\subsection{Estimating the Expected Log Likelihood}
+To carry out model selection based on the KL divergence, we need to estimate the expected log likelihood. Under the iid assumption,
+	$$E_G[\log f(\mathbf{y}|\theta_0)] = E_G\left[\sum_{t=1}^T f(Y|\theta_0) \right] = T \; E_G[\log f(Y|\theta_0)]$$
+so it is sufficient to work with the expected log likelihood of a single representative observation $Y$. Written as an integral,
 	$$E_G[\log f(Y|\theta_0)] = \int g(y) \log f(y|\theta_0) \; dy$$
-The problem is, we don't know $\theta_0$. If we had an estimate $\widehat{\theta}$ and knew $g$, then we could approximate the integral as
+There are two problems. First, we don't know $\theta_0$. Of course we do have an estimator $\widehat{\theta}$, so we might consider simply plugging it in to yield
 $$\int g(y) \log f(y|\theta_0) \; dy \approx \int g(y) \log f(y|\widehat{\theta}) \; dy$$
-by plugging in. The problem is that we don'w know $g$. What if we were to try the sample analogue: the maximized log likelihood $\ell_T(\widehat{\theta})/T$. It turns out this is biased: it is in fact overly optimistic.
-
-\todo[inline]{Explain why by rearranging from above.}
-
-We'll write the bias relative to the infeasible plug-in estimator
+Even with this approximation, however, we still don't know $g$, the true data density. As discussed above, trying to replace this integral with the sample analogue $\ell_T(\widehat{\theta})/T$, the maximized log-likelihood, introduces a bias. So what can we do? The idea behind the AIC and TIC is to \emph{estimate} this bias, which we'll write relative to the infeasible plug-in estimator. In other words:
 $$Bias = \frac{\ell_T(\widehat{\theta})}{T} - \int g(y) \log f(y|\widehat{\theta}) dy$$
-
-It turns out that we can expand as follows
+Now, as it turns out, we can expand the bias expression as follows
 \begin{eqnarray*}
 	Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})
 \end{eqnarray*}
 where
 $$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
+
+
+
 Now, $E[\bar{Z}_T] = 0$. And from above we know that 
 $$\sqrt{T}\left(\widehat{\theta} - \theta_0 \right) \overset{d}{\rightarrow} J^{-1}U$$
 hence
@@ -361,7 +359,7 @@ Putting all the pieces together,
 Since $\log(\widehat{\sigma}^2)$ is an unbiased estimator of $E[\log(\widehat{\sigma}^2)]$, substituting this give us an unbiased estimator of $E\left[\widehat{KL}(g;f) \right]$ as desired. 
 The only terms that vary across candidate models are the first and the third. Moreover, the multiplicative factor of $T/2$ does not affect model selection. Hence, the criterion is
 	$$AIC_c = \log(\widehat{\sigma}^2) + \frac{T + k}{T - k -2}$$
-So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
+Note that the way this expression is written, \emph{smaller} values indicate a better model. So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
 \begin{eqnarray*}
 	\widehat{\beta} &=& (X'X)^{-1}X'\mathbf{y}\\
 	\widehat{\sigma}^2 &=& \frac{(\mathbf{y} - X\widehat{\beta})'(\mathbf{y} - X\widehat{\beta})}{T}
@@ -372,10 +370,10 @@ It follows that the maximized log-likehood is
 		&=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
 \end{eqnarray*}
 by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is 
-	$$AIC = 2\left(\ell(\widehat{\theta}) - p \right) = -T\log(\widehat{\sigma}^2) - T - 2p $$
-
-\todo[inline]{Check the convention for signs, but in units comparable to $AIC_c$.}
-
+	$$AIC = 2\left(\ell(\widehat{\theta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
+But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
+	$$AIC^* = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
+where \emph{smaller} values now indicate a better model. 
 
 
 
