@@ -103,9 +103,15 @@ In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likeliho
 
 \section{The AIC and TIC}
 In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an approximate expression for the bias so that we can correct it.
+<<<<<<< HEAD
 
 To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
 
+=======
+
+To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
+
+>>>>>>> FETCH_HEAD
 \subsection{Fundamental Expansion for MLE}
 Under standard regularity conditions, see for example Newey and McFadden (1994), the maximum likelihood estimator $\widehat{\theta}$ can be expanded as
 	$$\widehat{\theta} = \theta_0 + J^{-1} \bar{U}_T + o_p(T^{-1/2})$$
