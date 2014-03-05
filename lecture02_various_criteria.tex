@@ -87,11 +87,11 @@ Note that the way this expression is written, \emph{smaller} values indicate a b
 \end{eqnarray*}
 It follows that the maximized log-likehood is
 \begin{eqnarray*}
-\log\left[f(\mathbf{y}|X;\widehat{\theta})\right] &=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{1}{2\widehat{\sigma}^2}(y - X\widehat{\beta})'(y -X\widehat{\beta})\\
+\log\left[f(\mathbf{y}|X;\widehat{\beta})\right] &=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{1}{2\widehat{\sigma}^2}(y - X\widehat{\beta})'(y -X\widehat{\beta})\\
 &=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
 \end{eqnarray*}
 by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is
-$$AIC = 2\left(\ell(\widehat{\theta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
+$$AIC = 2\left(\ell(\widehat{\beta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
 But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
 $$AIC = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
 where \emph{smaller} values now indicate a better model.
@@ -112,31 +112,48 @@ We'll start with an iid setting. Below, we'll consider generalizations to a time
 \subsection{Final Prediction Error}
 \subsection{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
-	$$\textbf{y} = X\beta + \boldsymbol{\epsilon}$$
-Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$. Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense. Compare to the ``best we could possibly do'' using $X$. This is $X\theta$ but of course we don't know $\theta$
+	$$\underset{(T\times1)}{\textbf{y}} = \underset{(T\times K)}{X} \underset{(K\times 1)}{\beta} + \boldsymbol{\epsilon}$$
+Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$.  Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense. Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of course we don't know $\beta$
 
-Adopt the convention that $\widehat{\theta}_M$ has zeros for the elements of $\theta$ that are not estimated. In other words:
-	$$X\widehat{\theta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
+Adopt the convention that $\widehat{\beta}_M$ has zeros for the elements of $\beta$ that are not estimated. In other words:
+	$$X\widehat{\beta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
 so we have
 \begin{eqnarray*}
-	(X\widehat{\theta}_M - X\theta)'(X\widehat{\theta}_M - X\theta) &=& (P_M \mathbf{y} - X\theta)'(P_M \mathbf{y} - X\theta)\\
-		&=&\left\{P_M(Y-X\theta) + (\mathbf{I} - P_M)X\theta \right\}' \left\{P_M(Y-X\theta) + (\mathbf{I} - P_M)X\theta  \right\}\\
-		&=&\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\theta\right\}'\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\theta \right\}\\
-		&=&\boldsymbol{\epsilon}'P_M'P_M \boldsymbol{\epsilon} + \theta'X'(\mathbf{I}-P_M)'P_M\boldsymbol{\epsilon} \\
-			&&\quad \quad + \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\theta + \theta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\theta\\
-		&=& \boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon} + \theta'X'(\mathbf{I} - P_M)X\theta
+	(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta) &=& (P_M \mathbf{y} - X\beta)'(P_M \mathbf{y} - X\beta)\\
+		&=&\left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta \right\}' \left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta  \right\}\\
+		&=&\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\beta\right\}'\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\beta \right\}\\
+		&=&\boldsymbol{\epsilon}'P_M'P_M \boldsymbol{\epsilon} + \beta'X'(\mathbf{I}-P_M)'P_M\boldsymbol{\epsilon} \\
+			&&\quad \quad + \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\beta + \beta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\beta\\
+		&=& \boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon} + \beta'X'(\mathbf{I} - P_M)X\beta
 \end{eqnarray*}
 where we have used the fact that $P_M$ and $(\mathbf{I}-P_M)$ are symmetric and idempotent and their product is zero. Thus,
 	\begin{eqnarray*}
-		\mbox{MSE}(M|X) &=& E\left[(X\widehat{\theta}_M - X\theta)'(X\widehat{\theta}_M - X\theta)|X \right]\\
-		 &=& E\left[\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}|X\right] + E\left[\theta'X'(\mathbf{I} - P_M)X\theta |X\right]\\
-			&=&E\left[\mbox{trace}\left\{\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}\right\}|X\right] + \theta'X'(\mathbf{I} - P_M)X\theta \\
-		&=&\mbox{trace}\left\{E[\boldsymbol{\epsilon} \boldsymbol{\epsilon}'|X]P_M\right\} + \theta'X'(\mathbf{I} - P_M)X\theta \\
-	&=&\mbox{trace}\left\{\sigma^2 P_M\right\} + \theta'X'(\mathbf{I} - P_M)X\theta \\
-	&=& \sigma^2 k_M + \theta'X'(\mathbf{I} - P_M)X\theta
+		\mbox{MSE}(M|X) &=& E\left[(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta)|X \right]\\
+		 &=& E\left[\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}|X\right] + E\left[\beta'X'(\mathbf{I} - P_M)X\beta |X\right]\\
+			&=&E\left[\mbox{trace}\left\{\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}\right\}|X\right] + \beta'X'(\mathbf{I} - P_M)X\beta \\
+		&=&\mbox{trace}\left\{E[\boldsymbol{\epsilon} \boldsymbol{\epsilon}'|X]P_M\right\} + \beta'X'(\mathbf{I} - P_M)X\beta \\
+	&=&\mbox{trace}\left\{\sigma^2 P_M\right\} + \beta'X'(\mathbf{I} - P_M)X\beta \\
+	&=& \sigma^2 k_M + \beta'X'(\mathbf{I} - P_M)X\beta
 	\end{eqnarray*}
-where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
- 
+where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. Since the preceding expression depends on unknown constants, we construct an unbiased estimate of it as follows. Let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that 
+		$$X \widehat{\theta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
+Then, using the fact that $P_MP_X = P_XP_M = P_M$, we have
+	\begin{eqnarray*}
+		E\left[\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} |X\right] &=& E\left[\mathbf{y}'P_X'(\mathbf{I} - P_M)P_{X}\mathbf{y} |X\right]\\
+			&=& E\left[\mathbf{y}'(P_X'P_X - P_X'P_MP_X)\mathbf{y} |X\right]\\
+			&=& E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]\\
+			&=& E\left[(X\beta + \boldsymbol{\epsilon})'(P_X - P_M)(X\beta + \boldsymbol{\epsilon})\mathbf{y} |X\right]\\
+			&=& E\left[\beta'X(P_X - P_M)X\beta|X\right] + E[\boldsymbol{\epsilon}'(P_X - P_M)X\beta|X] \\
+				&& \quad  + \; E[\beta'X'(P_X - P_M)\boldsymbol{\epsilon}|X] + E[\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}|X]\\
+			&=& \beta'X(P_X - P_M)X\beta +  E[\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}|X]\\
+			&=& \beta'X(P_X - P_M)X\beta +  E[\mbox{trace}\left\{\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}\right\}|X]\\
+			&=&\beta'X(P_X - P_M)X\beta +  \mbox{trace}\left\{E[\boldsymbol{\boldsymbol{\epsilon}\epsilon}'|X](P_X - P_M)\right\}\\
+			&=&\beta'X(P_X - P_M)X\beta +  \mbox{trace}\left\{\sigma^2(P_X - P_M)\right\}\\ 
+			&=&\beta'X(P_X - P_M)X\beta +  \sigma^2 \left(\mbox{trace}\left\{P_X\right\} - \mbox{trace}\left\{P_M\right\}\right)\\ 
+			&=& \beta'X(P_X - P_M)X\beta +  \sigma^2 (K - k_M) 
+	\end{eqnarray*}
+Now, we can calculate an unbiased estimate $\sigma^2$ from the residuals of the full model as follows
+	$$\widehat{\sigma}^2 &=& \frac{\mathbf{y}'(\mathbf{I} - P_X)\mathbf{y}}{(T-K)}$$
 % Suppose that we have an iid collection of observations $\{(y_1, \mathbf{x}_1), \hdots, (y_T, \mathbf{x}_T)\}$ where $\mathbf{x}_t$ is a $p$-vector of regressors 
 
 % Now suppose that we attempt to estimate $\boldsymbol{\mu}$ using a linear regression model
@@ -223,7 +240,7 @@ Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-samp
 	\begin{enumerate}
 		\item Begin with a uniform prior on the set of candidate models so that it suffices to maximize the Marginal Likelihood.
 		\item The BIC is a large sample approximation to the Marginal Likelihood:
-		$$\int \pi(\theta_i)f_i(\mathbf{y}|\theta_i)d\theta_i$$
+		$$\int \pi(\beta_i)f_i(\mathbf{y}|\beta_i)d\beta_i$$
 		where $i$ indexes models $M_i$ in a set $\mathcal{M}$.
 		\item As usual when Bayesian procedures are subjected to Frequentist asymptotics, the priors on parameters vanish in the limit.
 		\item We proceed by a \emph{Laplace Approximation} to the Marginal Likelihood
@@ -231,14 +248,14 @@ Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-samp
 
 \subsection{Laplace Approximation}
 For the moment simplify the notation by suppressing dependence on $M_i$. We want to approximate: 
-	$$\int \pi(\theta)f(\mathbf{y}|\theta)d\theta$$
+	$$\int \pi(\beta)f(\mathbf{y}|\beta)d\beta$$
 This is actually a common problem in applications of Bayesian inference:
 	\begin{itemize} 
-		\item Notice that $\pi(\theta)f(\mathbf{y}|\theta)$ is the \emph{kernel} of some probability density, i.e.\ the density without its normalizing constant. 
+		\item Notice that $\pi(\beta)f(\mathbf{y}|\beta)$ is the \emph{kernel} of some probability density, i.e.\ the density without its normalizing constant. 
 		\item \emph{How do we know this?} By Bayes' Rule 
-	$$\pi(\theta|\mathbf{y}) = \frac{\pi(\theta)f(\mathbf{y}|\theta)}{\int \pi(\theta)f(\mathbf{y}|\theta) d\theta }$$
-is a proper probability density and the denominator is \emph{constant} with respect to $\theta$. (The parameter has been ``integrated out.'')
-	\item In Bayesian inference, we specify $\pi(\theta)$ and $f(\mathbf{y}|\theta)$, so $\pi(\theta)f(\mathbf{y}|\theta)$ is known. But to calculate the posterior we need to \emph{integrate} to find the normalizing constant.
+	$$\pi(\beta|\mathbf{y}) = \frac{\pi(\beta)f(\mathbf{y}|\beta)}{\int \pi(\beta)f(\mathbf{y}|\beta) d\beta }$$
+is a proper probability density and the denominator is \emph{constant} with respect to $\beta$. (The parameter has been ``integrated out.'')
+	\item In Bayesian inference, we specify $\pi(\beta)$ and $f(\mathbf{y}|\beta)$, so $\pi(\beta)f(\mathbf{y}|\beta)$ is known. But to calculate the posterior we need to \emph{integrate} to find the normalizing constant.
 	\item Only in special cases (e.g.\ conjugate families) can we find the exact normalizing constant. Typically some kind of approximation is needed:  
 		\begin{itemize}
 			\item Importance Sampling
@@ -246,64 +263,64 @@ is a proper probability density and the denominator is \emph{constant} with resp
 			\item \emph{Laplace Approximation}
 		\end{itemize}
 	\end{itemize}
-The Laplace Approximation is an \emph{analytical approximation} based on Taylor Expansion arguments. In Bayesian applications, the expansion is carried out around the posterior mode, i.e.\ the mode of $\pi(\theta)f(\mathbf{y}|\theta)$, but we will expand around the Maximum likelihood estimator. 
+The Laplace Approximation is an \emph{analytical approximation} based on Taylor Expansion arguments. In Bayesian applications, the expansion is carried out around the posterior mode, i.e.\ the mode of $\pi(\beta)f(\mathbf{y}|\beta)$, but we will expand around the Maximum likelihood estimator. 
 
 \begin{pro}[Laplace Approximation]
 	\label{pro:laplace}
-$$\int \pi(\theta)f(\mathbf{y}|\theta)d\theta \approx \frac{\exp\left\{ \ell(\hat{\theta}) \right\} \pi(\hat{\theta})(2\pi)^{p/2}}{n^{p/2}\left| J(\hat{\theta}) \right|^{1/2}}$$
-	Where $\hat{\theta}$ is the \emph{maximum likelihood estimator}, $p$ the dimension of $\theta$ and
-		$$J(\hat{\theta}) = -\frac{1}{n} \frac{\partial^2 \log f(\mathbf{y}|\hat{\theta})}{\partial \theta \partial \theta'}$$
+$$\int \pi(\beta)f(\mathbf{y}|\beta)d\beta \approx \frac{\exp\left\{ \ell(\hat{\beta}) \right\} \pi(\hat{\beta})(2\pi)^{p/2}}{n^{p/2}\left| J(\hat{\beta}) \right|^{1/2}}$$
+	Where $\hat{\beta}$ is the \emph{maximum likelihood estimator}, $p$ the dimension of $\beta$ and
+		$$J(\hat{\beta}) = -\frac{1}{n} \frac{\partial^2 \log f(\mathbf{y}|\hat{\beta})}{\partial \beta \partial \beta'}$$
 \end{pro}
 
 \begin{proof}
-A rigorous proof of this result is complicated. The following is a sketch. First write $\ell(\theta)$ for $\log{f(\mathbf{y}|\theta)}$ so that 
-$$\pi(\theta)f(\mathbf{y}|\theta) = \pi(\theta) \exp{\left\{ \log{f(\mathbf{y}| \theta)} \right\}}=\pi(\theta) \exp{\left\{ \log{\ell(\theta)} \right\}}$$
-By a second-order Taylor Expansion around the MLE $\hat{\theta}$
+A rigorous proof of this result is complicated. The following is a sketch. First write $\ell(\beta)$ for $\log{f(\mathbf{y}|\beta)}$ so that 
+$$\pi(\beta)f(\mathbf{y}|\beta) = \pi(\beta) \exp{\left\{ \log{f(\mathbf{y}| \beta)} \right\}}=\pi(\beta) \exp{\left\{ \log{\ell(\beta)} \right\}}$$
+By a second-order Taylor Expansion around the MLE $\hat{\beta}$
 	\begin{equation}
 	\label{taylorell}
-		\ell(\theta) = \ell(\hat{\theta}) +\frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) + R_\ell
+		\ell(\beta) = \ell(\hat{\beta}) +\frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) + R_\ell
 	\end{equation}
-since the derivative of $\ell(\theta)$ is zero at $\hat{\theta}$ by the definition of MLE. A first-order expansion is sufficient for $\pi(\theta)$ because the derivative does not vanish at $\hat{\theta}$
+since the derivative of $\ell(\beta)$ is zero at $\hat{\beta}$ by the definition of MLE. A first-order expansion is sufficient for $\pi(\beta)$ because the derivative does not vanish at $\hat{\beta}$
 	\begin{equation}
 		\label{taylorpi}
-		\pi(\theta) = \pi(\hat{\theta}) +  \frac{\partial \pi(\hat{\theta})}{\partial \theta'} \left(\theta - \hat{\theta}  \right)+ R_\pi
+		\pi(\beta) = \pi(\hat{\beta}) +  \frac{\partial \pi(\hat{\beta})}{\partial \beta'} \left(\beta - \hat{\beta}  \right)+ R_\pi
 	\end{equation}
 Substituting Equations \ref{taylorell} and \ref{taylorpi},
 	\begin{eqnarray*}
-		\int \pi(\theta)f(\mathbf{y}|\theta)d\theta &=& \int \exp\left\{ \ell(\hat{\theta}) +\frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) + R_\ell \right\}\\
-		&&\;\;\;\;\;\;\times \left[ \pi(\hat{\theta}) + \left(\theta - \hat{\theta}  \right)' \frac{\partial \pi(\hat{\theta})}{\partial \theta} + R_\pi \right]  d\theta\\\\
-		&=& \exp\left\{ \ell(\hat{\theta}) \right\} (I_1 + I_2 + I_3)
+		\int \pi(\beta)f(\mathbf{y}|\beta)d\beta &=& \int \exp\left\{ \ell(\hat{\beta}) +\frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) + R_\ell \right\}\\
+		&&\;\;\;\;\;\;\times \left[ \pi(\hat{\beta}) + \left(\beta - \hat{\beta}  \right)' \frac{\partial \pi(\hat{\beta})}{\partial \beta} + R_\pi \right]  d\beta\\\\
+		&=& \exp\left\{ \ell(\hat{\beta}) \right\} (I_1 + I_2 + I_3)
 	\end{eqnarray*}
 where
 	\begin{eqnarray*}
-		I_1 &=& \pi(\hat{\theta}) \int  \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) + R_\ell\right\}} d\theta\\
-		I_2 &=& \frac{\partial \pi(\hat{\theta})}{\partial \theta'}   \int  \left(\theta - \hat{\theta}  \right) \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) + R_\ell\right\}} d\theta\\
+		I_1 &=& \pi(\hat{\beta}) \int  \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) + R_\ell\right\}} d\beta\\
+		I_2 &=& \frac{\partial \pi(\hat{\beta})}{\partial \beta'}   \int  \left(\beta - \hat{\beta}  \right) \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) + R_\ell\right\}} d\beta\\
 \\
-		I_3 &=& \int R_\pi \; \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) + R_\ell\right\}} d\theta
+		I_3 &=& \int R_\pi \; \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) + R_\ell\right\}} d\beta
 	\end{eqnarray*}
-Under certain regularity conditions (not the standard ones!) we can treat $R_\ell$ and $R_\pi$ as approximately equal to zero for large $n$ uniformly in $\theta$, so that
+Under certain regularity conditions (not the standard ones!) we can treat $R_\ell$ and $R_\pi$ as approximately equal to zero for large $n$ uniformly in $\beta$, so that
 	\begin{eqnarray*}
-		I_1 &\approx& \pi(\hat{\theta}) \int  \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) \right\}} d\theta\\
-		I_2 &\approx& \frac{\partial \pi(\hat{\theta})}{\partial \theta'}   \int  \left(\theta - \hat{\theta}  \right) \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) \right\}} d\theta\\
+		I_1 &\approx& \pi(\hat{\beta}) \int  \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) \right\}} d\beta\\
+		I_2 &\approx& \frac{\partial \pi(\hat{\beta})}{\partial \beta'}   \int  \left(\beta - \hat{\beta}  \right) \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) \right\}} d\beta\\
 		I_3 &\approx& 0
 	\end{eqnarray*}	
-Because $\hat{\theta}$ is the MLE, 
-	$$\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}$$ 
+Because $\hat{\beta}$ is the MLE, 
+	$$\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}$$ 
 must be negative definite, so 
-	$$-\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}$$
+	$$-\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}$$
 is positive definite. It follows that 
-	$$ \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) \right\}} =  \exp{\left\{ -\frac{1}{2} \left( \theta - \hat{\theta}  \right)'\left[ \left(-\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}\right)^{-1} \right]^{-1}\left( \theta - \hat{\theta}  \right) \right\}}$$
-can be viewed as the kernel of a Normal distribution with mean $\hat{\theta}$ and variance matrix 
-	$$\left(-\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}\right)^{-1}$$
+	$$ \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) \right\}} =  \exp{\left\{ -\frac{1}{2} \left( \beta - \hat{\beta}  \right)'\left[ \left(-\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}\right)^{-1} \right]^{-1}\left( \beta - \hat{\beta}  \right) \right\}}$$
+can be viewed as the kernel of a Normal distribution with mean $\hat{\beta}$ and variance matrix 
+	$$\left(-\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}\right)^{-1}$$
 Thus,
-	$$\int  \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) \right\}} d\theta = \left(2\pi\right)^{p/2}\left| \left(-\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}\right)^{-1} \right|^{1/2}$$
+	$$\int  \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) \right\}} d\beta = \left(2\pi\right)^{p/2}\left| \left(-\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}\right)^{-1} \right|^{1/2}$$
 and
-	$$\int \left(\theta - \hat{\theta}  \right)  \exp{\left\{ \frac{1}{2} \left( \theta - \hat{\theta}  \right)' \frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'} \left( \theta - \hat{\theta}  \right) \right\}} d\theta = 0$$
+	$$\int \left(\beta - \hat{\beta}  \right)  \exp{\left\{ \frac{1}{2} \left( \beta - \hat{\beta}  \right)' \frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'} \left( \beta - \hat{\beta}  \right) \right\}} d\beta = 0$$
 Therefore,
 	\begin{eqnarray*}
-		\int \pi(\theta)f(\mathbf{y}|\theta)d\theta &\approx& \exp\left\{ \ell(\hat{\theta}) \right\}\pi(\hat{\theta}) \left(2\pi\right)^{p/2}\left| \left(-\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}\right)^{-1} \right|^{1/2}\\
-		&=&  \exp\left\{ \ell(\hat{\theta}) \right\}\pi(\hat{\theta}) \left(2\pi\right)^{p/2}\left|n \left(-\frac{1}{n}\frac{\partial^2 \ell(\hat{\theta})}{\partial \theta \partial \theta'}\right) \right|^{-1/2}\\\\
-		&=&\frac{ \exp\left\{ \ell(\hat{\theta}) \right\}\pi(\hat{\theta}) \left(2\pi\right)^{p/2}}{n^{p/2}\left| J(\hat{\theta}) \right|^{1/2}}
+		\int \pi(\beta)f(\mathbf{y}|\beta)d\beta &\approx& \exp\left\{ \ell(\hat{\beta}) \right\}\pi(\hat{\beta}) \left(2\pi\right)^{p/2}\left| \left(-\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}\right)^{-1} \right|^{1/2}\\
+		&=&  \exp\left\{ \ell(\hat{\beta}) \right\}\pi(\hat{\beta}) \left(2\pi\right)^{p/2}\left|n \left(-\frac{1}{n}\frac{\partial^2 \ell(\hat{\beta})}{\partial \beta \partial \beta'}\right) \right|^{-1/2}\\\\
+		&=&\frac{ \exp\left\{ \ell(\hat{\beta}) \right\}\pi(\hat{\beta}) \left(2\pi\right)^{p/2}}{n^{p/2}\left| J(\hat{\beta}) \right|^{1/2}}
 	\end{eqnarray*}
 \end{proof}
 
@@ -311,12 +328,12 @@ Therefore,
 \subsection{Finally the BIC}
 Now we re-introduce the dependence on the model $M_i$. Taking logs of the Laplace Approximation and multiplying by two (again, this is traditional but has no effect on model comparisons)
 	\begin{eqnarray*}
-		2 \log f(y|M_i) &=& 2 \log \left\{ \int f_i(y|\theta_i)\pi(\theta_i)d\theta_i \right\}\\
-		&\approx& 2\ell(\hat{\theta}_i) -p\log(n) + p \log(2\pi)- \pi(\hat{\theta}_i)-\log \left| J(\hat{\theta_i}) \right|
+		2 \log f(y|M_i) &=& 2 \log \left\{ \int f_i(y|\beta_i)\pi(\beta_i)d\beta_i \right\}\\
+		&\approx& 2\ell(\hat{\beta}_i) -p\log(n) + p \log(2\pi)- \pi(\hat{\beta}_i)-\log \left| J(\hat{\beta_i}) \right|
 	\end{eqnarray*}
 The first two terms are $O_p(n)$ and $O_p(\log{n})$, while the last three are $O_p(1)$, hence negligible as $n\rightarrow \infty$. This gives us Schwarz's BIC
-	$$BIC(M_i) = 2\log{f_i(\mathbf{y}|\hat{\theta}_i)} - p\log{n}$$
-We choose the model $M_i$ for which $BIC(M_i)$ is largest. Notice that the prior on the parameter, $\pi(\theta)$, drops out in the limit, and recall that we began by putting a uniform prior on the \emph{models} under consideration. 
+	$$BIC(M_i) = 2\log{f_i(\mathbf{y}|\hat{\beta}_i)} - p\log{n}$$
+We choose the model $M_i$ for which $BIC(M_i)$ is largest. Notice that the prior on the parameter, $\pi(\beta)$, drops out in the limit, and recall that we began by putting a uniform prior on the \emph{models} under consideration. 
 
 
 \end{document}
