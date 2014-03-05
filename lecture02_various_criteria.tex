@@ -121,6 +121,42 @@ Talk about time series version and Racine paper.
 
 
 \section{Time Series Examples}
+We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
+McQuarrie and Tsai (1998). The AR and VAR models are straightforward since, in the conditional formulation, they're just univariate and multivariate regression, respectively.
+
+\subsection{Autoregressive Models}
+
+\paragraph{Cross-Validation for AR}
+The way we described it above, CV depended in independence. How can we adapt it for AR models? Roughly speaking, the idea is to use the fact that dependence dies out over time and treat observations that are ``far enough apart'' as \emph{approximately} independent. Specifically, we choose an integer value $h$ and assume that $y_t$ and $y_s$ can be treated as independent as long as $|s - t|>h$. This idea is called ``$h$-block cross-validation'' and was introduced by Burman, Chow \& Nolan (1994). As in the iid version of leave-one-out cross-validation, we still evaluate a loss function by predicting \emph{one} witheld observation at a time using a model estimated without it. The difference is that we also omit the $h$ neighboring observations \emph{on each side} when fitting the model. For example, if we choose to evaluate squared-error loss, the criterion is
+	$$CV_h(1) = \frac{1}{T-p}\sum_{t = p+1}^T \left(y_t - \hat{y}_{(t)}^h\right)^2$$
+where 
+$$\hat{y}^h_{(t)} = \hat{\phi}^h_{1(t)} y_{t-1} + \hdots + \hat{\phi}^h_{1(t)}y_{t-p}$$
+and $\hat{\phi}^h_{j(t)}$ denotes the $j$th parameter estimate from the conditional least-squares estimator with observations $y_{t-h}, \hdots,  y_{t+h}$ removed. This idea can also be adapted to versions of cross-validation other than leave-one-out. For more details, see Racine (1997, 2000).
+
+\subsection{Vector Autoregression Models}
+Write without an intercept for simplicity (just demean everything)
+	\begin{eqnarray*}
+		\underset{(q\times 1)}{\textbf{y}_t} &=& \underset{(q\times q)}{\Phi_1} \textbf{y}_{t-1} + \hdots + \Phi_{p}\textbf{y}_{t-p} + \epsilon_t\\
+		\boldsymbol{\epsilon}_t &\overset{iid}{\sim}& N_q(\mathbf{0}, \Sigma)
+	\end{eqnarray*}
+Conditional least squares estimation, sample size, etc.	
+\begin{eqnarray*}
+	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
+	AIC &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\ 
+	AIC_c &=& \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}\\ \\
+	BIC &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}\\ \\ 
+	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{2 \log\log(T)pq^2}{T}
+\end{eqnarray*}
+Problems with VARs
+	\begin{enumerate}
+		\item If we fit $p$ lags, we lose $p$ observations under the conditional least squares estimation procedure.
+		\item Adding a lag introduces $q^2$ additional parameters. 
+	\end{enumerate}
+
+\subsection{General State Space Models}
+Problem with VARs and state space more generally is that we can easily have sample size small relative to number of parameters. In this case AIC-type criteria don't work well. Suggestions for simulation-based selection.
+
+
 Reference McQuarrie and Tsai among others. Also the paper by Ng and Renault. 
 
 \newpage
