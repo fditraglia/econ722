@@ -37,8 +37,6 @@
 \maketitle 
 
 
-
-
 \section{The Corrected AIC}
 To derive the TIC and AIC we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
 _c$, of Hurvich and Tsai (1989). Suppose that the true DGP is a linear regression model:
@@ -47,13 +45,11 @@ where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\ma
 $$g(\textbf{y}|X;\beta_0, \sigma^2_0) = \left(2\pi\sigma_0^2\right)^{-T/2} \exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta_0)'(y - X\beta_0)\right\}$$
 and the log-likelihood is
 $$\log\left[g(\textbf{y}|X;\beta_0, \sigma_0^2)\right] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)$$
-To keep the notation from getting out of control, we'll use the shorthand $\log[g(\mathbf{y})]$ for this quantity. Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. We have
+Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. We have
 $$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
-Since we've specified the density from which the data were generated as well as the density of the approximating model, we can directly compute the KL divergence. It turns out that for this example:
+Since we've specified the density from which the data were generated as well as the density of the approximating model, we can \emph{directly calculate} the KL divergence rather than trying to find a reasonable large sample approximation. It turns out that for this example 
 $$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
-\todo[inline]{You will show this on the problem set!}
-
-We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
+as you will demonstrate on the problem set. We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
 \begin{eqnarray*}
 \widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
 \end{eqnarray*}
@@ -97,20 +93,19 @@ It follows that the maximized log-likehood is
 by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is
 $$AIC = 2\left(\ell(\widehat{\theta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
 But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
-$$AIC^* = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
+$$AIC = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
 where \emph{smaller} values now indicate a better model.
 
-\todo[inline]{Add some discussion of the practical differences.}
+
 
 \section{Simulation-Based Model selection}
+We'll start with an iid setting. Below, we'll consider generalizations to a time series setting.
 
 \subsection{Bootstrap Model Selection}
 
-\paragraph{State Space Version}
-There's a state-space paper here as well. Need to talk about block bootstrap. Mention that we're going to learn more about this when we look at Bagging later in the semester.
 
 \subsection{Cross-Validation}
-Talk about time series version and Racine paper.
+
 
 \section{Some other Model Selection Criteria}
 \subsection{Hannan-Quinn}
@@ -131,7 +126,11 @@ The way we described it above, CV depended in independence. How can we adapt it 
 	$$CV_h(1) = \frac{1}{T-p}\sum_{t = p+1}^T \left(y_t - \hat{y}_{(t)}^h\right)^2$$
 where 
 $$\hat{y}^h_{(t)} = \hat{\phi}^h_{1(t)} y_{t-1} + \hdots + \hat{\phi}^h_{1(t)}y_{t-p}$$
-and $\hat{\phi}^h_{j(t)}$ denotes the $j$th parameter estimate from the conditional least-squares estimator with observations $y_{t-h}, \hdots,  y_{t+h}$ removed. This idea can also be adapted to versions of cross-validation other than leave-one-out. For more details, see Racine (1997, 2000).
+and $\hat{\phi}^h_{j(t)}$ denotes the $j$th parameter estimate from the conditional least-squares estimator with observations $y_{t-h}, \hdots,  y_{t+h}$ removed. We still have the question of what $h$ to choose. Here there is a trade-off between making the assumption of independence more plausible and leaving enough observations to get precise model estimates. Intriguingly, the simulation evidence presented in McQuarrie and Tsai (1998) suggests that setting $h=0$, which yields plain-vanilla leave-one-out CV, works well even in settings with dependence.
+
+The idea of $h$-block cross-validation can also be adapted to versions of cross-validation other than leave-one-out. For details, see Racine (1997, 2000).
+
+
 
 \subsection{Vector Autoregression Models}
 Write without an intercept for simplicity (just demean everything)
@@ -147,21 +146,28 @@ Conditional least squares estimation, sample size, etc.
 	BIC &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}\\ \\ 
 	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{2 \log\log(T)pq^2}{T}
 \end{eqnarray*}
-Problems with VARs
+
+\paragraph{Problems with VAR model selection}
 	\begin{enumerate}
 		\item If we fit $p$ lags, we lose $p$ observations under the conditional least squares estimation procedure.
 		\item Adding a lag introduces $q^2$ additional parameters. 
 	\end{enumerate}
 
-\subsection{General State Space Models}
+\paragraph{Cross-Validation for VARs} In principle we could use the same $h$-block idea here as we did for for the AR example above. However, given the large number of parameters we need to estimate, the sample sizes witholding $2h+1$ observations at a time may be too small for this to work well. 
+
+
+
+
+\subsection{Corrected AIC for State Space Models}
 Problem with VARs and state space more generally is that we can easily have sample size small relative to number of parameters. In this case AIC-type criteria don't work well. Suggestions for simulation-based selection.
 
+\paragraph{Cavanaugh \& Shumway (1997)} 
 
-Reference McQuarrie and Tsai among others. Also the paper by Ng and Renault. 
+\paragraph{}
+ 
 
-\newpage
 
-\section*{Addendum: Bayesian Information Criterion}
+\section{Bayesian Information Criterion}
 Since Frank2 talked about this in his part of the course, I won't discuss this derivation in class but I wanted to provide the details for completeness. As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
 
 \subsection{Overview of the BIC}
