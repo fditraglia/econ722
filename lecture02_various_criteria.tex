@@ -111,9 +111,57 @@ We'll start with an iid setting. Below, we'll consider generalizations to a time
 \subsection{Hannan-Quinn}
 \subsection{Final Prediction Error}
 \subsection{Mallow's $C_p$}
+Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
+	$$\textbf{y} = X\beta + \boldsymbol{\epsilon}$$
+Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$. Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense. Compare to the ``best we could possibly do'' using $X$. This is $X\theta$ but of course we don't know $\theta$
 
+Adopt the convention that $\widehat{\theta}_M$ has zeros for the elements of $\theta$ that are not estimated. In other words:
+	$$X\widehat{\theta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
+so we have
+\begin{eqnarray*}
+	(X\widehat{\theta}_M - X\theta)'(X\widehat{\theta}_M - X\theta) &=& (P_M \mathbf{y} - X\theta)'(P_M \mathbf{y} - X\theta)\\
+		&=&\left\{P_M(Y-X\theta) + (\mathbf{I} - P_M)X\theta \right\}' \left\{P_M(Y-X\theta) + (\mathbf{I} - P_M)X\theta  \right\}\\
+		&=&\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\theta\right\}'\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\theta \right\}\\
+		&=&\boldsymbol{\epsilon}'P_M'P_M \boldsymbol{\epsilon} + \theta'X'(\mathbf{I}-P_M)'P_M\boldsymbol{\epsilon} \\
+			&&\quad \quad + \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\theta + \theta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\theta\\
+		&=& \boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon} + \theta'X'(\mathbf{I} - P_M)X\theta
+\end{eqnarray*}
+where we have used the fact that $P_M$ and $(\mathbf{I}-P_M)$ are symmetric and idempotent and their product is zero. Thus,
+	\begin{eqnarray*}
+		\mbox{MSE}(M|X) &=& E\left[(X\widehat{\theta}_M - X\theta)'(X\widehat{\theta}_M - X\theta)|X \right]\\
+		 &=& E\left[\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}|X\right] + E\left[\theta'X'(\mathbf{I} - P_M)X\theta |X\right]\\
+			&=&E\left[\mbox{trace}\left\{\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}\right\}|X\right] + \theta'X'(\mathbf{I} - P_M)X\theta \\
+		&=&\mbox{trace}\left\{E[\boldsymbol{\epsilon} \boldsymbol{\epsilon}'|X]P_M\right\} + \theta'X'(\mathbf{I} - P_M)X\theta \\
+	&=&\mbox{trace}\left\{\sigma^2 P_M\right\} + \theta'X'(\mathbf{I} - P_M)X\theta \\
+	&=& \sigma^2 k_M + \theta'X'(\mathbf{I} - P_M)X\theta
+	\end{eqnarray*}
+where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
+ 
+% Suppose that we have an iid collection of observations $\{(y_1, \mathbf{x}_1), \hdots, (y_T, \mathbf{x}_T)\}$ where $\mathbf{x}_t$ is a $p$-vector of regressors 
 
+% Now suppose that we attempt to estimate $\boldsymbol{\mu}$ using a linear regression model
 
+% Let $P = X(X'X)^{-1}X'$ and $M = \mathbf{I}_T - P$. As we know from Econ 705 both matrices are symmetric and idempotent and $PM = MP = 0$. Thus,
+% \begin{eqnarray*}
+% 	&=& E\left[\left\{ P(\mathbf{y} - \boldsymbol{\mu}) - M \boldsymbol{\mu}\right\}'\left\{ P(\mathbf{y} - \boldsymbol{\mu}) - M \boldsymbol{\mu}\right\}|X \right]\\
+% 		&=& E\left[(\mathbf{y} - \boldsymbol{\mu})'P'P(\mathbf{y} - \boldsymbol{\mu})|X \right] - E\left[(\mathbf{y} - \boldsymbol{\mu})'P'M \boldsymbol{\mu}|X\right] \\
+% 			&& \quad \quad \quad \quad-\; E[\boldsymbol{\mu}'M'P(\mathbf{y} - \boldsymbol{\mu})|X]+ E[\boldsymbol{\mu}'M'M\boldsymbol{\mu}|X]\\
+% 		&=& E\left[(\mathbf{y} - \boldsymbol{\mu})'P(\mathbf{y} - \boldsymbol{\mu})|X \right] + E[\boldsymbol{\mu}'M \boldsymbol{\mu}|X]\\
+% 		&=& E\left[\mbox{trace}\left\{(\mathbf{y} - \boldsymbol{\mu})'P(\mathbf{y} - \boldsymbol{\mu})\right\}|X \right] +  \boldsymbol{\mu}'M\boldsymbol{\mu}\\
+% 		&=&\mbox{trace}\left\{E\left[(\mathbf{y} - \boldsymbol{\mu})(\mathbf{y} - \boldsymbol{\mu})'|X \right]P\right\} + \boldsymbol{\mu}'(\mathbf{I}_T - P)\boldsymbol{\mu}\\
+% 		&=& \mbox{trace}\left\{ Var(\mathbf{y}|X)P\right\}+ \boldsymbol{\mu}'\boldsymbol{\mu} -
+% \end{eqnarray*}
+
+% \begin{eqnarray*}
+% 	E[RSS] &=& E\left[(M\mathbf{y})'(M\mathbf{y})\right]\\
+% 		&=&E\left[\left\{M(\mathbf{y} - \boldsymbol{\mu}) + M\boldsymbol{\mu}\right\}'\left\{M(\mathbf{y} - \boldsymbol{\mu}) + M\boldsymbol{\mu}\right\}\right]\\
+% 		&=& E[(\mathbf{y} - \boldsymbol{\mu})'M'M(\mathbf{y} - \boldsymbol{\mu})|X] + E[\boldsymbol{\mu}'M'M(\mathbf{y}- \boldsymbol{\mu})|X]\\
+% 			&& \quad \quad \quad \quad + \; E[(\mathbf{y} - \boldsymbol{\mu})'M'M\boldsymbol{\mu}|X] + E[\boldsymbol{\mu}'M'M\boldsymbol{\mu}|X]\\
+% 		&=& E[(\mathbf{y} - \boldsymbol{\mu})'M(\mathbf{y} - \boldsymbol{\mu})|X] + \boldsymbol{\mu}'ME[\mathbf{y}|X] - \boldsymbol{\mu}\\
+% 			&& \quad \quad \quad \quad + \; E[(\mathbf{y} - \boldsymbol{\mu})'M\boldsymbol{\mu}] + E[\boldsymbol{\mu}'M\boldsymbol{\mu}]\\
+% 		&=& 
+% \end{eqnarray*}
+% conditional on $X$
 
 \section{Time Series Examples}
 We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
