@@ -113,11 +113,16 @@ We'll start with an iid setting. Below, we'll consider generalizations to a time
 \subsection{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
 	$$\underset{(T\times1)}{\textbf{y}} = \underset{(T\times K)}{X} \underset{(K\times 1)}{\beta} + \boldsymbol{\epsilon}$$
-Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$.  Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense. Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of course we don't know $\beta$
+Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$.  Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense.  
 
 Adopt the convention that $\widehat{\beta}_M$ has zeros for the elements of $\beta$ that are not estimated. In other words:
 	$$X\widehat{\beta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
-so we have
+
+One idea would be to use the in-sample prediction error to compare models
+	$$RSS(M) = (\textbf{y} - X\widehat{\beta}_M)'(\textbf{y} - X\widehat{\beta}_M)$$
+But we know that this can never decrease as we add regressors. In constrast, out-of-sample predictive ability can easily decrease when we add more predictors: there's a bias-variance tradeoff that arises from estimation uncertainty.
+
+Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of course we don't know $\beta$.
 \begin{eqnarray*}
 	(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta) &=& (P_M \mathbf{y} - X\beta)'(P_M \mathbf{y} - X\beta)\\
 		&=&\left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta \right\}' \left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta  \right\}\\
@@ -135,7 +140,9 @@ where we have used the fact that $P_M$ and $(\mathbf{I}-P_M)$ are symmetric and 
 	&=&\mbox{trace}\left\{\sigma^2 P_M\right\} + \beta'X'(\mathbf{I} - P_M)X\beta \\
 	&=& \sigma^2 k_M + \beta'X'(\mathbf{I} - P_M)X\beta
 	\end{eqnarray*}
-where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. Since the preceding expression depends on unknown constants, we construct an unbiased estimate of it as follows. Let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that 
+where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
+
+The problem with the proceeding expression is that we don't know $\theta$ or $\sigma^2$ so we can't compare MSE across models. To get around this, we'll construct an unbiased estimator. Let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that we have 
 		$$X \widehat{\theta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
 Then, using the fact that $P_MP_X = P_XP_M = P_M$, we have
 	\begin{eqnarray*}
@@ -152,33 +159,35 @@ Then, using the fact that $P_MP_X = P_XP_M = P_M$, we have
 			&=&\beta'X(P_X - P_M)X\beta +  \sigma^2 \left(\mbox{trace}\left\{P_X\right\} - \mbox{trace}\left\{P_M\right\}\right)\\ 
 			&=& \beta'X(P_X - P_M)X\beta +  \sigma^2 (K - k_M) 
 	\end{eqnarray*}
-Now, we can calculate an unbiased estimate $\sigma^2$ from the residuals of the full model as follows
-	$$\widehat{\sigma}^2 &=& \frac{\mathbf{y}'(\mathbf{I} - P_X)\mathbf{y}}{(T-K)}$$
-% Suppose that we have an iid collection of observations $\{(y_1, \mathbf{x}_1), \hdots, (y_T, \mathbf{x}_T)\}$ where $\mathbf{x}_t$ is a $p$-vector of regressors 
-
-% Now suppose that we attempt to estimate $\boldsymbol{\mu}$ using a linear regression model
-
-% Let $P = X(X'X)^{-1}X'$ and $M = \mathbf{I}_T - P$. As we know from Econ 705 both matrices are symmetric and idempotent and $PM = MP = 0$. Thus,
-% \begin{eqnarray*}
-% 	&=& E\left[\left\{ P(\mathbf{y} - \boldsymbol{\mu}) - M \boldsymbol{\mu}\right\}'\left\{ P(\mathbf{y} - \boldsymbol{\mu}) - M \boldsymbol{\mu}\right\}|X \right]\\
-% 		&=& E\left[(\mathbf{y} - \boldsymbol{\mu})'P'P(\mathbf{y} - \boldsymbol{\mu})|X \right] - E\left[(\mathbf{y} - \boldsymbol{\mu})'P'M \boldsymbol{\mu}|X\right] \\
-% 			&& \quad \quad \quad \quad-\; E[\boldsymbol{\mu}'M'P(\mathbf{y} - \boldsymbol{\mu})|X]+ E[\boldsymbol{\mu}'M'M\boldsymbol{\mu}|X]\\
-% 		&=& E\left[(\mathbf{y} - \boldsymbol{\mu})'P(\mathbf{y} - \boldsymbol{\mu})|X \right] + E[\boldsymbol{\mu}'M \boldsymbol{\mu}|X]\\
-% 		&=& E\left[\mbox{trace}\left\{(\mathbf{y} - \boldsymbol{\mu})'P(\mathbf{y} - \boldsymbol{\mu})\right\}|X \right] +  \boldsymbol{\mu}'M\boldsymbol{\mu}\\
-% 		&=&\mbox{trace}\left\{E\left[(\mathbf{y} - \boldsymbol{\mu})(\mathbf{y} - \boldsymbol{\mu})'|X \right]P\right\} + \boldsymbol{\mu}'(\mathbf{I}_T - P)\boldsymbol{\mu}\\
-% 		&=& \mbox{trace}\left\{ Var(\mathbf{y}|X)P\right\}+ \boldsymbol{\mu}'\boldsymbol{\mu} -
-% \end{eqnarray*}
-
-% \begin{eqnarray*}
-% 	E[RSS] &=& E\left[(M\mathbf{y})'(M\mathbf{y})\right]\\
-% 		&=&E\left[\left\{M(\mathbf{y} - \boldsymbol{\mu}) + M\boldsymbol{\mu}\right\}'\left\{M(\mathbf{y} - \boldsymbol{\mu}) + M\boldsymbol{\mu}\right\}\right]\\
-% 		&=& E[(\mathbf{y} - \boldsymbol{\mu})'M'M(\mathbf{y} - \boldsymbol{\mu})|X] + E[\boldsymbol{\mu}'M'M(\mathbf{y}- \boldsymbol{\mu})|X]\\
-% 			&& \quad \quad \quad \quad + \; E[(\mathbf{y} - \boldsymbol{\mu})'M'M\boldsymbol{\mu}|X] + E[\boldsymbol{\mu}'M'M\boldsymbol{\mu}|X]\\
-% 		&=& E[(\mathbf{y} - \boldsymbol{\mu})'M(\mathbf{y} - \boldsymbol{\mu})|X] + \boldsymbol{\mu}'ME[\mathbf{y}|X] - \boldsymbol{\mu}\\
-% 			&& \quad \quad \quad \quad + \; E[(\mathbf{y} - \boldsymbol{\mu})'M\boldsymbol{\mu}] + E[\boldsymbol{\mu}'M\boldsymbol{\mu}]\\
-% 		&=& 
-% \end{eqnarray*}
-% conditional on $X$
+Rearranging, and comparing to our expression from above, we have 
+	$$E[\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} +\sigma^2( 2k_M -  K)|X] = MSE(M|X)$$
+We still don't know $\sigma^2$, but we can construct an unbiased estimate from the residuals of the full model as follows
+	$$\widehat{\sigma}^2 = \frac{\mathbf{y}'(\mathbf{I} - P_X)\mathbf{y}}{(T-K)}$$
+Now, as we calculated above,
+	$$\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} = \textbf{y}'(P_X - P_M)\textbf{y}$$
+Hence, the following is an unbiased estimator of $\mbox{MSE}(M|X)$
+	$$\mbox{MC}_M = \widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} +\widehat{\sigma}^2( 2k_M -  K)$$
+To get Mallow's $C_p$ we rearrange this quantity. First, we have
+\begin{eqnarray*}
+	MC_M - 2\widehat{\sigma}^2k_M &=& \widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} - K\widehat{\sigma}^2\\
+	&=& \mathbf{y}'P_X'(\mathbf{I} - P_M)P_X \mathbf{y}K\widehat{\sigma}^2\\
+	&=&\mathbf{y}'(P_X'P_X - P_X'P_MP_X)\mathbf{y}K\widehat{\sigma}^2\\
+	 &=& \mathbf{y}'(P_X - P_M)\mathbf{y} - \left(\frac{K}{T-K}\right)\mathbf{y}'\left(\mathbf{I} - P_X\right)\mathbf{y}\\
+		&=& \left(\frac{T-K}{T-K}\right)(\mathbf{y}'P_X\mathbf{y} - \mathbf{y}'P_M\mathbf{y}) - \left(\frac{K}{T-K}\right)(\mathbf{y}'\mathbf{y}' - \mathbf{y}'P_X \mathbf{y})\\
+			&=&\left(\frac{T-K}{T-K} + \frac{K}{T-K}\right)\mathbf{y}'P_X \mathbf{y}  - \left(\frac{T-K}{T-K}\right)\mathbf{y}'P_M\mathbf{y} - \left(\frac{K}{T-K}\right)\mathbf{y}'\mathbf{y} \\
+			&=&\left(\frac{T}{T-K}\right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}'P_M\mathbf{y} - \left(\frac{K}{T-K} \right)\mathbf{y}'\mathbf{y}  \\
+			&=& \left(\frac{T}{T-K}\right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}'P_M\mathbf{y} + \left(\frac{T - K - T}{T-K} \right)\mathbf{y}'\mathbf{y}  \\
+			&=&  \left(\frac{T}{T-K} \right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}' P_M \mathbf{y} + \left(1 - \frac{T}{T-K}\right)\mathbf{y}'\mathbf{y} \\
+			&=&  \left(\frac{T}{T-K} \right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}' P_M \mathbf{y} + \mathbf{y}'\mathbf{y} - \left(\frac{T}{T-K}\right)\mathbf{y}'\mathbf{y}  \\
+			&=& \mathbf{y}'\mathbf{y} - \mathbf{y}'P_M\mathbf{y} - \left(\frac{T}{T-K} \right)(\mathbf{y}'\mathbf{y} - \mathbf{y}'P_m\mathbf{y})\\
+			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - \left(\frac{T}{T-K}\right)\mathbf{y}'\left(\mathbf{I} - P_X\right)\mathbf{y}\\
+			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - T\widehat{\sigma}^2\\
+			&=& RSS(M) - T\widehat{\sigma^2}
+\end{eqnarray*}
+In other words,
+	$$MC_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
+Dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
+	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
 
 \section{Time Series Examples}
 We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
