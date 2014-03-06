@@ -169,11 +169,11 @@ Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigm
 
 We'll now consider using \emph{subsets} of $X$ rather than the full data matrix. Let $X_M$ denote a design matrix that possibly excludes some columns of $X$. The index $M$ refers to a particular \emph{model}. Accordingly, let $\widehat{\beta}_M$ be the least-squares estimator based on the design matrix $X_M$. We'll adopt the convention that $\widehat{\beta}_M$ is padded out with zeros for the elements of $\beta$ that are \emph{not estimated} under model $M$. This way we can write
 	$$X\widehat{\beta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
-Now, suppose we want to compare the predictive power of the competing estimators $\widehat{\beta}_M$ using mean-squared error. A na\"{i}ve idea would be to use in-sample prediction error to make the compare models:
+Now, suppose we want to compare the predictive power of the competing estimators $\widehat{\beta}_M$ using mean-squared error. A na\"{i}ve idea would be to use in-sample prediction error to compare models:
 	$$RSS(M) = (\textbf{y} - X\widehat{\beta}_M)'(\textbf{y} - X\widehat{\beta}_M)$$
 As is well-known, however, the residual sum of squares can \emph{never} decrease even as we add irrelevant predictors to our model. In constrast, out-of-sample predictive ability can easily decrease when we add more predictors: there's a bias-variance tradeoff that arises from estimation uncertainty. Somehow or other we need to develop a criterion to take this into account.
 
-Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of course we don't know $\beta$.
+We'll start off by calculating the predictive mean-squared error of $X\widehat{\beta}_M$ relative to the infeasible optimum, namely $X\beta$. Let $P_M = X_M(X_M'X_M)^{-1}X_M$. Then, using the properties of projection matrices that we learned in Econ 705, in particular that they are symmetric and idempotent and the same goes from their orthogonal complements,
 \begin{eqnarray*}
 	(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta) &=& (P_M \mathbf{y} - X\beta)'(P_M \mathbf{y} - X\beta)\\
 		&=&\left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta \right\}' \left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta  \right\}\\
@@ -182,7 +182,7 @@ Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of 
 			&&\quad \quad + \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\beta + \beta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\beta\\
 		&=& \boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon} + \beta'X'(\mathbf{I} - P_M)X\beta
 \end{eqnarray*}
-where we have used the fact that $P_M$ and $(\mathbf{I}-P_M)$ are symmetric and idempotent and their product is zero. Thus,
+Thus, evaluating the predictive mean-squared error conditional on $X$, we have
 	\begin{eqnarray*}
 		\mbox{MSE}(M|X) &=& E\left[(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta)|X \right]\\
 		 &=& E\left[\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}|X\right] + E\left[\beta'X'(\mathbf{I} - P_M)X\beta |X\right]\\
@@ -191,7 +191,7 @@ where we have used the fact that $P_M$ and $(\mathbf{I}-P_M)$ are symmetric and 
 	&=&\mbox{trace}\left\{\sigma^2 P_M\right\} + \beta'X'(\mathbf{I} - P_M)X\beta \\
 	&=& \sigma^2 k_M + \beta'X'(\mathbf{I} - P_M)X\beta
 	\end{eqnarray*}
-where $k_M$ is the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
+where $k_M$ denotes the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
 
 The problem with the proceeding expression is that we don't know $\theta$ or $\sigma^2$ so we can't compare MSE across models. To get around this, we'll construct an unbiased estimator. Let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that we have 
 		$$X \widehat{\theta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
@@ -237,8 +237,10 @@ To get Mallow's $C_p$ we rearrange this quantity. First, we have
 \end{eqnarray*}
 In other words,
 	$$MC_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
+is an unbiased estimator of the predictive mean-squared error of model $M$ conditional on $X$. 
 Dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
 	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
+This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
 
 \section{Time Series Examples}
 We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
