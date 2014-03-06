@@ -105,10 +105,20 @@ provides a biased estimator of this quantity. Intuitively, the problem is that i
 using the empirical CDF constructed from the sample observations. If the problem is that we've used the data twice, then an obvious idea is to find some way to use \emph{different} data for estimating $\theta$ than we use to approximate the integral. This is the idea behind cross-validation. We split the data into two parts, use one for estimation and the \emph{other} for model evaluation. To avoid ``wasting data'' we repeat this process sucessively for \emph{different} splits, so each observation has a chance to be used for for estimation and evaluation but \emph{never for both at the same time}.
 
 To make this more concrete, we'll consider what is perhaps the most common form of cross-validation: ``leave-one-out'' cross-validation. For simplicity, suppose we have iid observations $Y_1, \hdots, Y_T$ and let $\widehat{\theta}_{(t)}$ denote the ML estimator for $\theta$ using all observations \emph{except} $Y_t$. The leave-one-out cross-validation estimator of the expected log likelihood is
-	$$CV_T(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
+	$$CV(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
 The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject the the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
 
-As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent}. To understand what's going on here, we'll need to use the properties of \emph{influence functions}, an idea from the literature on robust estiation. Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $H$ at a point $y$ is defined as 
+As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent} as we'll now show. To begin note that, by a first-order Taylor Expansion of the leave-one-out estimator around the full-sample MLE we have
+	\begin{eqnarray*}
+		CV(1) &=& \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})\\
+			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\
+			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
+	\end{eqnarray*}
+so if we can show that 
+	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = \mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
+we'll be done. Everything that follows amounts to showing that this statement is in fact correct. To see why, we'll need to examine something called an \emph{influence function}, which comes from the robust estimation literature.
+
+Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathcal{T}$ at a point $y$ is defined as 
 	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta\left(y\right)\right) - \mathbb{T}(G)}{\epsilon}$$
 where $\delta_y$ is a \emph{point mass} at $y$, that is
 		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
@@ -134,8 +144,12 @@ where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from
 Which means that we can express the leave-one-out estimator $\widehat{\theta}_{(t)}$ as follows
 \begin{eqnarray*}
 	\widehat{\theta} &=& \widehat{\theta}_{(t)} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
-	&=&
+	&=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}, y_t\right) + o_p(1)
 \end{eqnarray*}
+
+
+
+
 
 \section{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
