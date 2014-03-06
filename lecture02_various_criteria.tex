@@ -108,7 +108,7 @@ To make this more concrete, we'll consider what is perhaps the most common form 
 	$$CV(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
 The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject the the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
 
-As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent} as we'll now show. To begin note that, by a first-order Taylor Expansion of the leave-one-out estimator around the full-sample MLE we have
+As it turns out, leave-one-out cross-validation is intimately connected with the TIC. In fact the two are \emph{asymptotically equivalent} as we'll now show. To begin note that, by a first-order Taylor Expansion of the leave-one-out estimator around the full-sample MLE we have
 	\begin{eqnarray*}
 		CV(1) &=& \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})\\
 			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\
@@ -136,15 +136,16 @@ Now, since the empirical distribution is given by
 $$\widehat{G}(a) = \frac{1}{T}\sum_{t=1}^T \textbf{1}\left\{y_t \leq a\right\} = \frac{1}{T}\sum_{t=1}^T \delta_{y_t}(a)$$
 we can re-write it as 
 $$\widehat{G} = (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T$$
-where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. 
-
-$$\mathbb{T}(\widehat{G}) = \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t \right)$$
-Since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat{G}_{(t)}) =\widehat{\theta}_{(t)}$, we have the following expression for the leave-one-out estimator
+where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. Applying $\mathbb{T}$ to both sides, subtracting $\mathbb{T}(\widehat{G}_{(t)})$ and multiplying the right-hand-side by $T/T$, we have
+	$$\mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T}\left[\frac{\mathbb{T}\left((1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T \right) - \mathbb{T}(\widehat{G}_{(t)})}{1/T} \right]$$
+If we take $\epsilon = 1/T$, the term in square brackets is \emph{exactly} the expression whose limit is defined as the influence function. Hence, for $T$ large we have the approximation
+$$\mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t \right) + o_p(1)$$
+Now, since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat{G}_{(t)}) =\widehat{\theta}_{(t)}$, we have the following expression for the leave-one-out estimator
 \begin{eqnarray*}
 	\widehat{\theta}_{(t)} &=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
 	&=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}, y_t\right) + o_p(1)
 \end{eqnarray*}
-Now, it can be shown that the influence function for maximum likelihood estimation is
+The second expression indicates that dropping one observation is asymptotically negligible in its effect, through the empirical CDF, on the influence function. Now, it can be shown that the influence function for maximum likelihood estimation is
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
 where $\theta_0 = \mathbb{T}(G)$. Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
 	$$\widehat{\theta}_{(t)} = \widehat{\theta} - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
@@ -157,9 +158,8 @@ Finally, substituting this back into the expression we initially set out to prov
 		&&\quad \quad + \; o_p(1)\\
 		&=&-\frac{1}{T}\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}
 \end{eqnarray*}
-So it works as advertised!
 
-\paragraph{Other Loss Functions} Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. You'll examine a simple case of this on the problem set. It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
+Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. You'll examine a simple case of this on the problem set. It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
 
 
 
