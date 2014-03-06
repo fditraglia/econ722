@@ -110,12 +110,12 @@ The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{inde
 
 As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent} as we'll now show. To begin note that, by a first-order Taylor Expansion of the leave-one-out estimator around the full-sample MLE we have
 	\begin{eqnarray*}
-		CV(1) &=& \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})\\
+		CV(1) &=& \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})\\
 			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\
 			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
 	\end{eqnarray*}
 so we simply need to show that
-	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
+	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T}\mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
 \textbf{\emph{Everything that follows amounts to proving this statement}}. 
 
 To understand the preceding assertion, we'll need to take a slight detour and talk about \emph{influence functions}, an idea from the robust estimation literature. Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathbb{T}$ at a point $y$ is defined as 
@@ -152,9 +152,13 @@ $$\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right) =  - \frac{1}{T}\wideha
 Finally, substituting this back into the expression we initially set out to prove,
 \begin{eqnarray*}
 	\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) &=& -\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)' \frac{\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)\\
-		&=& \mbox{trace}
+		&=& -\frac{1}{T}\mbox{trace}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\
+		&&\quad \quad + \; o_p(1)\\
+		&=&-\frac{1}{T}\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}
 \end{eqnarray*}
-	
+So it works as advertised!
+
+\paragraph{Other Loss Functions} Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. You'll examine a simple case of this on the problem set. It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
 
 
 
