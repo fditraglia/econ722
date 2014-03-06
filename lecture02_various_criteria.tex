@@ -204,30 +204,32 @@ Using the fact that $P_MP_X = P_XP_M = P_M$,
 			&=& E\left[\mathbf{y}'(P_X'P_X - P_X'P_MP_X)\mathbf{y} |X\right]\\
 			&=& E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]\\
 			&\vdots& \\
-			&&\boxed{\mbox{You'll fill in the details on the problem set}}\\  
+			&&\boxed{\mbox{\textbf{You'll fill in the details on the problem set}}}\\  
 			&\vdots& \\
-			&=& \beta'X(P_X - P_M)X\beta +  \sigma^2 (K - k_M) 
+			&=& \beta'X'(\mathbf{I}- P_M)X\beta +  \sigma^2 (K - k_M) 
 	\end{eqnarray*}
-Rearranging, and comparing to our expression from above, we have 
-	$$E[\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} +\sigma^2( 2k_M -  K)|X] = MSE(M|X)$$
-We still don't know $\sigma^2$, but we can construct an unbiased estimate from the residuals of the full model as follows
+In other words, substituting the estimator $\widehat{\beta}$ from the full model in order to estaimate $\beta'X(\mathbf{I}- P_M)X\beta$ \emph{doesn't work}. The estimator $\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta}$ is \emph{biased upwards}. However, we have an explicit expression for the bias, namely $\sigma^2 (K - k_M)$. This means that if we can find an unbiased estimator of $\sigma^2$, we can \emph{correct} the bias in our estimator of $\beta'X(\mathbf{I}- P_M)X\beta$. Fortunately there is an obvious unbiased estimator of $\sigma^2$: we simply use the residuals from the full model:
 	$$\widehat{\sigma}^2 = \frac{\mathbf{y}'(\mathbf{I} - P_X)\mathbf{y}}{(T-K)}$$
-Now, as we calculated above,
-	$$\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} = \textbf{y}'(P_X - P_M)\textbf{y}$$
-Hence, the following is an unbiased estimator of $\mbox{MSE}(M|X)$
-	$$\mbox{MC}_M = \widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} +\widehat{\sigma}^2( 2k_M -  K)$$
-To get Mallow's $C_p$ we rearrange this quantity. First, we have
+Thus, 
+	$$E[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) |X ] = \beta'X(\mathbf{I}- P_M)X\beta$$ 
+Now we've managed to construct an unbiased estimator of the \emph{second} term of the MSE. What about the first? This one is easy. We already have an unbiased estimator of $\widehat{\sigma}^2$ and $k_M$ is a known constant: it's simply the number of regressors in model $M$. Therefore, collecting terms
+	\begin{eqnarray*}
+		\mbox{MC}_M &=& \widehat{\sigma}^2 k_M + \left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) \right]\\
+			&=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} + \widehat{\sigma}^2 (k_M - K)
+	\end{eqnarray*}
+is an unbiased estimator of $\mbox{MSE}(M|X)$. This criterion contains exactly the same information as Mallow's $C_p$ but expressed in a slightly different way. To get the formula from the textbooks, we need to do some more algebra. First, 
 \begin{eqnarray*}
-	MC_M - 2\widehat{\sigma}^2k_M &=& \widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} - K\widehat{\sigma}^2\\
+	MC_M - 2\widehat{\sigma}^2k_M &=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - K\widehat{\sigma}^2\\
 	&=& \mathbf{y}'(P_X - P_M)\mathbf{y} -  K\widehat{\sigma}^2\\
-		&\vdots& \mbox{You'll fill in the details on the problem set!}\\
+			&\vdots& \\
+			&&\boxed{\mbox{\textbf{You'll fill in the details on the problem set}}}\\  
+			&\vdots& \\
 			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - T\widehat{\sigma}^2\\
 			&=& RSS(M) - T\widehat{\sigma^2}
 \end{eqnarray*}
-In other words,
-	$$MC_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
-is an unbiased estimator of the predictive mean-squared error of model $M$ conditional on $X$. 
-Dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
+Substituting this into the expression for $\mbox{MC}_M$ we see that 
+	$$\mbox{MC}_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
+which is much easier to interpret than the formula we have before. Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
 	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
 This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
 
