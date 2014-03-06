@@ -165,14 +165,13 @@ So it works as advertised!
 \section{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
 	$$\underset{(T\times1)}{\textbf{y}} = \underset{(T\times K)}{X} \underset{(K\times 1)}{\beta} + \boldsymbol{\epsilon}$$
-Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$.  Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense.  
+Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$. We know that the conditional mean is the minimum mean-squared error predictor. This means that if $\beta$ were \emph{known}, we could never improve upon simply using all the regressors for prediction. But since $\beta$ must be \emph{estimated} from the data, a bias-variance tradeoff arises. In particular, we might be better of \emph{excluding} a regressor with small coefficient, since it adds very little predictive power compared but introduces additional estimation uncertainty. 
 
-Adopt the convention that $\widehat{\beta}_M$ has zeros for the elements of $\beta$ that are not estimated. In other words:
+We'll now consider using \emph{subsets} of $X$ rather than the full data matrix. Let $X_M$ denote a design matrix that possibly excludes some columns of $X$. The index $M$ refers to a particular \emph{model}. Accordingly, let $\widehat{\beta}_M$ be the least-squares estimator based on the design matrix $X_M$. We'll adopt the convention that $\widehat{\beta}_M$ is padded out with zeros for the elements of $\beta$ that are \emph{not estimated} under model $M$. This way we can write
 	$$X\widehat{\beta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
-
-One idea would be to use the in-sample prediction error to compare models
+Now, suppose we want to compare the predictive power of the competing estimators $\widehat{\beta}_M$ using mean-squared error. A na\"{i}ve idea would be to use in-sample prediction error to make the compare models:
 	$$RSS(M) = (\textbf{y} - X\widehat{\beta}_M)'(\textbf{y} - X\widehat{\beta}_M)$$
-But we know that this can never decrease as we add regressors. In constrast, out-of-sample predictive ability can easily decrease when we add more predictors: there's a bias-variance tradeoff that arises from estimation uncertainty.
+As is well-known, however, the residual sum of squares can \emph{never} decrease even as we add irrelevant predictors to our model. In constrast, out-of-sample predictive ability can easily decrease when we add more predictors: there's a bias-variance tradeoff that arises from estimation uncertainty. Somehow or other we need to develop a criterion to take this into account.
 
 Compare to the ``best we could possibly do'' using $X$. This is $X\beta$ but of course we don't know $\beta$.
 \begin{eqnarray*}
