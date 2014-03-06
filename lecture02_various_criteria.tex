@@ -108,21 +108,34 @@ To make this more concrete, we'll consider what is perhaps the most common form 
 	$$CV_T(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
 The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject the the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
 
-As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent}. To understand what's going on here, we'll need to use the properties of \emph{influence functions}, an idea from the literature on robust estiation. Let $H=H(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $H$ at a point $y$ is defined as 
-	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{H\left(\left(1-\epsilon\right)G + \epsilon \delta\left(y\right)\right)}{\epsilon}$$
-where $\delta(y)$ is the Dirac Delta Function, in this context a \emph{point mass} at $y$. This is a strange concept, so let's be more concrete. We're going to be considering the influence function for the following functional:
-	$$\theta_0 = H(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
-What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $H$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo true value will depend on the true DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. Now, if we evaulate $H$ at the \emph{empirical} distribution $\widehat{G}_T$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
+As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent}. To understand what's going on here, we'll need to use the properties of \emph{influence functions}, an idea from the literature on robust estiation. Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $H$ at a point $y$ is defined as 
+	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta\left(y\right)\right) - \mathbb{T}(G)}{\epsilon}$$
+where $\delta_y$ is a \emph{point mass} at $y$, that is
+		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
+ All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance. Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
+	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
+What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo true value will depend on the true DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. Now, if we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
+
 
 The influence function is in fact a \emph{functional derivative}. It allows us to evaulate, for example, how the pseudo-true value $\theta_0$  would change if we \emph{slightly} changed the distribution $G$ that generated the data by ``polluting'' it with a tiny mass point located at $y$. We could also consider how the maximum likelihood estimator, $\widehat{\theta}$, would change if we slightly changed the dataset, represented by empirical distribution function. 
 
-Under certain regularity conditions,
+Under appropriate regularity conditions, it can be shown that
 	$$T(\widehat{G}_T) = T(G) + \frac{1}{T}\sum_{t=1}^T \mbox{infl}(G,Y_t) + o_p(T^{-1/2})$$
 so that
-	$$\sqrt{T}\left(H(\widehat{G}_T) - H(G) \right) \overset{d}{\rightarrow}N(0,\Omega)$$
+	$$\sqrt{T}\left(\mathbb{T}(\widehat{G}_T) - \mathbb{T}(G) \right) \overset{d}{\rightarrow}N(0,\Omega)$$
 
 
+Now, since the empirical distribution is given by
+$$\widehat{G}(a) = \frac{1}{T}\sum_{t=1}^T \textbf{1}\left\{a \geq y_t \right\}$$
+we can re-write it as 
+$$\widehat{G} = (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T$$
+where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. 
 
+Which means that we can express the leave-one-out estimator $\widehat{\theta}_{(t)}$ as follows
+\begin{eqnarray*}
+	\widehat{\theta} &=& \widehat{\theta}_{(t)} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
+	&=&
+\end{eqnarray*}
 
 \section{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
