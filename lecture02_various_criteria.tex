@@ -97,11 +97,35 @@ $$AIC = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
 where \emph{smaller} values now indicate a better model.
 
 
+\section{Cross-Validation}
+In the last lecture, we learned that choosing a model by minimizing the KL divergence is equivalent to choosing a model by maximizing the expected log likelihood. We also learned that the sample analogue
+ $$E_{\widehat{G}}\left[\log f(\textbf{y}|\widehat{\theta}) \right]= \frac{\ell(\widehat{\theta})}{T}= \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta})$$
+provides a biased estimator of this quantity. Intuitively, the problem is that it uses the data twice: first to estimate $\widehat{\theta}$ and then to approximate the integral
+	$$\int g(y) \log f(y|\widehat{\theta}) \; dy = E_G\left[\log f(Y_{new}|\widehat{\theta}) \right]$$
+using the empirical CDF constructed from the sample observations. If the problem is that we've used the data twice, then an obvious idea is to find some way to use \emph{different} data for estimating $\theta$ than we use to approximate the integral. This is the idea behind cross-validation. We split the data into two parts, use one for estimation and the \emph{other} for model evaluation. To avoid ``wasting data'' we repeat this process sucessively for \emph{different} splits, so each observation has a chance to be used for for estimation and evaluation but \emph{never for both at the same time}.
+
+To make this more concrete, we'll consider what is perhaps the most common form of cross-validation: ``leave-one-out'' cross-validation. For simplicity, suppose we have iid observations $Y_1, \hdots, Y_T$ and let $\widehat{\theta}_{(t)}$ denote the ML estimator for $\theta$ using all observations \emph{except} $Y_t$. The leave-one-out cross-validation estimator of the expected log likelihood is
+	$$CV_T(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
+The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject the the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
+
+As it turns out, leave-one-out cross-validation is intimiately connected with the TIC. In fact the two are \emph{asymptotically equivalent}. To understand what's going on here, we'll need to use the properties of \emph{influence functions}, an idea from the literature on robust estiation. Let $H=H(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $H$ at a point $y$ is defined as 
+	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{H\left(\left(1-\epsilon\right)G + \epsilon \delta\left(y\right)\right)}{\epsilon}$$
+where $\delta(y)$ is the Dirac Delta Function, in this context a \emph{point mass} at $y$. This is a strange concept, so let's be more concrete. We're going to be considering the influence function for the following functional:
+	$$\theta_0 = H(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
+What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $H$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo true value will depend on the true DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. Now, if we evaulate $H$ at the \emph{empirical} distribution $\widehat{G}_T$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
+
+The influence function is in fact a \emph{functional derivative}. It allows us to evaulate, for example, how the pseudo-true value $\theta_0$  would change if we \emph{slightly} changed the distribution $G$ that generated the data by ``polluting'' it with a tiny mass point located at $y$. We could also consider how the maximum likelihood estimator, $\widehat{\theta}$, would change if we slightly changed the dataset, represented by empirical distribution function. 
+
+Under certain regularity conditions,
+	$$T(\widehat{G}_T) = T(G) + \frac{1}{T}\sum_{t=1}^T \mbox{infl}(G,Y_t) + o_p(T^{-1/2})$$
+so that
+	$$\sqrt{T}\left(H(\widehat{G}_T) - H(G) \right) \overset{d}{\rightarrow}N(0,\Omega)$$
+
 
 \section{Bootstrap Model Selection}
 
 
-\section{Cross-Validation}
+
 
 
 \section{Mallow's $C_p$}
