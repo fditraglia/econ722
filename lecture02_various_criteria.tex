@@ -38,7 +38,7 @@
 
 
 \section{The Corrected AIC}
-To derive the TIC and AIC we used asymptotic theory to derive an analytical bias correction. These approximations tend to work well as long $n$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
+To derive the TIC and AIC we used asymptotic theory to construct an analytical bias correction. Such approximations tend to work as long as $T$ is fairly large relative to $p$ but when this is not the case, they can break down. We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$
 _c$, of Hurvich and Tsai (1989). Suppose that the true DGP is a linear regression model:
 $$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
 where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
@@ -48,8 +48,8 @@ $$\log\left[g(\textbf{y}|X;\beta_0, \sigma_0^2)\right] = -\frac{T}{2}\log(2\pi) 
 Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. We have
 $$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
 Since we've specified the density from which the data were generated as well as the density of the approximating model, we can \emph{directly calculate} the KL divergence rather than trying to find a reasonable large sample approximation. It turns out that for this example 
-$$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$
-as you will demonstrate on the problem set. We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
+$$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$ 
+\textbf{You will demonstrate this on the problem set}. We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
 \begin{eqnarray*}
 \widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
 \end{eqnarray*}
@@ -80,7 +80,9 @@ E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{ E\left[\frac{\sigma_0^2}{
 Since $\log(\widehat{\sigma}^2)$ is an unbiased estimator of $E[\log(\widehat{\sigma}^2)]$, substituting this give us an unbiased estimator of $E\left[\widehat{KL}(g;f) \right]$ as desired.
 The only terms that vary across candidate models are the first and the third. Moreover, the multiplicative factor of $T/2$ does not affect model selection. Hence, the criterion is
 $$AIC_c = \log(\widehat{\sigma}^2) + \frac{T + k}{T - k -2}$$
-Note that the way this expression is written, \emph{smaller} values indicate a better model. So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
+In its broad strokes, this makes perfect sense. The residual error variance $\widehat{\sigma}^2$ measures in-sample fit. But since in-sample fit is a mis-leading guide to out-of-sample fit, we add a complexity penalty. Note that the way this expression is written, \emph{smaller} values indicate a better model. 
+
+So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
 \begin{eqnarray*}
 \widehat{\beta} &=& (X'X)^{-1}X'\mathbf{y}\\
 \widehat{\sigma}^2 &=& \frac{(\mathbf{y} - X\widehat{\beta})'(\mathbf{y} - X\widehat{\beta})}{T}
@@ -106,7 +108,7 @@ using the empirical CDF constructed from the sample observations. If the problem
 
 To make this more concrete, we'll consider what is perhaps the most common form of cross-validation: ``leave-one-out'' cross-validation. For simplicity, suppose we have iid observations $Y_1, \hdots, Y_T$ and let $\widehat{\theta}_{(t)}$ denote the ML estimator for $\theta$ using all observations \emph{except} $Y_t$. The leave-one-out cross-validation estimator of the expected log likelihood is
 	$$CV(1) = \frac{1}{T} \sum_{t=1}^T \log f(y_y|\widehat{\theta}_{(t)})$$
-The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject the the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
+The idea is that, since the data are iid, $\widehat{\theta}_{(t)}$ is \emph{independent} of $Y_t$. Accordingly, the cross-validation estimate of the expected log-likelihood should \emph{not} be subject to the over-optimism problem that plagues the maximized log-likelihood. To use cross-validation for model selection, we simply calculate $CV(1)$ for the various models under consideration, and choose the one with the \emph{highest} value.
 
 As it turns out, leave-one-out cross-validation is intimately connected with the TIC. In fact the two are \emph{asymptotically equivalent} as we'll now show. To begin note that, by a first-order Taylor Expansion of the leave-one-out estimator around the full-sample MLE we have
 	\begin{eqnarray*}
@@ -122,7 +124,7 @@ To understand the preceding assertion, we'll need to take a slight detour and ta
 	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta_y\right) - \mathbb{T}(G)}{\epsilon}$$
 where $\delta_y$ is a \emph{point mass} at $y$, that is
 		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
- All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance. Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
+ All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{If you're interested in learning more about this, the book ``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
 	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
 What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo-true value depends on the DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. If we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
 
@@ -147,11 +149,11 @@ Now, since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat
 \end{eqnarray*}
 The second expression indicates that dropping one observation is asymptotically negligible in its effect, through the empirical CDF, on the influence function. Now, it can be shown that the influence function for maximum likelihood estimation is
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-where $\theta_0 = \mathbb{T}(G)$. Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
+where $\theta_0 = \mathbb{T}(G)$ is the pseudo-true value.\footnote{See, for example, Konishi and Kitagawa (2008).} Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
 	$$\widehat{\theta}_{(t)} = \widehat{\theta} - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
-In other words,
+since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$. This gives us an asymptotic expansion for $\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right)$, namely 
 $$\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right) =  - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
-Finally, substituting this back into the expression we initially set out to prove,
+which is exactly what we need. Finally, substituting this back into the expression we initially set out to prove,
 \begin{eqnarray*}
 	\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) &=& -\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)' \frac{\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)\\
 		&=& -\frac{1}{T}\mbox{trace}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\
@@ -166,7 +168,7 @@ Although we've used cross-validation to evaulate the KL divergence here, it's ac
 \section{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
 	$$\underset{(T\times1)}{\textbf{y}} = \underset{(T\times K)}{X} \underset{(K\times 1)}{\beta} + \boldsymbol{\epsilon}$$
-Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$. We know that the conditional mean is the minimum mean-squared error predictor. This means that if $\beta$ were \emph{known}, we could never improve upon simply using all the regressors for prediction. But since $\beta$ must be \emph{estimated} from the data, a bias-variance tradeoff arises. In particular, we might be better of \emph{excluding} a regressor with small coefficient, since it adds very little predictive power compared but introduces additional estimation uncertainty. 
+Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$. We know that the conditional mean is the minimum mean-squared error predictor. This means that if $\beta$ were \emph{known}, we could never improve upon simply using all the regressors for prediction. But since $\beta$ must be \emph{estimated} from the data, a bias-variance tradeoff arises. In particular, we might be better off \emph{excluding} a regressor with small coefficient, since it adds very little predictive power but introduces additional estimation uncertainty. Mallow's $C_p$ is a model selection criterion that trys to capture this idea by approximating the \emph{predictive mean squared error} of each model, relative to the infeasible optimum where $\beta$ is known.
 
 We'll now consider using \emph{subsets} of $X$ rather than the full data matrix. Let $X_M$ denote a design matrix that possibly excludes some columns of $X$. The index $M$ refers to a particular \emph{model}. Accordingly, let $\widehat{\beta}_M$ be the least-squares estimator based on the design matrix $X_M$. We'll adopt the convention that $\widehat{\beta}_M$ is padded out with zeros for the elements of $\beta$ that are \emph{not estimated} under model $M$. This way we can write
 	$$X\widehat{\beta}_M = X_{(-M)}\textbf{0} + X_M (X_M'X_M)^{-1} X_M'\textbf{y} = P_M \textbf{y}$$
@@ -174,16 +176,16 @@ Now, suppose we want to compare the predictive power of the competing estimators
 	$$RSS(M) = (\textbf{y} - X\widehat{\beta}_M)'(\textbf{y} - X\widehat{\beta}_M)$$
 As is well-known, however, the residual sum of squares can \emph{never} decrease even as we add irrelevant predictors to our model. In constrast, out-of-sample predictive ability can easily decrease when we add more predictors: there's a bias-variance tradeoff that arises from estimation uncertainty. Somehow or other we need to develop a criterion to take this into account.
 
-We'll start off by calculating the predictive mean-squared error of $X\widehat{\beta}_M$ relative to the infeasible optimum, namely $X\beta$. Let $P_M = X_M(X_M'X_M)^{-1}X_M$. Then, using the properties of projection matrices that we learned in Econ 705, in particular that they are symmetric and idempotent and the same goes from their orthogonal complements,
+We'll start off by calculating the predictive mean-squared error of $X\widehat{\beta}_M$ relative to the infeasible optimum, namely $X\beta$. Let $P_M = X_M(X_M'X_M)^{-1}X_M$. Then we have
 \begin{eqnarray*}
-	(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta) &=& (P_M \mathbf{y} - X\beta)'(P_M \mathbf{y} - X\beta)\\
-		&=&\left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta \right\}' \left\{P_M(Y-X\beta) + (\mathbf{I} - P_M)X\beta  \right\}\\
-		&=&\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\beta\right\}'\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\beta \right\}\\
-		&=&\boldsymbol{\epsilon}'P_M'P_M \boldsymbol{\epsilon} + \beta'X'(\mathbf{I}-P_M)'P_M\boldsymbol{\epsilon} \\
-			&&\quad \quad + \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\beta + \beta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\beta\\
+	\left|\left|X\widehat{\beta}_M - X\beta\right|\right|^2 &=& (P_M \mathbf{y} - X\beta)'(P_M \mathbf{y} - X\beta)\\
+		&=&\left\{P_M(Y-X\beta) - (\mathbf{I} - P_M)X\beta \right\}' \left\{P_M(Y-X\beta) - (\mathbf{I} - P_M)X\beta  \right\}\\
+		&=&\left\{ P_M \boldsymbol{\epsilon} - (\mathbf{I}- P_M)X\beta\right\}'\left\{ P_M \boldsymbol{\epsilon} + (\mathbf{I}- P_M)X\beta \right\}\\
+		&=&\boldsymbol{\epsilon}'P_M'P_M \boldsymbol{\epsilon} - \beta'X'(\mathbf{I}-P_M)'P_M\boldsymbol{\epsilon} \\
+			&&\quad \quad - \;\boldsymbol{\epsilon}'P_M'(\mathbf{I} - P_M)X\beta + \beta'X' (\mathbf{I} - P_M)(\mathbf{I} - P_M)X\beta\\
 		&=& \boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon} + \beta'X'(\mathbf{I} - P_M)X\beta
 \end{eqnarray*}
-Thus, evaluating the predictive mean-squared error conditional on $X$, we have
+since $P_M$ and $(\mathbf{I} - P_M)$ are both symmetric and idempotent and their product in any order is zero. Thus, evaluating the predictive mean-squared error conditional on $X$, we have
 	\begin{eqnarray*}
 		\mbox{MSE}(M|X) &=& E\left[(X\widehat{\beta}_M - X\beta)'(X\widehat{\beta}_M - X\beta)|X \right]\\
 		 &=& E\left[\boldsymbol{\epsilon}'P_M \boldsymbol{\epsilon}|X\right] + E\left[\beta'X'(\mathbf{I} - P_M)X\beta |X\right]\\
@@ -194,14 +196,16 @@ Thus, evaluating the predictive mean-squared error conditional on $X$, we have
 	\end{eqnarray*}
 where $k_M$ denotes the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
 
-The problem with the proceeding expression is that we don't know $\theta$ or $\sigma^2$ so we can't compare MSE across models. To get around this, we'll construct an unbiased estimator. Let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that we have 
+So far, so good: we have derived an expression of the predictive mean-squared error of each model $M$. The problem is that it's infeasible: it depends on the unknown quantities $\sigma^2$ and $\beta$. To get around this, Mallow's $C_p$ constructs an \emph{unbiased} estimator of MSE. We proceed as follows. First, let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that we have 
 		$$X \widehat{\theta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
-Then, using the fact that $P_MP_X = P_XP_M = P_M$, we have
+Using the fact that $P_MP_X = P_XP_M = P_M$, 
 	\begin{eqnarray*}
-		E\left[\widehat{\theta}'X'(\mathbf{I} - P_M)X\widehat{\theta} |X\right] &=& E\left[\mathbf{y}'P_X'(\mathbf{I} - P_M)P_{X}\mathbf{y} |X\right]\\
+		E\left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} |X\right] &=& E\left[\mathbf{y}'P_X'(\mathbf{I} - P_M)P_{X}\mathbf{y} |X\right]\\
 			&=& E\left[\mathbf{y}'(P_X'P_X - P_X'P_MP_X)\mathbf{y} |X\right]\\
 			&=& E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]\\
-			&\vdots& \mbox{You'll fill in the details on the problem set}\\  
+			&\vdots& \\
+			&&\boxed{\mbox{You'll fill in the details on the problem set}}\\  
+			&\vdots& \\
 			&=& \beta'X(P_X - P_M)X\beta +  \sigma^2 (K - k_M) 
 	\end{eqnarray*}
 Rearranging, and comparing to our expression from above, we have 
