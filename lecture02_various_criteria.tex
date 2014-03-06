@@ -138,7 +138,8 @@ we can re-write it as
 $$\widehat{G} = (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T$$
 where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. 
 
-Which means that we can express the leave-one-out estimator $\widehat{\theta}_{(t)}$ as follows
+$$\mathbb{T}(\widehat{G}) = \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t \right)$$
+Since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat{G}_{(t)}) =\widehat{\theta}_{(t)}$, we have the following expression for the leave-one-out estimator
 \begin{eqnarray*}
 	\widehat{\theta}_{(t)} &=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
 	&=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}, y_t\right) + o_p(1)
