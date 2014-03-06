@@ -114,40 +114,47 @@ As it turns out, leave-one-out cross-validation is intimiately connected with th
 			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\
 			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
 	\end{eqnarray*}
-so if we can show that 
-	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = \mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
-we'll be done. Everything that follows amounts to showing that this statement is in fact correct. To see why, we'll need to examine something called an \emph{influence function}, which comes from the robust estimation literature.
+so we simply need to show that
+	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
+\textbf{\emph{Everything that follows amounts to proving this statement}}. 
 
-Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathcal{T}$ at a point $y$ is defined as 
-	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta\left(y\right)\right) - \mathbb{T}(G)}{\epsilon}$$
+To understand the preceding assertion, we'll need to take a slight detour and talk about \emph{influence functions}, an idea from the robust estimation literature. Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathbb{T}$ at a point $y$ is defined as 
+	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta_y\right) - \mathbb{T}(G)}{\epsilon}$$
 where $\delta_y$ is a \emph{point mass} at $y$, that is
 		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
  All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance. Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
 	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
-What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo true value will depend on the true DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. Now, if we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
+What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo-true value depends on the DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. If we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
 
 
 The influence function is in fact a \emph{functional derivative}. It allows us to evaulate, for example, how the pseudo-true value $\theta_0$  would change if we \emph{slightly} changed the distribution $G$ that generated the data by ``polluting'' it with a tiny mass point located at $y$. We could also consider how the maximum likelihood estimator, $\widehat{\theta}$, would change if we slightly changed the dataset, represented by empirical distribution function. 
-
-Under appropriate regularity conditions, it can be shown that
-	$$T(\widehat{G}_T) = T(G) + \frac{1}{T}\sum_{t=1}^T \mbox{infl}(G,Y_t) + o_p(T^{-1/2})$$
-so that
-	$$\sqrt{T}\left(\mathbb{T}(\widehat{G}_T) - \mathbb{T}(G) \right) \overset{d}{\rightarrow}N(0,\Omega)$$
-
-
+% Under appropriate regularity conditions, it can be shown that
+% 	$$T(\widehat{G}_T) = T(G) + \frac{1}{T}\sum_{t=1}^T \mbox{infl}(G,Y_t) + o_p(T^{-1/2})$$
+% so that
+% 	$$\sqrt{T}\left(\mathbb{T}(\widehat{G}_T) - \mathbb{T}(G) \right) \overset{d}{\rightarrow}N(0,\Omega)$$
 Now, since the empirical distribution is given by
-$$\widehat{G}(a) = \frac{1}{T}\sum_{t=1}^T \textbf{1}\left\{a \geq y_t \right\}$$
+$$\widehat{G}(a) = \frac{1}{T}\sum_{t=1}^T \textbf{1}\left\{y_t \leq a\right\} = \frac{1}{T}\sum_{t=1}^T \delta_{y_t}(a)$$
 we can re-write it as 
 $$\widehat{G} = (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T$$
 where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. 
 
 Which means that we can express the leave-one-out estimator $\widehat{\theta}_{(t)}$ as follows
 \begin{eqnarray*}
-	\widehat{\theta} &=& \widehat{\theta}_{(t)} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
+	\widehat{\theta}_{(t)} &=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
 	&=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}, y_t\right) + o_p(1)
 \end{eqnarray*}
-
-
+Now, it can be shown that the influence function for maximum likelihood estimation is
+	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
+where $\theta_0 = \mathbb{T}(G)$. Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
+	$$\widehat{\theta}_{(t)} = \widehat{\theta} - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
+In other words,
+$$\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right) =  - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
+Finally, substituting this back into the expression we initially set out to prove,
+\begin{eqnarray*}
+	\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) &=& -\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)' \frac{\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)\\
+		&=& \mbox{trace}
+\end{eqnarray*}
+	
 
 
 
