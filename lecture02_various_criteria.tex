@@ -98,19 +98,13 @@ where \emph{smaller} values now indicate a better model.
 
 
 
-\section{Simulation-Based Model selection}
-We'll start with an iid setting. Below, we'll consider generalizations to a time series setting.
-
-\subsection{Bootstrap Model Selection}
+\section{Bootstrap Model Selection}
 
 
-\subsection{Cross-Validation}
+\section{Cross-Validation}
 
 
-\section{Some other Model Selection Criteria}
-\subsection{Hannan-Quinn}
-\subsection{Final Prediction Error}
-\subsection{Mallow's $C_p$}
+\section{Mallow's $C_p$}
 Suppose that we want to predict $y$ from $\mathbf{x}$ using a linear regression model:
 	$$\underset{(T\times1)}{\textbf{y}} = \underset{(T\times K)}{X} \underset{(K\times 1)}{\beta} + \boldsymbol{\epsilon}$$
 Where $E[\boldsymbol{\epsilon}|X] = 0$ and $Var(\boldsymbol{\epsilon}|X) = \sigma^2 \mathbf{I}$.  Some elements of $\beta$ might be zero or at least very small. We consider using only a subset of the regressors and ask whether this harms our predictions in a mean-squared error sense.  
