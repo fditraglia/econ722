@@ -149,7 +149,7 @@ Now, since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat
 \end{eqnarray*}
 The second expression indicates that dropping one observation is asymptotically negligible in its effect, through the empirical CDF, on the influence function. Now, it can be shown that the influence function for maximum likelihood estimation is
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-where $\theta_0 = \mathbb{T}(G)$ is the pseudo-true value.\footnote{See, for example, Konishi and Kitagawa (2008).} Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
+where $\theta_0 = \mathbb{T}(G)$ is the pseudo-true value.\footnote{For details, see the Appendix to this section.} Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
 	$$\widehat{\theta}_{(t)} = \widehat{\theta} - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
 since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$. This gives us an asymptotic expansion for $\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right)$, namely 
 $$\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right) =  - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
@@ -161,7 +161,46 @@ which is exactly what we need. Finally, substituting this back into the expressi
 		&=&-\frac{1}{T}\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}
 \end{eqnarray*}
 
+
+
 Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. You'll examine a simple case of this on the problem set. It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
+
+\subsection*{Appendix: Deriving the Influence Function for MLE}
+In the preceding argument I claimed that the influence function for MLE is given by
+	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
+Here's a proof of this statement, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Many thanks to Laura Liu for working out the details of this argument and typing it up for me!} First, note that the functional $\mathbb{T}$ for MLE can be (implicitly) defined in terms of the score by
+$$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)=0$$
+where $\mathbb{T}\left(G\right)=\theta_{0}$. Now, to calculate the influence function, we need to evaulate $\mathbb{T}$ not at $G$ but at $\left(1-\epsilon\right)G+\epsilon\delta_{y}$. Substituting, we have
+$$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)}d\left(\left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)\right)=0$$
+Note that the pseudo-true value has changed to $\theta^* = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y}) \neq \theta_0$ since we're evaluating the functional at a different distribution than $G$. In fact, the preceding expression gives $\theta^*$ as an \emph{implicit function} of $\epsilon$.
+
+Now, if we differentiate both sides of the preceding expression with respect to $\epsilon$ and evaulate the result at $\epsilon = 0$, we have
+\begin{align}
+ & \int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\left(\delta_{y}\left(z\right)-G\left(z\right)\right)\nonumber \\
+ & +\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\cdot\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]=0\label{eq:derivative}
+\end{align}
+
+To ensure the uniqueness of $\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]$,
+we need the following condition (equation 5.17 in the book)
+\[
+\int\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]dG\left(z\right)=0
+\]
+So the first term in equation (\ref{eq:derivative}) becomes
+\begin{align}
+\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\left(\delta_{y}\left(z\right)-G\left(z\right)\right) & =\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\delta_{y}\left(z\right)\nonumber \\
+ & =\left.\frac{\partial\log f\left(y|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}\label{eq:1st_term}
+\end{align}
+
+Thus,
+\begin{align*}
+\mathrm{infl\left(G,y\right)} & =\lim_{\epsilon\rightarrow0}\frac{\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)-\mathbb{T}\left(G\right)}{\epsilon}\\
+ & =\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]\\
+ & =\left\{ -\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\right\} ^{-1}\left.\frac{\partial\log f\left(y|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}\\
+ & =J^{-1}\frac{\partial\log f\left(y|\theta_{0}\right)}{\partial\theta}
+\end{align*}
+where the third line is given by equations (\ref{eq:derivative})
+and (\ref{eq:1st_term}), and the fourth line follows the definitions
+of $J$ and $\theta_{0}$.
 
 
 
