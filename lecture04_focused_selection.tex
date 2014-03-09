@@ -43,7 +43,10 @@
 \maketitle 
 
 \section{Local Mis-specification}
-In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding.
+
+\subsection{Introduction}
+In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
+
 \subsection{What's Wrong with Asymptotic Power?}
 Consider the following simple testing problem. Suppose we observe $2T$ observations according to
 $$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} N(\mu, 1)$$
