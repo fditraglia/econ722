@@ -120,11 +120,11 @@ so we simply need to show that
 	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T}\mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
 \textbf{\emph{Everything that follows amounts to proving this statement}}. 
 
-To understand the preceding assertion, we'll need to take a slight detour and talk about \emph{influence functions}, an idea from the robust estimation literature. Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathbb{T}$ at a point $y$ is defined as 
+To understand the preceding assertion, we'll need to take a slight detour and talk about \emph{influence functions}, an idea from the robust estimation literature.\footnote{For a detailed overview, see ``Robust Statistics'' by Huber \& Ronchetti (2009).} Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. Then the influence function of $\mathbb{T}$ at a point $y$ is defined as 
 	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta_y\right) - \mathbb{T}(G)}{\epsilon}$$
 where $\delta_y$ is a \emph{point mass} at $y$, that is
 		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
- All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{If you're interested in learning more about this, the book ``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
+ All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{See, for example, Chapter 5 of ``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} Here we're going to be concerned with a particular functional that should look familiar from our last lecture:
 	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
 What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo-true value depends on the DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. If we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
 
@@ -172,9 +172,29 @@ Here's a proof of this statement, following Chapter 5 of Konishi \& Kitagawa (20
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)=0$$
 where $\mathbb{T}\left(G\right)=\theta_{0}$. Now, to calculate the influence function, we need to evaulate $\mathbb{T}$ not at $G$ but at $\left(1-\epsilon\right)G+\epsilon\delta_{y}$. Substituting, we have
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)}d\left(\left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)\right)=0$$
-Note that the pseudo-true value has changed to $\theta^* = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y}) \neq \theta_0$ since we're evaluating the functional at a different distribution than $G$. In fact, the preceding expression gives $\theta^*$ as an \emph{implicit function} of $\epsilon$.
+Note that the pseudo-true value has changed to $\theta^* = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y}) \neq \theta_0$ since we're evaluating the functional at a different distribution than $G$. In fact, the preceding expression gives $\theta^*$ as an \emph{implicit function} of $\epsilon$. The next step is to differentiate both sides of the preceding equation with respect to $\epsilon$ and evaulate the result at $\epsilon = 0$. As written, this looks a little intimidating so let's simplify the notation a bit and unpack this somewhat strange-looking integral. First, let $s(z| \theta) = \partial \log f(z|\theta)/\partial \theta$ and write $\theta(\epsilon,y) = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y})$ and $H(z) = \left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)$. Using this notation, the integral we need to differentiate becomes
+	$$\int s(z|\theta(\epsilon,y))\; dH(z)$$
+But what exactly is the the measure $H(z)$? It is simply a \emph{mixture distribution}: $Z \sim H(z)$ is a random variable that equals $y$ with probability $\epsilon$ and $X$ with probability $1-\epsilon$ where $X \sim G(x)$. The preceding integral is simply the \emph{expected value} of a \emph{function} of $Z$. Hence,
+\begin{eqnarray*}
+	\int s(z|\theta(\epsilon,y))\; dH(z) &=& (1-\epsilon)\int s(z|\theta(\epsilon,y))\; dG(z) + \epsilon s(y|\theta(\epsilon,y))\\
+		&=& (1-\epsilon) A(\epsilon) + \epsilon B(\epsilon)
+\end{eqnarray*}
+Now we'll differentiate each piece. By the product rule and the chain rule
+	\begin{eqnarray*}
+		\frac{\partial}{\partial \epsilon} A(\epsilon) &=& -A(\epsilon) + (1-\epsilon) \frac{\partial}{\partial \epsilon} A(\epsilon)\\
+			&=& -A(\epsilon) + (1-\epsilon) \int \frac{\partial}{\partial \epsilon}  s(z|\theta(\epsilon,y))\; dG(z)\\
+			&=& -A(\epsilon) + (1-\epsilon) \int \frac{\partial s(z|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}\; dG(z)
+	\end{eqnarray*}
+and similarly
+	\begin{eqnarray*}
+		\frac{\partial}{\partial \epsilon} B(\epsilon) &=& B(\epsilon) +\epsilon\; \frac{\partial}{\partial \epsilon} B(\epsilon)\\
+		&=&B(\epsilon) + \epsilon \; \frac{\partial s(y|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}
+	\end{eqnarray*}
+Now, we're going to evaluate the derivative at $\epsilon = 0$, so we have
+	\begin{eqnarray*}
+		\frac{\partial}{\partial \epsilon}\left[\int s(z|\theta(\epsilon,y))\; dH(z) \right]_{\epsilon = 0} &=& B(\epsilon) - A(\epsilon)  + \int \frac{\partial s(z|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}\; dG(z)
+	\end{eqnarray*}
 
-Now, if we differentiate both sides of the preceding expression with respect to $\epsilon$ and evaulate the result at $\epsilon = 0$, we have
 \begin{align}
  & \int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\left(\delta_{y}\left(z\right)-G\left(z\right)\right)\nonumber \\
  & +\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\cdot\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]=0\label{eq:derivative}
