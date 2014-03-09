@@ -44,6 +44,42 @@
 
 \section{Local Mis-specification}
 In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding.
+\subsection{What's Wrong with Asymptotic Power?}
+Consider the following simple testing problem. Suppose we observe $2T$ observations according to
+$$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} N(\mu, 1)$$
+and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. In this admittedly very simple example, the obvious test statistic is 
+	$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
+where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
+\begin{eqnarray*}
+\mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{2N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
+	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{2N}\right)
+\end{eqnarray*}
+where $Z$ is a standard normal random variable and $\Phi$ is the corresponding CDF. Now suppose we decided to do something completely crazy: throw away half our sample. Let $\bar{X}_{N/2}$ denote the sample mean based on observations $1, 2, \hdots, \lfloor N/2 \rfloor $ \emph{only}. We can still construct a perfectly valid test with size $\alpha$ as follows. Define
+	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_N \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
+and reject if $\sqrt{N} \bar{X}_N > z_{1-\alpha}$. But there's an obvious problem here: there \emph{must} be a cost for throwing away perfectly good data. Indeed, if we calculate the power for this crazy test, we'll find that it's \emph{strictly lower} than that of the sensible test based on the full sample. In particular,
+	$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
+using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.  
+
+Now, for an example this simple we'd never resort to asymptotics, but suppose we did. How do these two tests compare as the sample size goes to infinity? The asymptotic size in this example is the same as the finite-sample size since we know the exact sampling distribution of the test statistics under the null and neither depends on sample size. But what about the power? We have,
+\begin{eqnarray*}
+	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right) \right] = 1\\
+	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right) \right] = 1
+\end{eqnarray*}
+In other words, both of these tests are \emph{consistent}: as the sample size goes to infinity, the power goes to one. Think about this for a moment: we know that for \emph{any} fixed sample size a test based on the full sample is \emph{strictly more powerful} but in the limit this difference disappears. This strongly suggests that something is wrong with our asymptotic thought experiment in this setting.
+
+You might object that I've cooked up a particularly perverse example, but it turns out that this phenomenon is quite general. It's easy to find consistent tests, in fact it's difficult to find tests that \emph{aren't} consistent. But we know from simulation studies that not all consistent tests are created equal: some have \emph{much} better finite sample power than others. One way around this problem would be to only compare the finite-sample properties of different tests and never use asymptotics. But we almost \emph{never} know the exact sampling distribution of our test statistics. 
+
+This is where \emph{local alternatives} come in. Rather than evaluating our tests against a \emph{fixed} alternative $\mu$, suppose we were to evaulate it against a \emph{sequence} of \emph{local} alternatives that \emph{drift towards the null} at rate $N^{-1/2}$. In other words, our alternative becomes $H_1 \colon \mu = \delta / \sqrt{N}$ where, for this one-sided test, $\delta > 0$. If we substitute $\delta/\sqrt{N}$ for $\mu$ and take the limit as $N\rightarrow \infty$, we find
+\begin{eqnarray*}
+	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{N}\right) \right]\\
+	 &=& 1 - \Phi\left(z_{1-\alpha} - \delta \right)
+\end{eqnarray*}
+and similarly
+\begin{eqnarray*}
+	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{\lfloor N/2 \rfloor }\right) \right]\\
+	 &=& 1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{2}} \right)
+\end{eqnarray*}
+Wow! Our problem has disappeared! The asymptotic power of the two tests now differs in essentially the same way as the finite sample power. Also note that the power no longer converges to one. Intuitively, this is because the drifting sequence of alternatives $\delta/\sqrt{n}$ makes it ``harder and harder'' to reject the null as the sample size grows by shrinking \emph{just fast enough} but not so fast that the power goes to zero. This type of calculation is called a \emph{local power analysis}. A test that has asymptotic power greater than zero in such as setting is said to ``have power against local alternatives.''
 
 \section{Focused Information Criterion}
 
