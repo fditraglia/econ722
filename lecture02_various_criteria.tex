@@ -181,8 +181,8 @@ Now, the measure $H(z)$ is simply a \emph{mixture distribution}: $Z \sim H(z)$ i
 \end{eqnarray*}
 First we'll differentiate each piece:
 	\begin{eqnarray*}
-		\frac{\partial}{\partial \epsilon} A(\epsilon) &=& -A(\epsilon) + (1-\epsilon) \frac{\partial}{\partial \epsilon} A(\epsilon)\\
-		\frac{\partial}{\partial \epsilon} B(\epsilon) &=& B(\epsilon) +\epsilon\; \frac{\partial}{\partial \epsilon} B(\epsilon)
+		\frac{\partial}{\partial \epsilon} \left[(1-\epsilon) A(\epsilon)\right] &=& -A(\epsilon) + (1-\epsilon) \frac{\partial}{\partial \epsilon} A(\epsilon)\\
+		\frac{\partial}{\partial \epsilon}\left[ \epsilon B(\epsilon)\right] &=& B(\epsilon) +\epsilon\; \frac{\partial}{\partial \epsilon} B(\epsilon)
 	\end{eqnarray*}
 Combining and and evaluating at $\epsilon = 0$, 
 	\begin{eqnarray*}
