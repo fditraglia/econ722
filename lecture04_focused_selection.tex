@@ -45,10 +45,10 @@
 \section{Local Mis-specification}
 
 \subsection{Introduction}
-In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
+In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
 
 \subsection{What's Wrong with Asymptotic Power?}
-Consider the following simple testing problem. Suppose we observe $2T$ observations according to
+Consider the following simple testing problem. Suppose we observe $N$ observations from the following DGP
 $$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} N(\mu, 1)$$
 and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. In this admittedly very simple example, the obvious test statistic is 
 	$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
@@ -82,7 +82,7 @@ and similarly
 	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{\lfloor N/2 \rfloor }\right) \right]\\
 	 &=& 1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{2}} \right)
 \end{eqnarray*}
-Wow! Our problem has disappeared! The asymptotic power of the two tests now differs in essentially the same way as the finite sample power. Also note that the power no longer converges to one. Intuitively, this is because the drifting sequence of alternatives $\delta/\sqrt{n}$ makes it ``harder and harder'' to reject the null as the sample size grows by shrinking \emph{just fast enough} but not so fast that the power goes to zero. This type of calculation is called a \emph{local power analysis}. A test that has asymptotic power greater than zero in such as setting is said to ``have power against local alternatives.''
+Wow! Our problem has disappeared! The asymptotic power of the two tests now differs in essentially the same way as the finite sample power. Also note that the power no longer converges to one. Intuitively, this is because the drifting sequence of alternatives $\delta/\sqrt{n}$ makes it ``harder and harder'' to reject the null as the sample size grows by shrinking \emph{just fast enough} but not so fast that the power goes to zero. This type of calculation is called a \emph{local power analysis}. A test that has asymptotic power greater than zero in such a setting is said to have ``power against local alternatives.''
 
 \subsection{A Bias-Variance Tradeoff in the Limit}
 When we derived Mallow's $C_p$, the idea was to compare models on the basis of predictive mean-squared error. Bigger models generally have a lower bias but a higher variance because there are more parameters to estimate. In the example we considered in class, everything was linear and we made enough assumptions about the finite sample distribution that we could deduce the \emph{exact} MSE conditional on $X$. In many settings, however, finite sample results unavailable and we are forced to rely on asymptotic approximations. We know there is a tradeoff between bias and variance in the finite sample and we'd like to capture this idea in our limit results. The question is how?
