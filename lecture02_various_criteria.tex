@@ -166,62 +166,48 @@ which is exactly what we need. Finally, substituting this back into the expressi
 Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. You'll examine a simple case of this on the problem set. It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
 
 \subsection*{Appendix: Deriving the Influence Function for MLE}
-In the preceding argument I claimed that the influence function for MLE is given by
+In the preceding argument I claimed that the influence function for MLE is 
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-Here's a proof of this statement, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Many thanks to Laura Liu for working out the details of this argument and typing it up for me!} First, note that the functional $\mathbb{T}$ for MLE can be (implicitly) defined in terms of the score by
+Here's a justification for this assertion, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Many thanks to Laura Liu for providing me with a detailed note upon which this section is based.} First, note that the functional $\mathbb{T}$ for MLE is defined as
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)=0$$
 where $\mathbb{T}\left(G\right)=\theta_{0}$. Now, to calculate the influence function, we need to evaulate $\mathbb{T}$ not at $G$ but at $\left(1-\epsilon\right)G+\epsilon\delta_{y}$. Substituting, we have
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)}d\left(\left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)\right)=0$$
-Note that the pseudo-true value has changed to $\theta^* = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y}) \neq \theta_0$ since we're evaluating the functional at a different distribution than $G$. In fact, the preceding expression gives $\theta^*$ as an \emph{implicit function} of $\epsilon$. The next step is to differentiate both sides of the preceding equation with respect to $\epsilon$ and evaulate the result at $\epsilon = 0$. As written, this looks a little intimidating so let's simplify the notation a bit and unpack this somewhat strange-looking integral. First, let $s(z| \theta) = \partial \log f(z|\theta)/\partial \theta$ and write $\theta(\epsilon,y) = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y})$ and $H(z) = \left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)$. Using this notation, the integral we need to differentiate becomes
+Note that the pseudo-true value has changed to $\mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y}) \neq \theta_0$ since we're evaluating the functional at a different distribution than $G$. In fact, the preceding expression gives $\theta$ as an \emph{implicit function} of $\epsilon$. The next step is to differentiate both sides of the preceding equation with respect to $\epsilon$ and evaulate the result at $\epsilon = 0$. As written, this looks a little intimidating so let's simplify the notation a bit and unpack this somewhat strange-looking integral. First, let $s(z| \theta) = \partial \log f(z|\theta)/\partial \theta$ and write $\theta(\epsilon,y) = \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y})$ and $H(z) = \left(1-\epsilon\right)G\left(z\right)+\epsilon\delta_{y}\left(z\right)$. Using this notation, the integral becomes
 	$$\int s(z|\theta(\epsilon,y))\; dH(z)$$
-But what exactly is the the measure $H(z)$? It is simply a \emph{mixture distribution}: $Z \sim H(z)$ is a random variable that equals $y$ with probability $\epsilon$ and $X$ with probability $1-\epsilon$ where $X \sim G(x)$. The preceding integral is simply the \emph{expected value} of a \emph{function} of $Z$. Hence,
+Now, the measure $H(z)$ is simply a \emph{mixture distribution}: $Z \sim H(z)$ is a random variable that equals $y$ with probability $\epsilon$ and $X$ with probability $1-\epsilon$ where $X \sim G(x)$. Indeed, the preceding integral is simply the \emph{expected value} of a \emph{function} of $Z$. Hence,
 \begin{eqnarray*}
 	\int s(z|\theta(\epsilon,y))\; dH(z) &=& (1-\epsilon)\int s(z|\theta(\epsilon,y))\; dG(z) + \epsilon s(y|\theta(\epsilon,y))\\
 		&=& (1-\epsilon) A(\epsilon) + \epsilon B(\epsilon)
 \end{eqnarray*}
-Now we'll differentiate each piece. By the product rule and the chain rule
+First we'll differentiate each piece:
 	\begin{eqnarray*}
 		\frac{\partial}{\partial \epsilon} A(\epsilon) &=& -A(\epsilon) + (1-\epsilon) \frac{\partial}{\partial \epsilon} A(\epsilon)\\
-			&=& -A(\epsilon) + (1-\epsilon) \int \frac{\partial}{\partial \epsilon}  s(z|\theta(\epsilon,y))\; dG(z)\\
-			&=& -A(\epsilon) + (1-\epsilon) \int \frac{\partial s(z|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}\; dG(z)
+		\frac{\partial}{\partial \epsilon} B(\epsilon) &=& B(\epsilon) +\epsilon\; \frac{\partial}{\partial \epsilon} B(\epsilon)
 	\end{eqnarray*}
-and similarly
+Combining and and evaluating at $\epsilon = 0$, 
 	\begin{eqnarray*}
-		\frac{\partial}{\partial \epsilon} B(\epsilon) &=& B(\epsilon) +\epsilon\; \frac{\partial}{\partial \epsilon} B(\epsilon)\\
-		&=&B(\epsilon) + \epsilon \; \frac{\partial s(y|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}
+		\frac{\partial}{\partial \epsilon}\left[\int s(z|\theta(\epsilon,y))\; dH(z) \right]_{\epsilon = 0} &=& B(0) - A(0)  + \frac{\partial}{\partial \epsilon} A(\epsilon)
 	\end{eqnarray*}
-Now, we're going to evaluate the derivative at $\epsilon = 0$, so we have
+Converting back into the notation of the original problem
 	\begin{eqnarray*}
-		\frac{\partial}{\partial \epsilon}\left[\int s(z|\theta(\epsilon,y))\; dH(z) \right]_{\epsilon = 0} &=& B(\epsilon) - A(\epsilon)  + \int \frac{\partial s(z|\theta(\epsilon,y))}{\partial \theta} \frac{\partial \theta(\epsilon,y)}{\partial \epsilon}\; dG(z)
+		B(0) &=& s(y|\theta(0,y))= \left.\frac{\partial \log f(y|\theta)}{\partial \theta}\right|_{\theta = \mathbb{T}(G)}\\
+		A(0) &=& \int s(z|\theta(0,y)) \; dG(z) = \int \left.\frac{\partial \log f(z|\theta)}{\partial \theta}\right|_{\theta = \mathbb{T}(G)} \;dG(z) = 0
 	\end{eqnarray*}
-
-\begin{align}
- & \int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\left(\delta_{y}\left(z\right)-G\left(z\right)\right)\nonumber \\
- & +\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\cdot\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]=0\label{eq:derivative}
-\end{align}
-
-To ensure the uniqueness of $\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]$,
-we need the following condition (equation 5.17 in the book)
-\[
-\int\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]dG\left(z\right)=0
-\]
-So the first term in equation (\ref{eq:derivative}) becomes
-\begin{align}
-\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\left(\delta_{y}\left(z\right)-G\left(z\right)\right) & =\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}d\delta_{y}\left(z\right)\nonumber \\
- & =\left.\frac{\partial\log f\left(y|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}\label{eq:1st_term}
-\end{align}
-
-Thus,
-\begin{align*}
-\mathrm{infl\left(G,y\right)} & =\lim_{\epsilon\rightarrow0}\frac{\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)-\mathbb{T}\left(G\right)}{\epsilon}\\
- & =\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]\\
- & =\left\{ -\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\right\} ^{-1}\left.\frac{\partial\log f\left(y|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}\\
- & =J^{-1}\frac{\partial\log f\left(y|\theta_{0}\right)}{\partial\theta}
-\end{align*}
-where the third line is given by equations (\ref{eq:derivative})
-and (\ref{eq:1st_term}), and the fourth line follows the definitions
-of $J$ and $\theta_{0}$.
-
+by the definition of $\theta_0 = \mathbb{T}(G)$ as the solution to the population moment condition for MLE under the data generating process $G$. Similarly,
+	\begin{eqnarray*}
+		\frac{\partial}{\partial \epsilon} A(\epsilon) &=& \int \frac{\partial s(z|\theta(0,y))}{\partial \theta} \frac{\partial \theta(0,y)}{\partial \epsilon}\; dG(z)\\
+		&=& \int \left.\frac{\partial^2 \log f(z|\theta)}{\partial \theta \partial \theta'}\right|_{\theta = \mathbb{T}(G)} \frac{\partial}{\partial \epsilon} \left[  \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y})\right]_{\epsilon = 0}\; dG(z)
+	\end{eqnarray*}
+Thus, putting everything together,
+	$$\left.\frac{\partial \log f(y|\theta)}{\partial \theta}\right|_{\theta = \mathbb{T}(G)} + \int \left.\frac{\partial^2 \log f(z|\theta)}{\partial \theta \partial \theta'}\right|_{\theta = \mathbb{T}(G)} \frac{\partial}{\partial \epsilon} \left[  \mathbb{T}(\left(1-\epsilon\right)G+\epsilon\delta_{y})\right]_{\epsilon = 0}\; dG(z) = 0$$
+Rearranging, and noting that the second factor in the second term is constant with respect to the variable of integration gives
+\begin{eqnarray*}
+	\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]_{\epsilon = 0}
+ & =&\left\{ -\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta\partial\theta^{\prime}}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)\right\} ^{-1}\left.\frac{\partial\log f\left(y|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}\\
+ & =&J^{-1}\frac{\partial\log f\left(y|\theta_{0}\right)}{\partial\theta}
+\end{eqnarray*}
+And now we're finished since:
+$$\frac{\partial}{\partial\epsilon}\left[\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)\right]_{\epsilon = 0} = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G+\epsilon\delta_{y}\right)}{\epsilon} = \mbox{infl}(G,y)$$
 
 
 \section{Mallow's $C_p$}
