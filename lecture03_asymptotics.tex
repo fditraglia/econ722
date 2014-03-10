@@ -88,5 +88,25 @@ Problem with VARs and state space more generally is that we can easily have samp
 \paragraph{Cavanaugh \& Shumway (1997)} 
 
 
+\section{Consistency vs.\ Efficiency}
+
+\subsection{Introduction}
+Up until now we've made proceeded by setting forth desiderata for model selection, e.g. minimize the KL divergence or predictive mean-squared error, and then making enough assumptions until we could derive a criterion. And although the details of the derivations were all different, in each of the examples we've considered to far, the result amounted to adding a penalty to the maximized log-likelihood to account for model complexity, for example:
+	\begin{eqnarray*}
+		TIC &=& 2\ell_T(\widehat{\theta}) -\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}\\
+		AIC &=& 2\ell_T(\widehat{\theta}) - 2\; \mbox{length}(\theta)\\
+		BIC &=& 2\ell_T(\widehat{\theta}) - \log(T)\; \mbox{length}(\theta)
+	\end{eqnarray*}
+We're now going to take a completely different perspective. Instead of asking what assumptions we need to derive a particular criterion, we'll ask ``given the penalty term that this criterion applies to the log-likelihood, how will it perform in large samples?'' We'll concern ourselves in particular with two properties: \textbf{consistency} and \textbf{efficiency}. 
+
+\paragraph{Consistency} Suppose that we have a set of candidate models, one of which is actually the true DGP. It seems clear that in this setting we'd like our model selection procedure to correctly identify the true DGP as the sample size grows. This is the idea behind consistency. We say that a model selection criterion is \textbf{consistent} if it selects the true DGP with probability approaching one as $T\rightarrow \infty$. 
+
+\paragraph{Efficiency} It's somewhat rare that the goal of model selection is to determine which model is the ``truth'' or even which model is the KL minimizer. More commonly we estimate a model for \emph{some specific purpose}: perhaps we want to estimate a particular parameter or make a good forecast. From this perspective it is natural to look for a model selection criterion that with good risk properties. Intuitively, we'l like the criterion to perform ``almost as well'' as the risk-optimal model in our candidate set. This property, which we'll make more precise below, is called \textbf{efficiency}. 
+
+You may be thinking ``consistency and efficiency both sound like great properties so let's find a criterion that satisfies them both!'' Unfortunately, this turns out to be impossible: if a model selection criterion is consistent it cannot be efficient, and vice-versa. 
+
+\paragraph{Weak Consistency} But what if the true DGP is not among the candidate models? This seems like a much more realistic assumption. If we are willing to assume that there is a unique candidate model with minimum KL divergence from the truth then it makes sense to ask that our model selection criterion identify \emph{this model} as the sample size grows. We say that a model selection criterion is \textbf{weakly consistent} if it selects the KL minimizing candidate model with probability approaching one as $T\rightarrow \infty$.
+
+
 \end{document}
  
