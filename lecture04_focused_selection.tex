@@ -49,7 +49,7 @@ In this lecture we'll be using a kind of asymptotic thought experiment that may 
 
 \subsection{What's Wrong with Asymptotic Power?}
 Consider the following simple testing problem. Suppose we observe $N$ observations from the following DGP
-$$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} N(\mu, 1)$$
+$$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} \mathcal{N}(\mu, 1)$$
 and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. In this admittedly very simple example, the obvious test statistic is 
 	$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
 where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
@@ -90,7 +90,7 @@ When we derived Mallow's $C_p$, the idea was to compare models on the basis of p
 Suppose that $\widehat{\mu}$ is a \emph{potentially biased} estimator of $\mu$. Then we have 
 	$$MSE(\widehat{\mu}) = E[(\widehat{\mu} - \mu)^2] = \left(E[\widehat{\mu} - \mu]\right)^2 + Var(\widehat{\mu})$$
 Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can't calculate the proceeding expression. So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this to as a ``stand-in'' for the exact, finite-sample quantity. Let $\mu_0$ be the probability limit of $\widehat{\mu}$ and $\mu$ be the ``true'' parameter value. Suppose that 
-	$$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} N(0,\sigma^2)$$
+	$$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
 In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that minimizes the KL divergence and $\sigma^2$ would be a diagonal element of $J^{-1}KJ^{-1}$. Now, an obvious idea is estimate $Var(\widehat{\mu})$ using the \emph{asymptotic variance}, namely $\mbox{AVAR}(\widehat{\mu}) = \sigma^2$. But what about the bias term $E[\widehat{\mu} - \mu]$? The limit distribution of $\widehat{\mu}$ is centered around $\mu_0$, the pseudo-true value, but we need to evaluate the bias relative to $\mu$. Let's try recentering by adding and subtracting $\sqrt{T}\mu$ as follows:
 \begin{eqnarray*}
 	\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) &=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0\\
@@ -106,7 +106,7 @@ So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) 
 	\sqrt{T}\left( \widehat{\mu} - \mu_T\right) &=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_T - \mu_0 \right)\\
 		&=&\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_0 + \delta/\sqrt{T} - \mu_0 \right)\\
 		&=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \delta\\
-		&\overset{d}{\rightarrow}& N(0, \sigma^2) - \delta
+		&\overset{d}{\rightarrow}& \mathcal{N}(0, \sigma^2) - \delta
 \end{eqnarray*}
 hence, the asymptotic mean-squared error of $\widehat{\mu}$ is $\mbox{AMSE}(\widehat{\mu}) = \delta^2 + \sigma^2$. But what does it mean to have a parameter that changes with sample size? It's important to be clear that this does \emph{not} mean that we think real-world datasets follow a DGP that changes with sample size. This is a \emph{thought experiment}: we also don't believe that it's possible to have an infinite sample size! When we use asymptotics, the point is to derive tractable expressions that approximate the effects that actually occur in finite samples. We know that there is a bias-variance tradeoff in finite samples but we showed above that the conventional asymptotics can't capture this. In other words, local mis-specification is a \emph{device} to get a limiting theory that provides a better approximation to what's really going on in finite samples. For more on the sense in which local mis-specification provides a much more realistic portrait of the effects of model selection, see Leeb and P\"{o}tscher (2005).
 
