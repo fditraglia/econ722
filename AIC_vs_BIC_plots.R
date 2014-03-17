@@ -27,14 +27,6 @@ d.Hodge <- function(n.T){return(sqrt(n.T))}
 risk <- function(n.T, mu, d.T){
   a <- -sqrt(d.T(n.T)) - sqrt(n.T) * mu
   b <- sqrt(d.T(n.T)) - sqrt(n.T) * mu
-  first.term <-  a * dnorm(a) - b * dnorm(b) + (pnorm(b) - pnorm(a))
-  second.term <- n.T * mu^2 * (pnorm(b) - pnorm(a))
-  return(1 - first.term + second.term)
-}
-
-risk2 <- function(n.T, mu, d.T){
-  a <- -sqrt(d.T(n.T)) - sqrt(n.T) * mu
-  b <- sqrt(d.T(n.T)) - sqrt(n.T) * mu
   first.term <- b * dnorm(b) - a * dnorm(a) 
   second.term <- (n.T * mu^2 - 1) * (pnorm(b) - pnorm(a))
   return(1 + first.term + second.term)
@@ -51,6 +43,3 @@ max(risk(sample.size, mu, d.AIC))
 max(risk(sample.size, mu, d.BIC))
 max(risk(sample.size, mu, d.Hodge))
 
-all.equal(risk2(sample.size, mu, d.AIC), risk(sample.size, mu, d.AIC))
-all.equal(risk2(sample.size, mu, d.BIC), risk(sample.size, mu, d.BIC))
-all.equal(risk2(sample.size, mu, d.Hodge), risk(sample.size, mu, d.Hodge))
