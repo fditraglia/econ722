@@ -267,8 +267,15 @@ where $Z \sim N(0,1)$. For the AIC $d_T = 2$ so the probability of overfitting i
 Consider MSE risk, scaling up by $T$ since variances for well-behaved problems are $O(1/T)$. Recall from above that $\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$. Thus,
 \begin{eqnarray*}
 	R_T(\mu) &=& T E_\mu\left[\left( \widehat{\mu} - \mu\right)\right] = E_\mu\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)\right]\\
-		&=&
+		&=& E\left\{\left[ \left(\sqrt{T}\mu + Z \right)\mathbf{1}\left\{\sqrt{T}\mu + Z \geq \sqrt{d_T}\right\}- \sqrt{T}\mu \right]^2 \right\}\\
+		&\vdots& \\
+		&=& 1 - \int_{a}^{b} z^2 \phi(z)\; dz + T\mu^2 \left[\Phi(b) - \Phi(a) \right]
 \end{eqnarray*}
+where
+	\begin{eqnarray*}
+		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
+		b &=& \sqrt{d_T} - \sqrt{T}\mu
+	\end{eqnarray*}
 
 Now is an excellent time for integration by parts. We'll take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
 	$$\frac{d}{dz} \left(\exp\left\{-\frac{z^2}{2}\right\}\right) = -z\exp\left\{-\frac{z^2}{2}\right\}$$
@@ -278,6 +285,17 @@ Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and we have
 		&=& \frac{1}{\sqrt{2\pi}}\left[-z \exp\left\{ \left.-\frac{z^2}{2}\right\}\right|_a^b+ \int_a^b \exp\left\{-\frac{z^2}{2}\right\}  \; dz \right]\\
 		&=& a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a)
 \end{eqnarray*}
+Putting it all together, we have
+	\begin{eqnarray*}
+		R_T(\mu) &=& 1 - \left[a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a) \right] + T\mu^2 \left[\Phi(b) - \Phi(a) \right]\\
+		&=&1 + \left[b\phi(b) - a\phi(a)\right]  + (T\mu^2 - 1) \left[\Phi(b) - \Phi(a) \right] 
+	\end{eqnarray*}
+where
+	\begin{eqnarray*}
+		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
+		b &=& \sqrt{d_T} - \sqrt{T}\mu
+	\end{eqnarray*}
+\todo[inline]{Plot for AIC and BIC. Even better, Shiny App if there's time.}
 
 \end{document}
  
