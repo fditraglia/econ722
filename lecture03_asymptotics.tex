@@ -224,27 +224,37 @@ as required. Now, the condition on the penalty term is $c_{T,k} = o_p(T)$, in ot
 
 \paragraph{Finite Sample Selection Probabilities} Since this is such a simple example, we can do better than appeal to asymptotics: we can calculate the exact finite-sample behavior of the selection criteria. The AIC penalty is $2 \times \mbox{length}(\theta)$ which corresponds to $d_T = 2$. Hence, the AIC-selected model is
 	$$\widehat{M}_{AIC} = \left\{\begin{array}
-		{cc} M_1, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{2} \\
-		M_0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{2}
+		{cc} M_1, &|\sqrt{T}\bar{Y}| \geq \sqrt{2} \\
+		M_0, & |\sqrt{T} \bar{Y}| < \sqrt{2}
 	\end{array} \right.$$
 Hence,
 	\begin{eqnarray*}
-		P\left(\widehat{M}_{AIC} = M_1\left.\right|\mu,T\right) &=& P\left( \right)
+		P\left(\widehat{M}_{AIC} = M_1) &=& P\left(\left|\sqrt{T}\bar{Y} \right| \geq \sqrt{2}  \right)\\
+		&=& P\left(\left|\sqrt{T}\mu + Z\right| \geq \sqrt{2}  \right)\\
+		&=& P\left(\sqrt{T}\mu + Z \leq -\sqrt{2}\right) + \left[1 - P\left(\sqrt{T} \mu +Z \leq \sqrt{2}\right) \right]\\
+			&=& \Phi\left(-\sqrt{2} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{2} - \sqrt{T} \mu \right)\right]
+	\end{eqnarray*}
+where $Z \sim N(0,1)$ using the fact that $\bar{Y} \sim N(\mu, 1/T)$ since $Var(Y_t)=1$.
+
+Now, the BIC penalty is $\log(T)\times \mbox{length}(\theta)$ which corresponds to $d_T = \log(T)$. Hence, the BIC-selected model is
+	$$\widehat{M}_{BIC} = \left\{\begin{array}
+		{cc} M_1, & |\sqrt{T}\bar{Y} | \geq \sqrt{\log(T)} \\
+		M_0, & |\sqrt{T} \bar{Y}| < \sqrt{\log(T)}
+	\end{array} \right.$$
+Using the exact same steps as for the AIC except with $\sqrt{\log(T)}$ in the place of $\sqrt{2}$, we have
+	\begin{eqnarray*}
+		P\left(\widehat{M}_{BIC} = M_1\right) &=& P\left(\left|\sqrt{T}\bar{Y} \right| \geq \sqrt{\log(T)}  \right)\\
+			&=& \Phi\left(-\sqrt{\log(T)} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{\log(T)} - \sqrt{T} \mu \right)\right]
 	\end{eqnarray*}
 
+\todo[inline]{Replicate Figure 4.1 from the book in R. Perhaps make a Shiny App if there's time.}
 
-The BIC penalty is $\log(T)\times \mbox{length}(\theta)$ which corresponds to $d_T = \log(T)$. Hence, the BIC-selected model is
-	$$\widehat{M}_{BIC} = \left\{\begin{array}
-		{cc} M_1, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{\log(T)} \\
-		M_0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{\log(T)}
-	\end{array} \right.$$
+\paragraph{What is the probability of overfitting?} The case where $\mu = 0$
 
-
-
-
-
-
-
+For a generic information criterion of the form we're considering here:
+\begin{eqnarray*}
+	P\left(\widehat{M} = M_1\right) = P\left(|\sqrt{T}\bar{Y}|\geq \sqrt{d_T}\right)
+\end{eqnarray*}
 
 
 
