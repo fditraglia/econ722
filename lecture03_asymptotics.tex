@@ -125,7 +125,7 @@ where $c_{T,k}$ is the penalty term for $M_k$. We'll now ask how different choic
 
 \paragraph{Sufficient Conditions for Weak Consistency}
 Suppose that exactly one of the candidates minimizes the KL distance: call it $M_{k_0}$. To state this precisely, suppose that
-	$$\underset{n\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) > 0$$
+	$$\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) > 0$$
 Then, if $c_{T,k}> 0$ and $c_{T,k} = o_p(T)$, $IC(M_k)$ is \emph{weakly consistent}: it selects $M_{k_0}$ with probability approaching one in the limit. Weak consistency continues to hold if the penalty term $c_{T,k}$ equals zero for one of the models, so long as it is strictly positive for all of the others.
 
 \paragraph{Both AIC and BIC are Weakly Consistent}
@@ -161,13 +161,91 @@ Here are the alternative sets of conditions:
 					$$P\left(c_{T,\ell} - c_{T,j_0} \rightarrow \infty \right) = 1$$
 			\end{enumerate}
 	\end{enumerate}
-Note that each of these alternative sets of conditions has \emph{two parts}: the first is a regularity condition that restricts the asymptotic behavior of the models in $\mathcal{J}$ while the second is a condition on the penalty term $c_{T,k}$. We immediately see that the penalty terms for the AIC and TIC \emph{cannot} satisfy (a)(ii) or (b)(ii) since $(c_{T,\ell} - c_{T,j_0})$ \emph{does not depend on sample size}. While this is not a proof, it does turn out that neither is consistent: even in the limit AIC and TIC have a non-zero probability of ``overfitting,'' i.e.\ selection a model that is in $\mathcal{J}\backslash \mathcal{J}_0$. In constrast, under (b)(i) the BIC \emph{is consistent} since
+Note that each of these alternative sets of conditions has \emph{two parts}: the first is a regularity condition that restricts the asymptotic behavior of the models in $\mathcal{J}$ while the second is a condition on the penalty term $c_{T,k}$. We immediately see that the penalty terms for the AIC and TIC \emph{cannot} satisfy (a)(ii) or (b)(ii) since $(c_{T,\ell} - c_{T,j_0})$ \emph{does not depend on sample size}. While this does not consitute a proof, it does turn out that neither is consistent: even in the limit AIC and TIC have a non-zero probability of ``overfitting,'' i.e.\ selection a model that is in $\mathcal{J}\backslash \mathcal{J}_0$. In constrast, under (b)(i) the BIC \emph{is consistent} since
 	$$c_{T,\ell} - c_{T,j_0} = \log(T) \left\{\mbox{length}(\theta_\ell) - \mbox{length}(\theta_{j_0}) \right\}$$
 The term in braces is \emph{positive} since $\ell \in\mathcal{J}\backslash \mathcal{J}_0$, i.e.\ $\ell$ is not as parsimonious as $j_0$, and $\log(T) \rightarrow \infty$. This means that in the limit, BIC will \emph{always} select a model in $\mathcal{J}_0$.
 
 \paragraph{What about selecting the true DGP?}
 The way we will just defined consistency did \emph{not} in fact require that the true DGP is among the models under consideration. If the true DGP \emph{is} among the models in our set, however, the preceding result gives conditions under which we are guaranteed to select it in the limit. Why is this the case? First of all, the true DGP minimizes the KL and the minimized value is zero. (See the notes for Lecture 1.) The only way that \emph{another} model could also minimize the KL divergence in this case is if it has ``superfluous'' parameters. For example, suppose the true DGP is an AR(1) but we also consider an AR(2). Hence, the true DGP is necessarily the most parsimonious model among those that minimize the KL divergence. 
 \subsection{The Simplest Possible Example}
+Let $Y_1, \hdots, Y_T \overset{\mbox{iid}}{\sim} N(\mu,1)$ and consider two models: $M_0$ assumes that $\mu = 0$ while $M_1$ doesn't make any assumption about the value of $\mu$. Now suppose we want to use an information criterion to choose between $M_0$ and $M_1$. We'll consider penalty terms of the form $c_{T,k} = d_T 
+\times \mbox{length}(\theta_k)$ which includes both the AIC and BIC as special cases. Since $M_0$ has \emph{zero} parameters while $M_1$ has one parameter, our information criteria are as follows:
+	\begin{eqnarray*}
+		IC_0 &=& 2 \max_\mu \left\{\ell_T(\mu)\colon M_0 \right\} \\
+		IC_1 &=& 2 \max_\mu \left\{\ell_T(\mu)\colon M_1 \right\} - d_T
+	\end{eqnarray*}
+
+\begin{eqnarray*}
+	\ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{2\pi} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\
+	&\vdots& \boxed{\mbox{fill in later}}\\
+	&=& -\frac{T}{2} \left\{ \widehat{\sigma}^2 + \log(2\pi)\right\} - \frac{T}{2}\left(\bar{Y} - \mu \right)^2\\
+	&=& C - \frac{T}{2}\left(\bar{Y} - \mu \right)^2
+\end{eqnarray*}
+Hence, substituting $0$ for $\mu$ under $M_0$ and the MLE $\bar{Y}$ for $\mu$ under $M_1$, we have
+	\begin{eqnarray*}
+		IC_0 &=& 2 \max_\mu \left\{\ell_T(\mu)\colon M_0 \right\} = 2C - T\bar{Y}^2\\
+		IC_1 &=&2 \max_\mu \left\{\ell_T(\mu)\colon M_1 \right\} - d_T = 2C - d_T
+	\end{eqnarray*}
+Therefore,
+	$$IC_1 - IC_0 = T\bar{Y}^2 - d_T$$
+and we choose $M_1$ if this quantity is positive, in other words if
+	\begin{eqnarray*}
+		T\bar{Y}^2 &\geq& d_T\\
+		\left|\sqrt{T} \bar{Y} \right| &\geq& \sqrt{D_T}\\
+		\sqrt{T} \left|\bar{Y} \right| &\geq& \sqrt{d_T}
+	\end{eqnarray*}
+Thus, our selected model is 
+	$$\widehat{M} = \left\{\begin{array}
+		{cc} M_1, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{d_T} \\
+		M_0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{d_T}
+	\end{array} \right.$$
+and our \emph{post-selection estimator} is 
+	$$\widehat{\mu}=\left\{\begin{array}
+		{cc} \bar{Y}, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{d_T} \\
+		0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{d_T}
+		\end{array}\right.$$
+For the AIC we have $d_T = 2$ while for the BIC we have $d_T = \log(T)$. Now let's examine the asymptotics as $T \rightarrow \infty$.
+
+\paragraph{Case I: $\mu \neq 0$} In this case, $M_1$ is the true DGP and the unique KL-minimizer. Since it's the true DGP, the KL divergence for $M_1$ is exactly zero. (See Lecture 1.) We can calculate the KL divergence for $M_0$ using similar steps to those we employed to derive the AIC$_c$ in Lecture 2. 
+\todo[inline]{fill in details later}
+To summarize, we have
+	\begin{eqnarray*}
+		KL(M_1) &=&0\\
+		KL(M_0) &=& \frac{\mu^2}{2}
+	\end{eqnarray*}
+Now let's check our sufficient conditions for weak consistency. First, we have
+	\begin{eqnarray*}
+		\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) &=& \underset{n\rightarrow \infty}{\lim\inf}\ \frac{1}{T}\sum_{t = 1}^T  \left(\frac{\mu^2}{2} - 0\right) \\
+		&=&  \underset{T\rightarrow \infty}{\lim\inf}\left(\frac{\mu^2}{2}\right) >0
+	\end{eqnarray*}
+as required. Now, the condition on the penalty term is $c_{T,k} = o_p(T)$, in other words $c_{T,k}/T \overset{p}{\rightarrow} 0$ both the AIC and BIC penalties satisfy this condition. Hence, if $M_1$ is the true model, both the AIC and BIC will select it with probability approaching 1 as $T\rightarrow \infty$.
+
+\paragraph{Case II: $\mu = 0$} In this case, both $M_1$ and $M_0$ are true and \emph{both} minimize the KL divergence. The most parsimonious model, however, is $M_0$. Hence, using our notion of consistency (\emph{not} weak consistency), we'd like our criteria to select $M_0$. We'll use the second set of sufficient conditions for consistency. In this example, it's easy to verify (b)(i). Since a $N(0,1)$ model is nested inside a $N(\mu,1)$ model, if the true distribution is $N(0,1)$ then the likelihood ratio statistic is asymptotically $\chi^2(1)$, hence the log-likelihood ratio is $O_p(1)$ as required. We know from above that the AIC penalty does \emph{not} satisfy (b)(ii) but the BIC penalty \emph{does}. Hence the BIC will select $M_0$ with probability approaching one in the limit.
+
+\paragraph{Finite Sample Selection Probabilities} Since this is such a simple example, we can do better than appeal to asymptotics: we can calculate the exact finite-sample behavior of the selection criteria. The AIC penalty is $2 \times \mbox{length}(\theta)$ which corresponds to $d_T = 2$. Hence, the AIC-selected model is
+	$$\widehat{M}_{AIC} = \left\{\begin{array}
+		{cc} M_1, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{2} \\
+		M_0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{2}
+	\end{array} \right.$$
+Hence,
+	\begin{eqnarray*}
+		P\left(\widehat{M}_{AIC} = M_1\left.\right|\mu,T\right) &=& P\left( \right)
+	\end{eqnarray*}
+
+
+The BIC penalty is $\log(T)\times \mbox{length}(\theta)$ which corresponds to $d_T = \log(T)$. Hence, the BIC-selected model is
+	$$\widehat{M}_{BIC} = \left\{\begin{array}
+		{cc} M_1, & \sqrt{T}\left|\bar{Y} \right| \geq \sqrt{\log(T)} \\
+		M_0, & \sqrt{T}\left| \bar{Y}\right| < \sqrt{\log(T)}
+	\end{array} \right.$$
+
+
+
+
+
+
+
+
 
 
 
