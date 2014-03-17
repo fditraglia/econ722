@@ -141,14 +141,33 @@ But what if \emph{two or more} models minimize the KL-divergence? We very often 
 
 
 \paragraph{Sufficient Conditions for Consistency}
-Suppose that, among our set of candidate models there is a tie in the KL divergence. Let $\mathcal{J}$ be the set of all models that attain the minimum KL divergence. Among these, let $\mathcal{J}_0$ denote the subset with the minimum number of parameters. \emph{Either} of the following two conditions is sufficient for consistency. In other words, either (a) or (b) implies that we will select a model from $\mathcal{J}_0$ with probability approaching one in the limit:
-	\begin{itemize}
-		\item[(a)]
-		\item[(b)] 
-	\end{itemize}
+Suppose that, among our set of candidate models there is a tie in the KL divergence. Let $\mathcal{J}$ be the set of all models that attain the minimum KL divergence. Among these, let $\mathcal{J}_0$ denote the subset with the minimum number of parameters. \emph{Either} of the following two conditions is sufficient for consistency. In other words, both (a) and (b) imply that we will select a model from $\mathcal{J}_0$ with probability approaching one in the limit:
+	$$\underset{T\rightarrow \infty}P\left\{ \underset{\ell \in \mathcal{J}\backslash \mathcal{J}_0}{\min} \left[ IC(M_{j_0}) - IC(M_\ell)\right] > 0 \right\} = 1$$
+Here are the alternative sets of conditions: 
+	\begin{enumerate}[(a)]
+		\item The following two conditions are sufficient for consistency:
+			\begin{enumerate}[(i)]
+				\item For all $k \neq \ell \in \mathcal{J}$ 
+					$$\underset{T\rightarrow \infty}{\lim\sup} \frac{1}{\sqrt{T}} \sum_{t=1}^T\left\{ KL(g; f_{k,t}) - KL(g;f_{\ell,t}) \right\}<\infty$$
+				\item For all $j_0 \in \mathcal{J}_0$ and $\ell \in (\mathcal J \backslash \mathcal{J}_0)$
+					$$P\left\{\left(c_{T,\ell} - c_{T,j_0} \right)/\sqrt{T} \rightarrow \infty \right\}= 1$$
+			\end{enumerate}
+		\item The following two conditions are \emph{also} sufficient for consistency:
+			\begin{enumerate}[(i)]
+				\item For all $k \neq \ell \in \mathcal{J}$ 
+					$$\sum_{t=1}^T \left[\log f_{k,t}(Y_t|\theta^*_k) - \log f_{\ell,t}(Y_t|\theta^*_\ell) \right] = O_p(1)$$
+				where $\theta^*_k$ and $\theta^*_\ell$ are the respective KL minimizing parameter values.
+				\item For all $j_0 \in \mathcal{J}_0$ and $\ell \in (\mathcal J \backslash \mathcal{J}_0)$
+					$$P\left(c_{T,\ell} - c_{T,j_0} \rightarrow \infty \right) = 1$$
+			\end{enumerate}
+	\end{enumerate}
+Note that each of these alternative sets of conditions has \emph{two parts}: the first is a regularity condition that restricts the asymptotic behavior of the models in $\mathcal{J}$ while the second is a condition on the penalty term $c_{T,k}$. We immediately see that the penalty terms for the AIC and TIC \emph{cannot} satisfy (a)(ii) or (b)(ii) since $(c_{T,\ell} - c_{T,j_0})$ \emph{does not depend on sample size}. While this is not a proof, it does turn out that neither is consistent: even in the limit AIC and TIC have a non-zero probability of ``overfitting,'' i.e.\ selection a model that is in $\mathcal{J}\backslash \mathcal{J}_0$. In constrast, under (b)(i) the BIC \emph{is consistent} since
+	$$c_{T,\ell} - c_{T,j_0} = \log(T) \left\{\mbox{length}(\theta_\ell) - \mbox{length}(\theta_{j_0}) \right\}$$
+The term in braces is \emph{positive} since $\ell \in\mathcal{J}\backslash \mathcal{J}_0$, i.e.\ $\ell$ is not as parsimonious as $j_0$, and $\log(T) \rightarrow \infty$. This means that in the limit, BIC will \emph{always} select a model in $\mathcal{J}_0$.
 
 \paragraph{What about selecting the true DGP?}
-The way we will just defined consistenct did \emph{not} in fact require that the true DGP is among the models under consideration. If the true DGP \emph{is} among the models in our set, however, the preceding result gives conditions under which we are guaranteed to select it in the limit. Why is this the case? First of all, the true DGP minimizes the KL and the minimized value is zero. (See the notes for Lecture 1.) The only way that \emph{another} model could also minimize the KL divergence in this case is if it has ``superfluous'' parameters. For example, suppose the true DGP is an AR(1) but we also consider an AR(2). Hence, the true DGP is necessarily the most parsimonious model among those that minimize the KL divergence. 
+The way we will just defined consistency did \emph{not} in fact require that the true DGP is among the models under consideration. If the true DGP \emph{is} among the models in our set, however, the preceding result gives conditions under which we are guaranteed to select it in the limit. Why is this the case? First of all, the true DGP minimizes the KL and the minimized value is zero. (See the notes for Lecture 1.) The only way that \emph{another} model could also minimize the KL divergence in this case is if it has ``superfluous'' parameters. For example, suppose the true DGP is an AR(1) but we also consider an AR(2). Hence, the true DGP is necessarily the most parsimonious model among those that minimize the KL divergence. 
+\subsection{The Simplest Possible Example}
 
 
 
