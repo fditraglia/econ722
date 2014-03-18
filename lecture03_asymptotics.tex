@@ -172,19 +172,16 @@ Let $\left\{\epsilon_t\right\}_{-\infty}^{\infty}$ by an iid sequence of $N(0,\s
 $$X_t + a_1 X_{t-1} + a_2 X_{t-2} + \cdots  = \epsilon_t$$  
 for some set of coefficients $\{a_j\}$. We attempt to approximate this stochastic process with an AR$(k)$ model, namely
 $$X_t + a_1 X_{t-1} + \cdots + a_2 X_{t-k}  = \epsilon_t$$  
-and calculate estimates $\widehat{a}_1, \hdots, \widehat{a}_k$ using observations $X_1, \hdots, X_T$.
+and calculate estimates $\widehat{a}_1, \hdots, \widehat{a}_k$ using observations $X_1, \hdots, X_T$. Now, suppose our goal is to make good one-step-ahead forecasts where ``good'' means minimum mean-squared prediction error. To keep things simple it is typically assumed that we have a \emph{new} realization $Y_1, \hdots, Y_T$ of the \emph{same} time series that is independent of $X_1, \hdots, X_T$. This is indeed an unrealistic assumption, but it simplifies various calculations. Although it's possible to proceed without it, you'll often see it invoked. The one-step-ahead prediction is
+	$$\widehat{Y}_{t+1} = -\widehat{a}_1 Y_t - \widehat{a}_2 Y_{t-2} - \cdots - \widehat{a}_k Y_{t-k+1}$$
+as the one-step-ahead mean-squared prediction error is
+	\begin{eqnarray*}
+		MSPE(k) &=& E\left[ \left(Y_{t+1} - \widehat{Y}(k)_{t+1}\right)^2\left. \right| X_1, \hdots, X_T\right]
+	\end{eqnarray*}
+Our ideal would be to estimate an $AR(k^*)$ model for forecasting where $k^*$ minimizes $MSPE(k)$. Since we don't know $k^*$ we use a model selection criterion to estimate it. Let $\widehat{k}$ be the lag-length that is selected by some model selection criterion. We say that this criterion is \emph{asymptotically efficient} if
+	$$\frac{MSPE(\widehat{k})}{MSPE(k^*)}\overset{p}{\rightarrow} 1 \quad \mbox{as} \quad T \rightarrow \infty$$
+Under appropriate assumptions, it can be shown for this example that the AIC and AIC$_c$ are asymptotically efficient while the BIC is not.
 
-% Here we'll look at mean-squared prediction loss, but we could do this with other loss functions as well. The basic idea would be the same.
-
-% $$y_t = \textbf{x}_t'\beta +\epsilon_t $$
-% for $t = 1, \hdots, T$ where $Var(\epsilon_t)=\sigma^2$
-
-% We want to select best set of regressors to minimize 
-% 	\begin{eqnarray*}
-% 		L_T(S) &=& E\left[\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)'\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)\right]\\
-% 			&=& E\left[\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)'\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)\right]\\
-% 			&=&  E\left[\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}'\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}\right]
-% 	\end{eqnarray*}
 
 
 
@@ -294,7 +291,6 @@ where $Z \sim N(0,1)$. For the AIC $d_T = 2$ so the probability of overfitting i
 		{cc} \bar{Y}, & |\sqrt{T}\bar{Y} | \geq \sqrt{d_T} \\
 		0, & |\sqrt{T}\bar{Y} | < \sqrt{d_T}
 		\end{array}\right.$$
-
 Consider MSE risk, scaling up by $T$ since variances for well-behaved problems are $O(1/T)$. Recall from above that $\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$. Thus,
 \begin{eqnarray*}
 	R_T(\mu) &=& T E_\mu\left[\left( \widehat{\mu} - \mu\right)\right] = E_\mu\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)\right]\\
