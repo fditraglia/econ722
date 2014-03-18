@@ -13,7 +13,7 @@
 \usepackage{threeparttable}
 \usepackage{caption}
 \usepackage{subcaption}
-
+\usepackage{hyperref}
 \newtheorem{assump}{Assumption}[section]
 \newtheorem{pro}{Proposition}[section]
 \newtheorem{lem}{Lemma}[section]
@@ -220,7 +220,7 @@ Now let's check our sufficient conditions for weak consistency. First, we have
 as required. Now, the condition on the penalty term is $c_{T,k} = o_p(T)$, in other words $c_{T,k}/T \overset{p}{\rightarrow} 0$ both the AIC and BIC penalties satisfy this condition. Hence, if $M_1$ is the true model, both the AIC and BIC will select it with probability approaching 1 as $T\rightarrow \infty$.
 
 \paragraph{Case II: $\mu = 0$} In this case, both $M_1$ and $M_0$ are true and \emph{both} minimize the KL divergence. The most parsimonious model, however, is $M_0$. Hence, using our notion of consistency (\emph{not} weak consistency), we'd like our criteria to select $M_0$. We'll use the second set of sufficient conditions for consistency. In this example, it's easy to verify (b)(i). Since a $N(0,1)$ model is nested inside a $N(\mu,1)$ model, if the true distribution is $N(0,1)$ then the likelihood ratio statistic is asymptotically $\chi^2(1)$, hence the log-likelihood ratio is $O_p(1)$ as required. 
-\todo[inline]{If there's time, write out the LR statistic for this case: it's very easy.}
+
 We know from above that the AIC penalty does \emph{not} satisfy (b)(ii) but the BIC penalty \emph{does}. Hence the BIC will select $M_0$ with probability approaching one in the limit.
 
 \paragraph{Finite Sample Selection Probabilities} Since this is such a simple example, we can do better than appeal to asymptotics: we can calculate the exact finite-sample behavior of the selection criteria. The AIC penalty is $2 \times \mbox{length}(\theta)$ which corresponds to $d_T = 2$. Hence, the AIC-selected model is
@@ -248,7 +248,7 @@ Using the exact same steps as for the AIC except with $\sqrt{\log(T)}$ in the pl
 			&=& \Phi\left(-\sqrt{\log(T)} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{\log(T)} - \sqrt{T} \mu \right)\right]
 	\end{eqnarray*}
 
-\todo[inline]{Replicate Figure 4.1 from the book in R. Perhaps make a Shiny App if there's time.}
+\todo[inline]{Shiny App: \url{http://glimmer.rstudio.com/fditraglia/CH_Figure_4_1/}}
 
 \paragraph{What is the probability of overfitting?} Suppose $\mu = 0$. In this case both models are KL-minimizers but we'd prefer $M_0$ since it's more parsimonious. For a generic information criterion of the form we're considering here, we calculate the ``probability of overfitting'' as follows
 \begin{eqnarray*}
@@ -295,10 +295,26 @@ where
 		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
 		b &=& \sqrt{d_T} - \sqrt{T}\mu
 	\end{eqnarray*}
-\todo[inline]{Make a Shiny App of this for AIC versus BIC if there's time. Explain how BIC has max risk that diverges in exchange for consistency at the null model. Also this bad behavior occurs very near to the point where the BIC is supposedly achieving its advantage. In constrast, max risk of AIC is bounded.  Talk about pointwise versus uniform results.}
+\todo[inline]{Shiny App: \url{http://glimmer.rstudio.com/fditraglia/CH_Figure_4_2/}}
+
+
+\todo[inline]{Explain how BIC has max risk that diverges in exchange for consistency at the null model. Also this bad behavior occurs very near to the point where the BIC is supposedly achieving its advantage. In constrast, max risk of AIC is bounded.  Talk about pointwise versus uniform results.}
 
 \section{Efficient Model Selection}
-Motivate from behavior of AIC in preceding example. 
+\todo[inline]{Motivate from behavior of AIC in preceding example.}
+Here we'll look at mean-squared prediction loss, but we could do this with other loss functions as well. The basic idea would be the same.
+
+$$y_t = \textbf{x}_t'\beta +\epsilon_t $$
+for $t = 1, \hdots, T$ where $Var(\epsilon_t)=\sigma^2$
+
+We want to select best set of regressors to minimize 
+	\begin{eqnarray*}
+		L_T(S) &=& E\left[\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)'\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)\right]\\
+			&=& E\left[\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)'\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)\right]\\
+			&=&  E\left[\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}'\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}\right]
+	\end{eqnarray*}
+
+\paragraph{Minimax Rate Optimality} A model selection criterion is called \emph{minimax rate optimal} over a class of functions $\mathcal{C}$ if the worst case 
 
 
 \end{document}

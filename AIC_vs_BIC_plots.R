@@ -1,9 +1,9 @@
 #This script replicates Figures 4.1 and 4.2 of Claeskens & Hjort (2008) - Model Selection and Model Averaging
 
-#Figure 4.1 gives the probability of selecting Model 1 for the AIC and BIC when n = 1000
+#Figure 4.1 
 mu <- seq(from = -0.5, to = 0.5, by = 0.001)
 
-n <-  1000
+n <- 1000
 
 pAIC <- pnorm(-sqrt(2) - sqrt(n) * mu) + (1 - pnorm(sqrt(2) - sqrt(n) * mu))  
 
@@ -34,12 +34,11 @@ risk <- function(n.T, mu, d.T){
 
 mu <- seq(from = -2, to = 2, by = 0.01)
 sample.size <- 200
-risk.mu <- cbind(risk(sample.size, mu, d.AIC), 
-                 risk(sample.size, mu, d.BIC), 
-                 risk(sample.size, mu, d.Hodge))
-matplot(mu, risk.mu, ylab = 'Risk', xlab = expression(mu), type = 'l', lwd = 2, col = 'black')
 
-max(risk(sample.size, mu, d.AIC))
-max(risk(sample.size, mu, d.BIC))
-max(risk(sample.size, mu, d.Hodge))
+
+risk.mu <- cbind(risk(sample.size, mu, d.AIC), 
+                 risk(sample.size, mu, d.BIC))
+
+matplot(mu, risk.mu, ylab = 'Risk', xlab = expression(mu), type = 'l', lwd = 2, col = c("red", "blue"))
+legend('bottomright', legend = c('AIC', 'BIC'), lty = c(1,2), col = c('red', 'blue'), lwd = c(2,2))
 
