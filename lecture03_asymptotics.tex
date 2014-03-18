@@ -88,9 +88,8 @@
 % \paragraph{Cavanaugh \& Shumway (1997)} 
 
 
-\section{Consistency vs.\ Efficiency}
 
-\subsection{Introduction}
+\section{Introduction}
 Up until now we've made proceeded by setting forth desiderata for model selection, e.g. minimize the KL divergence or predictive mean-squared error, and then making enough assumptions until we could derive a criterion. And although the details of the derivations were all different, in each of the examples we've considered to far, the result amounted to adding a penalty to the maximized log-likelihood to account for model complexity, for example:
 	\begin{eqnarray*}
 		% TIC &=& 2\ell_T(\widehat{\theta}) -\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}\\
@@ -106,10 +105,7 @@ We're now going to take a completely different perspective. Instead of asking wh
 You may be thinking ``consistency and efficiency both sound like great properties so let's find a criterion that satisfies them both!'' Unfortunately, this turns out to be impossible: if a model selection criterion is consistent it cannot be efficient, and vice-versa. 
 
 
-
-
-\subsection{Conditions}
-Let $g$ be the true, unknown data density and consider a collection of models $M_k$ indexed by $k = 1, 2, \hdots, K$ where $\theta_k$ is the parameter vector under model $M_k$ and $\widehat{\theta_k}$ is the corresponding maximum likelihood estimator. Let $f_{k,t}(y_t|\theta_k)$ be the density of observation $t$ under model $k$. For simplicity, suppose that we can express the likelihood of model $k$ as $\sum_{t=1}^T \log f_{k,t}(Y_t| \theta_k)$. This isn't actually necessary: if you want to see a more general way of writing things, consult Sin and White (1996). We do \emph{not} assume that the data are independent. Suppose we're interested in choosing a model to mininimze the KL divergence from $g$ to $f_k$.
+In this lecture we'll consider the following basic setup. Let $g$ be the true, unknown data density and consider a collection of models $M_k$ indexed by $k = 1, 2, \hdots, K$ where $\theta_k$ is the parameter vector under model $M_k$ and $\widehat{\theta_k}$ is the corresponding maximum likelihood estimator. Let $f_{k,t}(y_t|\theta_k)$ be the density of observation $t$ under model $k$. For simplicity, suppose that we can express the likelihood of model $k$ as $\sum_{t=1}^T \log f_{k,t}(Y_t| \theta_k)$. This isn't actually necessary: if you want to see a more general way of writing things, consult Sin and White (1996). We do \emph{not} assume that the data are independent. Suppose we're interested in choosing a model to mininimze the KL divergence from $g$ to $f_k$.
 
 
 
@@ -119,7 +115,7 @@ Let $g$ be the true, unknown data density and consider a collection of models $M
 where $c_{T,k}$ is the penalty term for $M_k$. We'll now ask how different choices of $c_{T,k}$ give rise to criteria that behave in different ways. 
 
 
-\subsection{Weak Consistency}
+\section{Weak Consistency}
 \paragraph{Weak Consistency} But what if the true DGP is not among the candidate models? This seems like a much more realistic assumption. If we are willing to assume that there is a unique candidate model with minimum KL divergence from the truth then it makes sense to ask that our model selection criterion identify \emph{this model} as the sample size grows. We say that a model selection criterion is \textbf{weakly consistent} if it selects the KL minimizing candidate model with probability approaching one as $T\rightarrow \infty$.
 
 
@@ -136,7 +132,7 @@ We have
 	\end{eqnarray*}
 and both of these penalties satisfy the condition $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 
-\subsection{Consistency}
+\section{Consistency}
 But what if \emph{two or more} models minimize the KL-divergence? We very often use information criteria to select among \emph{nested models} to decide, for example, whether to restrict certain elements of $\theta$ to be equal to zero. Suppose we want to choose the number of lags to include in an AR model. The usual way to do this is to specify a maximum lag-length, say 3 periods, and then evaulate each of the AR models up to this order: AR(1), AR(2), and AR(3). But in this example is is entirely possible that the KL minimizer will \emph{fail} to be unique. The AR(2) model is just a special case of the AR(3) with one coefficient set equal to zero. Similarly, the AR(1) model is just a special case of the AR(2). Stated mode generally, if an AR(k) model with all coefficients different from zero is the KL minimizer, then an AR(k+1) model also minimizes the KL divergence, as does an AR(k+2) and an AR(k+3) by setting certain coefficients to zero. In situations like this, where there is a tie in the KL divergence, it makes sense to choose the most ``parsimonious'' specification, in other words the one with the fewest parameters. This idea is often called \textbf{consistency}.
 
 
@@ -167,7 +163,9 @@ The term in braces is \emph{positive} since $\ell \in\mathcal{J}\backslash \math
 
 \paragraph{What about selecting the true DGP?}
 The way we will just defined consistency did \emph{not} in fact require that the true DGP is among the models under consideration. If the true DGP \emph{is} among the models in our set, however, the preceding result gives conditions under which we are guaranteed to select it in the limit. Why is this the case? First of all, the true DGP minimizes the KL and the minimized value is zero. (See the notes for Lecture 1.) The only way that \emph{another} model could also minimize the KL divergence in this case is if it has ``superfluous'' parameters. For example, suppose the true DGP is an AR(1) but we also consider an AR(2). Hence, the true DGP is necessarily the most parsimonious model among those that minimize the KL divergence. 
-\subsection{The Simplest Possible Example}
+
+
+\section{A Simple Example}
 Let $Y_1, \hdots, Y_T \overset{\mbox{iid}}{\sim} N(\mu,1)$ and consider two models: $M_0$ assumes that $\mu = 0$ while $M_1$ doesn't make any assumption about the value of $\mu$. Now suppose we want to use an information criterion to choose between $M_0$ and $M_1$. We'll consider penalty terms of the form $c_{T,k} = d_T 
 \times \mbox{length}(\theta_k)$ which includes both the AIC and BIC as special cases. Since $M_0$ has \emph{zero} parameters while $M_1$ has one parameter, our information criteria are as follows:
 	\begin{eqnarray*}
@@ -205,8 +203,12 @@ and our \emph{post-selection estimator} is
 		\end{array}\right.$$
 For the AIC we have $d_T = 2$ while for the BIC we have $d_T = \log(T)$. Now let's examine the asymptotics as $T \rightarrow \infty$.
 
-\paragraph{Case I: $\mu \neq 0$} In this case, $M_1$ is the true DGP and the unique KL-minimizer. Since it's the true DGP, the KL divergence for $M_1$ is exactly zero. (See Lecture 1.) We can calculate the KL divergence for $M_0$ using similar steps to those we employed to derive the AIC$_c$ in Lecture 2. 
-\todo[inline]{fill in details later}
+\paragraph{Case I: $\mu \neq 0$} In this case, $M_1$ is the true DGP and the unique KL-minimizer. Since it's the true DGP, the KL divergence for $M_1$ is exactly zero. (See Lecture 1.) We can calculate the KL divergence for $M_0$ using similar steps to those we employed to derive the AIC$_c$ in Lecture 2. First, we have
+	\begin{eqnarray*}
+		\log g(y) - \log f_\theta(y) &=& -\frac{1}{2}(y-\mu)^2
+	\end{eqnarray*}
+since the constant $-\log(2\pi)/2$ appears in each term and hence cancels.
+
 To summarize, we have
 	\begin{eqnarray*}
 		KL(M_1) &=&0\\
