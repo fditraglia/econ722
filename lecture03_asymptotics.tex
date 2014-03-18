@@ -165,6 +165,29 @@ The term in braces is \emph{positive} since $\ell \in\mathcal{J}\backslash \math
 The way we will just defined consistency did \emph{not} in fact require that the true DGP is among the models under consideration. If the true DGP \emph{is} among the models in our set, however, the preceding result gives conditions under which we are guaranteed to select it in the limit. Why is this the case? First of all, the true DGP minimizes the KL and the minimized value is zero. (See the notes for Lecture 1.) The only way that \emph{another} model could also minimize the KL divergence in this case is if it has ``superfluous'' parameters. For example, suppose the true DGP is an AR(1) but we also consider an AR(2). Hence, the true DGP is necessarily the most parsimonious model among those that minimize the KL divergence. 
 
 
+\section{Efficient Model Selection}
+Roughly speaking, a model selection criterion is called efficient if it performs ``nearly as well'' as the theoretical optimum relative to some loss function. To make this more concrete, we'll look at a particular example.
+
+Let $\left\{\epsilon_t\right\}_{-\infty}^{\infty}$ by an iid sequence of $N(0,\sigma^2)$ random variables and let $\{X_t\}$ be a stationary Gaussian Process that satisfies
+$$X_t + a_1 X_{t-1} + a_2 X_{t-2} + \cdots  = \epsilon_t$$  
+for some set of coefficients $\{a_j\}$. We attempt to approximate this stochastic process with an AR$(k)$ model, namely
+$$X_t + a_1 X_{t-1} + \cdots + a_2 X_{t-k}  = \epsilon_t$$  
+and calculate estimates $\widehat{a}_1, \hdots, \widehat{a}_k$ using observations $X_1, \hdots, X_T$.
+
+% Here we'll look at mean-squared prediction loss, but we could do this with other loss functions as well. The basic idea would be the same.
+
+% $$y_t = \textbf{x}_t'\beta +\epsilon_t $$
+% for $t = 1, \hdots, T$ where $Var(\epsilon_t)=\sigma^2$
+
+% We want to select best set of regressors to minimize 
+% 	\begin{eqnarray*}
+% 		L_T(S) &=& E\left[\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)'\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)\right]\\
+% 			&=& E\left[\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)'\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)\right]\\
+% 			&=&  E\left[\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}'\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}\right]
+% 	\end{eqnarray*}
+
+
+
 \section{A Simple Example}
 Let $Y_1, \hdots, Y_T \overset{\mbox{iid}}{\sim} N(\mu,1)$ and consider two models: $M_0$ assumes that $\mu = 0$ while $M_1$ doesn't make any assumption about the value of $\mu$. Now suppose we want to use an information criterion to choose between $M_0$ and $M_1$. We'll consider penalty terms of the form $c_{T,k} = d_T 
 \times \mbox{length}(\theta_k)$ which includes both the AIC and BIC as special cases. Since $M_0$ has \emph{zero} parameters while $M_1$ has one parameter, our information criteria are as follows:
@@ -205,14 +228,20 @@ For the AIC we have $d_T = 2$ while for the BIC we have $d_T = \log(T)$. Now let
 
 \paragraph{Case I: $\mu \neq 0$} In this case, $M_1$ is the true DGP and the unique KL-minimizer. Since it's the true DGP, the KL divergence for $M_1$ is exactly zero. (See Lecture 1.) We can calculate the KL divergence for $M_0$ using similar steps to those we employed to derive the AIC$_c$ in Lecture 2. First, we have
 	\begin{eqnarray*}
-		\log g(y) - \log f_\theta(y) &=& -\frac{1}{2}(y-\mu)^2
+		\log g(y) - \log f_\theta(y) &=& -\frac{1}{2}(y-\mu)^2 + \frac{1}{2} y^2\\
+		&\vdots& \boxed{\mbox{a little algebra}}\\
+		&=& \mu \left(y - \frac{\mu}{2}\right)
 	\end{eqnarray*}
-since the constant $-\log(2\pi)/2$ appears in each term and hence cancels.
-
+since the constant $-\log(2\pi)/2$ appears in each term and hence cancels. Thus,
+	\begin{eqnarray*}
+		KL(g;f_\theta) &=& \int \frac{1}{\sqrt{2\pi}} \exp\left\{ -\frac{1}{2} (y-\mu)^2\right\} \mu\left(y - \frac{\mu}{2} \right)\; dy\\
+			&\vdots& \boxed{\mbox{fill in later}}\\
+			&=& \frac{\mu^2}{2}
+	\end{eqnarray*}
 To summarize, we have
 	\begin{eqnarray*}
-		KL(M_1) &=&0\\
-		KL(M_0) &=& \frac{\mu^2}{2}
+		KL(g;M_1) &=&0\\
+		KL(g;M_0) &=& \frac{\mu^2}{2}
 	\end{eqnarray*}
 Now let's check our sufficient conditions for weak consistency. First, we have
 	\begin{eqnarray*}
@@ -270,7 +299,7 @@ Consider MSE risk, scaling up by $T$ since variances for well-behaved problems a
 \begin{eqnarray*}
 	R_T(\mu) &=& T E_\mu\left[\left( \widehat{\mu} - \mu\right)\right] = E_\mu\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)\right]\\
 		&=& E\left\{\left[ \left(\sqrt{T}\mu + Z \right)\mathbf{1}\left\{\sqrt{T}\mu + Z \geq \sqrt{d_T}\right\}- \sqrt{T}\mu \right]^2 \right\}\\
-		&\vdots& \\
+		&\vdots& \boxed{\mbox{fill in later}}\\
 		&=& 1 - \int_{a}^{b} z^2 \phi(z)\; dz + T\mu^2 \left[\Phi(b) - \Phi(a) \right]
 \end{eqnarray*}
 where
@@ -278,8 +307,7 @@ where
 		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
 		b &=& \sqrt{d_T} - \sqrt{T}\mu
 	\end{eqnarray*}
-
-Now is an excellent time for integration by parts. We'll take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
+To evaulate this risk function, we need an explicit formula for the integral that makes up the second term. This sounds like a job for integration by parts! We'll take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
 	$$\frac{d}{dz} \left(\exp\left\{-\frac{z^2}{2}\right\}\right) = -z\exp\left\{-\frac{z^2}{2}\right\}$$
 Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and we have
 \begin{eqnarray*}
@@ -302,21 +330,8 @@ where
 
 \todo[inline]{Explain how BIC has max risk that diverges in exchange for consistency at the null model. Also this bad behavior occurs very near to the point where the BIC is supposedly achieving its advantage. In constrast, max risk of AIC is bounded.  Talk about pointwise versus uniform results.}
 
-\section{Efficient Model Selection}
-\todo[inline]{Motivate from behavior of AIC in preceding example.}
-Here we'll look at mean-squared prediction loss, but we could do this with other loss functions as well. The basic idea would be the same.
-
-$$y_t = \textbf{x}_t'\beta +\epsilon_t $$
-for $t = 1, \hdots, T$ where $Var(\epsilon_t)=\sigma^2$
-
-We want to select best set of regressors to minimize 
-	\begin{eqnarray*}
-		L_T(S) &=& E\left[\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)'\left(\widehat{\bf{y}}_S -  \bf{y}_{new}\right)\right]\\
-			&=& E\left[\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)'\left(X\widehat{\beta}_S - X\beta - \boldsymbol{\epsilon}\right)\right]\\
-			&=&  E\left[\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}'\left\{X\left(\widehat{\beta}_S - \beta\right) - \boldsymbol{\epsilon}\right\}\right]
-	\end{eqnarray*}
-
 \paragraph{Minimax Rate Optimality} A model selection criterion is called \emph{minimax rate optimal} over a class of functions $\mathcal{C}$ if the worst case 
+
 
 
 \end{document}
