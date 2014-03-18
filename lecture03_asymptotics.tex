@@ -323,10 +323,9 @@ where
 	\end{eqnarray*}
 \todo[inline]{Shiny App: \url{http://glimmer.rstudio.com/fditraglia/CH_Figure_4_2/}}
 
+What we see from the picture is that, in exchange for low risk in a small neighborhood of $\mu=0$, BIC has max risk that \emph{diverges} as the sample size increases. In contrast, AIC has bounded max risk. This isn't just a problem with BIC: \emph{any} consistent selection criterion will suffer from this defect.
 
-\todo[inline]{Explain how BIC has max risk that diverges in exchange for consistency at the null model. Also this bad behavior occurs very near to the point where the BIC is supposedly achieving its advantage. In constrast, max risk of AIC is bounded.  Talk about pointwise versus uniform results.}
-
-\paragraph{Minimax Rate Optimality} A model selection criterion is called \emph{minimax rate optimal} over a class of functions $\mathcal{C}$ if the worst case 
+\paragraph{Postscript} The preceding is a special example of a more general phenomenon: consistency and efficiency are mutually exclusive properties. In general, consistent model selection criterion will have unbounded minimax risk. There is a huge literature on this topic but it's fairly technical. The key observation is that pointwise and uniform risk approximations give very different results. Yang (2007) gives a readable introduction. See Leeb and P\"{o}tscher (2009) for a comprehensive list of references. 
 
 
 
