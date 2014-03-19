@@ -76,7 +76,7 @@ where $\widehat{\sigma}^2_{wide}$ is the estimate of $\sigma^2$ from the model w
 For both $C_p$ and AIC$_c$ we choose the lag length that \emph{minimizes} the criteiron. 
 
 Using an argument essentially identical to the one presented in the notes for Lecture 2, the maximized log-likelihood for the AR$(p)$ model is
-	$$-\frac{T}{2}\left[\log\left(\widehat{\sigma}^2_p \right) + 1\right]$$
+	$$-\frac{T}{2}\left[\log(2\pi) + \log\left(\widehat{\sigma}^2_p \right) + 1\right]$$
 To construct the AIC and BIC, we multiply this quantity by 2 and subtract the appropriate penalty term, ignoring terms that are constant across models. The number of parameters for an AR($p$) model is $p+1$, since we estimate $\sigma^2$ in addition to the $p$ autoregressive parameters. We'll rescale both AIC and BIC and flip their signs to make them comparable to the $C_p$ and AIC$_c$ expressions from above. Putting everything together for the sake of comparison, we have
 \begin{eqnarray*}
 	\mbox{AIC} &=& \log\left(\widehat{\sigma}^2_p \right) + \frac{2(p+1)}{T}\\
@@ -87,7 +87,7 @@ To construct the AIC and BIC, we multiply this quantity by 2 and subtract the ap
 In each case, we choose the model that \emph{minimizes} the criterion. Of these four criteria, only BIC is consistent. The other three criteria, however, are efficient under one-step-ahead squared prediction error loss in an environment in which the true DGP is an infinite-order autoregression. The BIC does not have this property.
 
 
-\paragraph{Ng \& Perron (2005)} There are some subtle but important points that we glossed over in the preceding discussion and that are, indeed, rarely mentioned in textbooks or articles on model selection. First there is the question of whether we should use the maximum likelihood estimator $\widehat{\sigma}^2$ or the unbiased estimator that divides by $T-p$ rather than $T$. In time series applications $T$ may be small enough that it makes a difference. More troubling, however, is the problem of deciding what should count as the sample size, since different lag lengths use a different number of observations in the conditional maximum likelihood setting. Indeed, as they are usually written, expressions for AIC and BIC drop terms that are constant across models in \emph{cross-section regression}, where changing the number of regressors doesn't affect sample size. The situation is of course entirely different for AR models but practicioners \emph{still use the same formulas} in this case. There are numerous different ways to handle these complications. Ng \& Perron (2005) give a nice overview of these difficulties and possible solutions, illustrating how each performs in a number of simulation studies.
+\paragraph{Ng \& Perron (2005)} There are some subtle but important points that we glossed over in the preceding discussion and that are, indeed, rarely mentioned in textbooks or articles on model selection. First there is the question of whether we should use the maximum likelihood estimator $\widehat{\sigma}^2$ or the unbiased estimator that divides by $T-p$ rather than $T$. In time series applications $T$ may be small enough that it makes a difference. More troubling, however, is the problem of deciding what should count as the sample size, since different lag lengths use a different number of observations in the conditional maximum likelihood setting. Indeed, as they are usually written, expressions for AIC and BIC drop terms that are constant across models in \emph{cross-section regression}, where changing the number of regressors doesn't affect sample size. The situation is of course entirely different for AR models but practicioners \emph{still use the same formulas} in this case. There are numerous different ways to handle these complications. Ng \& Perron (2005) review the possibilities and illustrate how each performs in a number of simulation studies.
 
 
 \subsection{Vector Autoregression Models}
@@ -97,17 +97,17 @@ Again, assume the intercept is zero. Then the VAR$(p)$ model is given by
 		\boldsymbol{\epsilon}_t &\overset{iid}{\sim}& N_q(\mathbf{0}, \Sigma)
 	\end{eqnarray*}
 where we observe $\mathbf{y}_1, \hdots, \mathbf{y}_N$. Again, if we're content to use conditional maximum likelihood, dropping the first $p$ observations to estimate a VAR$(p)$ model, this is simply a multivariate regression problem and we have an \emph{effective sample size of} $T = N-p$. Written as a multivariate regression model, we have 
-	$$Y = X\Phi  + U$$
+	$$\underset{(T\times q)}{Y} = \underset{(T\times pq)}{X}\underset{(pq\times q)}{\Phi}  + \underset{(T\times q)}{U}$$
 where 
 	$$
-	Y = \left[\begin{array}
+	\underset{(T\times q)}{Y} = \left[\begin{array}
 		{c} \textbf{y}_{p+1}' \\ \textbf{y}_{p+2}' \\
 		\vdots \\ \textbf{y}_{N}' 
 	\end{array} \right],\quad
-	\Phi = \left[\begin{array}
+	\underset{(pq\times q)}{\Phi} = \left[\begin{array}
 		{c} \Phi_1' \\ \Phi_2' \\ \vdots \\ \Phi_p'
 	\end{array} \right],\quad
-	U = \left[\begin{array}
+	\underset{(T\times q)}{U} = \left[\begin{array}
 		{c} \boldsymbol{\epsilon}_{p+1}' \\ 
 		\boldsymbol{\epsilon}_{p+2}' \\ 
 		\vdots \\ 
@@ -115,33 +115,30 @@ where
 	\end{array} \right]
 	$$
 and the design matrix is
-$$X = \left[\begin{array}
+$$\underset{(T\times pq)}{X} = \left[\begin{array}
 		{cccc}
 		\textbf{y}_p' & \textbf{y}_{p-1}' & \cdots & \textbf{y}_{1}'\\
 		\textbf{y}_{p+1}' & \textbf{y}_{p}' & \cdots & \textbf{y}_{2}'\\
 		\vdots & \vdots & &\vdots \\
 		\textbf{y}_{N-1}' & \textbf{y}_{N-2}' & \cdots & \textbf{y}_{N-p-1}'\\
 	\end{array} \right]$$
-Thus, the conditional maximum likelihood estimator is
+Thus, the conditional maximum likelihood estimator for $\Phi$ is
 	$$\widehat{\Phi} = (X'X)^{-1} X'Y$$
-
-
+and the maximum likelihood estimator for $\Sigma$ is
+	$$\widehat{\Sigma}_p = \frac{\left(Y - X\widehat{\Phi}\right)'\left(Y - X\widehat{\Phi}\right)}{T}$$
+The VAR$(p)$ model has a very large number of parameters. First, we have the coefficients of $\Phi_1, \hdots, \Phi_p$. Each of these is an unrestricted $q\times q$ matrix so $\Phi$ contains a total of $pq^2$ parameters. We also need to estimate the variance matrix $\Sigma$ of the errors $\epsilon$. Although $\Sigma$ contains $q^2$ elements, it is a symmetric matrix so there are only $q(q+1)/2$ free parameters. Thus, a VAR$(p)$ model requires us to estimate a total of $pq^2 + (q+1)q/2$ parameters. To calculate the AIC and BIC we also need the maximized log-likelihood, which is given by
+	$$-\frac{T}{2} \left[q\log(2\pi) + \log \left| \widehat{\Sigma}_p\right| + q\right]$$
+Re-scaling as we did for the AR model, we have
 \begin{eqnarray*}
-	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
-	AIC &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\ 
-	AIC_c &=& \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}\\ \\
-	BIC &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}\\ \\ 
-	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{2 \log\log(T)pq^2}{T}
+	\mbox{AIC} &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\
+	\mbox{BIC} &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}
 \end{eqnarray*}
+The multivariate generalization of AIC$_c$ is
+$$\mbox{AIC}_c = \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}$$
+as explained in Chapter 5 of McQuarrie and Tsai (1998). For each of the preceding three expressions, we choose the model that \emph{minimizes} the given criterion. Of these criteria, both AIC and its corrected version are efficient while BIC is consistent. 
 
-\paragraph{Problems with VAR model selection}
-	\begin{enumerate}
-		\item If we fit $p$ lags, we lose $p$ observations under the conditional least squares estimation procedure.
-		\item Adding a lag introduces $q^2$ additional parameters. 
-	\end{enumerate}
-
-\paragraph{Corrected AIC for State Space Models}
-Problem with VARs and state space more generally is that we can easily have sample size small relative to number of parameters. In this case AIC-type criteria don't work well. Suggestions for simulation-based selection.
+\subsection{Corrected AIC for State Space Models}
+As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explodes, and can easily come close to the effective sample size. In situations like this, AIC is known to perform poorly 
 
 \paragraph{Cavanaugh \& Shumway (1997)} 
 
@@ -172,11 +169,19 @@ The idea of $h$-block cross-validation can also be adapted to versions of cross-
 
 
 \section{Two Additional Criteria}
-One efficient another consistent.
+We've already covered the most commonly used model selection criteria, but there are two others that come up from time to time: Akaike's Final Prediction Error (FPE), and the Hannan-Quinn Information Criterion (HQ). Roughly speaking FPE behaves like AIC while HQ behaves like BIC: while FPE is efficient, HQ is consistent.
+
 \subsection{Final Prediction Error}
 \subsection{Hannan-Quinn}
+In our last lecture we examined a consistency result based on the central limit theorem. It is also possible to construct a consistency proof by appealing to the law of the iterated logarithm. This is how HQ is derived.
 
 
+For VAR models
+\begin{eqnarray*}
+	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
+	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{c \log\log(T)pq^2}{T}
+\end{eqnarray*}
+where $c > 2$. A commonly-used value is $2.01$.
 
 
 
