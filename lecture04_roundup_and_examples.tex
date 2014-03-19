@@ -59,12 +59,20 @@ For simplicity assume there is no constant term. Then the AR($p$) model is
 	$$y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \cdots + \phi_p y_{t-p} + \epsilon_t$$
 where $\epsilon_t \sim \mbox{iid} \; N(0,\sigma^2)$ and we observe a sample $y_1, \hdots, y_N$. We'll use conditional maximum likelihood, so we lose the first $p$ observations. Thus the \emph{effective sample size} is $T = N-p$. The conditional ML estimator of $\boldsymbol{\phi} = \left(\phi_1, \hdots, \phi_p \right)'$ is simply the least-squares estimator
 	$$\widehat{\boldsymbol{\phi}} = (X'X)^{-1}X'\textbf{y}$$
-where $\mathbf{y} = (y_{p+1}, \hdots, y_N)'$ and the $(t,j)$th element of the design matrix $X$ is $y_{t-j}$ for $t = 1, \hdots, T$ and $j = 1, \hdots, p$. The maximum likelihood estimator of $\sigma^2$ is
+where $\mathbf{y} = (y_{p+1}, y_{p+2}, \hdots, y_N)'$ and the design matrix is
+	$$X = \left[ \begin{array}
+		{cccc}
+		y_p & y_{p-1} & \cdots & y_1\\
+		y_{p+1} & y_{p} & \cdots  & y_2\\
+		\vdots &  \vdots & &\vdots\\
+		y_{N-1} & y_{N-2} &\cdots & y_{N-p-1}
+	\end{array}\right]$$
+The maximum likelihood estimator of $\sigma^2$ is
 	$$\widehat{\sigma}^2_p = \frac{\mbox{RSS}_p}{T}$$
 where RSS denotes the residual sum of squares, namely $\lvert\lvert\mathbf{y} - X\widehat{\boldsymbol{\phi}} \rvert\rvert^2$. Since this is a regression model, it's trivial to adapt both Mallow's $C_p$ and the AIC$_C$ to this case.\footnote{If you'd like to see all of the details written out, consult McQuarrie \& Tsai (1998), Chapter 3.} For Mallow's $C_p$ we have
 	$$C_p = \frac{\mbox{RSS}_p}{\widehat{\sigma}^2_{wide}} - T + 2p$$
 where $\widehat{\sigma}^2_{wide}$ is the estimate of $\sigma^2$ from the model with \emph{maximum order} among those under consideration. For AIC$_c$ we have
-	$$\mbox{AIC}_c &=& \log\left(\widehat{\sigma}^2_p \right) + \frac{T+p}{T-p-2} $$
+	$$\mbox{AIC}_c = \log\left(\widehat{\sigma}^2_p \right) + \frac{T+p}{T-p-2} $$
 For both $C_p$ and AIC$_c$ we choose the lag length that \emph{minimizes} the criteiron. 
 
 Using an argument essentially identical to the one presented in the notes for Lecture 2, the maximized log-likelihood for the AR$(p)$ model is
@@ -83,12 +91,41 @@ In each case, we choose the model that \emph{minimizes} the criterion. Of these 
 
 
 \subsection{Vector Autoregression Models}
-Again, assume the intercept is zero. We have:
+Again, assume the intercept is zero. Then the VAR$(p)$ model is given by
 	\begin{eqnarray*}
 		\underset{(q\times 1)}{\textbf{y}_t} &=& \underset{(q\times q)}{\Phi_1} \textbf{y}_{t-1} + \hdots + \Phi_{p}\textbf{y}_{t-p} + \boldsymbol{\epsilon_t}\\
 		\boldsymbol{\epsilon}_t &\overset{iid}{\sim}& N_q(\mathbf{0}, \Sigma)
 	\end{eqnarray*}
-Conditional least squares estimation, sample size, etc.	
+where we observe $\mathbf{y}_1, \hdots, \mathbf{y}_N$. Again, if we're content to use conditional maximum likelihood, dropping the first $p$ observations to estimate a VAR$(p)$ model, this is simply a multivariate regression problem and we have an \emph{effective sample size of} $T = N-p$. Written as a multivariate regression model, we have 
+	$$Y = X\Phi  + U$$
+where 
+	$$
+	Y = \left[\begin{array}
+		{c} \textbf{y}_{p+1}' \\ \textbf{y}_{p+2}' \\
+		\vdots \\ \textbf{y}_{N}' 
+	\end{array} \right],\quad
+	\Phi = \left[\begin{array}
+		{c} \Phi_1' \\ \Phi_2' \\ \vdots \\ \Phi_p'
+	\end{array} \right],\quad
+	U = \left[\begin{array}
+		{c} \boldsymbol{\epsilon}_{p+1}' \\ 
+		\boldsymbol{\epsilon}_{p+2}' \\ 
+		\vdots \\ 
+		\boldsymbol{\epsilon}_{N}' \\ 
+	\end{array} \right]
+	$$
+and the design matrix is
+$$X = \left[\begin{array}
+		{cccc}
+		\textbf{y}_p' & \textbf{y}_{p-1}' & \cdots & \textbf{y}_{1}'\\
+		\textbf{y}_{p+1}' & \textbf{y}_{p}' & \cdots & \textbf{y}_{2}'\\
+		\vdots & \vdots & &\vdots \\
+		\textbf{y}_{N-1}' & \textbf{y}_{N-2}' & \cdots & \textbf{y}_{N-p-1}'\\
+	\end{array} \right]$$
+Thus, the conditional maximum likelihood estimator is
+	$$\widehat{\Phi} = (X'X)^{-1} X'Y$$
+
+
 \begin{eqnarray*}
 	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
 	AIC &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\ 
@@ -111,6 +148,8 @@ Problem with VARs and state space more generally is that we can easily have samp
 
 \section{More on Cross-Validation}
 How to extend it to time series. Varieties other than leave-one-out. Efficiency versus consistency. Racine (2000) and Burman, Chow \& Nolan (1994).
+
+\subsection{K-Fold Cross-validation}
 
 \subsection{How to handle dependent observations}
 AR example.
