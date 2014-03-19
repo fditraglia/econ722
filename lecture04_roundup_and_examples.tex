@@ -31,19 +31,36 @@
 
 \begin{document}
 
-\title{Lecture 4: Model Selection Roundup and Examples}
+\title{Lecture 4: Model Selection ``Roundup'' and Time Series Examples}
 
 \author{Francis J.\ DiTraglia}
 
 \maketitle 
 
+\section{More on Consistency vs Efficiency}
+Briefly explain catching up by switching sooner if there's time. Try to see what's going on with the weak consistency assumption from Sin and White as regards a penalty of zero.
 
+\section{Overview of What We know so Far and time series examples}
+AIC, TIC, BIC, AIC corrected, leave-one-out cross-validation, mallows. Give AR and VAR examples. Say which are efficient and which are consistent. Treat cross-validation in its own section.
+
+So far we've looked at some completely generic examples (AIC, TIC, cross-validation) and some regression examples (Mallows, AIC corrected). Haven't talked about time series in particular, but regression actually covers this case as long as we're willing to use conditional ML estimation (toss some observations). If you don't want to do this, you can use the Kalman Filter.
+
+\subsection{Autoregressive Models}
+
+\subsection{VAR Models}
+Pretty much the same as AR but multivariate.
+
+\section{More on Cross-Validation}
+How to extend it to time series. Varieties other than leave-one-out. Efficiency versus consistency. Racine (2000) and Burman, Chow \& Nolan (1994).
+
+\subsection{How to handle dependent observations}
+AR example.
 
 \section{Time Series Examples}
 We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
 McQuarrie and Tsai (1998). The AR and VAR models are straightforward since, in the conditional formulation, they're just univariate and multivariate regression, respectively.
 
-\subsection{Autoregressive Models}
+
 
 \paragraph{Cross-Validation for AR}
 The way we described it above, CV depended in independence. How can we adapt it for AR models? Roughly speaking, the idea is to use the fact that dependence dies out over time and treat observations that are ``far enough apart'' as \emph{approximately} independent. Specifically, we choose an integer value $h$ and assume that $y_t$ and $y_s$ can be treated as independent as long as $|s - t|>h$. This idea is called ``$h$-block cross-validation'' and was introduced by Burman, Chow \& Nolan (1994). As in the iid version of leave-one-out cross-validation, we still evaluate a loss function by predicting \emph{one} witheld observation at a time using a model estimated without it. The difference is that we also omit the $h$ neighboring observations \emph{on each side} when fitting the model. For example, if we choose to evaluate squared-error loss, the criterion is
@@ -79,7 +96,11 @@ Conditional least squares estimation, sample size, etc.
 
 \paragraph{Cross-Validation for VARs} In principle we could use the same $h$-block idea here as we did for for the AR example above. However, given the large number of parameters we need to estimate, the sample sizes witholding $2h+1$ observations at a time may be too small for this to work well. 
 
+\section{Two Additional Criteria}
+One efficient another consistent.
+\subsection{Final Prediction Error}
 
+\subsection{Hannan-Quinn}
 
 
 \subsection{Corrected AIC for State Space Models}
