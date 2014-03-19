@@ -31,16 +31,16 @@
 
 \begin{document}
 
-\title{Lecture 4: Model Selection ``Roundup'' and Time Series Examples}
+\title{Lecture 4: Model Selection Roundup}
 
 \author{Francis J.\ DiTraglia}
 
 \maketitle 
 
-\section{More on Consistency vs Efficiency}
-Briefly explain catching up by switching sooner if there's time. Try to see what's going on with the weak consistency assumption from Sin and White as regards a penalty of zero.
+% \section{More on Consistency vs Efficiency}
+% Briefly explain catching up by switching sooner if there's time. Try to see what's going on with the weak consistency assumption from Sin and White as regards a penalty of zero.
 
-\section{Overview of What We know so Far and time series examples}
+\section{Some Time Series Examples}
 
 So far we've looked at some completely generic examples (AIC, TIC, cross-validation) and some regression examples (Mallows, AIC corrected). The generic examples can immediately be applied to an ML problem, including time series setting: if you have an ML routine, you already get everything you need for these criteria as a side effect. Could be Kalman filter or conditional likelihood.
 
@@ -55,13 +55,37 @@ We won't go through all of the specifics of the derivations for mallows and AICc
 
 
 \subsection{Autoregressive Models}
+For simplicity assume there is no constant term. Then the AR($p$) model is
+	$$y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \cdots + \phi_p y_{t-p} + \epsilon_t$$
+where $\epsilon_t \sim \mbox{iid} \; N(0,\sigma^2)$ and we observe a sample $y_1, \hdots, y_N$. We'll use conditional maximum likelihood, so we lose the first $p$ observations. Thus the \emph{effective sample size} is $T = N-p$. The conditional ML estimator of $\boldsymbol{\phi} = \left(\phi_1, \hdots, \phi_p \right)'$ is simply the least-squares estimator
+	$$\widehat{\boldsymbol{\phi}} = (X'X)^{-1}X'\textbf{y}$$
+where $\mathbf{y} = (y_{p+1}, \hdots, y_N)'$ and the $(t,j)$th element of the design matrix $X$ is $y_{t-j}$ for $t = 1, \hdots, T$ and $j = 1, \hdots, p$. The maximum likelihood estimator of $\sigma^2$ is
+	$$\widehat{\sigma}^2_p = \frac{\mbox{RSS}_p}{T}$$
+where RSS denotes the residual sum of squares, namely $\lvert\lvert\mathbf{y} - X\widehat{\boldsymbol{\phi}} \rvert\rvert^2$. Since this is a regression model, it's trivial to adapt both Mallow's $C_p$ and the AIC$_C$ to this case.\footnote{If you'd like to see all of the details written out, consult McQuarrie \& Tsai (1998), Chapter 3.} For Mallow's $C_p$ we have
+	$$C_p = \frac{\mbox{RSS}_p}{\widehat{\sigma}^2_{wide}} - T + 2p$$
+where $\widehat{\sigma}^2_{wide}$ is the estimate of $\sigma^2$ from the model with \emph{maximum order} among those under consideration. For AIC$_c$ we have
+	$$\mbox{AIC}_c &=& \log\left(\widehat{\sigma}^2_p \right) + \frac{T+p}{T-p-2} $$
+For both $C_p$ and AIC$_c$ we choose the lag length that \emph{minimizes} the criteiron. 
 
-\subsection{VAR Models}
-Pretty much the same as AR but multivariate.
+Using an argument essentially identical to the one presented in the notes for Lecture 2, the maximized log-likelihood for the AR$(p)$ model is
+	$$-\frac{T}{2}\left[\log\left(\widehat{\sigma}^2_p \right) + 1\right]$$
+To construct the AIC and BIC, we multiply this quantity by 2 and subtract the appropriate penalty term, ignoring terms that are constant across models. The number of parameters for an AR($p$) model is $p+1$, since we estimate $\sigma^2$ in addition to the $p$ autoregressive parameters. We'll rescale both AIC and BIC and flip their signs to make them comparable to the $C_p$ and AIC$_c$ expressions from above. Putting everything together for the sake of comparison, we have
+\begin{eqnarray*}
+	\mbox{AIC} &=& \log\left(\widehat{\sigma}^2_p \right) + \frac{2(p+1)}{T}\\
+	\mbox{AIC}_c &=&  \log\left(\widehat{\sigma}^2_p \right) + \frac{T+p}{T-p-2}\\
+	C_p &=&  \frac{\mbox{RSS}_p}{\widehat{\sigma}^2_{wide}} + 2p- T\\
+	\mbox{BIC} &=&\log\left(\widehat{\sigma}^2_p \right) + \frac{ \log(T)(p+1)}{T}
+\end{eqnarray*}
+In each case, we choose the model that \emph{minimizes} the criterion. Of these four criteria, only BIC is consistent. The other three criteria, however, are efficient under one-step-ahead squared prediction error loss in an environment in which the true DGP is an infinite-order autoregression. The BIC does not have this property.
+
+
+\paragraph{Ng \& Perron (2005)} There are some subtle but important points that we glossed over in the preceding discussion and that are, indeed, rarely mentioned in textbooks or articles on model selection. First there is the question of whether we should use the maximum likelihood estimator $\widehat{\sigma}^2$ or the unbiased estimator that divides by $T-p$ rather than $T$. In time series applications $T$ may be small enough that it makes a difference. More troubling, however, is the problem of deciding what should count as the sample size, since different lag lengths use a different number of observations in the conditional maximum likelihood setting. Indeed, as they are usually written, expressions for AIC and BIC drop terms that are constant across models in \emph{cross-section regression}, where changing the number of regressors doesn't affect sample size. The situation is of course entirely different for AR models but practicioners \emph{still use the same formulas} in this case. There are numerous different ways to handle these complications. Ng \& Perron (2005) give a nice overview of these difficulties and possible solutions, illustrating how each performs in a number of simulation studies.
+
+
 \subsection{Vector Autoregression Models}
-Write without an intercept for simplicity (just demean everything)
+Again, assume the intercept is zero. We have:
 	\begin{eqnarray*}
-		\underset{(q\times 1)}{\textbf{y}_t} &=& \underset{(q\times q)}{\Phi_1} \textbf{y}_{t-1} + \hdots + \Phi_{p}\textbf{y}_{t-p} + \epsilon_t\\
+		\underset{(q\times 1)}{\textbf{y}_t} &=& \underset{(q\times q)}{\Phi_1} \textbf{y}_{t-1} + \hdots + \Phi_{p}\textbf{y}_{t-p} + \boldsymbol{\epsilon_t}\\
 		\boldsymbol{\epsilon}_t &\overset{iid}{\sim}& N_q(\mathbf{0}, \Sigma)
 	\end{eqnarray*}
 Conditional least squares estimation, sample size, etc.	
