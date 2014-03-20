@@ -41,17 +41,7 @@
 % Briefly explain catching up by switching sooner if there's time. Try to see what's going on with the weak consistency assumption from Sin and White as regards a penalty of zero.
 
 \section{Some Time Series Examples}
-
-So far we've looked at some completely generic examples (AIC, TIC, cross-validation) and some regression examples (Mallows, AIC corrected). The generic examples can immediately be applied to an ML problem, including time series setting: if you have an ML routine, you already get everything you need for these criteria as a side effect. Could be Kalman filter or conditional likelihood.
-
-We derived the other examples (Mallows, AIC corrected) for a regression problem, but it's easy to adapt these to AR and VAR models. As long as we're willing to use conditional ML (drop some observations) these already \emph{are} regression problems. 
-
-We'll take a look at AR and VAR models using conditional likelihood so we can write out explicit formulas for the criteria. We won't do TIC since we can't really unpack the penalty term. We'll treat cross-validation in its own section. 
-
-The consistent criteria are ... and the efficient criteria are ...
-
-
-We won't go through all of the specifics of the derivations for mallows and AICc since they're almost identical to the regression derivation. Some more details can be found in McQuarrie and Tsai (1998).
+Thus far we've looked at a number of model selection criteria. Some of them, namely AIC, BIC and TIC, are completely portable: they can be applied to \emph{any} model that is estimated by maximum likelihood. Each of these can be immediately applied to time series data: if you have a routine to carry out ML estimation, be it conditional ML or the Kalman filter, it already produces all the quantities you need. In contrast, some of the other examples we considered, namely Mallow's $C_p$ and AIC$_c$, were derived for the special case of linear regression. How can we adapt these examples to time series data? Fortunately, if we're willing to use conditional ML estimation, some of the most widely used time series models \emph{are in fact} regression models. In this section we'll take a closer look at model selection for autoregression and vector autoregression models.
 
 
 \subsection{Autoregressive Models}
@@ -142,21 +132,26 @@ As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explod
 
 
 \section{More on Cross-Validation}
-How to extend it to time series. Varieties other than leave-one-out. Efficiency versus consistency. Racine (2000) and Burman, Chow \& Nolan (1994).
-
+In Lecture 2 we discussed leave-one-out (LOO) cross-validation (CV) and proved that it is asymptotically equivalent to TIC. In fact, there's a lot more that can be said about cross-validation. In this section we'll take a closer look.
 
 \subsection{K-Fold Cross-validation}
-In Lecture 2 we discussed leave-one-out (LOO) cross-validation (CV) and proved that it is asymptotically equivalent to TIC. In fact LOO-CV can be viewed as a special case of a more general procedure: \textbf{K-fold cross-validation}. The idea behind cross-validation is to create a ``stand-in'' for the -- typically infeasible -- ideal of fitting your model on a ``training'' dataset and assessing its predictive performance out-of-sample on an independent ``validation'' dataset. In the simplest and most common case we suppose that we have observed an iid sample and K-fold CV proceeds as follows
+LOO-CV can be viewed as a special case of a more general procedure: \textbf{K-fold cross-validation}. The idea behind cross-validation is to create a ``stand-in'' for the -- typically infeasible -- ideal of fitting your model on a ``training'' dataset and assessing its predictive performance out-of-sample on an independent ``validation'' dataset. In the simplest and most common case we suppose that we have observed an iid sample and K-fold CV proceeds as follows
 	\begin{enumerate}
-		\item Randomly partition the dataset into $K$ parts of rougly equal size. These are the ``folds.''
-		\item For each $k = 1, \hdots, K$ do the following:
-			\begin{enumerate}
-				\item Estimate your model using all observations \emph{except} those contained in the $k$th fold. 
-				\item Using the results, construct $\left\{\widehat{y}_t^{(-k)}\right\}_{t=1}^T$ denote the predictions for $y_t$ based on estimation \emph{without} the observations from the $k$th fold.
-			\end{enumerate}
-		\item 
+		\item Randomly partition the dataset into $K$ parts of roughly equal size. These are the ``folds.''
+		\item For each $k = 1, \hdots, K$ do the following estimate your model using all observations \emph{except} those contained in the $k$th fold. 
+		\item For each observation $y_t$, let $\widehat{y}^{-k(t)}$ denote the predicted value of $y_t$ from the model estimated using all the data \emph{except} the fold in which observation $t$ has been placed.
+		\item The K-fold cross-validation estimate of the out-of-sample predictive loss is given by
+			$$CV(K) = \frac{1}{T}\sum_{t=1}^T L\left(y_t, \widehat{y}^{-k(t)}\right)$$
+		where $L$ is the desired loss function, for example squared error loss.
 		\item Repeat this procedure for each model under consideration, and select the one that yields the smallest value of $CV(K)$.
 	\end{enumerate}
+
+So how should we choose $K$? When $K = T$, we have as many folds as observations. This is simply leave-one-out CV and it turns out to give an approximately unbiased estimator of the expected out-of-sample prediction error. But since each of the $T$ leave-one-out estimators is based on an almost \emph{identical dataset} -- they only differ in that a single observation is dropped -- the $L\left(y_t, \widehat{y}^{-k(t)}\right)$ will be very strongly positively correlated. This leads to a high variance estimator of the prediction error. In contrast, choosing a value of $K$ larger than one introduces a bias, but results in estimators that are less strongly correlated, hence provides a lower variance estimator of prediction error.
+
+Another consideration is computational cost. Leave-one-out CV requires us to re-fit each model $T$ times. In contrast 5-fold cross-validation only requires us to re-fit 5 times. As you saw on the recent problem set, however, there are special cases -- namely linear smoothers under quadratic loss -- in which we don't actually need to re-fit anything to carry out LOO CV. Many interesting models, however, cannot be expressed as linear smoothers so this consideration can be important. 
+
+Yet a third idea is to choose $K$ on the basis of asymptotic considerations. We know, for example, that $K = T$ yields leave-one-out cross-validation and this is asymptotically equivalent to TIC. Since TIC is an efficient model selection criterion, it follows that LOO-CV is also efficient. But what about more general K-fold CV? We'll return to this question shortly. But first we'll consider how we can carry out CV in situations where the data are \emph{not} iid.
+
 
 How to choose $K$? Bias-Variance tradeoff. Correlation between estimators. Computational considerations: K-fold is easier than LOO. Often use K = 5 or 10. For linear smoothers and quadratic prediction loss, don't need to actually do the LOO computations. You proved a special case of this on the most recent problem set.
 
@@ -164,6 +159,7 @@ How to choose $K$? Bias-Variance tradeoff. Correlation between estimators. Compu
 \subsection{How to handle dependent observations}
 AR example.
 
+How to extend it to time series. Varieties other than leave-one-out. Efficiency versus consistency. Racine (2000) and Burman, Chow \& Nolan (1994).
 
 
 \paragraph{Cross-Validation for AR}
