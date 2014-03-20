@@ -121,7 +121,7 @@ The VAR$(p)$ model has a very large number of parameters. First, we have the coe
 Re-scaling as we did for the AR model, we have
 \begin{eqnarray*}
 	\mbox{AIC} &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\
-	\mbox{BIC} &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}
+	\mbox{BIC} &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)(pq^2 + q(q+1)/2)}{T}
 \end{eqnarray*}
 The multivariate generalization of AIC$_c$ is
 $$\mbox{AIC}_c = \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}$$
@@ -129,6 +129,28 @@ as explained in Chapter 5 of McQuarrie and Tsai (1998). For each of the precedin
 
 \subsection{Corrected AIC for State Space Models}
 As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explodes, and can easily come close to the effective sample size. In situations like this, AIC is known to perform poorly. The bias correction $2\times \mbox{length}(\theta)$ is based on a large-sample argument and fails to provide a good approximation when the number of parameters is too close to the sample size, leading the AIC to choose models that are in general ``too large'' to acheive our target of minimizing the KL divergence.\footnote{Cavanaugh \& Shumway (1997) suggest $\mbox{length}(\theta) \approx T/2$ as a rough approximation of what counts as ``too many parameters relative to sample size'' for the AIC to work well.} The idea behind the AIC$_c$ of Hurvich and Tsai (1989) was to provide a better approximation to the AIC bias correction for AR models under a certain set of assumptions. In a similar vein, Cavanaugh \& Shumway (1997) propose a refined AIC, the AIC$_b$, for general state space models. Rather than deriving an analytical correction term, they suggest using the bootstrap to approximate the bias of the maximized log-likelihood as an estimator of the expected log likelihood, using the state-space bootstrap procedure proposed by Stoffer and Wall (1991).  
+
+\section{Two Additional Criteria}
+We've already covered the most commonly used model selection criteria, but there are two others that come up from time to time: Akaike's Final Prediction Error (FPE), and the Hannan-Quinn Information Criterion (HQ). Roughly speaking FPE behaves like AIC while HQ behaves like BIC: while FPE is efficient, HQ is consistent.
+
+\subsection{Hannan-Quinn Information Criterion}
+In our last lecture we examined a consistency result based on the central limit theorem. It is also possible to construct a consistency proof by appealing to the Law of the Iterated Logarithm which, in its simplest form, states that
+	$$\underset{T \rightarrow \infty}{\lim \sup}\frac{\sum_{t=1}^T Y_t}{\sqrt{T \log \log T}} = \sqrt{2} \; \mbox{a.s.}$$
+provided that $Y_t \sim$ iid with mean zero and unit variance. This is essentially the result that ``lies in-between'' the CLT, which says that a scaling of $T^{-1/2}$ gives a result that has a non-degenerate limit distribution, and the SLLN, which says that a scaling of $T^{-1}$ gives a result that converges to zero, almost surely. Roughly speaking, the idea behind HQ is to find the \emph{weakest} penalty term that will yield consistent model selection. In other words, the point is to find the \emph{slowest growing} function of $T$ that still ensures we select the most parsimonious model among those tha minimize the KL divergence. The answer turns out to be $2c \log \log T \times \mbox{length}(\theta) $ where $c > 1$, yielding the following criterion:
+	$$HQ = 2 \ell(\widehat{\theta}) - 2c \log \log T \times \mbox{length}(\theta) $$
+Rescaling and reversing the sign of the criterion to make it agree with our other examples we have the following for AR models
+	$$HQ = \log\left(\widehat{\sigma}^2_p \right) + \frac{2c \log \log T \times (p+1)}{T}$$
+and for VAR models we have
+	$$HQ = \log \left| \widehat{\Sigma}_p\right| +  \frac{2c \log\log T \times (pq^2 + q(q+1)/2)}{T}$$
+where, again, $c > 1$. The practical problem with HQ is that $\log \log T$ is fairly small unless the sample size is extremely large. This means that different choices of $c$ lead to very different behavior, and the asymptotics provide us with no guidance on this point. 
+
+
+\subsection{Final Prediction Error}
+\begin{eqnarray*}
+	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
+	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{c \log\log(T)pq^2}{T}
+\end{eqnarray*}
+
 
 
 \section{More on Cross-Validation}
@@ -168,24 +190,7 @@ In principle, we could use the $h$-block idea in other settings as well, for exa
 The idea of $h$-block cross-validation can also be adapted to versions of cross-validation other than leave-one-out. For details, see Racine (2000) who proves the consistency of a particular flavor of cross-validation, so-called ``$hv$-block,'' for dependent data.
 
 
-\section{Two Additional Criteria}
-We've already covered the most commonly used model selection criteria, but there are two others that come up from time to time: Akaike's Final Prediction Error (FPE), and the Hannan-Quinn Information Criterion (HQ). Roughly speaking FPE behaves like AIC while HQ behaves like BIC: while FPE is efficient, HQ is consistent.
 
-\subsection{Final Prediction Error}
-\subsection{Hannan-Quinn}
-In our last lecture we examined a consistency result based on the central limit theorem. It is also possible to construct a consistency proof by appealing to the Law of the Iterated Logarithm which, in its simplest form, states that
-	$$\underset{T \rightarrow \infty}{\lim \sup}\frac{\sum_{t=1}^T Y_t}{\sqrt{T \log \log T}} = \sqrt{2} \; \mbox{a.s.}$$
-provided that $Y_t \sim$ iid with mean zero and unit variance. This is essentially the result that ``lies in-between'' the CLT, which says that a scaling of $T^{-1/2}$ gives a result that has a non-degenerate limit distribution, and the SLLN, which says that a scaling of $T^{-1}$ gives a result that converges to zero, almost surely. 
-
-Roughly speaking, the idea behind HQ is to find the \emph{weakest} penalty term that will yield consistent model selection. The answer turns out to be as follows:
-
-
-For VAR models
-\begin{eqnarray*}
-	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
-	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{c \log\log(T)pq^2}{T}
-\end{eqnarray*}
-where $c > 2$. A commonly-used value is $2.01$.
 
 
 
