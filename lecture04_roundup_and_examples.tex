@@ -31,7 +31,7 @@
 
 \begin{document}
 
-\title{Lecture 4: Model Selection Roundup}
+\title{Lecture 4: Time Series Examples}
 
 \author{Francis J.\ DiTraglia}
 
@@ -138,15 +138,28 @@ $$\mbox{AIC}_c = \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - q
 as explained in Chapter 5 of McQuarrie and Tsai (1998). For each of the preceding three expressions, we choose the model that \emph{minimizes} the given criterion. Of these criteria, both AIC and its corrected version are efficient while BIC is consistent. 
 
 \subsection{Corrected AIC for State Space Models}
-As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explodes, and can easily come close to the effective sample size. In situations like this, AIC is known to perform poorly 
-
-\paragraph{Cavanaugh \& Shumway (1997)} 
+As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explodes, and can easily come close to the effective sample size. In situations like this, AIC is known to perform poorly. The bias correction $2\times \mbox{length}(\theta)$ is based on a large-sample argument and fails to provide a good approximation when the number of parameters is too close to the sample size, leading the AIC to choose models that are in general ``too large'' to acheive our target of minimizing the KL divergence.\footnote{Cavanaugh \& Shumway (1997) suggest $\mbox{length}(\theta) \approx T/2$ as a rough approximation of what counts as ``too many parameters relative to sample size'' for the AIC to work well.} The idea behind the AIC$_c$ of Hurvich and Tsai (1989) was to provide a better approximation to the AIC bias correction for AR models under a certain set of assumptions. In a similar vein, Cavanaugh \& Shumway (1997) propose a refined AIC, the AIC$_b$, for general state space models. Rather than deriving an analytical correction term, they suggest using the bootstrap to approximate the bias of the maximized log-likelihood as an estimator of the expected log likelihood, using the state-space bootstrap procedure proposed by Stoffer and Wall (1991).  
 
 
 \section{More on Cross-Validation}
 How to extend it to time series. Varieties other than leave-one-out. Efficiency versus consistency. Racine (2000) and Burman, Chow \& Nolan (1994).
 
+
 \subsection{K-Fold Cross-validation}
+In Lecture 2 we discussed leave-one-out (LOO) cross-validation (CV) and proved that it is asymptotically equivalent to TIC. In fact LOO-CV can be viewed as a special case of a more general procedure: \textbf{K-fold cross-validation}. The idea behind cross-validation is to create a ``stand-in'' for the -- typically infeasible -- ideal of fitting your model on a ``training'' dataset and assessing its predictive performance out-of-sample on an independent ``validation'' dataset. In the simplest and most common case we suppose that we have observed an iid sample and K-fold CV proceeds as follows
+	\begin{enumerate}
+		\item Randomly partition the dataset into $K$ parts of rougly equal size. These are the ``folds.''
+		\item For each $k = 1, \hdots, K$ do the following:
+			\begin{enumerate}
+				\item Estimate your model using all observations \emph{except} those contained in the $k$th fold. 
+				\item Using the results, construct $\left\{\widehat{y}_t^{(-k)}\right\}_{t=1}^T$ denote the predictions for $y_t$ based on estimation \emph{without} the observations from the $k$th fold.
+			\end{enumerate}
+		\item 
+		\item Repeat this procedure for each model under consideration, and select the one that yields the smallest value of $CV(K)$.
+	\end{enumerate}
+
+How to choose $K$? Bias-Variance tradeoff. Correlation between estimators. Computational considerations: K-fold is easier than LOO. Often use K = 5 or 10. For linear smoothers and quadratic prediction loss, don't need to actually do the LOO computations. You proved a special case of this on the most recent problem set.
+
 
 \subsection{How to handle dependent observations}
 AR example.
@@ -164,7 +177,8 @@ The idea of $h$-block cross-validation can also be adapted to versions of cross-
 
 \paragraph{Cross-Validation for VARs} In principle we could use the same $h$-block idea here as we did for for the AR example above. However, given the large number of parameters we need to estimate, the sample sizes witholding $2h+1$ observations at a time may be too small for this to work well. 
 
-
+\subsection{Consistent or Efficient?}
+Shao (1993) and Racine (1997, 2000)
 
 
 
