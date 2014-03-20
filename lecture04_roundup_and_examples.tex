@@ -146,10 +146,10 @@ where, again, $c > 1$. The practical problem with HQ is that $\log \log T$ is fa
 
 
 \subsection{Final Prediction Error}
-\begin{eqnarray*}
-	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
-	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{c \log\log(T)pq^2}{T}
-\end{eqnarray*}
+In a spirit somewhat similar to Mallow's $C_p$, Akaike's Final Prediction Error (FPE) approximates the one-step-ahead mean-squared prediction error of an AR$(p)$ model. The criterion is given by
+	$$FPE = \widehat{\sigma}_p^2\left(\frac{T+p}{T-p} \right)$$
+and its generalization to VAR models is 
+$$FPE = \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q$$
 
 
 
