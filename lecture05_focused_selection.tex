@@ -498,13 +498,14 @@ where $K_S = \left(\pi_S K^{-1} \pi_S'\right)^{-1}$ and $K\equiv J^{11}$. Thus, 
 	\end{eqnarray*}
 Notice that:
 	\begin{enumerate}
-		\item $\omega$ depends on the choice of focus parameter $\mu$
+		\item $\omega$ depends on the choice of focus parameter $\mu$ but \emph{not} on the model $S$.
 		\item $H_S$ is symmetric and idempotent, thus it is a projection matrix.
 		\item $H_S$ is orthogonal to $I - H_S$
 		\item Define $H_{\emptyset}$ as a $q\times q$ null matrix.
 \end{enumerate}
 When $S = \emptyset$, i.e.\ when we consider a submodel that estimates \emph{none} of the componentes of $\gamma$, we define $H_\emptyset$ as a $q\times q$ matrix of zeros. The key result, which appears as Lemma 3.3 in the Paper, is as follows
 \begin{lem}
+\label{lem:mu}
 If $\mu$ has continuous partial derivatives in a neighborhood of $(\theta_0, \gamma_0)$,
 	$$
 	\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S
@@ -516,13 +517,13 @@ $$
 Thus, the the scalar random variable $\Lambda_S$ follows a normal distribution with
 	\begin{eqnarray*}
 		\mbox{Mean}&=&\omega'(I - K^{1/2}H_SK^{-1/2})\delta\\
-		\mbox{Variance}&=&\nabla_\theta(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
+		\mbox{Variance}&=&\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
 	\end{eqnarray*}	
 \end{lem}
 
 
 \begin{proof}
-The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{\true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
+The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
 	$$\mu_{\mbox{true}} = \mu(\theta_0, \gamma_0 + \delta/\sqrt{n})= \mu(\theta_0, \gamma_0) +\nabla_\gamma \mu(\theta_0, \bar{\gamma})' \frac{\delta}{\sqrt{n}} $$
 where $\bar{\gamma}$ is between $\gamma_0$ and $\gamma_0 + \delta/\sqrt{n}$. Thus, we have
 	\begin{eqnarray*}
@@ -637,7 +638,7 @@ Now we can easily calculate the mean and variance of the scalar random variable 
 	\left[\begin{array}{c}
 		M\\
 		W
-	\end{array}\right] \sim \mathcal{N}_{p+q}\left(
+	\end{array}\right] \sim \mbox{N}_{p+q}\left(
 	\left[\begin{array}{c}
 		0\\
 		0
@@ -673,9 +674,19 @@ where $K = J^{11}$. Exploiting the symmetry of variance matrices in several plac
 	\end{eqnarray*}
 \end{proof}
 
-\subsection{Write Out the FIC Formula}
+\paragraph{The Focused Information Criterion} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
+	\begin{eqnarray*}
+		\mbox{AMSE}(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
+		&=&\left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right] \left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right]'\\
+			&& \quad \quad \quad + \left[\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega \right]\\
+		&=& \omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
+		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega  + \tau_0^2
+	\end{eqnarray*}
+Where 
+	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
+which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
 
-\subsection{Give a Simple Example}
+\emph{Note that we don't even have to fit all of the submodels!}
 
 
 \section{Extensions of FIC Idea}
