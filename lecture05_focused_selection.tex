@@ -356,10 +356,18 @@ so the result follows by the Continuous Mapping Theorem.
 
 \paragraph{Important Point} Notice that the only place the mis-specification showed up in the preceding proof was in the CLT for the score. This means that \emph{all} of the models under consideration yield \emph{consistent estimators}. 
 
-\paragraph{Three }
+\paragraph{Some Additional Notation}
+To make the final results a bit more compact, Hjort \& Claeskens (2003) introduces the following notation
+	\begin{eqnarray*}
+		W &\equiv& J^{10}M + J^{11} N\\
+		\widehat{\delta}_S &\equiv& \sqrt{n}\left(\widehat{\gamma}_{S} -\gamma_{0,S} \right)\\
+		D_S &\equiv& K_S \pi_S K^{-1}(\delta + W) 
+	\end{eqnarray*}
+The random variable $W$	is simply a linear combination of the random variables $M$ and $N$ that emerged from applying a CLT to the score of the full model. It's worth giving a name to this quantity because of the following result. Note that this doesn't actually appear as a lemma in the paper: it's one of those ``it's not difficult to show'' assertions and appears immediately after Lemma 3.2. In any case, here is the result and the proof:
+\begin{lem}
+Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ and $W$ are indep.\ with $W\sim \mathcal{N}_q(0,K)$ and $M\sim\mathcal{N}_p(0,J_{00})$.
+\end{lem}
 
-	
-\paragraph{First Claim:} Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ and $W$ are indep.\ with $W\sim \mathcal{N}_q(0,K)$ and $M\sim\mathcal{N}_p(0,J_{00})$.
 \begin{proof}
 By the formula for the inverse of a partitioned matrix,
 	\begin{eqnarray*}
@@ -417,22 +425,7 @@ Finally,
 		&=&J^{11}\left(J_{11}-J_{10}J_{00}^{-1}J_{01}\right)J^{11}\\
 		&=&J^{11}\left(J_{11}\right)^{-1}J^{11}=J^{11}
 \end{eqnarray*}
-where the first equality uses the fact that $J_{00}J^{01}+J_{01}J^{11} =0$. Therefore
-	$$
-	\left[\begin{array}{c}
-		M\\
-		W
-	\end{array}\right] \sim \mathcal{N}_{p+q}\left(
-	\left[\begin{array}{c}
-		0\\
-		0
-	\end{array}\right],
-	\left[\begin{array}{cc}
-		J_{00}&0\\
-		0&J^{11}
-	\end{array}\right]\right)
-$$
-Thus, $W\sim \mathcal{N}_q(0,J^{11})$ independent of $M\sim\mathcal{N}_p(0,J_{00})$.
+where the first equality uses the fact that $J_{00}J^{01}+J_{01}J^{11} =0$. The result follows.
 \end{proof}
 
 
