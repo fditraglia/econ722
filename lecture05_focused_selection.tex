@@ -304,8 +304,9 @@ by the information matrix equality, yielding the desired result.
 
 
 \paragraph{Asymptotic Normality of the Estimators}
-The next step in the derivation of the FIC is to work out the limiting distribution of the ML estimators $(\widehat{\theta}_S, \widehat{\gamma}_S)$ under model $S$. This result appears as Lemma 3.2 in Hjort \& Claeskens (2003).
+The next step in the derivation of the FIC is to work out the limiting distribution of the ML estimators $(\widehat{\theta}_S, \widehat{\gamma}_S)$ under model $S$. This  is Lemma 3.2 in Hjort \& Claeskens (2003).
 \begin{lem}
+\label{lem:main}
 Under local mis-specification,
 $$\left[\begin{array}{c}
 		\sqrt{n} (\hat{\theta}_S - \theta_0)\\
@@ -357,15 +358,12 @@ so the result follows by the Continuous Mapping Theorem.
 \paragraph{Important Point} Notice that the only place the mis-specification showed up in the preceding proof was in the CLT for the score. This means that \emph{all} of the models under consideration yield \emph{consistent estimators}. 
 
 \paragraph{Some Additional Notation}
-To make the final results a bit more compact, Hjort \& Claeskens (2003) introduces the following notation
-	\begin{eqnarray*}
-		W &\equiv& J^{10}M + J^{11} N\\
-		\widehat{\delta}_S &\equiv& \sqrt{n}\left(\widehat{\gamma}_{S} -\gamma_{0,S} \right)\\
-		D_S &\equiv& K_S \pi_S K^{-1}(\delta + W) 
-	\end{eqnarray*}
-The random variable $W$	is simply a linear combination of the random variables $M$ and $N$ that emerged from applying a CLT to the score of the full model. It's worth giving a name to this quantity because of the following result. Note that this doesn't actually appear as a lemma in the paper: it's one of those ``it's not difficult to show'' assertions and appears immediately after Lemma 3.2. In any case, here is the result and the proof:
+To make the final results a bit more compact, Hjort \& Claeskens (2003) introduce some additional notation:
+	$$W =  J^{10}M + J^{11} N$$
+The random variable $W$	is simply a linear combination of the random variables $M$ and $N$ that emerged from applying a CLT to the score of the full model. The reason it's worth naming this quantity is because of the following result\footnote{This doesn't actually appear as a Lemma in the paper: it's one of those ``it's not difficult to show'' assertions and appears immediately after Lemma 3.2.}
 \begin{lem}
-Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ and $W$ are indep.\ with $W\sim \mathcal{N}_q(0,K)$ and $M\sim\mathcal{N}_p(0,J_{00})$.
+\label{lem:W}
+Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ and $W$ are independent with $W\sim \mbox{N}_q(0,K)$ and $M\sim\mbox{N}_p(0,J_{00})$.
 \end{lem}
 
 \begin{proof}
@@ -382,7 +380,7 @@ Thus,
 			&=&J^{11}\left( N - J_{10}J_{00}^{-1}M \right)\\
 			&=&K\left( N - J_{10}J_{00}^{-1}M \right)
 	\end{eqnarray*}
-as required. Now we need to show the independence of $W$ and $M$. Write
+Now we need to show the independence of $W$ and $M$. Because they're jointly normal, it is sufficient to show that they are uncorrelated. Write
 	$$
 	\left[\begin{array}{c}
 		M\\
@@ -425,17 +423,23 @@ Finally,
 		&=&J^{11}\left(J_{11}-J_{10}J_{00}^{-1}J_{01}\right)J^{11}\\
 		&=&J^{11}\left(J_{11}\right)^{-1}J^{11}=J^{11}
 \end{eqnarray*}
-where the first equality uses the fact that $J_{00}J^{01}+J_{01}J^{11} =0$. The result follows.
+where the first equality uses the fact that $J_{00}J^{01}+J_{01}J^{11} =0$.
 \end{proof}
 
-
-\paragraph{Second Claim:} Lemma 3.2 and some algebra imply that
+\paragraph {Estimating $\delta$} As we saw in Lemma \ref{lem:main}, the limiting distribution of the ML estimators depends on the local mis-specification parameter, $\delta$. Since this is unknown we will, ultimately, need to estimate it. To this end, define
+	\begin{eqnarray*}
+		\widehat{\delta}_S &=& \sqrt{n}\left(\widehat{\gamma}_{S} -\gamma_{0,S} \right)\\
+		D_S &=& K_S \pi_S K^{-1}(\delta + W) 
+	\end{eqnarray*}
+where $W$ is the random variable described in Lemma \ref{lem:W}. The key result concerning these quantities is as follows\footnote{This does not appear as a lemma in the paper: ``it follows from Lemma 3.2 and a little algebra.''}
+\begin{lem}
+Lemma 3.2 and some algebra imply that
 	$$\hat{\delta}_S \equiv \sqrt{n}(\hat{\gamma}_S - \gamma_{0,S})\overset{d}{\rightarrow} D_S$$
 where $D_S = K_S \pi_s K^{-1}(\delta + W) = K_S \pi_s K^{-1}D$, defining $D = \delta + W$. In particular:
 	$$
-	D_N \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)
-$$
-where, as before, $K \equiv J^{11}$.
+	D_N \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)$$
+\end{lem}
+
 \begin{proof}
 Lemma 3.2 establishes that
 	$$
@@ -487,21 +491,21 @@ where $K_S = \left(\pi_S K^{-1} \pi_S'\right)^{-1}$ and $K\equiv J^{11}$. Thus, 
 	\end{eqnarray*}
 \end{proof}
 
-
-\paragraph{More Notation:} 
+\paragraph{Estimating the Focus Parameter} We're finally ready to work out the limiting distribution of $\widehat{\mu}_S$. First two final items of notation. Define
 	\begin{eqnarray*}
-		H_S &\equiv& \left(K^{-1}\right)^{1/2}(\pi_S' K_S \pi_S) \left( K^{-1} \right)^{1/2} \\
-		\omega &\equiv& J_{10}J_{00}^{-1} \nabla_\theta \mu(\theta_0,\gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0) 
+		H_S &=& \left(K^{-1}\right)^{1/2}(\pi_S' K_S \pi_S) \left( K^{-1} \right)^{1/2} \\
+		\omega &=&  J_{10}J_{00}^{-1} \nabla_\theta \mu(\theta_0,\gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)
 	\end{eqnarray*}
 Notice that:
 	\begin{enumerate}
 		\item $\omega$ depends on the choice of focus parameter $\mu$
 		\item $H_S$ is symmetric and idempotent, thus it is a projection matrix.
-		\item From (2) it follows that $H_S$ is orthogonal to $I - H_S$
+		\item $H_S$ is orthogonal to $I - H_S$
 		\item Define $H_{\emptyset}$ as a $q\times q$ null matrix.
 \end{enumerate}
-
-\paragraph{Lemma 3.3} If $\mu$ has continuous partial derivatives in a neighborhood of $(\theta_0, \gamma_0)$, then:
+When $S = \emptyset$, i.e.\ when we consider a submodel that estimates \emph{none} of the componentes of $\gamma$, we define $H_\emptyset$ as a $q\times q$ matrix of zeros. The key result, which appears as Lemma 3.3 in the Paper, is as follows
+\begin{lem}
+If $\mu$ has continuous partial derivatives in a neighborhood of $(\theta_0, \gamma_0)$,
 	$$
 	\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S
 $$
@@ -513,16 +517,22 @@ Thus, the the scalar random variable $\Lambda_S$ follows a normal distribution w
 	\begin{eqnarray*}
 		\mbox{Mean}&=&\omega'(I - K^{1/2}H_SK^{-1/2})\delta\\
 		\mbox{Variance}&=&\nabla_\theta(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
-	\end{eqnarray*}
+	\end{eqnarray*}	
+\end{lem}
+
+
 \begin{proof}
-Applying the delta-method to Lemma 3.2 along with a mean value expansion for 		$$
-	\mu(\hat{\theta}_S, \hat{\gamma}_S) - \mu(\theta_0, \gamma_0+\delta/\sqrt{n})
-$$
-gives\footnote{for details see Section 2.5 of my First-Year Paper}
-	$$
-		\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta \equiv \Lambda_S
-$$
-From here, it is immediate that $\Lambda_S$ is MV normal, as it is a linear combination of a normal random vector. Although we \emph{could} find its mean and variance directly using this result, it will be helpful to express the limiting RV $\Lambda_S$ in the alternative formulation given in Lemma 3.3. This is because $M$ and $D = \delta + W$ are \emph{independent} normal random vectors! We established above that:
+The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{\true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
+	$$\mu_{\mbox{true}} = \mu(\theta_0, \gamma_0 + \delta/\sqrt{n})= \mu(\theta_0, \gamma_0) +\nabla_\gamma \mu(\theta_0, \bar{\gamma})' \frac{\delta}{\sqrt{n}} $$
+where $\bar{\gamma}$ is between $\gamma_0$ and $\gamma_0 + \delta/\sqrt{n}$. Thus, we have
+	\begin{eqnarray*}
+		\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) &=& \sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \sqrt{n}\left(\mu_{\mbox{true}} - \mu_0 \right)\\
+			&=&\sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \nabla_\gamma \mu(\theta_0, \bar{\gamma})' \delta
+	\end{eqnarray*}
+Applying the Delta Method to the first term via Lemma \ref{lem:main} and using the fact that $\bar{\gamma} \rightarrow \gamma_0$ for the second term, we have
+$\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S$ where
+	$$\Lambda_S =  \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta$$
+From here, it is immediate that $\Lambda_S$ is MV normal, as it is a linear combination of a normal random vector. Although we \emph{could} find its mean and variance directly using this result, it will be helpful to simplify the expression for $\Lambda_S$. The point is that $M$ and $D = \delta + W$ are \emph{independent} normal random vectors, so if we can isolate them, we have a much easier expression to deal with. We established above that:
 	\begin{eqnarray*}
 		\left[\begin{array}{c}
 		C_S\\
