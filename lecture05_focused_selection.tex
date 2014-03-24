@@ -14,17 +14,17 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-\newtheorem{assump}{Assumption}[section]
-\newtheorem{pro}{Proposition}[section]
-\newtheorem{lem}{Lemma}[section]
-\newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}{Corollary}[section]
-\newtheorem{ineq}{Inequality}[section]
-\newtheorem{defn}{Definition}[section]
-\newtheorem{rem}{Remark}[section]
-\newtheorem{ex}{Example}[section]
+\newtheorem{assump}{Assumption} 
+\newtheorem{pro}{Proposition} 
+\newtheorem{lem}{Lemma} 
+\newtheorem{thm}{Theorem} 
+\newtheorem{cor}{Corollary} 
+\newtheorem{ineq}{Inequality} 
+\newtheorem{defn}{Definition} 
+\newtheorem{rem}{Remark} 
+\newtheorem{ex}{Example} 
 \theoremstyle{definition}
-\newtheorem{alg}{Algorithm}[section]
+\newtheorem{alg}{Algorithm} 
 
 
 \newcommand{\slfrac}[2]{\left.#1\right/#2}
@@ -143,11 +143,11 @@ where $m$ denotes the horizon. The estimated impulse responses for the class of 
 \section{The Focused Information Criterion (FIC)}
 Portable, like AIC and BIC, based on risk minimization, like FPE and Mallow's $C_p$, but \emph{focused} in the sense of Hansen (2005). Want to be able to select different models for different purposes. Turns out to be even \emph{more} portable than AIC and BIC: although originally derived in a likelihood framework, the idea behind the FIC can be easily extended to any situation in which it is possible to derive a limiting distribution. Indeed extending the idea behing the FIC idea to novel settings has been a major area of my research in the past few years! 
 
-Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). Can look at various loss functions, but the original papers use MSE so that's what we'll look at here. I'll talk about extensions below. Roughly speaking, the idea is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters. 
+Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). These papers appear in the same issue of JASA and the derivations and explanations are split between them. Can look at various loss functions, but the original papers use MSE so that's what we'll look at here. I'll talk about extensions below. Roughly speaking, the idea is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters. 
 
 \paragraph{Local Mis-specification Framework:}
 Suppose $Y_1, \hdots, Y_n$ are independent with density
-	$$f_{true}(y)=f(y| \theta_0, \gamma_0 + \delta/\sqrt{n})$$
+	$$f_{true}(y)=f(y, \theta_0, \gamma_0 + \delta/\sqrt{n})$$
 This could be a regression model, in which case the likelihood is conditional on $x$ but we'll suppress this in the notation. The $p$-vector $\theta$ contains the ``protected parameters.'' These are the parameters that we have decided in advance we definitely want to estimate. In contrast, the $q$-vector $\gamma$ contains the parameters over which we will carry out model selection: we consider the restriction $\gamma = \gamma_0$ where $\gamma_0$ is a \emph{known} parameter. When we restrict a component of $\gamma$ we \emph{do not estimate it}: we simply substitute the restriction into the likelihood. In a linear regression problem, for example, we might have something like
 	$$y_i = x_i'\theta + z_i'\gamma + \epsilon_i$$
 and consider setting some or all of the elements of $\gamma$ equal to zero rather than estimating them.  The true value of $\gamma$ is \emph{changing with sample size} according to $\gamma_n = \gamma_0 + \delta/\sqrt{n}$ where $\delta$ is a fixed but unknown constant $q$-vector. Thus, any specification that does not estimate $\gamma$ is \emph{locally mis-specified} but the mis-specification disappears in the limit as $n\rightarrow \infty$. 
@@ -160,16 +160,10 @@ The goal is to estimate $\mu$ with minimum mean-squared error. But since we are 
 
 \paragraph{Candidate Models:} Considered in full generality, we could restrict any number of components of $\gamma$. Since this parameter is $q$-dimensional, we could consider a total of $2^q$ candidate models if desired. Alternatively, we could decide to consider only particular groups of restrictions. The simplest case considers only two models: the \emph{wide} model estimates \emph{all} elements of $\gamma$ and the \emph{narrow} model estimates \emph{none} of the elements of gamma. However we choose to restrict the set of candidates, each model is indexed by $S$ which is a subset of $\{1, \hdots, q\}$ that indicates which elements of $\gamma$ we estimate. Its complement, $S^c$, indicates which elements of $\gamma$ we set equal to the corresponding elements of $\gamma_0$. Each candidate model $S$ implies a maximum likelihood estimator
 for the underlying model parameters $\theta$ and $\gamma_S$, where $\gamma_S$ denotes the elements of $\gamma$ that are esetimated under model $S$. The corresponding ML estimator $\widehat{\mu}_S = \mu\left(\widehat{\mu}_S, \widehat{\gamma}_S \right)$ for the target parameter $\mu$
-	$$\widehat{\mu}_S = \mu\left(\widehat{\mu}_S, \widehat{\gamma}_S, \gamma_{0,S^c} \right)$$
+	$$\widehat{\mu}_S = \mu\left(\widehat{\theta}_S, \widehat{\gamma}_S, \gamma_{0,S^c} \right)$$
 where $\gamma_{0,S^c}$ denotes a vector containing the elements of $\gamma_0$ whose indices are in $S^c$. These are the elements of $\gamma$ that are \emph{not estimated}. 
 
-\paragraph{Selection Matrices} In various matrix manipulations in the paper, it turns out to be helpful to define a matrix that \emph{selects} the elements of $\gamma$ that are estimated under model $S$. Let $\pi_S$ be the $|S|\times q$ matrix that ``selects'' only those elements of a $q$-vector that correspond to the indices in the set $S$. For example, suppose $q=3$ and $S = \{1,3\}$. Then,
-	$$\pi_S = \left[\begin{array}
-		{ccc} 1 & 0 & 0\\ 0 & 0 & 1
-	\end{array} \right]$$
-In this case $\gamma = (\gamma_1, \gamma_2, \gamma_3)'$ and $\pi_S \gamma = (\gamma_1, \gamma_3)'$. For the \emph{wide} or \emph{full} model, i.e.\ the model that estimates all components of $\gamma$, we have $S = \{1, \hdots, q\}$ and hence $\pi_S$ is simply the identity matrix of order $q$. An extremely useful fact about $\pi_S$ is that we can use it to construct 
-
-\paragraph{Score Function:}
+\paragraph{The ``Full'' Model} The \emph{full}, aka \emph{wide}, model is the specification in which we estimate all elements of $\gamma$. Under the local mis-specificiation assumption, this model is \emph{correctly specified}. Any model selection criterion relies on some form of over-identification to evaluate the quality of a candidate model relative to alternatives. In the FIC framework this is achieved by comparing the results of each candidate $S$ to those of the full model. We denote the \textbf{score function} of the full model by
 	$$\left[\begin{array}{c}
 		U(y)\\
 		V(y)
@@ -180,30 +174,33 @@ In this case $\gamma = (\gamma_1, \gamma_2, \gamma_3)'$ and $\pi_S \gamma = (\ga
 		(p\times 1)\\
 		(q\times 1)
 \end{array}$$
-
-\paragraph{Variance Matrix:}
-	$$J_{Full} = Var_0\left[\begin{array}{c}
+Note that the score is evaluated at the \emph{null point} $(\theta_0, \gamma_0)$. This is \emph{not} the true parameter vector for \emph{any finite sample size}, but it is the true parameter vector in the limit. Similarly, the \textbf{information matrix} of the full model by
+$$J_{Full} = Var_0\left[\begin{array}{c}
 		U(y)\\
 		V(y)
 \end{array}\right]=\left[\begin{array}{cc}
 		J_{00} & J_{01}\\
 		J_{10} & J_{11}
-	\end{array}\right]
-$$
-\paragraph{Inverse of Variance Matrix:}
-	$$
-	J_{Full}^{-1} = \left[\begin{array}{cc}
+
+	\end{array}\right]\begin{array}
+	{cc} (p\times p) & (p\times q) \\
+	(q\times p) & (q\times q)
+\end{array}$$
+where the the zero subscript indicates that the expectation is being taken with respect to the distribution in which $\gamma = \gamma_0$. This is the \emph{limiting} DGP which is \emph{different} from the DGP for any finite sample size under local mis-specification. We partition the inverset of the information matrix for the full model as follows 
+	$$J_{Full}^{-1} = \left[\begin{array}{cc}
 		J^{00} & J^{01}\\
 		J^{10} & J^{11}
-	\end{array}\right]
-$$
-By the partitioned matrix inverse formula:
-	$$
-	K \equiv J^{11} = (J_{11} - J_{10}J_{00}^{-1}J_{01})^{-1}
-$$
-\paragraph{Projection Matrix:} $\pi_S$ maps vector $v$ to subvector $v_S$ containing only those components $v_j$ of $v$ for which $j$ is in the set $S$. We write $v_S = \pi_S v$.
-	$$
-	J_S = Var_0\left[\begin{array}{c}
+	\end{array}\right]$$
+where
+	$$K \equiv J^{11} = (J_{11} - J_{10}J_{00}^{-1}J_{01})^{-1}$$
+by the partitioned matrix inverse formula. The quantity $J^{11}$ appears so frequently in the derivation of the FIC that it is called $K$ to keep the superscripts from getting out of control. 
+
+\paragraph{Selection Matrices} In various matrix manipulations in the paper, it turns out to be helpful to define a matrix that \emph{selects} the elements of $\gamma$ that are estimated under model $S$. Let $\pi_S$ be the $|S|\times q$ matrix that ``selects'' only those elements of a $q$-vector that correspond to the indices in the set $S$. For example, suppose $q=3$ and $S = \{1,3\}$. Then,
+	$$\pi_S = \left[\begin{array}
+		{ccc} 1 & 0 & 0\\ 0 & 0 & 1
+	\end{array} \right]$$
+In this case $\gamma = (\gamma_1, \gamma_2, \gamma_3)'$ and $\pi_S \gamma = (\gamma_1, \gamma_3)'$. For the \emph{wide} or \emph{full} model, i.e.\ the model that estimates all components of $\gamma$, we have $S = \{1, \hdots, q\}$ and hence $\pi_S$ is simply the identity matrix of order $q$. An extremely useful fact about $\pi_S$ is that we can use it to transform the information matrix for the \emph{full} aka \emph{wide} model -- the model that estimates all components of $\gamma$ -- into the information matrix for a candidate model $S$ as follows:
+	$$J_S = Var_0\left[\begin{array}{c}
 		U(y)\\
 		V_S(y)
 \end{array}\right]=\left[\begin{array}{cc}
@@ -212,18 +209,19 @@ $$
 	\end{array}\right]=\left[\begin{array}{cc}
 		J_{00} & J_{01}\pi_S'\\
 		\pi_S J_{10} & \pi_S J_{11} \pi_S'
-	\end{array}\right]
-$$
+	\end{array}\right]$$
 By the partitioned matrix inverse formula:
 \begin{eqnarray*}
 	K_S \equiv J^{11,S} &=& \left(\pi_S K^{-1} \pi_S'\right)^{-1} = \left[\pi_S \left(J_{11} - J_{10}J_{00}^{-1}J_{01} \right) \pi_S'\right]^{-1} \\
 	J^{01,S} &=& -J_{00}^{-1}J_{01}\pi_S'K_S\\
 	J^{00,S} &=& J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}
 \end{eqnarray*}
+Again, the quantity $J^{11,S}$ appears so many times in the derivation of the FIC that it is called $K_S$ for short.
 
-\paragraph{Lemma 3.1}
-	$$
-	\left[\begin{array}{c}
+\paragraph{CLT for the Score of the Full Model} The first step in deriving the FIC is to calculate the limiting distribution of the score for the full model evaluated at $(\theta_0, \gamma_0)$. This appears as Lemma 3.1 in Hjort \& Claeskens (2003):
+\begin{lem}[CLT for Score of Full Model]
+Under local mis-specification,
+	$$\left[\begin{array}{c}
 		\frac{1}{\sqrt{n}}\sum_{i=1}^n U(Y_i)\\
 		\frac{1}{\sqrt{n}}\sum_{i=1}^n V(Y_i)
 	\end{array}\right] \overset{d}{\rightarrow}
@@ -234,15 +232,72 @@ By the partitioned matrix inverse formula:
 	\left(\begin{array}{c}
 		M\\
 		N
-	\end{array}\right)
-$$
+	\end{array}\right)$$
 where
-	$$
-	\left(\begin{array}{c}
+	$$\left(\begin{array}{c}
 		M\\
 		N
-	\end{array}\right) \sim \mathcal{N}_{p+q}(0, J_{Full})
-$$
+	\end{array}\right) \sim \mbox{N}_{p+q}(0, J_{Full})$$
+\end{lem}
+\begin{proof}
+To prove this result, we apply the Lindeberg-Feller CLT	to the triangular array of random variables
+	$$\left[\begin{array}
+		{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
+	\end{array} \right]$$
+Since the $Y_i$ are iid \emph{for fixed} $n$, we have
+	\begin{eqnarray*}
+		Var\sum_{i = 1}^n \left[\begin{array}
+		{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
+	\end{array} \right] = Var_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] \rightarrow Var_0 \left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] = J_{full}
+	\end{eqnarray*}
+under appropriate regularity conditions. Thus, assuming the Lindeberg condition is satisfied, we have
+$$\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left(\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] - E_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] \right) \overset{d}{\rightarrow} \left[\begin{array}
+		{c} M \\N
+	\end{array}\right]$$
+where $(M', N')' \sim  N_{p+q}\left(0,J_{full}\right)$. Again, since the $Y_i$ are iid for fixed $n$,
+$$\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left(\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] - E_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] \right) =\left(\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] \right) - \sqrt{n}E_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] $$
+And by a mean-value expansion around $\gamma_n = \gamma_0 + \delta/\sqrt{n}$,
+\begin{eqnarray*}
+	E_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] &=&  E_n\left[\begin{array}
+		{cc} \nabla_\theta \log f(Y_i, \theta_0, \gamma_n) \\ \nabla_\gamma \log f(Y_i, \theta_0, \gamma_n)
+	\end{array} \right] + E_n\left[\begin{array}
+		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] (\gamma_0 - \gamma_n)
+\end{eqnarray*}
+where $\gamma^*$ is between $\gamma_0$ and $\gamma_n$. The first term is simply the population moment condition for ML estimation and hence equals zero: thanks to the mean-value expansion, the expectation is now evaluated at $(\theta_0,\gamma_n)$ which is the true parameter value for the DGP based on a sample size of $n$. Thus, since $\gamma_0 = \gamma_n = -\delta/\sqrt{n}$, we have
+	$$\sqrt{n}E_n\left[\begin{array}
+		{cc} U(Y_i) \\ V(Y_i)
+	\end{array} \right] = -E_n\left[\begin{array}
+		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] \delta \rightarrow -E_0\left[\begin{array}
+		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] \delta$$
+under appropriate regularity conditions. Recall that, in the limit, $(\theta_0, \gamma_0)$ are the \emph{true} parameter values. Hence, 
+$$-E_0\left[\begin{array}
+		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] = \left[\begin{array}
+			{c} J_{01} \\ J_{11}
+		\end{array} \right]$$
+by the information matrix equality, yielding the desired result.
+\end{proof}
+
+
+\paragraph{Asymptotic Normality of the Estimators}
+The next step in the derivation of the FIC is to 
 \paragraph{Lemma 3.2}
 	$$
 	\left[\begin{array}{c}
