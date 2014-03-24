@@ -136,8 +136,6 @@ Thus \emph{none} of the models under consideration is correctly specified since 
 	$$\theta_m = (\alpha -\gamma)\alpha^{m-1}$$
 where $m$ denotes the horizon. The estimated impulse responses for the class of models we are considering can be calculated recursively from the estimated AR parameters. By simulating the DGP with $T=200$ for a range of parameter values $(\alpha,\gamma)$ Hansen (2005) shows that the optimal AR order for approximating the impulse response of the true DGP in a minumum mean-squared error sense is \emph{highly} sensitive to $m$, the horizon of interest. To take a particularly stark example, when $\alpha = 0.5$ and $\beta = 0.9$ the optimal AR order for $m=2$ is $k=10$ but the optimal AR order for $m=6$ is $k=0$. 
 
-\subsection{The FIC for Hansen's (2005) Example}
-
 
 
 \section{The Focused Information Criterion (FIC)}
@@ -218,12 +216,21 @@ By the partitioned matrix inverse formula:
 \end{eqnarray*}
 Again, the quantity $J^{11,S}$ appears so many times in the derivation of the FIC that it is called $K_S$ for short.
 
-\paragraph{CLT for the Score of the Full Model} The first step in deriving the FIC is to calculate the limiting distribution of the score for the full model evaluated at $(\theta_0, \gamma_0)$. This appears as Lemma 3.1 in Hjort \& Claeskens (2003):
+\paragraph{CLT for the Score of the Full Model} The first step in deriving the FIC is to calculate the limiting distribution of the score for the full model evaluated at $(\theta_0, \gamma_0)$. This appears as Lemma 3.1 in Hjort \& Claeskens (2003). Before stating it, we'll define the following notation:
+	$$
+	\left[\begin{array}
+		{c} \bar{U}_n \\ \bar{V}_n
+	\end{array}\right] = \frac{1}{n} \sum_{i=1}^n \left[\begin{array}
+		{c} U(Y_i)\\ V(Y_i)
+	\end{array}\right]
+	$$
+		
+
 \begin{lem}[CLT for Score of Full Model]
+\label{lem:score}
 Under local mis-specification,
 	$$\left[\begin{array}{c}
-		\frac{1}{\sqrt{n}}\sum_{i=1}^n U(Y_i)\\
-		\frac{1}{\sqrt{n}}\sum_{i=1}^n V(Y_i)
+		\sqrt{n} \bar{U}_n \\ \sqrt{n} \bar{V}_n
 	\end{array}\right] \overset{d}{\rightarrow}
 	\left(\begin{array}{c}
 		J_{01}\delta\\
@@ -297,26 +304,61 @@ by the information matrix equality, yielding the desired result.
 
 
 \paragraph{Asymptotic Normality of the Estimators}
-The next step in the derivation of the FIC is to 
-\paragraph{Lemma 3.2}
-	$$
-	\left[\begin{array}{c}
-		\sqrt{n} (\hat{\theta} - \theta_0)\\
-		\sqrt{n} (\hat{\gamma} - \gamma_0)
+The next step in the derivation of the FIC is to work out the limiting distribution of the ML estimators $(\widehat{\theta}_S, \widehat{\gamma}_S)$ under model $S$. This result appears as Lemma 3.2 in Hjort \& Claeskens (2003).
+\begin{lem}
+Under local mis-specification,
+$$\left[\begin{array}{c}
+		\sqrt{n} (\hat{\theta}_S - \theta_0)\\
+		\sqrt{n} (\hat{\gamma}_S - \gamma_0)
 \end{array}\right]\overset{d}{\rightarrow} 
 	\left[\begin{array}{c}
+		C_S\\
+		D_S
+	\end{array}\right]$$
+where
+	$$\left[\begin{array}{c}
 		C_S\\
 		D_S
 	\end{array}\right] = J_S^{-1}
 	\left(\begin{array}{c}
 		J_{01}\delta + M\\
 		\pi_S J_{11}\delta + N_S 
-	\end{array}\right) \sim \mathcal{N}_{p+|S|}
+	\end{array}\right) \sim \mbox{N}_{p+|S|}
 		\left(J_S^{-1}\left[\begin{array}{c}
 			J_{01}\\
 			\pi_S J_{11}
-	\end{array}\right]\delta, J_S^{-1}\right)
-$$
+	\end{array}\right]\delta, J_S^{-1}\right)$$
+and $N_S = \pi_S N$.
+\end{lem}
+\begin{proof}
+The usual Taylor Expansion argument for ML continues to apply under local mis-specification. Furthermore, the information matrix equality holds in the limit since all the models under consideration are asymptotically correctly specified. Thus, we have
+$$\left[\begin{array}{c}
+	\widehat{\theta}_S \\ \widehat{\gamma}_S 
+\end{array} \right] = \left[\begin{array}{c}
+	\theta_0 \\ \gamma_{0,S}
+\end{array} \right] + J_S^{-1}\left[\begin{array}
+		{c} \bar{U}_n \\ \pi_S \bar{V}_n
+	\end{array}\right] + o_p(n^{-1/2}) $$ 
+Restricting Lemma \ref{lem:score} to model $S$, we have
+$$\left[\begin{array}{c}
+		\sqrt{n} \bar{U}_n \\ \sqrt{n} \pi_S \bar{V}_n
+	\end{array}\right] \overset{d}{\rightarrow}
+	\left(\begin{array}{c}
+		J_{01}\delta\\
+		\pi_S J_{11}\delta
+	\end{array}\right) + 	
+	\left(\begin{array}{c}
+		M\\
+		\pi_S N
+	\end{array}\right)$$
+so the result follows by the Continuous Mapping Theorem.
+\end{proof}
+
+\paragraph{Important Point} Notice that the only place the mis-specification showed up in the preceding proof was in the CLT for the score. This means that \emph{all} of the models under consideration yield \emph{consistent estimators}. 
+
+\paragraph{Three }
+
+	
 \paragraph{First Claim:} Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ and $W$ are indep.\ with $W\sim \mathcal{N}_q(0,K)$ and $M\sim\mathcal{N}_p(0,J_{00})$.
 \begin{proof}
 By the formula for the inverse of a partitioned matrix,
@@ -628,12 +670,16 @@ where $K = J^{11}$. Exploiting the symmetry of variance matrices in several plac
 	\end{eqnarray*}
 \end{proof}
 
+\subsection{Write Out the FIC Formula}
+
+\subsection{Give a Simple Example}
 
 
-
+\section{Extensions of FIC Idea}
+List some references and give the gist of each. Point to time series examples.
 
 \section{Schorfheide (2005)}
-
+In the same spirit as FIC, but developed independently.
 
 
 
