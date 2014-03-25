@@ -55,10 +55,10 @@ and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colo
 where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
 \begin{eqnarray*}
 \mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{2N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
-	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{2N}\right)
+	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{2N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right)
 \end{eqnarray*}
 where $Z$ is a standard normal random variable and $\Phi$ is the corresponding CDF. Now suppose we decided to do something completely crazy: throw away half our sample. Let $\bar{X}_{N/2}$ denote the sample mean based on observations $1, 2, \hdots, \lfloor N/2 \rfloor $ \emph{only}. We can still construct a perfectly valid test with size $\alpha$ as follows. Define
-	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_N \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
+	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_{N} \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
 and reject if $\sqrt{N} \bar{X}_N > z_{1-\alpha}$. But there's an obvious problem here: there \emph{must} be a cost for throwing away perfectly good data. Indeed, if we calculate the power for this crazy test, we'll find that it's \emph{strictly lower} than that of the sensible test based on the full sample. In particular,
 	$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
 using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.  
@@ -103,7 +103,7 @@ In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that mi
 	&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-	$$\sqrt{T}\left( \widehat{\mu} - \mu\right) = \sqrt{T}\left(\widehat{\mu} - \mu \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
+	$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
 Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. So what's going on here? The problem is that the asymptotic variance is of a \emph{different order} than the asymptotic bias. We need to scale $\widehat{\mu}$ up by $\sqrt{T}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. In other words, there is no way to get a meaningful bias-variance tradeoff in the limit under conventional asymptotics.
 
 So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) = O(T^{1/2})$ but what we want is $\sqrt{T}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(T^{-1/2})$. This is where local mis-specification makes its grand appearance. Suppose that we have a DGP under which the true parameter value is $\mu_T = \mu_0 + \delta/\sqrt{T}$ where $\delta$ is a constant. That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $T^{-1/2}$. This may sound like a crazy idea, but there's no arguing with the fact that it solves our problem. We have,
@@ -686,7 +686,7 @@ Where
 	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
 which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
 
-\emph{Note that we don't even have to fit all of the submodels!}
+\emph{Note that we don't even have to fit all of the submodels!\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)}
 
 
 \section{Extensions of FIC Idea}
