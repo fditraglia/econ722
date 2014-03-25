@@ -45,7 +45,7 @@
 \section{Local Mis-specification}
 
 \subsection{Introduction}
-In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
+In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following simple examples.
 
 \subsection{What's Wrong with Asymptotic Power?}
 Consider the following simple testing problem. Suppose we observe $N$ observations from the following DGP
@@ -87,7 +87,7 @@ Wow! Our problem has disappeared! The asymptotic power of the two tests now diff
 
 \subsection{Weak Identification}
 Drifting parameter sequences of the kind described above are also used in the weak instruments and weak identification literature. 
-\todo[inline]{Possibly add a simple example later.}
+
 
 \subsection{A Bias-Variance Tradeoff in the Limit}
 When we derived Mallow's $C_p$, the idea was to compare models on the basis of predictive mean-squared error. Bigger models generally have a lower bias but a higher variance because there are more parameters to estimate. In the example we considered in class, everything was linear and we made enough assumptions about the finite sample distribution that we could deduce the \emph{exact} MSE conditional on $X$. In many settings, however, finite sample results unavailable and we are forced to rely on asymptotic approximations. We know there is a tradeoff between bias and variance in the finite sample and we'd like to capture this idea in our limit results. The question is how?
@@ -118,12 +118,37 @@ hence, the asymptotic mean-squared error of $\widehat{\mu}$ is $\mbox{AMSE}(\wid
 
 
 \subsection{Triangular Array Asymptotics}
-\todo[inline]{Put together a simple example (iid) showing what's going on here. Perhaps a little $L_2$ WLLN. Also, give the Lindeberg-Feller CLT. Point them to the Andrews papers that give technical conditions.}
+When parameter values change with sample size, we no longer have iid random variables. Instead we have what is called a ``triangular array DGP'' and we need to index random variables \emph{by sample size} in addition to the usual index:
+	\begin{eqnarray*}
+		&&Y_{11}\\
+		&&Y_{21}, Y_{22}\\
+		&& \vdots\\
+		&&Y_{n1}, Y_{n2}, \hdots, Y_{nn}
+	\end{eqnarray*}
+When we want to avoid the double subscript on the random variables, it's common to add one to the expectation and variance operators so indicate the distribution with respect to which the given moment is being evaulated.
+
+To give you a sense of how triangular array DGPs work, I'll show you some very simple results. For much more general, and also much more technical, results for triangular array DGPs, see Andrews (1988) and Andrews (1992).
+
+\paragraph{A Very Simple LLN for Triangular Arrays}
+Suppose $Y_1, \hdots, Y_n \sim \mbox{iid}$ with mean $\mu + \delta/\sqrt{n}$ and variance $\sigma^2_n$. Can we still establish a LLN for the sample mean $\bar{Y}_n = n^{-1} \sum_{i=1}^n Y_i$? If so how? By Chebyshev's Inequality, we know that one simple way to establish a WLLN is via an $L_2$ argument. In this case, it is sufficient to show that $E_n[\bar{Y}_n] \rightarrow \mu$ and $Var_n[\bar{Y}_n] \rightarrow 0$. Although the triangular array of RVs in this example is not identically distributed in the strict sense, it \emph{is} identically distributed \emph{for fixed $n$}. Thus, we have,
+	$$E_n[\bar{Y}_n] = \frac{1}{n} \sum_{i=1}^n E_n[Y_i] = \mu + \delta/\sqrt{n} \rightarrow \mu$$
+Using independence, we have
+	$$Var_n(\bar{Y}_n) =\frac{1}{n^2} \sum_{i=1}^n Var_n(Y_i) = \frac{\sigma_n^2}{n}$$
+Thus, as long as $\sigma_n^2$ is \emph{uniformly bounded} by some constant $M$, we have $Var_n(\bar{Y}_n) \rightarrow 0$ and it follows that $\bar{Y}_n \overset{p}{\rightarrow} \mu$. Although this example as so simple as to be nearly trivial it illustrates the basic flavor of triangular array asymptotics: they're very similar to the usual asymptotics you see in first year, but typically require some kind of uniform bound on the array.
+
+\paragraph{Lindeberg-Feller CLT}
+The previous example showed a simple LLN for triangular arrays. What about a CLT? The simplest case assumes independent data and is called the Lindeberg-Feller CLT. For each $n$, let $Y_{n,1}, Y_{n,2}, \hdots, Y_{n,k_n}$ be independent random vectors with finite variances such that
+	$$\sum_{i=1}^{k_n} E\left[ \lVert Y_{n,i}  \rVert^2 \mathbf{1}\left\{ \lVert Y_{n,i} \rVert > \epsilon\right\} \right] \rightarrow 0$$
+for every $\epsilon > 0$ and
+	$$\sum_{i=1}^{k_n} Var(Y_{n,i}) \rightarrow \Sigma$$
+Then $\sum_{i=1}^{k_n} \left(Y_{n,i}-E\left[ Y_{n,i} \right]\right) \overset{d}{\rightarrow} \mbox{N}(0,\Sigma)$.
+
+
 
 \section{Focused Evaluation}
-Best model for a \emph{particular purpose} rather than ``one-size-fits all.'' Once we acknowledge that are models are probably wrong, we should ask ``how wrong'' and it might depend on what we want to use the model for. More generally, it's not clear that we would want to use the true model \emph{even if we knew its form}: bias-variance tradeoff that comes from estimation uncertainty of more complicated models.
+The idea behind focused model selection is to choose the model that is best for a \emph{particular purpose} rather than seeking ``one-size-fits all'' best model. In general, ``best''  means minimum risk relative to some loss function: it is \emph{not} a matter of searching for the ``true.'' There are two main ideas here. First, even if we knew what the true DGP model was, up to some unknown parameters that we need to estimate, it's not clear that we should use it. In most interesting settings there is a bias-variance trade-off. If the true model is somewhat complicated, we may be better off fitting a simpler model. Although this introduces a bias, it could lead to a large reduction in variance, depending on sample size. Second, different modeling goals may call for different models \emph{of the same data}. Estimating a structural parameter and creating a forecast are two very different goals. It is far from obvious that we should use the same model for both.
 
-This example comes from Hansen (2005). Consider AR$(k)$ model
+The following example comes from Hansen (2005). Consider an AR$(k)$ model
 	$$y_t = \mu + \beta_1 y_{t-1} + \cdots + \beta_k y_{t-k} + \epsilon_t$$
 where $\{\epsilon_t\}$ is a martingale difference sequence, that is $E[\epsilon_t|I_{t-1}] = 0$. We're interested in learning about a scalar ``focus parameter'' $\theta = g(\beta)$. This could be for example, one of the individual coefficients $\beta_j$, the long-run variance, or an impulse response at some specified horizon. The point is that it's a scalar and a \emph{function} of the underlying model parameters $\beta_1, \hdots, \beta_k$. So what constitutes a ``good'' model for learning about $\theta$? The natural way to proceed is to specify a loss function and try to find the estimator $\widehat{\theta}$ that minimizes the expectation of the loss. For this example we'll use mean-squared error and search for a model that minimizes $E[(\widehat{\theta} - \theta)^2]$ 
 
@@ -139,9 +164,11 @@ where $m$ denotes the horizon. The estimated impulse responses for the class of 
 
 
 \section{The Focused Information Criterion (FIC)}
-Portable, like AIC and BIC, based on risk minimization, like FPE and Mallow's $C_p$, but \emph{focused} in the sense of Hansen (2005). Want to be able to select different models for different purposes. Turns out to be even \emph{more} portable than AIC and BIC: although originally derived in a likelihood framework, the idea behind the FIC can be easily extended to any situation in which it is possible to derive a limiting distribution. Indeed extending the idea behing the FIC idea to novel settings has been a major area of my research in the past few years! 
+The motivation behind the FIC is to create a model selection criterion that is portable like AIC and BIC, based on risk minimization like FPE and $C_p$, but \emph{focused} in the sense of Hansen (2005). The result turns out to be even \emph{more} portable than AIC and BIC: although originally derived in a likelihood framework, the idea behind the FIC can be easily extended to any situation in which it is possible to derive a limiting distribution. Indeed extending the idea behing the FIC idea to novel settings has been a topic of my recent research! 
 
-Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). These papers appear in the same issue of JASA and the derivations and explanations are split between them. Can look at various loss functions, but the original papers use MSE so that's what we'll look at here. I'll talk about extensions below. Roughly speaking, the idea is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters. 
+Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). These papers appear in the same issue of JASA and the derivations and explanations are split between them. One can look at various loss functions, but the original papers use MSE so that's what we'll discuss here. 
+
+Roughly speaking, the idea behind the FIC is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters. 
 
 \paragraph{Local Mis-specification Framework:}
 Suppose $Y_1, \hdots, Y_n$ are independent with density
@@ -686,14 +713,16 @@ Where
 	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
 which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
 
-\emph{Note that we don't even have to fit all of the submodels!}
+\todo[inline]{Explain about asymptotically unbiased estimator of $\delta\delta'$ and explain that we don't ahve to fit all of the submodels.}
+
 
 
 \section{Extensions of FIC Idea}
-List some references and give the gist of each. Point to time series examples.
+\todo[inline]{List some references and give the gist of each. In particular, point out the time series examples. Don't forget about that Brownlees Paper.}
 
 \section{Schorfheide (2005)}
-In the same spirit as FIC, but developed independently.
+\todo[inline]{In the same spirit as FIC, but developed independently.}
+
 
 
 
