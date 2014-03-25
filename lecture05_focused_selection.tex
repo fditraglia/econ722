@@ -45,7 +45,7 @@
 \section{Local Mis-specification}
 
 \subsection{Introduction}
-In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following simple examples.
+In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. This basic idea is widely used in econometrics and statistics and is known by several different names. Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
 
 \subsection{What's Wrong with Asymptotic Power?}
 Consider the following simple testing problem. Suppose we observe $N$ observations from the following DGP
@@ -54,11 +54,11 @@ and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colo
 	$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
 where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
 \begin{eqnarray*}
-\mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{2N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
-	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{2N}\right)
+\mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
+	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right)
 \end{eqnarray*}
 where $Z$ is a standard normal random variable and $\Phi$ is the corresponding CDF. Now suppose we decided to do something completely crazy: throw away half our sample. Let $\bar{X}_{N/2}$ denote the sample mean based on observations $1, 2, \hdots, \lfloor N/2 \rfloor $ \emph{only}. We can still construct a perfectly valid test with size $\alpha$ as follows. Define
-	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_N \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
+	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_{N/2} \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
 and reject if $\sqrt{N} \bar{X}_N > z_{1-\alpha}$. But there's an obvious problem here: there \emph{must} be a cost for throwing away perfectly good data. Indeed, if we calculate the power for this crazy test, we'll find that it's \emph{strictly lower} than that of the sensible test based on the full sample. In particular,
 	$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
 using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.  
@@ -87,7 +87,7 @@ Wow! Our problem has disappeared! The asymptotic power of the two tests now diff
 
 \subsection{Weak Identification}
 Drifting parameter sequences of the kind described above are also used in the weak instruments and weak identification literature. 
-
+\todo[inline]{Possibly add a simple example later.}
 
 \subsection{A Bias-Variance Tradeoff in the Limit}
 When we derived Mallow's $C_p$, the idea was to compare models on the basis of predictive mean-squared error. Bigger models generally have a lower bias but a higher variance because there are more parameters to estimate. In the example we considered in class, everything was linear and we made enough assumptions about the finite sample distribution that we could deduce the \emph{exact} MSE conditional on $X$. In many settings, however, finite sample results unavailable and we are forced to rely on asymptotic approximations. We know there is a tradeoff between bias and variance in the finite sample and we'd like to capture this idea in our limit results. The question is how?
@@ -103,7 +103,7 @@ In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that mi
 	&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-	$$\sqrt{T}\left( \widehat{\mu} - \mu\right) = \sqrt{T}\left(\widehat{\mu} - \mu \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
+	$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
 Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. So what's going on here? The problem is that the asymptotic variance is of a \emph{different order} than the asymptotic bias. We need to scale $\widehat{\mu}$ up by $\sqrt{T}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. In other words, there is no way to get a meaningful bias-variance tradeoff in the limit under conventional asymptotics.
 
 So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) = O(T^{1/2})$ but what we want is $\sqrt{T}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(T^{-1/2})$. This is where local mis-specification makes its grand appearance. Suppose that we have a DGP under which the true parameter value is $\mu_T = \mu_0 + \delta/\sqrt{T}$ where $\delta$ is a constant. That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $T^{-1/2}$. This may sound like a crazy idea, but there's no arguing with the fact that it solves our problem. We have,
