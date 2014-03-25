@@ -55,10 +55,10 @@ and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colo
 where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
 \begin{eqnarray*}
 \mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{2N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
-	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{2N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right)
+	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{2N}\right)
 \end{eqnarray*}
 where $Z$ is a standard normal random variable and $\Phi$ is the corresponding CDF. Now suppose we decided to do something completely crazy: throw away half our sample. Let $\bar{X}_{N/2}$ denote the sample mean based on observations $1, 2, \hdots, \lfloor N/2 \rfloor $ \emph{only}. We can still construct a perfectly valid test with size $\alpha$ as follows. Define
-	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_{N} \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
+	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_N \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
 and reject if $\sqrt{N} \bar{X}_N > z_{1-\alpha}$. But there's an obvious problem here: there \emph{must} be a cost for throwing away perfectly good data. Indeed, if we calculate the power for this crazy test, we'll find that it's \emph{strictly lower} than that of the sensible test based on the full sample. In particular,
 	$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
 using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.  
@@ -103,7 +103,7 @@ In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that mi
 	&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-	$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
+	$$\sqrt{T}\left( \widehat{\mu} - \mu\right) = \sqrt{T}\left(\widehat{\mu} - \mu \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
 Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. So what's going on here? The problem is that the asymptotic variance is of a \emph{different order} than the asymptotic bias. We need to scale $\widehat{\mu}$ up by $\sqrt{T}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. In other words, there is no way to get a meaningful bias-variance tradeoff in the limit under conventional asymptotics.
 
 So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) = O(T^{1/2})$ but what we want is $\sqrt{T}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(T^{-1/2})$. This is where local mis-specification makes its grand appearance. Suppose that we have a DGP under which the true parameter value is $\mu_T = \mu_0 + \delta/\sqrt{T}$ where $\delta$ is a constant. That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $T^{-1/2}$. This may sound like a crazy idea, but there's no arguing with the fact that it solves our problem. We have,
@@ -498,13 +498,14 @@ where $K_S = \left(\pi_S K^{-1} \pi_S'\right)^{-1}$ and $K\equiv J^{11}$. Thus, 
 	\end{eqnarray*}
 Notice that:
 	\begin{enumerate}
-		\item $\omega$ depends on the choice of focus parameter $\mu$
+		\item $\omega$ depends on the choice of focus parameter $\mu$ but \emph{not} on the model $S$.
 		\item $H_S$ is symmetric and idempotent, thus it is a projection matrix.
 		\item $H_S$ is orthogonal to $I - H_S$
 		\item Define $H_{\emptyset}$ as a $q\times q$ null matrix.
 \end{enumerate}
 When $S = \emptyset$, i.e.\ when we consider a submodel that estimates \emph{none} of the componentes of $\gamma$, we define $H_\emptyset$ as a $q\times q$ matrix of zeros. The key result, which appears as Lemma 3.3 in the Paper, is as follows
 \begin{lem}
+\label{lem:mu}
 If $\mu$ has continuous partial derivatives in a neighborhood of $(\theta_0, \gamma_0)$,
 	$$
 	\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S
@@ -516,13 +517,13 @@ $$
 Thus, the the scalar random variable $\Lambda_S$ follows a normal distribution with
 	\begin{eqnarray*}
 		\mbox{Mean}&=&\omega'(I - K^{1/2}H_SK^{-1/2})\delta\\
-		\mbox{Variance}&=&\nabla_\theta(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
+		\mbox{Variance}&=&\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
 	\end{eqnarray*}	
 \end{lem}
 
 
 \begin{proof}
-The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{\true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
+The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
 	$$\mu_{\mbox{true}} = \mu(\theta_0, \gamma_0 + \delta/\sqrt{n})= \mu(\theta_0, \gamma_0) +\nabla_\gamma \mu(\theta_0, \bar{\gamma})' \frac{\delta}{\sqrt{n}} $$
 where $\bar{\gamma}$ is between $\gamma_0$ and $\gamma_0 + \delta/\sqrt{n}$. Thus, we have
 	\begin{eqnarray*}
@@ -637,7 +638,7 @@ Now we can easily calculate the mean and variance of the scalar random variable 
 	\left[\begin{array}{c}
 		M\\
 		W
-	\end{array}\right] \sim \mathcal{N}_{p+q}\left(
+	\end{array}\right] \sim \mbox{N}_{p+q}\left(
 	\left[\begin{array}{c}
 		0\\
 		0
@@ -673,13 +674,19 @@ where $K = J^{11}$. Exploiting the symmetry of variance matrices in several plac
 	\end{eqnarray*}
 \end{proof}
 
-\subsection{Write Out the FIC Formula}
+\paragraph{The Focused Information Criterion} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
+	\begin{eqnarray*}
+		\mbox{AMSE}(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
+		&=&\left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right] \left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right]'\\
+			&& \quad \quad \quad + \left[\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega \right]\\
+		&=& \omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
+		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega  + \tau_0^2
+	\end{eqnarray*}
+Where 
+	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
+which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
 
-<<<<<<< HEAD
-\emph{Note that we don't even have to fit all of the submodels!\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)}
-=======
-\subsection{Give a Simple Example}
->>>>>>> parent of 16020c8... finished deriving FIC
+\emph{Note that we don't even have to fit all of the submodels!}
 
 
 \section{Extensions of FIC Idea}
