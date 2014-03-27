@@ -1,3 +1,26 @@
+ Skip to content
+
+    Explore
+    Gist
+    Blog
+    Help
+
+    Francis DiTraglia fditraglia
+
+    3
+    0
+    0
+
+public fditraglia / econ722
+
+econ722 / lecture05_focused_selection.tex
+Francis DiTraglia fditraglia 15 hours ago
+that's all for tonight!
+
+1 contributor
+file 758 lines (694 sloc) 59.57 kb
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 343 344 345 346 347 348 349 350 351 352 353 354 355 356 357 358 359 360 361 362 363 364 365 366 367 368 369 370 371 372 373 374 375 376 377 378 379 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396 397 398 399 400 401 402 403 404 405 406 407 408 409 410 411 412 413 414 415 416 417 418 419 420 421 422 423 424 425 426 427 428 429 430 431 432 433 434 435 436 437 438 439 440 441 442 443 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476 477 478 479 480 481 482 483 484 485 486 487 488 489 490 491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508 509 510 511 512 513 514 515 516 517 518 519 520 521 522 523 524 525 526 527 528 529 530 531 532 533 534 535 536 537 538 539 540 541 542 543 544 545 546 547 548 549 550 551 552 553 554 555 556 557 558 559 560 561 562 563 564 565 566 567 568 569 570 571 572 573 574 575 576 577 578 579 580 581 582 583 584 585 586 587 588 589 590 591 592 593 594 595 596 597 598 599 600 601 602 603 604 605 606 607 608 609 610 611 612 613 614 615 616 617 618 619 620 621 622 623 624 625 626 627 628 629 630 631 632 633 634 635 636 637 638 639 640 641 642 643 644 645 646 647 648 649 650 651 652 653 654 655 656 657 658 659 660 661 662 663 664 665 666 667 668 669 670 671 672 673 674 675 676 677 678 679 680 681 682 683 684 685 686 687 688 689 690 691 692 693 694 695 696 697 698 699 700 701 702 703 704 705 706 707 708 709 710 711 712 713 714 715 716 717 718 719 720 721 722 723 724 725 726 727 728 729 730 731 732 733 734 735 736 737 738 739 740 741 742 743 744 745 746 747 748 749 750 751 752 753 754 755 756 757 758 	
+
 \documentclass[12pt]{article}
 \usepackage[margin=1.5in]{geometry}
 \usepackage{todonotes}
@@ -13,17 +36,17 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-\newtheorem{assump}{Assumption} 
-\newtheorem{pro}{Proposition} 
-\newtheorem{lem}{Lemma} 
-\newtheorem{thm}{Theorem} 
-\newtheorem{cor}{Corollary} 
-\newtheorem{ineq}{Inequality} 
-\newtheorem{defn}{Definition} 
-\newtheorem{rem}{Remark} 
-\newtheorem{ex}{Example} 
+\newtheorem{assump}{Assumption}
+\newtheorem{pro}{Proposition}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{ineq}{Inequality}
+\newtheorem{defn}{Definition}
+\newtheorem{rem}{Remark}
+\newtheorem{ex}{Example}
 \theoremstyle{definition}
-\newtheorem{alg}{Algorithm} 
+\newtheorem{alg}{Algorithm}
 
 
 \newcommand{\slfrac}[2]{\left.#1\right/#2}
@@ -39,7 +62,7 @@
 
 \author{Francis J.\ DiTraglia}
 
-\maketitle 
+\maketitle
 
 \section{Local Mis-specification}
 
@@ -49,68 +72,68 @@ In this lecture we'll be using a kind of asymptotic thought experiment that may 
 \subsection{What's Wrong with Asymptotic Power?}
 Consider the following simple testing problem. Suppose we observe $N$ observations from the following DGP
 $$X_1, X_2, \hdots, X_{N} \overset{iid}{\sim} \mathcal{N}(\mu, 1)$$
-and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. In this admittedly very simple example, the obvious test statistic is 
-	$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
+and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. In this admittedly very simple example, the obvious test statistic is
+$$T_{N} = \sqrt{N} \bar{X}_{N} \sim N\left(\mu \sqrt{N}, 1\right)$$
 where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. We can calculate the power of this test as follows:
 \begin{eqnarray*}
 \mbox{Power}(T_{N}) &=& P\left(\sqrt{N} \bar{X}_{N}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{N} >z_{1-\alpha}\right)\\
-	&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right)
+&=&P\left(Z >z_{1-\alpha} - \mu\sqrt{N}\right) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right)
 \end{eqnarray*}
 where $Z$ is a standard normal random variable and $\Phi$ is the corresponding CDF. Now suppose we decided to do something completely crazy: throw away half our sample. Let $\bar{X}_{N/2}$ denote the sample mean based on observations $1, 2, \hdots, \lfloor N/2 \rfloor $ \emph{only}. We can still construct a perfectly valid test with size $\alpha$ as follows. Define
-	$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_{N/2} \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
+$$T_{N/2} = \sqrt{\lfloor N/2 \rfloor } \bar{X}_{N/2} \sim N\left(\mu \sqrt{\lfloor N/2 \rfloor }, 1\right)$$
 and reject if $\sqrt{N} \bar{X}_N > z_{1-\alpha}$. But there's an obvious problem here: there \emph{must} be a cost for throwing away perfectly good data. Indeed, if we calculate the power for this crazy test, we'll find that it's \emph{strictly lower} than that of the sensible test based on the full sample. In particular,
-	$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
-using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.  
+$$\mbox{Power}(T_{N/2}) = 1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right)$$
+using the same argument as above with $\lfloor N/2 \rfloor $ in place of $N$.
 
 Now, for an example this simple we'd never resort to asymptotics, but suppose we did. How do these two tests compare as the sample size goes to infinity? The asymptotic size in this example is the same as the finite-sample size since we know the exact sampling distribution of the test statistics under the null and neither depends on sample size. But what about the power? We have,
 \begin{eqnarray*}
-	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right) \right] = 1\\
-	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right) \right] = 1
+\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{N}\right) \right] = 1\\
+\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \mu\sqrt{\lfloor N/2 \rfloor }\right) \right] = 1
 \end{eqnarray*}
 In other words, both of these tests are \emph{consistent}: as the sample size goes to infinity, the power goes to one. Think about this for a moment: we know that for \emph{any} fixed sample size a test based on the full sample is \emph{strictly more powerful} but in the limit this difference disappears. This strongly suggests that something is wrong with our asymptotic thought experiment in this setting.
 
-You might object that I've cooked up a particularly perverse example, but it turns out that this phenomenon is quite general. It's easy to find consistent tests, in fact it's difficult to find tests that \emph{aren't} consistent. But we know from simulation studies that not all consistent tests are created equal: some have \emph{much} better finite sample power than others. One way around this problem would be to only compare the finite-sample properties of different tests and never use asymptotics. But we almost \emph{never} know the exact sampling distribution of our test statistics. 
+You might object that I've cooked up a particularly perverse example, but it turns out that this phenomenon is quite general. It's easy to find consistent tests, in fact it's difficult to find tests that \emph{aren't} consistent. But we know from simulation studies that not all consistent tests are created equal: some have \emph{much} better finite sample power than others. One way around this problem would be to only compare the finite-sample properties of different tests and never use asymptotics. But we almost \emph{never} know the exact sampling distribution of our test statistics.
 
 This is where \emph{local alternatives} come in. Rather than evaluating our tests against a \emph{fixed} alternative $\mu$, suppose we were to evaulate it against a \emph{sequence} of \emph{local} alternatives that \emph{drift towards the null} at rate $N^{-1/2}$. In other words, our alternative becomes $H_1 \colon \mu = \delta / \sqrt{N}$ where, for this one-sided test, $\delta > 0$. If we substitute $\delta/\sqrt{N}$ for $\mu$ and take the limit as $N\rightarrow \infty$, we find
 \begin{eqnarray*}
-	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{N}\right) \right]\\
-	 &=& 1 - \Phi\left(z_{1-\alpha} - \delta \right)
+\lim_{N\rightarrow \infty} \mbox{Power}(T_{N}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{N}\right) \right]\\
+&=& 1 - \Phi\left(z_{1-\alpha} - \delta \right)
 \end{eqnarray*}
 and similarly
 \begin{eqnarray*}
-	\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{\lfloor N/2 \rfloor }\right) \right]\\
-	 &=& 1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{2}} \right)
+\lim_{N\rightarrow \infty} \mbox{Power}(T_{N/2}) &=& \lim_{N\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{N}}\sqrt{\lfloor N/2 \rfloor }\right) \right]\\
+&=& 1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{2}} \right)
 \end{eqnarray*}
 Wow! Our problem has disappeared! The asymptotic power of the two tests now differs in essentially the same way as the finite sample power. Also note that the power no longer converges to one. Intuitively, this is because the drifting sequence of alternatives $\delta/\sqrt{n}$ makes it ``harder and harder'' to reject the null as the sample size grows by shrinking \emph{just fast enough} but not so fast that the power goes to zero. This type of calculation is called a \emph{local power analysis}. A test that has asymptotic power greater than zero in such a setting is said to have ``power against local alternatives.''
 
 
 \subsection{Weak Identification}
-Drifting parameter sequences of the kind described above are also used in the weak instruments and weak identification literature. 
+Drifting parameter sequences of the kind described above are also used in the weak instruments and weak identification literature.
 \todo[inline]{Possibly add a simple example later.}
 
 \subsection{A Bias-Variance Tradeoff in the Limit}
 When we derived Mallow's $C_p$, the idea was to compare models on the basis of predictive mean-squared error. Bigger models generally have a lower bias but a higher variance because there are more parameters to estimate. In the example we considered in class, everything was linear and we made enough assumptions about the finite sample distribution that we could deduce the \emph{exact} MSE conditional on $X$. In many settings, however, finite sample results unavailable and we are forced to rely on asymptotic approximations. We know there is a tradeoff between bias and variance in the finite sample and we'd like to capture this idea in our limit results. The question is how?
 
-Suppose that $\widehat{\mu}$ is a \emph{potentially biased} estimator of $\mu$. Then we have 
-	$$MSE(\widehat{\mu}) = E[(\widehat{\mu} - \mu)^2] = \left(E[\widehat{\mu} - \mu]\right)^2 + Var(\widehat{\mu})$$
-Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can't calculate the proceeding expression. So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this to as a ``stand-in'' for the exact, finite-sample quantity. Let $\mu_0$ be the probability limit of $\widehat{\mu}$ and $\mu$ be the ``true'' parameter value. Suppose that 
-	$$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
+Suppose that $\widehat{\mu}$ is a \emph{potentially biased} estimator of $\mu$. Then we have
+$$MSE(\widehat{\mu}) = E[(\widehat{\mu} - \mu)^2] = \left(E[\widehat{\mu} - \mu]\right)^2 + Var(\widehat{\mu})$$
+Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can't calculate the proceeding expression. So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this to as a ``stand-in'' for the exact, finite-sample quantity. Let $\mu_0$ be the probability limit of $\widehat{\mu}$ and $\mu$ be the ``true'' parameter value. Suppose that
+$$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
 In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that minimizes the KL divergence and $\sigma^2$ would be a diagonal element of $J^{-1}KJ^{-1}$. Now, an obvious idea is estimate $Var(\widehat{\mu})$ using the \emph{asymptotic variance}, namely $\mbox{AVAR}(\widehat{\mu}) = \sigma^2$. But what about the bias term $E[\widehat{\mu} - \mu]$? The limit distribution of $\widehat{\mu}$ is centered around $\mu_0$, the pseudo-true value, but we need to evaluate the bias relative to $\mu$. Let's try recentering by adding and subtracting $\sqrt{T}\mu$ as follows:
 \begin{eqnarray*}
-	\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) &=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0\\
-	&=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0 - \sqrt{T} \mu + \sqrt{T} \mu\\
-	&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
+\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) &=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0\\
+&=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0 - \sqrt{T} \mu + \sqrt{T} \mu\\
+&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-	$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
+$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
 Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. So what's going on here? The problem is that the asymptotic variance is of a \emph{different order} than the asymptotic bias. We need to scale $\widehat{\mu}$ up by $\sqrt{T}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. In other words, there is no way to get a meaningful bias-variance tradeoff in the limit under conventional asymptotics.
 
 So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) = O(T^{1/2})$ but what we want is $\sqrt{T}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(T^{-1/2})$. This is where local mis-specification makes its grand appearance. Suppose that we have a DGP under which the true parameter value is $\mu_T = \mu_0 + \delta/\sqrt{T}$ where $\delta$ is a constant. That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $T^{-1/2}$. This may sound like a crazy idea, but there's no arguing with the fact that it solves our problem. We have,
 \begin{eqnarray*}
-	\sqrt{T}\left( \widehat{\mu} - \mu_T\right) &=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_T - \mu_0 \right)\\
-		&=&\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_0 + \delta/\sqrt{T} - \mu_0 \right)\\
-		&=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \delta\\
-		&\overset{d}{\rightarrow}& \mathcal{N}(0, \sigma^2) - \delta
+\sqrt{T}\left( \widehat{\mu} - \mu_T\right) &=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_T - \mu_0 \right)\\
+&=&\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_0 + \delta/\sqrt{T} - \mu_0 \right)\\
+&=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \delta\\
+&\overset{d}{\rightarrow}& \mathcal{N}(0, \sigma^2) - \delta
 \end{eqnarray*}
 hence, the asymptotic mean-squared error of $\widehat{\mu}$ is $\mbox{AMSE}(\widehat{\mu}) = \delta^2 + \sigma^2$. But what does it mean to have a parameter that changes with sample size? It's important to be clear that this does \emph{not} mean that we think real-world datasets follow a DGP that changes with sample size. This is a \emph{thought experiment}: we also don't believe that it's possible to have an infinite sample size! When we use asymptotics, the point is to derive tractable expressions that approximate the effects that actually occur in finite samples. We know that there is a bias-variance tradeoff in finite samples but we showed above that the conventional asymptotics can't capture this. In other words, local mis-specification is a \emph{device} to get a limiting theory that provides a better approximation to what's really going on in finite samples. For more on the sense in which local mis-specification provides a much more realistic portrait of the effects of model selection, see Leeb and P\"{o}tscher (2005).
 
@@ -118,274 +141,274 @@ hence, the asymptotic mean-squared error of $\widehat{\mu}$ is $\mbox{AMSE}(\wid
 
 \subsection{Triangular Array Asymptotics}
 When parameter values change with sample size, we no longer have iid random variables. Instead we have what is called a ``triangular array DGP'' and we need to index random variables \emph{by sample size} in addition to the usual index:
-	\begin{eqnarray*}
-		&&Y_{11}\\
-		&&Y_{21}, Y_{22}\\
-		&& \vdots\\
-		&&Y_{n1}, Y_{n2}, \hdots, Y_{nn}
-	\end{eqnarray*}
+\begin{eqnarray*}
+&&Y_{11}\\
+&&Y_{21}, Y_{22}\\
+&& \vdots\\
+&&Y_{n1}, Y_{n2}, \hdots, Y_{nn}
+\end{eqnarray*}
 When we want to avoid the double subscript on the random variables, it's common to add one to the expectation and variance operators so indicate the distribution with respect to which the given moment is being evaulated.
 
 To give you a sense of how triangular array DGPs work, I'll show you some very simple results. For much more general, and also much more technical, results for triangular array DGPs, see Andrews (1988) and Andrews (1992).
 
 \paragraph{A Very Simple LLN for Triangular Arrays}
 Suppose $Y_1, \hdots, Y_n \sim \mbox{iid}$ with mean $\mu + \delta/\sqrt{n}$ and variance $\sigma^2_n$. Can we still establish a LLN for the sample mean $\bar{Y}_n = n^{-1} \sum_{i=1}^n Y_i$? If so how? By Chebyshev's Inequality, we know that one simple way to establish a WLLN is via an $L_2$ argument. In this case, it is sufficient to show that $E_n[\bar{Y}_n] \rightarrow \mu$ and $Var_n[\bar{Y}_n] \rightarrow 0$. Although the triangular array of RVs in this example is not identically distributed in the strict sense, it \emph{is} identically distributed \emph{for fixed $n$}. Thus, we have,
-	$$E_n[\bar{Y}_n] = \frac{1}{n} \sum_{i=1}^n E_n[Y_i] = \mu + \delta/\sqrt{n} \rightarrow \mu$$
+$$E_n[\bar{Y}_n] = \frac{1}{n} \sum_{i=1}^n E_n[Y_i] = \mu + \delta/\sqrt{n} \rightarrow \mu$$
 Using independence, we have
-	$$Var_n(\bar{Y}_n) =\frac{1}{n^2} \sum_{i=1}^n Var_n(Y_i) = \frac{\sigma_n^2}{n}$$
+$$Var_n(\bar{Y}_n) =\frac{1}{n^2} \sum_{i=1}^n Var_n(Y_i) = \frac{\sigma_n^2}{n}$$
 Thus, as long as $\sigma_n^2$ is \emph{uniformly bounded} by some constant $M$, we have $Var_n(\bar{Y}_n) \rightarrow 0$ and it follows that $\bar{Y}_n \overset{p}{\rightarrow} \mu$. Although this example as so simple as to be nearly trivial it illustrates the basic flavor of triangular array asymptotics: they're very similar to the usual asymptotics you see in first year, but typically require some kind of uniform bound on the array.
 
 \paragraph{Lindeberg-Feller CLT}
 The previous example showed a simple LLN for triangular arrays. What about a CLT? The simplest case assumes independent data and is called the Lindeberg-Feller CLT. For each $n$, let $Y_{n,1}, Y_{n,2}, \hdots, Y_{n,k_n}$ be independent random vectors with finite variances such that
-	$$\sum_{i=1}^{k_n} E\left[ \lVert Y_{n,i}  \rVert^2 \mathbf{1}\left\{ \lVert Y_{n,i} \rVert > \epsilon\right\} \right] \rightarrow 0$$
+$$\sum_{i=1}^{k_n} E\left[ \lVert Y_{n,i} \rVert^2 \mathbf{1}\left\{ \lVert Y_{n,i} \rVert > \epsilon\right\} \right] \rightarrow 0$$
 for every $\epsilon > 0$ and
-	$$\sum_{i=1}^{k_n} Var(Y_{n,i}) \rightarrow \Sigma$$
+$$\sum_{i=1}^{k_n} Var(Y_{n,i}) \rightarrow \Sigma$$
 Then $\sum_{i=1}^{k_n} \left(Y_{n,i}-E\left[ Y_{n,i} \right]\right) \overset{d}{\rightarrow} \mbox{N}(0,\Sigma)$.
 
 
 
 \section{Focused Evaluation}
-The idea behind focused model selection is to choose the model that is best for a \emph{particular purpose} rather than seeking ``one-size-fits all'' best model. In general, ``best''  means minimum risk relative to some loss function: it is \emph{not} a matter of searching for the ``true.'' There are two main ideas here. First, even if we knew what the true DGP model was, up to some unknown parameters that we need to estimate, it's not clear that we should use it. In most interesting settings there is a bias-variance trade-off. If the true model is somewhat complicated, we may be better off fitting a simpler model. Although this introduces a bias, it could lead to a large reduction in variance, depending on sample size. Second, different modeling goals may call for different models \emph{of the same data}. Estimating a structural parameter and creating a forecast are two very different goals. It is far from obvious that we should use the same model for both.
+The idea behind focused model selection is to choose the model that is best for a \emph{particular purpose} rather than seeking ``one-size-fits all'' best model. In general, ``best'' means minimum risk relative to some loss function: it is \emph{not} a matter of searching for the ``true.'' There are two main ideas here. First, even if we knew what the true DGP model was, up to some unknown parameters that we need to estimate, it's not clear that we should use it. In most interesting settings there is a bias-variance trade-off. If the true model is somewhat complicated, we may be better off fitting a simpler model. Although this introduces a bias, it could lead to a large reduction in variance, depending on sample size. Second, different modeling goals may call for different models \emph{of the same data}. Estimating a structural parameter and creating a forecast are two very different goals. It is far from obvious that we should use the same model for both.
 
 The following example comes from Hansen (2005). Consider an AR$(k)$ model
-	$$y_t = \mu + \beta_1 y_{t-1} + \cdots + \beta_k y_{t-k} + \epsilon_t$$
-where $\{\epsilon_t\}$ is a martingale difference sequence, that is $E[\epsilon_t|I_{t-1}] = 0$. We're interested in learning about a scalar ``focus parameter'' $\theta = g(\beta)$. This could be for example, one of the individual coefficients $\beta_j$, the long-run variance, or an impulse response at some specified horizon. The point is that it's a scalar and a \emph{function} of the underlying model parameters $\beta_1, \hdots, \beta_k$. So what constitutes a ``good'' model for learning about $\theta$? The natural way to proceed is to specify a loss function and try to find the estimator $\widehat{\theta}$ that minimizes the expectation of the loss. For this example we'll use mean-squared error and search for a model that minimizes $E[(\widehat{\theta} - \theta)^2]$ 
+$$y_t = \mu + \beta_1 y_{t-1} + \cdots + \beta_k y_{t-k} + \epsilon_t$$
+where $\{\epsilon_t\}$ is a martingale difference sequence, that is $E[\epsilon_t|I_{t-1}] = 0$. We're interested in learning about a scalar ``focus parameter'' $\theta = g(\beta)$. This could be for example, one of the individual coefficients $\beta_j$, the long-run variance, or an impulse response at some specified horizon. The point is that it's a scalar and a \emph{function} of the underlying model parameters $\beta_1, \hdots, \beta_k$. So what constitutes a ``good'' model for learning about $\theta$? The natural way to proceed is to specify a loss function and try to find the estimator $\widehat{\theta}$ that minimizes the expectation of the loss. For this example we'll use mean-squared error and search for a model that minimizes $E[(\widehat{\theta} - \theta)^2]$
 
 Hansen (2005) uses a simple simulation experiment to show that different focus parameters can lead to \emph{very different} selected models. The setup is as follows. We consider the family of AR$(k)$ models for $k = 0, 1, \hdots, k_{\mbox{max}}$ but the true DGP is in fact an ARMA(1,1) model, namely
-	\begin{eqnarray*}
-		y_t &=& \alpha y_{t-1} + \epsilon_t - \gamma \epsilon_{t-1}\\
-		\epsilon_t &\sim& \mbox{iid}\; N(0,1)
-	\end{eqnarray*}
-Thus \emph{none} of the models under consideration is correctly specified since the true DGP can be expressed as an AR$(\infty)$ model. Now suppose we're interested in the impulse responses. A little algebra reveals that the true impulse responses for the DGP are 
-	$$\theta_m = (\alpha -\gamma)\alpha^{m-1}$$
-where $m$ denotes the horizon. The estimated impulse responses for the class of models we are considering can be calculated recursively from the estimated AR parameters. By simulating the DGP with $T=200$ for a range of parameter values $(\alpha,\gamma)$ Hansen (2005) shows that the optimal AR order for approximating the impulse response of the true DGP in a minumum mean-squared error sense is \emph{highly} sensitive to $m$, the horizon of interest. To take a particularly stark example, when $\alpha = 0.5$ and $\beta = 0.9$ the optimal AR order for $m=2$ is $k=10$ but the optimal AR order for $m=6$ is $k=0$. 
+\begin{eqnarray*}
+y_t &=& \alpha y_{t-1} + \epsilon_t - \gamma \epsilon_{t-1}\\
+\epsilon_t &\sim& \mbox{iid}\; N(0,1)
+\end{eqnarray*}
+Thus \emph{none} of the models under consideration is correctly specified since the true DGP can be expressed as an AR$(\infty)$ model. Now suppose we're interested in the impulse responses. A little algebra reveals that the true impulse responses for the DGP are
+$$\theta_m = (\alpha -\gamma)\alpha^{m-1}$$
+where $m$ denotes the horizon. The estimated impulse responses for the class of models we are considering can be calculated recursively from the estimated AR parameters. By simulating the DGP with $T=200$ for a range of parameter values $(\alpha,\gamma)$ Hansen (2005) shows that the optimal AR order for approximating the impulse response of the true DGP in a minumum mean-squared error sense is \emph{highly} sensitive to $m$, the horizon of interest. To take a particularly stark example, when $\alpha = 0.5$ and $\beta = 0.9$ the optimal AR order for $m=2$ is $k=10$ but the optimal AR order for $m=6$ is $k=0$.
 
 
 
 \section{The Focused Information Criterion (FIC)}
-The motivation behind the FIC is to create a model selection criterion that is portable like AIC and BIC, based on risk minimization like FPE and $C_p$, but \emph{focused} in the sense of Hansen (2005). The result turns out to be even \emph{more} portable than AIC and BIC: although originally derived in a likelihood framework, the idea behind the FIC can be easily extended to any situation in which it is possible to derive a limiting distribution. Indeed extending the idea behing the FIC idea to novel settings has been a topic of my recent research! 
+The motivation behind the FIC is to create a model selection criterion that is portable like AIC and BIC, based on risk minimization like FPE and $C_p$, but \emph{focused} in the sense of Hansen (2005). The result turns out to be even \emph{more} portable than AIC and BIC: although originally derived in a likelihood framework, the idea behind the FIC can be easily extended to any situation in which it is possible to derive a limiting distribution. Indeed extending the idea behing the FIC idea to novel settings has been a topic of my recent research!
 
-Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). These papers appear in the same issue of JASA and the derivations and explanations are split between them. One can look at various loss functions, but the original papers use MSE so that's what we'll discuss here. 
+Although it has been extended in a number of ways, here I'll follow the notation and framework of the original two papers: Claeskens \& Hjort (2003) and Hjort \& Claeskens (2003). These papers appear in the same issue of JASA and the derivations and explanations are split between them. One can look at various loss functions, but the original papers use MSE so that's what we'll discuss here.
 
-Roughly speaking, the idea behind the FIC is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters. 
+Roughly speaking, the idea behind the FIC is to estimate a user-specified target parameter $\mu$ with minimum mean-square error. Since finite-sample MSE can only be calculated in very simple examples, the FIC uses an asymptotic MSE to approximate finite-sample behavior. As discussed above, this requires an asymptotic framework based on drifting sequences of parameters.
 
 \paragraph{Local Mis-specification Framework:}
 Suppose $Y_1, \hdots, Y_n$ are independent with density
-	$$f_{true}(y)=f(y, \theta_0, \gamma_0 + \delta/\sqrt{n})$$
+$$f_{true}(y)=f(y, \theta_0, \gamma_0 + \delta/\sqrt{n})$$
 This could be a regression model, in which case the likelihood is conditional on $x$ but we'll suppress this in the notation. The $p$-vector $\theta$ contains the ``protected parameters.'' These are the parameters that we have decided in advance we definitely want to estimate. In contrast, the $q$-vector $\gamma$ contains the parameters over which we will carry out model selection: we consider the restriction $\gamma = \gamma_0$ where $\gamma_0$ is a \emph{known} parameter. When we restrict a component of $\gamma$ we \emph{do not estimate it}: we simply substitute the restriction into the likelihood. In a linear regression problem, for example, we might have something like
-	$$y_i = x_i'\theta + z_i'\gamma + \epsilon_i$$
-and consider setting some or all of the elements of $\gamma$ equal to zero rather than estimating them.  The true value of $\gamma$ is \emph{changing with sample size} according to $\gamma_n = \gamma_0 + \delta/\sqrt{n}$ where $\delta$ is a fixed but unknown constant $q$-vector. Thus, any specification that does not estimate $\gamma$ is \emph{locally mis-specified} but the mis-specification disappears in the limit as $n\rightarrow \infty$. 
+$$y_i = x_i'\theta + z_i'\gamma + \epsilon_i$$
+and consider setting some or all of the elements of $\gamma$ equal to zero rather than estimating them. The true value of $\gamma$ is \emph{changing with sample size} according to $\gamma_n = \gamma_0 + \delta/\sqrt{n}$ where $\delta$ is a fixed but unknown constant $q$-vector. Thus, any specification that does not estimate $\gamma$ is \emph{locally mis-specified} but the mis-specification disappears in the limit as $n\rightarrow \infty$.
 
 \paragraph{N.B.} There's something slightly awkward in the notation here: $\theta_0$ is the true value of $\theta$ but $\gamma_0$ is \emph{not} the true value of $\gamma$. It is only \emph{in the limit} that $\gamma = \gamma_0$. Unlike $\theta_0$, which is unknown, $\gamma_0$ is \emph{known} since it's the restriction we're considering. This is something the econometrician chooses based on the specifics of the problem at hand.
 
 \paragraph{The Focus Parameter:} The FIC is not a specific model selection criterion. Instead it is a \emph{procedure} that allows the \emph{user} to create her own model selection criterion for a particular problem. Let $\mu = \mu(\theta, \gamma)$ be the user-specified parameter of interest. Under local mis-specification, the true value of $\mu$ is changing with sample size according to
-	$$\mu_{\mbox{true}} = \mu\left(\theta_0, \gamma_0 + \delta/\sqrt{n}\right)$$ 
+$$\mu_{\mbox{true}} = \mu\left(\theta_0, \gamma_0 + \delta/\sqrt{n}\right)$$
 The goal is to estimate $\mu$ with minimum mean-squared error. But since we are considering general ML models, it's not possible to work out the exact finite-sample distributions of the various estimators. Instead, we calculate the \emph{asymptotic mean-squared error} (AMSE) of our estimators of $\mu$ and attempt to select a model to minimize this quantity. The key innovation here is that we are \emph{not} interested in $\gamma$ for its own sake: all that matters is how our modeling decisions about $\gamma$ affect our estimates of $\mu$.
 
 \paragraph{Candidate Models:} Considered in full generality, we could restrict any number of components of $\gamma$. Since this parameter is $q$-dimensional, we could consider a total of $2^q$ candidate models if desired. Alternatively, we could decide to consider only particular groups of restrictions. The simplest case considers only two models: the \emph{wide} model estimates \emph{all} elements of $\gamma$ and the \emph{narrow} model estimates \emph{none} of the elements of gamma. However we choose to restrict the set of candidates, each model is indexed by $S$ which is a subset of $\{1, \hdots, q\}$ that indicates which elements of $\gamma$ we estimate. Its complement, $S^c$, indicates which elements of $\gamma$ we set equal to the corresponding elements of $\gamma_0$. Each candidate model $S$ implies a maximum likelihood estimator
 for the underlying model parameters $\theta$ and $\gamma_S$, where $\gamma_S$ denotes the elements of $\gamma$ that are esetimated under model $S$. The corresponding ML estimator $\widehat{\mu}_S = \mu\left(\widehat{\mu}_S, \widehat{\gamma}_S \right)$ for the target parameter $\mu$
-	$$\widehat{\mu}_S = \mu\left(\widehat{\theta}_S, \widehat{\gamma}_S, \gamma_{0,S^c} \right)$$
-where $\gamma_{0,S^c}$ denotes a vector containing the elements of $\gamma_0$ whose indices are in $S^c$. These are the elements of $\gamma$ that are \emph{not estimated}. 
+$$\widehat{\mu}_S = \mu\left(\widehat{\theta}_S, \widehat{\gamma}_S, \gamma_{0,S^c} \right)$$
+where $\gamma_{0,S^c}$ denotes a vector containing the elements of $\gamma_0$ whose indices are in $S^c$. These are the elements of $\gamma$ that are \emph{not estimated}.
 
 \paragraph{The ``Full'' Model} The \emph{full}, aka \emph{wide}, model is the specification in which we estimate all elements of $\gamma$. Under the local mis-specificiation assumption, this model is \emph{correctly specified}. Any model selection criterion relies on some form of over-identification to evaluate the quality of a candidate model relative to alternatives. In the FIC framework this is achieved by comparing the results of each candidate $S$ to those of the full model. We denote the \textbf{score function} of the full model by
-	$$\left[\begin{array}{c}
-		U(y)\\
-		V(y)
+$$\left[\begin{array}{c}
+U(y)\\
+V(y)
 \end{array} \right] = \left[\begin{array}{c}
-		\nabla_\theta \log{f(y, \theta_0, \gamma_0)}\\
-		\nabla_\gamma \log{f(y, \theta_0, \gamma_0)}
+\nabla_\theta \log{f(y, \theta_0, \gamma_0)}\\
+\nabla_\gamma \log{f(y, \theta_0, \gamma_0)}
 \end{array}\right]\;\;\begin{array}{c}
-		(p\times 1)\\
-		(q\times 1)
+(p\times 1)\\
+(q\times 1)
 \end{array}$$
 Note that the score is evaluated at the \emph{null point} $(\theta_0, \gamma_0)$. This is \emph{not} the true parameter vector for \emph{any finite sample size}, but it is the true parameter vector in the limit. Similarly, the \textbf{information matrix} of the full model by
 $$J_{Full} = Var_0\left[\begin{array}{c}
-		U(y)\\
-		V(y)
+U(y)\\
+V(y)
 \end{array}\right]=\left[\begin{array}{cc}
-		J_{00} & J_{01}\\
-		J_{10} & J_{11}
+J_{00} & J_{01}\\
+J_{10} & J_{11}
 
-	\end{array}\right]\begin{array}
-	{cc} (p\times p) & (p\times q) \\
-	(q\times p) & (q\times q)
+\end{array}\right]\begin{array}
+{cc} (p\times p) & (p\times q) \\
+(q\times p) & (q\times q)
 \end{array}$$
-where the the zero subscript indicates that the expectation is being taken with respect to the distribution in which $\gamma = \gamma_0$. This is the \emph{limiting} DGP which is \emph{different} from the DGP for any finite sample size under local mis-specification. We partition the inverset of the information matrix for the full model as follows 
-	$$J_{Full}^{-1} = \left[\begin{array}{cc}
-		J^{00} & J^{01}\\
-		J^{10} & J^{11}
-	\end{array}\right]$$
+where the the zero subscript indicates that the expectation is being taken with respect to the distribution in which $\gamma = \gamma_0$. This is the \emph{limiting} DGP which is \emph{different} from the DGP for any finite sample size under local mis-specification. We partition the inverset of the information matrix for the full model as follows
+$$J_{Full}^{-1} = \left[\begin{array}{cc}
+J^{00} & J^{01}\\
+J^{10} & J^{11}
+\end{array}\right]$$
 where
-	$$K \equiv J^{11} = (J_{11} - J_{10}J_{00}^{-1}J_{01})^{-1}$$
-by the partitioned matrix inverse formula. The quantity $J^{11}$ appears so frequently in the derivation of the FIC that it is called $K$ to keep the superscripts from getting out of control. 
+$$K \equiv J^{11} = (J_{11} - J_{10}J_{00}^{-1}J_{01})^{-1}$$
+by the partitioned matrix inverse formula. The quantity $J^{11}$ appears so frequently in the derivation of the FIC that it is called $K$ to keep the superscripts from getting out of control.
 
 \paragraph{Selection Matrices} In various matrix manipulations in the paper, it turns out to be helpful to define a matrix that \emph{selects} the elements of $\gamma$ that are estimated under model $S$. Let $\pi_S$ be the $|S|\times q$ matrix that ``selects'' only those elements of a $q$-vector that correspond to the indices in the set $S$. For example, suppose $q=3$ and $S = \{1,3\}$. Then,
-	$$\pi_S = \left[\begin{array}
-		{ccc} 1 & 0 & 0\\ 0 & 0 & 1
-	\end{array} \right]$$
+$$\pi_S = \left[\begin{array}
+{ccc} 1 & 0 & 0\\ 0 & 0 & 1
+\end{array} \right]$$
 In this case $\gamma = (\gamma_1, \gamma_2, \gamma_3)'$ and $\pi_S \gamma = (\gamma_1, \gamma_3)'$. For the \emph{wide} or \emph{full} model, i.e.\ the model that estimates all components of $\gamma$, we have $S = \{1, \hdots, q\}$ and hence $\pi_S$ is simply the identity matrix of order $q$. An extremely useful fact about $\pi_S$ is that we can use it to transform the information matrix for the \emph{full} aka \emph{wide} model -- the model that estimates all components of $\gamma$ -- into the information matrix for a candidate model $S$ as follows:
-	$$J_S = Var_0\left[\begin{array}{c}
-		U(y)\\
-		V_S(y)
+$$J_S = Var_0\left[\begin{array}{c}
+U(y)\\
+V_S(y)
 \end{array}\right]=\left[\begin{array}{cc}
-		J_{00} & J_{01,S}\\
-		J_{10,S} & J_{11,S}
-	\end{array}\right]=\left[\begin{array}{cc}
-		J_{00} & J_{01}\pi_S'\\
-		\pi_S J_{10} & \pi_S J_{11} \pi_S'
-	\end{array}\right]$$
+J_{00} & J_{01,S}\\
+J_{10,S} & J_{11,S}
+\end{array}\right]=\left[\begin{array}{cc}
+J_{00} & J_{01}\pi_S'\\
+\pi_S J_{10} & \pi_S J_{11} \pi_S'
+\end{array}\right]$$
 By the partitioned matrix inverse formula:
 \begin{eqnarray*}
-	K_S \equiv J^{11,S} &=& \left(\pi_S K^{-1} \pi_S'\right)^{-1} = \left[\pi_S \left(J_{11} - J_{10}J_{00}^{-1}J_{01} \right) \pi_S'\right]^{-1} \\
-	J^{01,S} &=& -J_{00}^{-1}J_{01}\pi_S'K_S\\
-	J^{00,S} &=& J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}
+K_S \equiv J^{11,S} &=& \left(\pi_S K^{-1} \pi_S'\right)^{-1} = \left[\pi_S \left(J_{11} - J_{10}J_{00}^{-1}J_{01} \right) \pi_S'\right]^{-1} \\
+J^{01,S} &=& -J_{00}^{-1}J_{01}\pi_S'K_S\\
+J^{00,S} &=& J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}
 \end{eqnarray*}
 Again, the quantity $J^{11,S}$ appears so many times in the derivation of the FIC that it is called $K_S$ for short.
 
 \paragraph{CLT for the Score of the Full Model} The first step in deriving the FIC is to calculate the limiting distribution of the score for the full model evaluated at $(\theta_0, \gamma_0)$. This appears as Lemma 3.1 in Hjort \& Claeskens (2003). Before stating it, we'll define the following notation:
-	$$
-	\left[\begin{array}
-		{c} \bar{U}_n \\ \bar{V}_n
-	\end{array}\right] = \frac{1}{n} \sum_{i=1}^n \left[\begin{array}
-		{c} U(Y_i)\\ V(Y_i)
-	\end{array}\right]
-	$$
-		
+$$
+\left[\begin{array}
+{c} \bar{U}_n \\ \bar{V}_n
+\end{array}\right] = \frac{1}{n} \sum_{i=1}^n \left[\begin{array}
+{c} U(Y_i)\\ V(Y_i)
+\end{array}\right]
+$$
+
 
 \begin{lem}[CLT for Score of Full Model]
 \label{lem:score}
 Under local mis-specification,
-	$$\left[\begin{array}{c}
-		\sqrt{n} \bar{U}_n \\ \sqrt{n} \bar{V}_n
-	\end{array}\right] \overset{d}{\rightarrow}
-	\left(\begin{array}{c}
-		J_{01}\delta\\
-		J_{11}\delta
-	\end{array}\right) + 	
-	\left(\begin{array}{c}
-		M\\
-		N
-	\end{array}\right)$$
+$$\left[\begin{array}{c}
+\sqrt{n} \bar{U}_n \\ \sqrt{n} \bar{V}_n
+\end{array}\right] \overset{d}{\rightarrow}
+\left(\begin{array}{c}
+J_{01}\delta\\
+J_{11}\delta
+\end{array}\right) +
+\left(\begin{array}{c}
+M\\
+N
+\end{array}\right)$$
 where
-	$$\left(\begin{array}{c}
-		M\\
-		N
-	\end{array}\right) \sim \mbox{N}_{p+q}(0, J_{Full})$$
+$$\left(\begin{array}{c}
+M\\
+N
+\end{array}\right) \sim \mbox{N}_{p+q}(0, J_{Full})$$
 \end{lem}
 \begin{proof}
-To prove this result, we apply the Lindeberg-Feller CLT	to the triangular array of random variables
-	$$\left[\begin{array}
-		{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
-	\end{array} \right]$$
+To prove this result, we apply the Lindeberg-Feller CLT to the triangular array of random variables
+$$\left[\begin{array}
+{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
+\end{array} \right]$$
 Since the $Y_i$ are iid \emph{for fixed} $n$, we have
-	\begin{eqnarray*}
-		Var\sum_{i = 1}^n \left[\begin{array}
-		{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
-	\end{array} \right] = Var_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] \rightarrow Var_0 \left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] = J_{full}
-	\end{eqnarray*}
+\begin{eqnarray*}
+Var\sum_{i = 1}^n \left[\begin{array}
+{cc} U(Y_i)/\sqrt{n} \\ V(Y_i)/\sqrt{n}
+\end{array} \right] = Var_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] \rightarrow Var_0 \left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] = J_{full}
+\end{eqnarray*}
 under appropriate regularity conditions. Thus, assuming the Lindeberg condition is satisfied, we have
 $$\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left(\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] - E_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] \right) \overset{d}{\rightarrow} \left[\begin{array}
-		{c} M \\N
-	\end{array}\right]$$
-where $(M', N')' \sim  N_{p+q}\left(0,J_{full}\right)$. Again, since the $Y_i$ are iid for fixed $n$,
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] - E_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] \right) \overset{d}{\rightarrow} \left[\begin{array}
+{c} M \\N
+\end{array}\right]$$
+where $(M', N')' \sim N_{p+q}\left(0,J_{full}\right)$. Again, since the $Y_i$ are iid for fixed $n$,
 $$\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left(\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] - E_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] \right) =\left(\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] \right) - \sqrt{n}E_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] $$
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] - E_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] \right) =\left(\frac{1}{\sqrt{n}}\sum_{i = 1}^n \left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] \right) - \sqrt{n}E_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] $$
 And by a mean-value expansion around $\gamma_n = \gamma_0 + \delta/\sqrt{n}$,
 \begin{eqnarray*}
-	E_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] &=&  E_n\left[\begin{array}
-		{cc} \nabla_\theta \log f(Y_i, \theta_0, \gamma_n) \\ \nabla_\gamma \log f(Y_i, \theta_0, \gamma_n)
-	\end{array} \right] + E_n\left[\begin{array}
-		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] (\gamma_0 - \gamma_n)
+E_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] &=& E_n\left[\begin{array}
+{cc} \nabla_\theta \log f(Y_i, \theta_0, \gamma_n) \\ \nabla_\gamma \log f(Y_i, \theta_0, \gamma_n)
+\end{array} \right] + E_n\left[\begin{array}
+{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] (\gamma_0 - \gamma_n)
 \end{eqnarray*}
 where $\gamma^*$ is between $\gamma_0$ and $\gamma_n$. The first term is simply the population moment condition for ML estimation and hence equals zero: thanks to the mean-value expansion, the expectation is now evaluated at $(\theta_0,\gamma_n)$ which is the true parameter value for the DGP based on a sample size of $n$. Thus, since $\gamma_0 = \gamma_n = -\delta/\sqrt{n}$, we have
-	$$\sqrt{n}E_n\left[\begin{array}
-		{cc} U(Y_i) \\ V(Y_i)
-	\end{array} \right] = -E_n\left[\begin{array}
-		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] \delta \rightarrow -E_0\left[\begin{array}
-		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] \delta$$
-under appropriate regularity conditions. Recall that, in the limit, $(\theta_0, \gamma_0)$ are the \emph{true} parameter values. Hence, 
+$$\sqrt{n}E_n\left[\begin{array}
+{cc} U(Y_i) \\ V(Y_i)
+\end{array} \right] = -E_n\left[\begin{array}
+{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] \delta \rightarrow -E_0\left[\begin{array}
+{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] \delta$$
+under appropriate regularity conditions. Recall that, in the limit, $(\theta_0, \gamma_0)$ are the \emph{true} parameter values. Hence,
 $$-E_0\left[\begin{array}
-		{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] = \left[\begin{array}
-			{c} J_{01} \\ J_{11}
-		\end{array} \right]$$
+{cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma_0) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma_0)\end{array} \right] = \left[\begin{array}
+{c} J_{01} \\ J_{11}
+\end{array} \right]$$
 by the information matrix equality, yielding the desired result.
 \end{proof}
 
 
 \paragraph{Asymptotic Normality of the Estimators}
-The next step in the derivation of the FIC is to work out the limiting distribution of the ML estimators $(\widehat{\theta}_S, \widehat{\gamma}_S)$ under model $S$. This  is Lemma 3.2 in Hjort \& Claeskens (2003).
+The next step in the derivation of the FIC is to work out the limiting distribution of the ML estimators $(\widehat{\theta}_S, \widehat{\gamma}_S)$ under model $S$. This is Lemma 3.2 in Hjort \& Claeskens (2003).
 \begin{lem}
 \label{lem:main}
 Under local mis-specification,
 $$\left[\begin{array}{c}
-		\sqrt{n} (\hat{\theta}_S - \theta_0)\\
-		\sqrt{n} (\hat{\gamma}_S - \gamma_0)
-\end{array}\right]\overset{d}{\rightarrow} 
-	\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right]$$
+\sqrt{n} (\hat{\theta}_S - \theta_0)\\
+\sqrt{n} (\hat{\gamma}_S - \gamma_0)
+\end{array}\right]\overset{d}{\rightarrow}
+\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right]$$
 where
-	$$\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right] = J_S^{-1}
-	\left(\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right) \sim \mbox{N}_{p+|S|}
-		\left(J_S^{-1}\left[\begin{array}{c}
-			J_{01}\\
-			\pi_S J_{11}
-	\end{array}\right]\delta, J_S^{-1}\right)$$
+$$\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right] = J_S^{-1}
+\left(\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right) \sim \mbox{N}_{p+|S|}
+\left(J_S^{-1}\left[\begin{array}{c}
+J_{01}\\
+\pi_S J_{11}
+\end{array}\right]\delta, J_S^{-1}\right)$$
 and $N_S = \pi_S N$.
 \end{lem}
 \begin{proof}
 The usual Taylor Expansion argument for ML continues to apply under local mis-specification. Furthermore, the information matrix equality holds in the limit since all the models under consideration are asymptotically correctly specified. Thus, we have
 $$\left[\begin{array}{c}
-	\widehat{\theta}_S \\ \widehat{\gamma}_S 
+\widehat{\theta}_S \\ \widehat{\gamma}_S
 \end{array} \right] = \left[\begin{array}{c}
-	\theta_0 \\ \gamma_{0,S}
+\theta_0 \\ \gamma_{0,S}
 \end{array} \right] + J_S^{-1}\left[\begin{array}
-		{c} \bar{U}_n \\ \pi_S \bar{V}_n
-	\end{array}\right] + o_p(n^{-1/2}) $$ 
+{c} \bar{U}_n \\ \pi_S \bar{V}_n
+\end{array}\right] + o_p(n^{-1/2}) $$
 Restricting Lemma \ref{lem:score} to model $S$, we have
 $$\left[\begin{array}{c}
-		\sqrt{n} \bar{U}_n \\ \sqrt{n} \pi_S \bar{V}_n
-	\end{array}\right] \overset{d}{\rightarrow}
-	\left(\begin{array}{c}
-		J_{01}\delta\\
-		\pi_S J_{11}\delta
-	\end{array}\right) + 	
-	\left(\begin{array}{c}
-		M\\
-		\pi_S N
-	\end{array}\right)$$
+\sqrt{n} \bar{U}_n \\ \sqrt{n} \pi_S \bar{V}_n
+\end{array}\right] \overset{d}{\rightarrow}
+\left(\begin{array}{c}
+J_{01}\delta\\
+\pi_S J_{11}\delta
+\end{array}\right) +
+\left(\begin{array}{c}
+M\\
+\pi_S N
+\end{array}\right)$$
 so the result follows by the Continuous Mapping Theorem.
 \end{proof}
 
-\paragraph{Important Point} Notice that the only place the mis-specification showed up in the preceding proof was in the CLT for the score. This means that \emph{all} of the models under consideration yield \emph{consistent estimators}. 
+\paragraph{Important Point} Notice that the only place the mis-specification showed up in the preceding proof was in the CLT for the score. This means that \emph{all} of the models under consideration yield \emph{consistent estimators}.
 
 \paragraph{Some Additional Notation}
 To make the final results a bit more compact, Hjort \& Claeskens (2003) introduce some additional notation:
-	$$W =  J^{10}M + J^{11} N$$
+$$W = J^{10}M + J^{11} N$$
 The random variable $W$	is simply a linear combination of the random variables $M$ and $N$ that emerged from applying a CLT to the score of the full model. The reason it's worth naming this quantity is because of the following result\footnote{This doesn't actually appear as a Lemma in the paper: it's one of those ``it's not difficult to show'' assertions and appears immediately after Lemma 3.2.}
 \begin{lem}
 \label{lem:W}
@@ -394,332 +417,366 @@ Define $W\equiv J^{10}M+J^{11}N$. Then, $W= K(N - J_{10}J_{00}^{-1}M)$ and $M$ a
 
 \begin{proof}
 By the formula for the inverse of a partitioned matrix,
-	\begin{eqnarray*}
-		J^{11} &=&\left(J_{11} - J_{10}J_{00}^{-1}J_{01}\right)^{-1}\\
-		J^{01} &=&-J_{00}^{-1}J_{01}J^{11}\\
-		J^{10} &=&-J^{11}J_{10}J_{00}^{-1}\\
-		J^{00} &=& J_{00}^{-1} + J_{00}^{-1}J_{01}J^{11}J_{10}J_{00}^{-1}
-	\end{eqnarray*}
+\begin{eqnarray*}
+J^{11} &=&\left(J_{11} - J_{10}J_{00}^{-1}J_{01}\right)^{-1}\\
+J^{01} &=&-J_{00}^{-1}J_{01}J^{11}\\
+J^{10} &=&-J^{11}J_{10}J_{00}^{-1}\\
+J^{00} &=& J_{00}^{-1} + J_{00}^{-1}J_{01}J^{11}J_{10}J_{00}^{-1}
+\end{eqnarray*}
 Thus,
-	\begin{eqnarray*}
-		W \equiv J^{10}M + J^{11}N &=& \left(-J^{11}J_{10}J_{00}^{-1}\right)M + J^{11}N\\
-			&=&J^{11}\left( N - J_{10}J_{00}^{-1}M \right)\\
-			&=&K\left( N - J_{10}J_{00}^{-1}M \right)
-	\end{eqnarray*}
+\begin{eqnarray*}
+W \equiv J^{10}M + J^{11}N &=& \left(-J^{11}J_{10}J_{00}^{-1}\right)M + J^{11}N\\
+&=&J^{11}\left( N - J_{10}J_{00}^{-1}M \right)\\
+&=&K\left( N - J_{10}J_{00}^{-1}M \right)
+\end{eqnarray*}
 Now we need to show the independence of $W$ and $M$. Because they're jointly normal, it is sufficient to show that they are uncorrelated. Write
-	$$
-	\left[\begin{array}{c}
-		M\\
-		W
-	\end{array}\right] = \left[\begin{array}{c}
-		M\\
-		J^{10}M + J^{11}N
-	\end{array}\right] = \left[\begin{array}{cc}
-		I_p&0_{p\times q}\\
-		J^{10}&J^{11}
-	\end{array}\right]\left[\begin{array}{c}
-		M\\
-		N
-	\end{array}\right]\equiv A \left[\begin{array}{c}
-		M\\
-		N
-	\end{array}\right]
+$$
+\left[\begin{array}{c}
+M\\
+W
+\end{array}\right] = \left[\begin{array}{c}
+M\\
+J^{10}M + J^{11}N
+\end{array}\right] = \left[\begin{array}{cc}
+I_p&0_{p\times q}\\
+J^{10}&J^{11}
+\end{array}\right]\left[\begin{array}{c}
+M\\
+N
+\end{array}\right]\equiv A \left[\begin{array}{c}
+M\\
+N
+\end{array}\right]
 $$
 Since $\left[\begin{array}{c} M\\ N \end{array}\right]\sim \mathcal{N}_{p+q}(0, J_{Full})$, we have $A\left[\begin{array}{c} M\\ N \end{array}\right]\sim \mathcal{N}_{p+q}(0, A J_{Full}A')$. Multiplying through, we find that
-	$$
-	AJ_{Full}A' = \left[\begin{array}{cc}
-		J_{00}& J_{00}J^{01}+J_{01}J^{11}\\
-		J^{10}J_{00}+J^{11}J_{10}& J^{10}\left(J_{00}J^{01}+J_{01}J^{11}\right) + J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right)
-	\end{array}\right]
+$$
+AJ_{Full}A' = \left[\begin{array}{cc}
+J_{00}& J_{00}J^{01}+J_{01}J^{11}\\
+J^{10}J_{00}+J^{11}J_{10}& J^{10}\left(J_{00}J^{01}+J_{01}J^{11}\right) + J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right)
+\end{array}\right]
 $$
 Now,
-	\begin{eqnarray*}
-		 J_{00}J^{01}+J_{01}J^{11} &=& J_{00}\left(-J_{00}^{-1}J_{01}J^{11}\right)+J_{01}J^{11} \\
-			&=&  -J_{01}J^{11}+J_{01}J^{11} = 0 
-	\end{eqnarray*}
+\begin{eqnarray*}
+J_{00}J^{01}+J_{01}J^{11} &=& J_{00}\left(-J_{00}^{-1}J_{01}J^{11}\right)+J_{01}J^{11} \\
+&=& -J_{01}J^{11}+J_{01}J^{11} = 0
+\end{eqnarray*}
 and similarly
-	\begin{eqnarray*}
-		J^{10}J_{00}+J^{11}J_{10} &=& \left(-J^{11}J_{10}J_{00}^{-1}\right)J_{00}+J^{11}J_{10}\\
-			&=& -J^{11}J_{10}+J^{11}J_{10} = 0
+\begin{eqnarray*}
+J^{10}J_{00}+J^{11}J_{10} &=& \left(-J^{11}J_{10}J_{00}^{-1}\right)J_{00}+J^{11}J_{10}\\
+&=& -J^{11}J_{10}+J^{11}J_{10} = 0
 \end{eqnarray*}
 Finally,
-	\begin{eqnarray*}
-		J^{10}\left(J_{00}J^{01}+J_{01}J^{11}\right) + J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right) &=& J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right)\\
-		&=&J^{11}\left(J_{10}\left[-J_{00}^{-1}J_{01}J^{11}\right]+J_{11}J^{11}\right)\\
-		&=&J^{11}\left(J_{11}-J_{10}J_{00}^{-1}J_{01}\right)J^{11}\\
-		&=&J^{11}\left(J_{11}\right)^{-1}J^{11}=J^{11}
+\begin{eqnarray*}
+J^{10}\left(J_{00}J^{01}+J_{01}J^{11}\right) + J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right) &=& J^{11}\left(J_{10}J^{01}+J_{11}J^{11}\right)\\
+&=&J^{11}\left(J_{10}\left[-J_{00}^{-1}J_{01}J^{11}\right]+J_{11}J^{11}\right)\\
+&=&J^{11}\left(J_{11}-J_{10}J_{00}^{-1}J_{01}\right)J^{11}\\
+&=&J^{11}\left(J_{11}\right)^{-1}J^{11}=J^{11}
 \end{eqnarray*}
 where the first equality uses the fact that $J_{00}J^{01}+J_{01}J^{11} =0$.
 \end{proof}
 
 \paragraph {Estimating $\delta$} As we saw in Lemma \ref{lem:main}, the limiting distribution of the ML estimators depends on the local mis-specification parameter, $\delta$. Since this is unknown we will, ultimately, need to estimate it. To this end, define
-	\begin{eqnarray*}
-		\widehat{\delta}_S &=& \sqrt{n}\left(\widehat{\gamma}_{S} -\gamma_{0,S} \right)\\
-		D_S &=& K_S \pi_S K^{-1}(\delta + W) 
-	\end{eqnarray*}
+\begin{eqnarray*}
+\widehat{\delta}_S &=& \sqrt{n}\left(\widehat{\gamma}_{S} -\gamma_{0,S} \right)\\
+D_S &=& K_S \pi_S K^{-1}(\delta + W)
+\end{eqnarray*}
 where $W$ is the random variable described in Lemma \ref{lem:W}. The key result concerning these quantities is as follows\footnote{This does not appear as a lemma in the paper: ``it follows from Lemma 3.2 and a little algebra.''}
 \begin{lem}
 Lemma 3.2 and some algebra imply that
-	$$\hat{\delta}_S \equiv \sqrt{n}(\hat{\gamma}_S - \gamma_{0,S})\overset{d}{\rightarrow} D_S$$
+$$\hat{\delta}_S \equiv \sqrt{n}(\hat{\gamma}_S - \gamma_{0,S})\overset{d}{\rightarrow} D_S$$
 where $D_S = K_S \pi_s K^{-1}(\delta + W) = K_S \pi_s K^{-1}D$, defining $D = \delta + W$. In particular:
-	$$
-	D_N \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)$$
+$$
+D_n \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)$$
 \end{lem}
 
 \begin{proof}
 Lemma 3.2 establishes that
-	$$
-	\left[\begin{array}{c}
-		\sqrt{n} (\hat{\theta} - \theta_0)\\
-		\sqrt{n} (\hat{\gamma} - \gamma_0)
-\end{array}\right]\overset{d}{\rightarrow} 
-	\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right] = J_S^{-1}
-	\left(\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right)$$
+$$
+\left[\begin{array}{c}
+\sqrt{n} (\hat{\theta} - \theta_0)\\
+\sqrt{n} (\hat{\gamma} - \gamma_0)
+\end{array}\right]\overset{d}{\rightarrow}
+\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right] = J_S^{-1}
+\left(\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right)$$
 so we know immediately that $\hat{\delta}_S \equiv \sqrt{n} (\hat{\gamma}_S - \gamma_{0,S})\overset{d}{\rightarrow} D_S$. We need to show that $D_S = K_S\pi_S K^{-1}D$ where $D = \delta + W$. We have:
-	\begin{eqnarray*}
-		\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right] &=& J_S^{-1}
-	\left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] = \left[\begin{array}{cc}
-				J^{00,S}&J^{01,S}\\
-				J^{10,S}&J^{11,S}	
-		\end{array}\right] \left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] \\ \\
-	&=& \left[\begin{array}{cc}
-				J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}&-J_{00}^{-1}J_{01}\pi_S'K_S\\
-				-K_S \pi_S J_{10}J_{00}^{-1}&K_S	
-		\end{array}\right] \left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] 
-	\end{eqnarray*}
+\begin{eqnarray*}
+\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right] &=& J_S^{-1}
+\left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right] = \left[\begin{array}{cc}
+J^{00,S}&J^{01,S}\\
+J^{10,S}&J^{11,S}	
+\end{array}\right] \left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right] \\ \\
+&=& \left[\begin{array}{cc}
+J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}&-J_{00}^{-1}J_{01}\pi_S'K_S\\
+-K_S \pi_S J_{10}J_{00}^{-1}&K_S
+\end{array}\right] \left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right]
+\end{eqnarray*}
 where $K_S = \left(\pi_S K^{-1} \pi_S'\right)^{-1}$ and $K\equiv J^{11}$. Thus, we have
-	\begin{eqnarray*}
-		D_S &=& -K_S \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) + K_S \left(\pi_S J_{11}\delta + N_S \right)\\
-			&=& K_S \left[ \left(\pi_S J_{11}\delta + N_S \right) - \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) \right]\\
-			&=& K_S \left[ \pi_S J_{11}\delta + \pi_S N  - \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) \right]\\
-			&=& K_S \pi_S \left[ \left(J_{11} - J_{10}J_{00}^{-1}J_{01}\right)\delta +  N  -  J_{10}J_{00}^{-1} M \right]\\
-		&=& K_S \pi_S \left[ K^{-1}\delta +K^{-1}K  \left(N  -  J_{10}J_{00}^{-1} M \right)\right]\\
-		&=& K_S \pi_S K^{-1} \left[ \delta +K  \left(N  -  J_{10}J_{00}^{-1} M \right)\right]\\
-		&=& K_S \pi_S K^{-1} \left( \delta + W\right)
-	\end{eqnarray*}
+\begin{eqnarray*}
+D_S &=& -K_S \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) + K_S \left(\pi_S J_{11}\delta + N_S \right)\\
+&=& K_S \left[ \left(\pi_S J_{11}\delta + N_S \right) - \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) \right]\\
+&=& K_S \left[ \pi_S J_{11}\delta + \pi_S N - \pi_S J_{10}J_{00}^{-1}\left(J_{01}\delta + M\right) \right]\\
+&=& K_S \pi_S \left[ \left(J_{11} - J_{10}J_{00}^{-1}J_{01}\right)\delta + N - J_{10}J_{00}^{-1} M \right]\\
+&=& K_S \pi_S \left[ K^{-1}\delta +K^{-1}K \left(N - J_{10}J_{00}^{-1} M \right)\right]\\
+&=& K_S \pi_S K^{-1} \left[ \delta +K \left(N - J_{10}J_{00}^{-1} M \right)\right]\\
+&=& K_S \pi_S K^{-1} \left( \delta + W\right)
+\end{eqnarray*}
 \end{proof}
 
 \paragraph{Estimating the Focus Parameter} We're finally ready to work out the limiting distribution of $\widehat{\mu}_S$. First two final items of notation. Define
-	\begin{eqnarray*}
-		H_S &=& \left(K^{-1}\right)^{1/2}(\pi_S' K_S \pi_S) \left( K^{-1} \right)^{1/2} \\
-		\omega &=&  J_{10}J_{00}^{-1} \nabla_\theta \mu(\theta_0,\gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)
-	\end{eqnarray*}
+\begin{eqnarray*}
+H_S &=& K^{-1/2}\pi_S' K_S \pi_SK^{-1/2} \\
+\omega &=& J_{10}J_{00}^{-1} \nabla_\theta \mu(\theta_0,\gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)
+\end{eqnarray*}
 Notice that:
-	\begin{enumerate}
-		\item $\omega$ depends on the choice of focus parameter $\mu$ but \emph{not} on the model $S$.
-		\item $H_S$ is symmetric and idempotent, thus it is a projection matrix.
-		\item $H_S$ is orthogonal to $I - H_S$
-		\item Define $H_{\emptyset}$ as a $q\times q$ null matrix.
+\begin{enumerate}
+\item $\omega$ depends on the choice of focus parameter $\mu$ but \emph{not} on the model $S$.
+\item $H_S$ is symmetric and idempotent, thus it is a projection matrix.
+\item $H_S$ is orthogonal to $I - H_S$
+\item Define $H_{\emptyset}$ as a $q\times q$ null matrix.
 \end{enumerate}
 When $S = \emptyset$, i.e.\ when we consider a submodel that estimates \emph{none} of the componentes of $\gamma$, we define $H_\emptyset$ as a $q\times q$ matrix of zeros. The key result, which appears as Lemma 3.3 in the Paper, is as follows
 \begin{lem}
 \label{lem:mu}
 If $\mu$ has continuous partial derivatives in a neighborhood of $(\theta_0, \gamma_0)$,
-	$$
-	\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S
 $$
-where $\mu_{true} = \mu(\theta_0, \gamma_0+\delta/\sqrt{n})$ and 
-	$$
-	\Lambda_S = \nabla_\theta \mu(\theta_0, \gamma_0)' J_{00}^{-1} M + \omega'\left( \delta - K^{1/2}H_S K^{-1/2}D\right)
+\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S
+$$
+where $\mu_{true} = \mu(\theta_0, \gamma_0+\delta/\sqrt{n})$ and
+$$
+\Lambda_S = \nabla_\theta \mu(\theta_0, \gamma_0)' J_{00}^{-1} M + \omega'\left( \delta - K^{1/2}H_S K^{-1/2}D\right)
 $$
 Thus, the the scalar random variable $\Lambda_S$ follows a normal distribution with
-	\begin{eqnarray*}
-		\mbox{Mean}&=&\omega'(I - K^{1/2}H_SK^{-1/2})\delta\\
-		\mbox{Variance}&=&\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
-	\end{eqnarray*}	
+\begin{eqnarray*}
+\mbox{Mean}&=&\omega'(I - K^{1/2}H_SK^{-1/2})\delta\\
+\mbox{Variance}&=&\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
+\end{eqnarray*}	
 \end{lem}
 
 
 \begin{proof}
-The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$, 
-	$$\mu_{\mbox{true}} = \mu(\theta_0, \gamma_0 + \delta/\sqrt{n})= \mu(\theta_0, \gamma_0) +\nabla_\gamma \mu(\theta_0, \bar{\gamma})' \frac{\delta}{\sqrt{n}} $$
+The first thing to notice is that the limiting result distribution given in the Lemma is centered around $\mu_{\mbox{true}} = \mu(\theta_0, \gamma_n)$ where $\gamma_n = \gamma_0 + \delta/\sqrt{n}$. It is \emph{not} centered around $\mu_0 = \mu(\theta_0,\gamma_0)$. This means that we cannot immediately apply the Delta Method to Lemma \ref{lem:main} since the limit distributions given there are centered around $(\theta_0, \gamma_0)$. By a mean-value expansion around $\gamma_0$,
+$$\mu_{\mbox{true}} = \mu(\theta_0, \gamma_0 + \delta/\sqrt{n})= \mu(\theta_0, \gamma_0) +\nabla_\gamma \mu(\theta_0, \bar{\gamma})' \frac{\delta}{\sqrt{n}} $$
 where $\bar{\gamma}$ is between $\gamma_0$ and $\gamma_0 + \delta/\sqrt{n}$. Thus, we have
-	\begin{eqnarray*}
-		\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) &=& \sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \sqrt{n}\left(\mu_{\mbox{true}} - \mu_0 \right)\\
-			&=&\sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \nabla_\gamma \mu(\theta_0, \bar{\gamma})' \delta
-	\end{eqnarray*}
+\begin{eqnarray*}
+\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) &=& \sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \sqrt{n}\left(\mu_{\mbox{true}} - \mu_0 \right)\\
+&=&\sqrt{n} \left(\widehat{\mu}_S - \mu_0 \right) - \nabla_\gamma \mu(\theta_0, \bar{\gamma})' \delta
+\end{eqnarray*}
 Applying the Delta Method to the first term via Lemma \ref{lem:main} and using the fact that $\bar{\gamma} \rightarrow \gamma_0$ for the second term, we have
 $\sqrt{n}\left( \hat{\mu}_S - \mu_{true} \right) \overset{d}{\rightarrow} \Lambda_S$ where
-	$$\Lambda_S =  \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta$$
+$$\Lambda_S = \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta$$
 From here, it is immediate that $\Lambda_S$ is MV normal, as it is a linear combination of a normal random vector. Although we \emph{could} find its mean and variance directly using this result, it will be helpful to simplify the expression for $\Lambda_S$. The point is that $M$ and $D = \delta + W$ are \emph{independent} normal random vectors, so if we can isolate them, we have a much easier expression to deal with. We established above that:
-	\begin{eqnarray*}
-		\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right] &=& J_S^{-1}
-	\left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] = \left[\begin{array}{cc}
-				J^{00,S}&J^{01,S}\\
-				J^{10,S}&J^{11,S}	
-		\end{array}\right] \left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] \\ \\
-	&=& \left[\begin{array}{cc}
-				J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}&-J_{00}^{-1}J_{01}\pi_S'K_S\\
-				-K_S \pi_S J_{10}J_{00}^{-1}&K_S	
-		\end{array}\right] \left[\begin{array}{c}
-		J_{01}\delta + M\\
-		\pi_S J_{11}\delta + N_S 
-	\end{array}\right] 
-	\end{eqnarray*}
-and, multiplying this out, found $D_S = K_S \pi_S K^{-1}(\delta + W)$. Now we will do the same for $C_S$. To begin:
-	\begin{eqnarray*}
-		C_S &=& J^{00,S}\left(J_{01}\delta + M\right) + J^{01,S}\left( \pi_S J_{11}\delta + N_S\right)\\
-			&=& \left(J^{00,S}J_{01} + J^{01,S} \pi_S J_{11}\right)\delta + \left( J^{00,S}M + J^{01,S} N_S\right)\\
-			&\equiv& A\delta + B
+\begin{eqnarray*}
+\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right] &=& J_S^{-1}
+\left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right] = \left[\begin{array}{cc}
+J^{00,S}&J^{01,S}\\
+J^{10,S}&J^{11,S}	
+\end{array}\right] \left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right] \\ \\
+&=& \left[\begin{array}{cc}
+J_{00}^{-1} + J_{00}^{-1}J_{01}\left(\pi_S'K_S\pi_S \right)J_{10}J_{00}^{-1}&-J_{00}^{-1}J_{01}\pi_S'K_S\\
+-K_S \pi_S J_{10}J_{00}^{-1}&K_S
+\end{array}\right] \left[\begin{array}{c}
+J_{01}\delta + M\\
+\pi_S J_{11}\delta + N_S
+\end{array}\right]
 \end{eqnarray*}
-Now, 
-	\begin{eqnarray*}
-		A &\equiv& J^{00,S}J_{01} + J^{01,S} \pi_S J_{11} \\
-			&=& \left(J_{00}^{-1} + J_{00}^{-1}J_{01}\left[\pi_S'K_S\pi_S \right]J_{10}J_{00}^{-1}\right) J_{01} + \left( -J_{00}^{-1}J_{01}\pi_S'K_S\right) \pi_S J_{11}\\
-			&=& J_{00}^{-1}J_{01}\left( I + \left[\pi_S'K_S\pi_S \right]J_{10}J_{00}^{-1}J_{01} -  \left[\pi_S'K_S\pi_S \right]J_{11} \right)\\
-			&=&J_{00}^{-1}J_{01}\left[ I -  \left(\pi_S'K_S\pi_S \right)\left(J_{11} -  J_{10}J_{00}^{-1}J_{01}\right) \right]\\
-			&=&J_{00}^{-1}J_{01}\left[ I -  \left(\pi_S'K_S\pi_S \right)K^{-1}\right]\\
-			&=&J_{00}^{-1}J_{01}\left[ I -  K^{1/2}K^{-1/2}\left(\pi_S'K_S\pi_S \right)K^{-1/2}K^{-1/2}\right]\\
-			&=&J_{00}^{-1}J_{01}\left[ I -  K^{1/2}\left(K^{-1/2}\pi_S'K_S\pi_S K^{-1/2}\right)K^{-1/2}\right]\\
-			&=&J_{00}^{-1}J_{01}\left[ I -  K^{1/2}H_SK^{-1/2}\right]
-	\end{eqnarray*}
-	\begin{eqnarray*}
-		B &\equiv&  J^{00,S}M + J^{01,S} N_S\\
-			&=& \left(J_{00}^{-1} + J_{00}^{-1}J_{01}\pi_S'K_S\pi_S J_{10}J_{00}^{-1}\right) M + \left( -J_{00}^{-1}J_{01}\pi_S'K_S\right) \pi_S N\\
-			&=& J_{00}^{-1}M  + J_{00}^{-1}J_{01}\pi_S'K_S\pi_S\left( J_{10}J_{00}^{-1}M - N\right)  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}\pi_S'K_S\pi_S\left(N - J_{10}J_{00}^{-1}M\right)  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1}K\right)\left(N - J_{10}J_{00}^{-1}M\right)  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1}\right)\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right]  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1/2}K^{-1/2}\right)\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right]  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}K^{1/2}\left(K^{-1/2}\pi_S'K_S\pi_SK^{-1/2}\right)K^{-1/2}\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right]  \\
-			&=& J_{00}^{-1}M  - J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}W 
-	\end{eqnarray*}
-where we have substituted the definition of $H_S$ and  used the fact that, as we showed above, $K(N - J_{10}J_{00}^{-1}M) = W$. Combining these, 
-	\begin{eqnarray*}
-	C_S &=& J_{00}^{-1}J_{01}\left( I -  K^{1/2}H_SK^{-1/2}\right) \delta + J_{00}^{-1}M  - J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}W \\
-		&=& J_{00}^{-1}J_{01}\delta -  \left(J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}\right)\delta + J_{00}^{-1}M  - \left(J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}\right)W \\
-		&=& \left(J_{00}^{-1}J_{01}\right)\delta -  \left(J_{00}^{-1}J_{01}\right)K^{1/2}H_SK^{-1/2}(\delta+W) + J_{00}^{-1}M \\
-		&=& J_{00}^{-1}M + J_{00}^{-1}J_{01}\left[\delta -  K^{1/2}H_SK^{-1/2}(\delta+W)\right]\\
-		&=& J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta -  K^{1/2}H_SK^{-1/2}D\right)
+and, multiplying this out, found $D_S = K_S \pi_S K^{-1}(\delta + W)$. Now we will do the same for $C_S$. To begin:
+\begin{eqnarray*}
+C_S &=& J^{00,S}\left(J_{01}\delta + M\right) + J^{01,S}\left( \pi_S J_{11}\delta + N_S\right)\\
+&=& \left(J^{00,S}J_{01} + J^{01,S} \pi_S J_{11}\right)\delta + \left( J^{00,S}M + J^{01,S} N_S\right)\\
+&\equiv& A\delta + B
+\end{eqnarray*}
+Now,
+\begin{eqnarray*}
+A &\equiv& J^{00,S}J_{01} + J^{01,S} \pi_S J_{11} \\
+&=& \left(J_{00}^{-1} + J_{00}^{-1}J_{01}\left[\pi_S'K_S\pi_S \right]J_{10}J_{00}^{-1}\right) J_{01} + \left( -J_{00}^{-1}J_{01}\pi_S'K_S\right) \pi_S J_{11}\\
+&=& J_{00}^{-1}J_{01}\left( I + \left[\pi_S'K_S\pi_S \right]J_{10}J_{00}^{-1}J_{01} - \left[\pi_S'K_S\pi_S \right]J_{11} \right)\\
+&=&J_{00}^{-1}J_{01}\left[ I - \left(\pi_S'K_S\pi_S \right)\left(J_{11} - J_{10}J_{00}^{-1}J_{01}\right) \right]\\
+&=&J_{00}^{-1}J_{01}\left[ I - \left(\pi_S'K_S\pi_S \right)K^{-1}\right]\\
+&=&J_{00}^{-1}J_{01}\left[ I - K^{1/2}K^{-1/2}\left(\pi_S'K_S\pi_S \right)K^{-1/2}K^{-1/2}\right]\\
+&=&J_{00}^{-1}J_{01}\left[ I - K^{1/2}\left(K^{-1/2}\pi_S'K_S\pi_S K^{-1/2}\right)K^{-1/2}\right]\\
+&=&J_{00}^{-1}J_{01}\left[ I - K^{1/2}H_SK^{-1/2}\right]
+\end{eqnarray*}
+\begin{eqnarray*}
+B &\equiv& J^{00,S}M + J^{01,S} N_S\\
+&=& \left(J_{00}^{-1} + J_{00}^{-1}J_{01}\pi_S'K_S\pi_S J_{10}J_{00}^{-1}\right) M + \left( -J_{00}^{-1}J_{01}\pi_S'K_S\right) \pi_S N\\
+&=& J_{00}^{-1}M + J_{00}^{-1}J_{01}\pi_S'K_S\pi_S\left( J_{10}J_{00}^{-1}M - N\right) \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}\pi_S'K_S\pi_S\left(N - J_{10}J_{00}^{-1}M\right) \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1}K\right)\left(N - J_{10}J_{00}^{-1}M\right) \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1}\right)\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right] \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}\left(K^{1/2}K^{-1/2}\right)\pi_S'K_S\pi_S\left(K^{-1/2}K^{-1/2}\right)\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right] \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}K^{1/2}\left(K^{-1/2}\pi_S'K_S\pi_SK^{-1/2}\right)K^{-1/2}\left[K\left(N - J_{10}J_{00}^{-1}M\right)\right] \\
+&=& J_{00}^{-1}M - J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}W
+\end{eqnarray*}
+where we have substituted the definition of $H_S$ and used the fact that, as we showed above, $K(N - J_{10}J_{00}^{-1}M) = W$. Combining these,
+\begin{eqnarray*}
+C_S &=& J_{00}^{-1}J_{01}\left( I - K^{1/2}H_SK^{-1/2}\right) \delta + J_{00}^{-1}M - J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}W \\
+&=& J_{00}^{-1}J_{01}\delta - \left(J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}\right)\delta + J_{00}^{-1}M - \left(J_{00}^{-1}J_{01}K^{1/2}H_SK^{-1/2}\right)W \\
+&=& \left(J_{00}^{-1}J_{01}\right)\delta - \left(J_{00}^{-1}J_{01}\right)K^{1/2}H_SK^{-1/2}(\delta+W) + J_{00}^{-1}M \\
+&=& J_{00}^{-1}M + J_{00}^{-1}J_{01}\left[\delta - K^{1/2}H_SK^{-1/2}(\delta+W)\right]\\
+&=& J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta - K^{1/2}H_SK^{-1/2}D\right)
 \end{eqnarray*}
 Thus, expressing everything in terms of the independent normal random vectors $M$ and $D = \delta + W$, we have
-	$$
-	\left[\begin{array}{c}
-		C_S\\
-		D_S
-	\end{array}\right] = 	\left[\begin{array}{c}
-		 J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta -  K^{1/2}H_SK^{-1/2}D\right)\\
-		K_S \pi_S K^{-1}D
-	\end{array}\right] 
+$$
+\left[\begin{array}{c}
+C_S\\
+D_S
+\end{array}\right] = \left[\begin{array}{c}
+J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta - K^{1/2}H_SK^{-1/2}D\right)\\
+K_S \pi_S K^{-1}D
+\end{array}\right]
 $$
 Now, recall that
-	$$
-	\Lambda_S  = \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta
+$$
+\Lambda_S = \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta
 $$
 Multiplying through,
-	$$
-			\nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S = 		 \nabla_{\theta}\mu(\theta_0, \gamma_0)'\left[J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta -  K^{1/2}H_SK^{-1/2}D\right)\right]\\
+$$
+\nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S = \nabla_{\theta}\mu(\theta_0, \gamma_0)'\left[J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta - K^{1/2}H_SK^{-1/2}D\right)\right]\\
 $$
 and
-	\begin{eqnarray*}
-			\left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S &=& \nabla_\gamma \mu(\theta_0, \gamma_0)'\pi_S' D_S\\
-		&=&\nabla_\gamma \mu(\theta_0, \gamma_0)'\pi_S'  K_S \pi_S
+\begin{eqnarray*}
+\left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S &=& \nabla_\gamma \mu(\theta_0, \gamma_0)'\pi_S' D_S\\
+&=&\nabla_\gamma \mu(\theta_0, \gamma_0)'\pi_S' K_S \pi_S
  K^{-1}D\\
-		&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' \left(K^{1/2}K^{-1/2}\right)\pi_S'  K_S \pi_S
+&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' \left(K^{1/2}K^{-1/2}\right)\pi_S' K_S \pi_S
  \left(K^{-1/2}K^{-1/2}\right)D\\
-		&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}\left(K^{-1/2}\pi_S'  K_S \pi_S
+&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}\left(K^{-1/2}\pi_S' K_S \pi_S
 K^{-1/2}\right)K^{-1/2}D\\
-		&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}H_S K^{-1/2}D
+&=&\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}H_S K^{-1/2}D
 \end{eqnarray*}
 Therefore,
-	\begin{eqnarray*}
-		\Lambda_S &=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta\\
-			&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'\left[J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta -  K^{1/2}H_SK^{-1/2}D\right)\right]\\
-			&& \;\;\;\;\;\;\; + \left[\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}H_S K^{-1/2}D\right] - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta\\
-			&=&\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \nabla_{\theta}\mu(\theta_0, \gamma_0)' J_{00}^{-1}J_{01}\left(\delta -  K^{1/2}H_SK^{-1/2}D\right)\\
-			&&\;\;\;\;\;\;\; - \nabla_\gamma \mu(\theta_0, \gamma_0)' \left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
-			&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \left[\nabla_{\theta}\mu(\theta_0, \gamma_0)' J_{00}^{-1}J_{01} - \nabla_\gamma \mu(\theta_0, \gamma_0)'\right]\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
-			&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \left[J_{10}J_{00}^{-1}\nabla_{\theta}\mu(\theta_0, \gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)\right]'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
-			&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)
-	\end{eqnarray*}
+\begin{eqnarray*}
+\Lambda_S &=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'C_S + \left[\pi_S\nabla_\gamma \mu(\theta_0, \gamma_0)\right]'D_S - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta\\
+&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'\left[J_{00}^{-1}M + J_{00}^{-1}J_{01}\left(\delta - K^{1/2}H_SK^{-1/2}D\right)\right]\\
+&& \;\;\;\;\;\;\; + \left[\nabla_\gamma \mu(\theta_0, \gamma_0)' K^{1/2}H_S K^{-1/2}D\right] - \nabla_\gamma \mu(\theta_0,\gamma_0)'\delta\\
+&=&\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \nabla_{\theta}\mu(\theta_0, \gamma_0)' J_{00}^{-1}J_{01}\left(\delta - K^{1/2}H_SK^{-1/2}D\right)\\
+&&\;\;\;\;\;\;\; - \nabla_\gamma \mu(\theta_0, \gamma_0)' \left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
+&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \left[\nabla_{\theta}\mu(\theta_0, \gamma_0)' J_{00}^{-1}J_{01} - \nabla_\gamma \mu(\theta_0, \gamma_0)'\right]\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
+&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \left[J_{10}J_{00}^{-1}\nabla_{\theta}\mu(\theta_0, \gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)\right]'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\\
+&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M + \omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)
+\end{eqnarray*}
 Now we can easily calculate the mean and variance of the scalar random variable $\Lambda_S$ as we have expressed it as a linear combination of two independent normal random vectors: $M$ and $D=\delta + W$. Recall that
-	$$
-	\left[\begin{array}{c}
-		M\\
-		W
-	\end{array}\right] \sim \mbox{N}_{p+q}\left(
-	\left[\begin{array}{c}
-		0\\
-		0
-	\end{array}\right],
-	\left[\begin{array}{cc}
-		J_{00}&0\\
-		0&K
-	\end{array}\right]\right)
+$$
+\left[\begin{array}{c}
+M\\
+W
+\end{array}\right] \sim \mbox{N}_{p+q}\left(
+\left[\begin{array}{c}
+0\\
+0
+\end{array}\right],
+\left[\begin{array}{cc}
+J_{00}&0\\
+0&K
+\end{array}\right]\right)
 $$
 where $K = J^{11}$. Exploiting the symmetry of variance matrices in several places as well as the symmetry and idempotency of $H_S$, we have
-	\begin{eqnarray*}
-		E[\Lambda_S] &=& E\left[\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M\right] + E\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]\\
-			&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}E\left[M\right] + \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}E[\delta + W]\\
-			&=& \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}\left(\delta +E[W]\right)\\
-			&=& \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}\delta\\
-			&=& \omega' \left(I - K^{1/2}H_S K^{-1/2}\right)\delta
-	\end{eqnarray*}
-	\begin{eqnarray*}
-		 Var\left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}M\right] &=& \left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\right]Var[M]\left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\right]'\\
-		&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}J_{00}J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0)\\
-		&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0)
-	\end{eqnarray*}
-	\begin{eqnarray*}
-		Var\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]&=&\left( \omega'K^{1/2}H_S K^{-1/2}\right)Var[D]\left( \omega'K^{1/2}H_S K^{-1/2}\right)'\\
-				&=&\omega'K^{1/2}H_S K^{-1/2}K K^{-1/2}H_SK^{1/2}\omega\\
-				&=&\omega'K^{1/2}H_S \left(K^{-1/2}K^{1/2}\right)\left(K^{1/2} K^{-1/2}\right)H_SK^{1/2}\omega\\
-				&=&\omega'K^{1/2}H_S H_SK^{1/2}\omega\\
-				&=&\omega'K^{1/2}H_S K^{1/2}\omega
-	\end{eqnarray*}
-	\begin{eqnarray*}
-		Var[\Lambda_S] &=& Var\left[\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M\right] + Var\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]\\
-					&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
-	\end{eqnarray*}
+\begin{eqnarray*}
+E[\Lambda_S] &=& E\left[\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M\right] + E\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]\\
+&=& \nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}E\left[M\right] + \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}E[\delta + W]\\
+&=& \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}\left(\delta +E[W]\right)\\
+&=& \omega' \delta -\omega' K^{1/2}H_S K^{-1/2}\delta\\
+&=& \omega' \left(I - K^{1/2}H_S K^{-1/2}\right)\delta
+\end{eqnarray*}
+\begin{eqnarray*}
+Var\left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}M\right] &=& \left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\right]Var[M]\left[\nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\right]'\\
+&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}J_{00}J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0)\\
+&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0)
+\end{eqnarray*}
+\begin{eqnarray*}
+Var\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]&=&\left( \omega'K^{1/2}H_S K^{-1/2}\right)Var[D]\left( \omega'K^{1/2}H_S K^{-1/2}\right)'\\
+&=&\omega'K^{1/2}H_S K^{-1/2}K K^{-1/2}H_SK^{1/2}\omega\\
+&=&\omega'K^{1/2}H_S \left(K^{-1/2}K^{1/2}\right)\left(K^{1/2} K^{-1/2}\right)H_SK^{1/2}\omega\\
+&=&\omega'K^{1/2}H_S H_SK^{1/2}\omega\\
+&=&\omega'K^{1/2}H_S K^{1/2}\omega
+\end{eqnarray*}
+\begin{eqnarray*}
+Var[\Lambda_S] &=& Var\left[\nabla_{\theta}\mu(\theta_0, \gamma_0)'J_{00}^{-1}M\right] + Var\left[\omega'\left(\delta -K^{1/2}H_S K^{-1/2}D\right)\right]\\
+&=& \nabla_{\theta}\mu(\theta_0,\gamma_0)'J_{00}^{-1}\nabla_{\theta}\mu(\theta_0,\gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega
+\end{eqnarray*}
 \end{proof}
 
-\paragraph{The Focused Information Criterion} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
-	\begin{eqnarray*}
-		\mbox{AMSE}(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
-		&=&\left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right] \left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right]'\\
-			&& \quad \quad \quad + \left[\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega \right]\\
-		&=& \omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
-		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega  + \tau_0^2
-	\end{eqnarray*}
-Where 
-	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
-which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
+\paragraph{Estimating AMSE} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
+\begin{eqnarray*}
+r(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
+&=&\left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right] \left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right]'\\
+&& \quad \quad \quad + \left[\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega \right]\\
+&=& \omega' (I - K^{-1/2}H_SK^{1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
+&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2
+\end{eqnarray*}
+Where
+$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
+which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available: they're just the usual ML estimators.\footnote{There's a slight issue about whether it makes more sense to use the estimates from the wide model or from a given submodel but this doesn't show up anywhere in the asymptotics. For more discussion on this point, see Claeskens \& Hjort (2003).}
 
-\todo[inline]{Explain about asymptotically unbiased estimator of $\delta\delta'$ and explain that we don't have to fit all of the submodels.}
+So what can we do about $\delta$? Notice from above that we actually need to estimate $\delta \delta'$, \emph{not} $\delta$. If we had a consistent estimator $\widetilde{\delta}$ of $\delta$, then $\widetilde{\delta}\widetilde{\delta}'$ would be a consistent estimator of $\delta\delta'$. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows. Instead, the FIC substitutes an \textbf{asymptotically unbiased estimator} of this quantity, constructed as follows. First, we know from Lemma \ref{lem:W} that
+$$D_n = \widehat{\delta}_{Full} \overset{d}{\rightarrow} D = \delta + W \sim \mbox{N}_q(\delta,K)$$
+Thus, $\widehat{\delta}_{Full}$ is an \emph{asymptotically unbiased estimator of} $\delta$. By the Continuous Mapping Theorem,
+$$D_nD_n' \overset{d}{\rightarrow} D D'$$
+But, by the shortcut formula
+$$E[DD'] = Var(D) + E[D]E[D'] = K + \delta \delta'$$
+which means that $D_nD_n'$ is an asymptotically \emph{biased} estimator of $\delta\delta'$. Fortunately, to remove the bias we simply need to subtract $K$. Thus, our asymptotically unbiased estimator of $\delta \delta'$ is
+$$D_nD_n' - \widehat{K}$$
+Substituting this quantity along with consistent estimators of everything else provides an \textbf{asymptotically unbiased estimator of AMSE}.
+
+\paragraph{The FIC}
+We could really just stop here, but in the paper Claeskens and Hjort express the FIC in a slightly different (and simpler) way by removing constants that do not vary across models. First they construct the \emph{limit experiment} version of the AMSE by substituting $DD' - K$ for $\delta\delta'$. This yields
+\begin{eqnarray*}
+\widehat{r}(S) &=& \omega' (I - K^{1/2}H_SK^{-1/2})\left(DD' - K\right)(I - K^{-1/2}H_SK^{1/2})\omega\\
+&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2\\
+&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+&& \quad - \omega'K\omega + \omega'K^{1/2}H_SK^{-1/2}K\omega + \omega' K K^{-1/2}H_S K^{1/2}\omega\\
+&& \quad \quad - \omega'K^{1/2}H_SK^{-1/2}KK^{-1/2}H_S K^{1/2} \omega\\
+&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2 \\
+&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+&& \quad - \omega'K\omega + \omega'K^{1/2}H_SK^{1/2}\omega + \omega' K ^{1/2}H_S K^{1/2}\omega\\
+&& \quad \quad -\omega'K^{1/2}H_SK^{1/2}\omega \\
+&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2\\
+&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+&&+2\omega'K^{1/2}H_SK^{1/2}\omega + (\tau_0^2 - \omega'K\omega)
+\end{eqnarray*}
+Next they write the limiting (i.e.\ infeasible) version of the FIC by subtracting $\tau_0^2 - \omega'K\omega$ since this is constant across models. This gives
+\begin{eqnarray*}
+FIC &=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega \\
+&& \quad \quad+2\omega'K^{1/2}H_SK^{1/2}\omega\\
+&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega +2\omega_S'K_S\omega_S
+\end{eqnarray*}
+Where $\omega_S = \pi_S \omega$. Finally, the FIC substitutes estimators as follows
+$$\widehat{FIC} = \widehat{\omega}' (I - \widehat{K}^{1/2}\widehat{H}_S\widehat{K}^{-1/2})\widehat{\delta}_{Full}\widehat{\delta}_{Full}'(I - \widehat{K}^{-1/2}\widehat{H}_S\widehat{K}^{1/2})\widehat{\omega} +2\widehat{\omega}_S'\widehat{K}_S\widehat{\omega}_S$$
+This formula may look somewhat complicated, but calculating it only requires quantities that we get automatically from fitting the full model. Thus, the FIC does \emph{not} require us to fit each of the candidate models.
 
 \section{Extensions of FIC Idea}
-\todo[inline]{List some references and give the gist of each. In particular, point out the time series examples. Don't forget about that Brownlees Paper.}
+The FIC idea turns out to be extremely general, and has been extended in a number of directions by the original authors, among others. Claeskens, Croux and Van Kerckhoven (2006) adapt the FIC idea to a number of loss functions besides MSE in the case of logistic regression, while Claeskens, Croux and Van Kerckhoven (2007) consider the problem of model selection for autoregressive models. Claeskens \& Hjort (2008) consider both more general loss functions and focus parameters that depend on the data through some kind of average. In a more theoretical contribution, Claeskens \& Carroll work out the asymptotics necessary to extend the FIC to semiparametric problems More recently, Brownlees and Gallo (2011) use the FIC to choose the amount of shrinkage used in estimation of the deterministic component of a conditional duration model, while Zhang, Wan and Zhou (2012) derive an FIC-type criterion for Tobit model selection. The idea behind the FIC can even be extended to GMM models. This is the topic of our next lecture.
 
 \section{Schorfheide (2005)}
-\todo[inline]{In the same spirit as FIC, but developed independently.}
-
+Although developed independently, Schorfheide (2005) shares many similarities with Claeskens \& Hjort (2003). Working in a local asymptotic framework, this paper proposes for choosing VAR lag length and deciding between maximum likelihood and loss function-based estimation in multistep forecasting problems.
 
 
 \end{document}
+
