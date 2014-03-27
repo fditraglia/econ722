@@ -337,7 +337,7 @@ E_n\left[\begin{array}
 \end{array} \right] + E_n\left[\begin{array}
 {cc} \nabla_{\theta\gamma'} \log f(Y_i, \theta_0, \gamma^*) \\ \nabla_{\gamma \gamma'} \log f(Y_i, \theta_0, \gamma^*)\end{array} \right] (\gamma_0 - \gamma_n)
 \end{eqnarray*}
-where $\gamma^*$ is between $\gamma_0$ and $\gamma_n$. The first term is simply the population moment condition for ML estimation and hence equals zero: thanks to the mean-value expansion, the expectation is now evaluated at $(\theta_0,\gamma_n)$ which is the true parameter value for the DGP based on a sample size of $n$. Thus, since $\gamma_0 = \gamma_n = -\delta/\sqrt{n}$, we have
+where $\gamma^*$ is between $\gamma_0$ and $\gamma_n$. The first term is simply the population moment condition for ML estimation and hence equals zero: thanks to the mean-value expansion, the expectation is now evaluated at $(\theta_0,\gamma_n)$ which is the true parameter value for the DGP based on a sample size of $n$. Thus, since $\gamma_0 - \gamma_n = -\delta/\sqrt{n}$, we have
 $$\sqrt{n}E_n\left[\begin{array}
 {cc} U(Y_i) \\ V(Y_i)
 \end{array} \right] = -E_n\left[\begin{array}
