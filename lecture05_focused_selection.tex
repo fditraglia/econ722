@@ -463,7 +463,7 @@ Lemma 3.2 and some algebra imply that
 	$$\hat{\delta}_S \equiv \sqrt{n}(\hat{\gamma}_S - \gamma_{0,S})\overset{d}{\rightarrow} D_S$$
 where $D_S = K_S \pi_s K^{-1}(\delta + W) = K_S \pi_s K^{-1}D$, defining $D = \delta + W$. In particular:
 	$$
-	D_N \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)$$
+	D_n \equiv \hat{\delta}_{Full} = \sqrt{n}(\hat{\gamma}_{Full} -\gamma_0) \overset{d}{\rightarrow} D = (\delta+W) \sim \mathcal{N}_q(\delta,K)$$
 \end{lem}
 
 \begin{proof}
@@ -519,7 +519,7 @@ where $K_S = \left(\pi_S K^{-1} \pi_S'\right)^{-1}$ and $K\equiv J^{11}$. Thus, 
 
 \paragraph{Estimating the Focus Parameter} We're finally ready to work out the limiting distribution of $\widehat{\mu}_S$. First two final items of notation. Define
 	\begin{eqnarray*}
-		H_S &=& \left(K^{-1}\right)^{1/2}(\pi_S' K_S \pi_S) \left( K^{-1} \right)^{1/2} \\
+		H_S &=& K^{-1/2}\pi_S' K_S \pi_SK^{-1/2} \\
 		\omega &=&  J_{10}J_{00}^{-1} \nabla_\theta \mu(\theta_0,\gamma_0) - \nabla_\gamma \mu(\theta_0, \gamma_0)
 	\end{eqnarray*}
 Notice that:
@@ -700,19 +700,64 @@ where $K = J^{11}$. Exploiting the symmetry of variance matrices in several plac
 	\end{eqnarray*}
 \end{proof}
 
-\paragraph{The Focused Information Criterion} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
+\paragraph{Estimating AMSE} So far, all we have done, admittedly at great length, is derive the limit distribution of $\widehat{\mu}_S$. Now we're \emph{finally} ready to state our model selection criterion: the FIC. From Lemma \ref{lem:mu}, the asymptotic mean-squared error of $\sqrt{n}\left(\widehat{\mu}_S - \mu_{\mbox{true}} \right)$ is
 	\begin{eqnarray*}
-		\mbox{AMSE}(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
+		r(S) &=& \mbox{Bias}^2 + \mbox{Variance}\\
 		&=&\left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right] \left[\omega'(I - K^{1/2}H_SK^{-1/2})\delta \right]'\\
 			&& \quad \quad \quad + \left[\nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0) + \omega'K^{1/2}H_S K^{1/2}\omega \right]\\
-		&=& \omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
+		&=& \omega' (I - K^{-1/2}H_SK^{1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega \\
 		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega  + \tau_0^2
 	\end{eqnarray*}
 Where 
 	$$\tau_0^2 = \nabla_\theta \mu(\theta_0, \gamma_0)'J_{00}^{-1}\nabla_\theta \mu(\theta_0, \gamma_0)$$
-which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows.
+which is non-negative and does \emph{not} vary across models. Ideally, we would simply choose $S$ to minimize $\mbox{AMSE}(S)$ but the formula depends on various unknowns. The solution is, of course, to estimate them. Under local mis-specification, consistent estimators of all quantities \emph{except} $\delta$ are readily available: they're just the usual ML estimators.\footnote{There's a slight issue about whether it makes more sense to use the estimates from the wide model or from a given submodel but this doesn't show up anywhere in the asymptotics. For more discussion on this point, see Claeskens \& Hjort (2003).} 
 
-\todo[inline]{Explain about asymptotically unbiased estimator of $\delta\delta'$ and explain that we don't have to fit all of the submodels.}
+So what can we do about $\delta$? Notice from above that we actually need to estimate $\delta \delta'$, \emph{not} $\delta$. If we had a consistent estimator $\widetilde{\delta}$ of $\delta$, then $\widetilde{\delta}\widetilde{\delta}'$ would be a consistent estimator of $\delta\delta'$. Unfortunately \emph{no consistent estimator of $\delta$ exists under local mis-specification}. Intuitively, the problem is that the data become ``less and less informative'' about $\delta$ as the sample size grows. Instead, the FIC substitutes an \textbf{asymptotically unbiased estimator} of this quantity, constructed as follows. First, we know from  Lemma \ref{lem:W} that 
+$$D_n = \widehat{\delta}_{Full} \overset{d}{\rightarrow} D = \delta + W \sim \mbox{N}_q(\delta,K)$$
+Thus, $\widehat{\delta}_{Full}$ is an \emph{asymptotically unbiased estimator of} $\delta$. By the Continuous Mapping Theorem,
+	$$D_nD_n' \overset{d}{\rightarrow} D D'$$
+But, by the shortcut formula
+	$$E[DD'] = Var(D) + E[D]E[D'] = K + \delta \delta'$$
+which means that $D_nD_n'$ is an asymptotically \emph{biased} estimator of $\delta\delta'$. Fortunately, to remove the bias we simply need to subtract $K$. Thus, our asymptotically unbiased estimator of $\delta \delta'$ is 
+	$$D_nD_n' - \widehat{K}$$
+Substituting this quantity along with consistent estimators of everything else provides an \textbf{asymptotically unbiased estimator of AMSE}. 
+
+\paragraph{The FIC}
+We could really just stop here, but in the paper Claeskens and Hjort express the FIC in a slightly different (and simpler) way by removing constants that do not vary across models.
+
+The FIC, however, is expressed in a slightly different and simpler way by removing constants that do not vary across models. First, we construct the \emph{limit experiment} version of the AMSE substitutes $DD' - K$ for $\delta\delta'$, yielding
+\begin{eqnarray*}
+	\widehat{r}(S) &=& \omega' (I - K^{1/2}H_SK^{-1/2})\left(DD' - K\right)(I - K^{-1/2}H_SK^{1/2})\omega\\
+	&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2\\
+		&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+		&& \quad  - \omega'K\omega + \omega'K^{1/2}H_SK^{-1/2}K\omega + \omega' K K^{-1/2}H_S K^{1/2}\omega\\
+		&& \quad \quad - \omega'K^{1/2}H_SK^{-1/2}KK^{-1/2}H_S K^{1/2} \omega\\
+		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2 \\
+	&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+		&& \quad  - \omega'K\omega + \omega'K^{1/2}H_SK^{1/2}\omega + \omega' K ^{1/2}H_S K^{1/2}\omega\\
+		&& \quad \quad -\omega'K^{1/2}H_SK^{1/2}\omega \\
+		&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2\\
+	&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
+	&&+2\omega'K^{1/2}H_SK^{1/2}\omega + (\tau_0^2 - \omega'K\omega)
+\end{eqnarray*}
+The limiting (i.e.\ infeasible) version of the FIC simply subtracts $\tau_0^2 - \omega'K\omega$ since this is constant across models, yielding
+	\begin{eqnarray*}
+		FIC &=&  \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega +
+	\end{eqnarray*}
+
+
+which is an unbiased estimator of the limiting risk.
+
+where we have ignored the term $\tau_0^2$ since it does not vary across models.
+
+
+
+
+Thus, our asymptotically unbiased estimator of $\delta \delta'$ is 
+	$$D_nD_n' - \widehat{K}$$
+Substituting this into the expression for AMSE, along with consistent estimators of all other quantities, gives the FIC:
+	$$FIC(S) =\omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega + \omega'K^{1/2}H_S K^{1/2}\omega $$
+where we have ignored the term $\tau_0^2$ since it does not vary across models.
 
 \section{Extensions of FIC Idea}
 \todo[inline]{List some references and give the gist of each. In particular, point out the time series examples. Don't forget about that Brownlees Paper.}
