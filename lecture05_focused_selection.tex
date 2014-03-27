@@ -723,9 +723,7 @@ which means that $D_nD_n'$ is an asymptotically \emph{biased} estimator of $\del
 Substituting this quantity along with consistent estimators of everything else provides an \textbf{asymptotically unbiased estimator of AMSE}. 
 
 \paragraph{The FIC}
-We could really just stop here, but in the paper Claeskens and Hjort express the FIC in a slightly different (and simpler) way by removing constants that do not vary across models.
-
-The FIC, however, is expressed in a slightly different and simpler way by removing constants that do not vary across models. First, we construct the \emph{limit experiment} version of the AMSE substitutes $DD' - K$ for $\delta\delta'$, yielding
+We could really just stop here, but in the paper Claeskens and Hjort express the FIC in a slightly different (and simpler) way by removing constants that do not vary across models. First they construct the \emph{limit experiment} version of the AMSE by substituting $DD' - K$ for $\delta\delta'$. This yields
 \begin{eqnarray*}
 	\widehat{r}(S) &=& \omega' (I - K^{1/2}H_SK^{-1/2})\left(DD' - K\right)(I - K^{-1/2}H_SK^{1/2})\omega\\
 	&& \quad \quad \quad + \omega'K^{1/2}H_S K^{1/2}\omega + \tau_0^2\\
@@ -740,31 +738,21 @@ The FIC, however, is expressed in a slightly different and simpler way by removi
 	&=& \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega\\
 	&&+2\omega'K^{1/2}H_SK^{1/2}\omega + (\tau_0^2 - \omega'K\omega)
 \end{eqnarray*}
-The limiting (i.e.\ infeasible) version of the FIC simply subtracts $\tau_0^2 - \omega'K\omega$ since this is constant across models, yielding
+Next they write the limiting (i.e.\ infeasible) version of the FIC by subtracting $\tau_0^2 - \omega'K\omega$ since this is constant across models. This gives
 	\begin{eqnarray*}
-		FIC &=&  \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega +
+		FIC &=&  \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega \\
+		&& \quad \quad+2\omega'K^{1/2}H_SK^{1/2}\omega\\
+		&=&  \omega' (I - K^{1/2}H_SK^{-1/2})DD'(I - K^{-1/2}H_SK^{1/2})\omega +2\omega_S'K_S\omega_S
 	\end{eqnarray*}
-
-
-which is an unbiased estimator of the limiting risk.
-
-where we have ignored the term $\tau_0^2$ since it does not vary across models.
-
-
-
-
-Thus, our asymptotically unbiased estimator of $\delta \delta'$ is 
-	$$D_nD_n' - \widehat{K}$$
-Substituting this into the expression for AMSE, along with consistent estimators of all other quantities, gives the FIC:
-	$$FIC(S) =\omega' (I - K^{1/2}H_SK^{-1/2})\delta \delta'(I - K^{1/2}H_SK^{-1/2})\omega + \omega'K^{1/2}H_S K^{1/2}\omega $$
-where we have ignored the term $\tau_0^2$ since it does not vary across models.
+Where $\omega_S = \pi_S \omega$. Finally, the FIC substitutes estimators as follows
+	$$\widehat{FIC} = \widehat{\omega}' (I - \widehat{K}^{1/2}\widehat{H}_S\widehat{K}^{-1/2})\widehat{\delta}_{Full}\widehat{\delta}_{Full}'(I - \widehat{K}^{-1/2}\widehat{H}_S\widehat{K}^{1/2})\widehat{\omega} +2\widehat{\omega}_S'\widehat{K}_S\widehat{\omega}_S$$
+This formula may look somewhat complicated, but calculating it only requires quantities that we get automatically from fitting the full model. Thus, the FIC does \emph{not} require us to fit each of the candidate models.
 
 \section{Extensions of FIC Idea}
-\todo[inline]{List some references and give the gist of each. In particular, point out the time series examples. Don't forget about that Brownlees Paper.}
+The FIC idea turns out to be extremely general, and has been extended in a number of directions by the original authors, among others. Claeskens, Croux and Van Kerckhoven (2006) adapt the FIC idea to a number of loss functions besides MSE in the case of logistic regression, while Claeskens, Croux and Van Kerckhoven (2007) consider the problem of model selection for autoregressive models. Claeskens \& Hjort (2008) consider both more general loss functions and focus parameters that depend on the data through some kind of average. In a more theoretical contribution, Claeskens \& Carroll work out the asymptotics necessary to extend the FIC to semiparametric problems More recently, Brownlees and Gallo (2011) use the FIC to choose the amount of shrinkage used in estimation of the deterministic component of a conditional duration model, while Zhang, Wan and Zhou (2012) derive an FIC-type criterion for Tobit model selection. The idea behind the FIC can even be extended to GMM models. This is the topic of our next lecture.
 
 \section{Schorfheide (2005)}
-\todo[inline]{In the same spirit as FIC, but developed independently.}
-
+Although developed independently, Schorfheide (2005) shares many similarities with Claeskens \& Hjort (2003). Working in a local asymptotic framework, this paper proposes for choosing VAR lag length and deciding between maximum likelihood and loss function-based estimation in multistep forecasting problems. 
 
 
 \end{document}
