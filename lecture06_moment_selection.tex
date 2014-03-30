@@ -78,6 +78,25 @@ The population moment condition for GMM estimation is $E[f(v_t, \theta_0)]=0$ wh
 
 
 \section{Andrews (1999)}
+The consistency and asymptotic normality results for GMM estimation reviewed above rely on the assumption that the moment conditions used in estimation are correct. That is, they assume that $E[f(v_t,\theta_0)]=0$. But what if we are unsure of this assumption? In many real-world applications we have a fairly large collection of moment functions, the $q$ elements of $f$, some of which may have been derived under different economic or statistical assumptions that others. It could easily be the case that only \emph{some} of the moment functions in $f$ satisfy the moment conditions, while others do not. To take a simple example, we may have a collection of instrumental variables that arise from different sources or different assumptions on the DGP. Perhaps only some of these instruments are truly exogenous but we are unsure which. Andrews (1999) proposes a family of \emph{moment selection criteria} (MSC) for this situation, in which the aim is to consistently select \emph{any and all} elements of $f$ that satisfy the moment condition, and eliminate those that do not. 
+
+Roughly speaking, the intuition is as follows. When we studied AIC, BIC and friends, we discussed how the maximized log-likelihood measures model fit but unfairly advantages models with more parameters. The various model selection criteria we examined amounted to adding some kind of ``penalty'' term to correct for this by \emph{penalizing} more complicated models. In a similar vein, so long as we have more moment conditions than parameters, the $J$-test statistic provides a measure of how well the data ``fit'' the moment conditions: the bigger the statistic, the greater the evidence that the moment conditions are violated. The problem is that $J$-test statistic tends to increase as we add additional moment conditions \emph{even if they are correct}. Thus, if we simply compared $J$-statistics, we would be led to select \emph{too few} moment conditions. To correct for this, Andrews (1999) considers a variety of ``bonus terms'' that \emph{reward} estimators based on a lager number of moment conditions. Using this idea, he derives GMM analogues of AIC, BIC and the Hannan-Quinn information criterion, and studies the conditions under which a bonus term will yield consistent moment selection.
+
+
+
+\paragraph{Identification Conditions}
+	\begin{enumerate}[(i)]
+		\item $\mathcal{MZ}^0 = \{c_0\}$
+		\item $E[f(v_t, \theta_0; c_0)] = 0$ and $E[f(v_t, \theta; c_0)]\neq 0$ for any $\theta \neq \theta_0$
+	\end{enumerate}
+
+
+
+
+
+
+
+
 
 \section{DiTraglia (2014)}
 
