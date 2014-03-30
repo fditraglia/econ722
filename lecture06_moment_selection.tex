@@ -77,7 +77,7 @@ The ``Generalized'' in Generalized Method of Moments, comes from the fact that w
 The population moment condition for GMM estimation is $E[f(v_t, \theta_0)]=0$ where $f$ is $q\times 1$. If $f$ is differentiable and we can interchange expectation and derivative, then
 
 
-\section{Andrews (1999)}
+\section{Andrews' GMM Moment Selection Criteria}
 
 \subsection{Overview}
 The consistency and asymptotic normality results for GMM estimation reviewed above rely on the assumption that the moment conditions used in estimation are correct. That is, they assume that $E[f(v_t,\theta_0)]=0$. But what if we are unsure of this assumption? In many real-world applications we have a fairly large collection of moment functions, the $q$ elements of $f$, some of which may have been derived under different economic or statistical assumptions that others. It could easily be the case that only \emph{some} of the moment functions in $f$ satisfy the moment conditions, while others do not. To take a simple example, we may have a collection of instrumental variables that arise from different sources or different assumptions on the DGP. Perhaps only some of these instruments are truly exogenous but we are unsure which. Andrews (1999) proposes a family of \emph{moment selection criteria} (MSC) for this situation, in which the aim is to consistently select \emph{any and all} elements of $f$ that satisfy the moment condition, and eliminate those that do not. 
@@ -112,8 +112,8 @@ Talk about why identification is tricky in this setting.
 	Under the preceding assumptions, $\widehat{c}_T \overset{p}{\rightarrow} c_0$.
 \end{thm}
 \begin{proof}
-We're trying to show that the moment conditions $\widehat{c}_T$ selected by our criterion are consistent for the maximal set $c_0$ of correct moment conditions. By definition $\widehat{c}_T = \underset{c\in \mathcal{C}}{\arg \min} \; MSC_T(c)$, so what we need to establish is
-	$$\lim_{T\rightarrow \infty} P\left[\left\{MSC_T(c_0) < MSC_T(c), \; \forall c \neq c_0\right\} \right] = 1$$
+We're trying to show that the moment conditions $\widehat{c}_T$ selected by our criterion are consistent for the maximal set $c_0$ of correct moment conditions. By definition $\widehat{c}_T = \underset{c\in \mathcal{C}}{\arg \min} \; MSC_T(c)$, so we need to show that
+	$$\lim_{T\rightarrow \infty} P\left[\left\{MSC_T(c) - MSC_T(c_0)>0, \; \forall c \neq c_0\right\} \right] = 1$$
 To simplify the notation, define
 	\begin{eqnarray*}
 		\Delta_T(c, c_0) &=& MSC_T(c) - MSC_T(c_0)\\
@@ -125,17 +125,41 @@ Now, we are interested in $\Delta_T(c, c_0)$ \emph{only} for situations in which
 	$$J_T(c_1) - J_T(c_0) \overset{d}{\rightarrow} \chi^2_{|c_1| - p} - \chi^2_{|c_0|-p} = O_p(1)$$
 By the first Identification Condition, $c_0$ is the \emph{unique} maximal set of correct moment conditions. Hence $|c_0| > |c_1|$. Now, by the first Regularity Condition for the Bonus Term, $h$ is strictly increasing. It follows that $h(|c_0|) - h(|c_1|)>0$. By the second Regularity Condition for the Bonus Term, $\kappa_T \rightarrow \infty$. Thus, 
 	$$\kappa_T \left[h(|c_0|) - h(|c|) \right] \rightarrow \infty$$ 
-and it follows that $\Delta_T(c_1, c_0) \rightarrow \infty$.
+It follows that $\Delta_T(c_1, c_0) \rightarrow \infty$ and we obtain our desired result.
 
 
-\paragraph{Case 2} Consider $c_2 \neq c_0$ such that $E[f(v_t, \theta; c_2)]\neq 0$ for any $\theta \in \Theta$. In this case, the first Regularity Condition for the $J$-test Statistic applies to $c_0$, while the second applies to $c_2$.
+\paragraph{Case 2} Consider $c_2 \neq c_0$ such that $E[f(v_t, \theta; c_2)]\neq 0$ for any $\theta \in \Theta$. In this case, the \emph{first} Regularity Condition for the $J$-test Statistic applies to $c_0$, while the \emph{second} applies to $c_2$ so we have
+	$$T^{-1}\left[J_T(c_2) - J_T(c_0) \right] = a(c_2) + o_p(1) - T^{-1} O_p(1)$$
+Now, whatever the value $\left[h(|c_0|) - h(|c|) \right]$ happens to be, it is definitely finite since $h$ is strictly increasing by the first Regularity Condition for the Bonus Term, and both $|c|$ and $|c_0|$ are finite. By the second Regularity Condition for the Bonus Term, $\kappa_T = o(T)$. Hence,
+	$$T^{-1} \kappa_T\left[h(|c_0|) - h(|c|) \right] = o(1)$$
+Putting the pieces together, we have
+\begin{eqnarray*}
+	T^{-1} \Delta_T(c_2, c_0) &=& a(c_2) + o_p(1) - T^{-1}O_p(1) + o(1)\\
+	&=& a(c_2) + o_p(1)
+\end{eqnarray*}
+By the second Regularity Condition for the $J$-test Statistic, $a(c_2) >0$. Thus, $T^{-1}\Delta_T(c_2,c_0) >0$ with probability approaching one as $T\rightarrow \infty$. It follows that $\Delta_T(c_2,c_0)  \rightarrow \infty$ with probability approaching one as $T\rightarrow \infty$, as required.
 \end{proof}
 
+\subsection{Which Criteria Are Consistent?}
+Recall from above that:
+\begin{eqnarray*}
+	\mbox{GMM-BIC}(c) &=& J_T(c) - \left(|c| - p\right)\log(T)\\
+	\mbox{GMM-HQ}(c) &=& J_T(c) - 2.01\left(|c| - p\right)\log(\log(T))\\
+	\mbox{GMM-AIC}(c) &=& J_T(c) - 2\left(|c| - p\right)\log(T)
+\end{eqnarray*}
+We see immediately that the GMM-AIC does \emph{not} satisfy the necessary conditions for consistency, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$. In constrast, both the GMM-BIC and GMM-HQ diverge as $T\rightarrow \infty$, so we simply need to check the requirement that $\kappa_t = o(T)$. For $GMM-BIC$ we have 
+	$$\lim_{T \rightarrow \infty} \frac{\log T}{T} = \lim_{T \rightarrow \infty} \frac{1}{T} = 0$$
+by l'H\^{o}pital's rule, and similarly for GMM-HQ
+	$$\lim_{T \rightarrow \infty} \frac{\log \log T}{T} = \lim_{T \rightarrow \infty} \frac{1}{\log T} = 0$$
+Thus both GMM-BIC and GMM-HQ provide consistent moment selection.
+ 
+\subsection{Asymptotics for GMM-AIC}
+We saw in the previous subsection that GMM-AIC does not satisfy the necessary conditions for consistent moment selection. The question remains: how does this criterion behave in the limit? To answer this question, 
 
+\section{The Focused Moment Selection Criterion}
+DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
 
-
-
-\section{DiTraglia (2014)}
+Add asymptotics for Andrews criteria under my asymptotics.
 
 \section{Other Approaches}
 
