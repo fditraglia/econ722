@@ -179,11 +179,12 @@ But since the second term is a \emph{constant}, this is simply $\Delta_T(c_1,c_0
 
 So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in Case 1 GMM-AIC is \emph{random even in the limit}. Putting these two results together, we see that, although it will never select a set of false moment conditions, GMM-AIC chooses \emph{randomly} among the set of correct moment conditions. In other words, it will not necessarily select $c_0$ as $T\rightarrow \infty$. 
 
+\subsection{Problems with Andrews' Approach}
+Irrelevant moment conditions: Hall \& Peixe. Identification condition is stronger than it sounds, can easily fail in simple examples. Comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$. This motivates FMSC, descibed in the next section.
+
 \section{The Focused Moment Selection Criterion}
 DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
 
-\paragraph{Problems With Andrews Approach}
-First, we don't usually care about finding the true MCs. Bias-variance tradeoff, allow slightly incorrect MC to bring down variance. Second, the issue of irrelevant moment conditions. Briefly mention the Hall \& Peixe paper.
 
 \todo[inline]{Add asymptotics for Andrews criteria under my asymptotics.}
 
