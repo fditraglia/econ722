@@ -95,6 +95,8 @@ Talk about why identification is tricky in this setting.
 		\item If $E[f(v_t, \theta;c)] \neq 0$ for a \emph{all} $\theta \in \Theta$ then $T^{-1} J_T(c) \overset{p}{\rightarrow} a(c)$, a finite, positive constant that may depend on $c$.
 	\end{enumerate}
 
+\todo[inline]{Need to talk about this assumption in terms of low-level conditions, and what happens when GMM is mis-specified. Also need to talk about centered covariance matrix estimator.}
+
 \paragraph{Regularity Conditions for Bonus Term}
 	\begin{enumerate}[(i)]
 		\item $h(\cdot)$ is strictly increasing
@@ -147,20 +149,27 @@ Recall from above that:
 	\mbox{GMM-HQ}(c) &=& J_T(c) - 2.01\left(|c| - p\right)\log(\log(T))\\
 	\mbox{GMM-AIC}(c) &=& J_T(c) - 2\left(|c| - p\right)\log(T)
 \end{eqnarray*}
-We see immediately that the GMM-AIC does \emph{not} satisfy the necessary conditions for consistency, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$. In constrast, both the GMM-BIC and GMM-HQ diverge as $T\rightarrow \infty$, so we simply need to check the requirement that $\kappa_t = o(T)$. For $GMM-BIC$ we have 
+We see immediately that GMM-AIC does \emph{not} satisfy the necessary conditions for consistency, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$. In constrast, both the GMM-BIC and GMM-HQ diverge as $T\rightarrow \infty$, so we simply need to check the requirement that $\kappa_T = o(T)$. For GMM-BIC we have 
 	$$\lim_{T \rightarrow \infty} \frac{\log T}{T} = \lim_{T \rightarrow \infty} \frac{1}{T} = 0$$
 by l'H\^{o}pital's rule, and similarly for GMM-HQ
 	$$\lim_{T \rightarrow \infty} \frac{\log \log T}{T} = \lim_{T \rightarrow \infty} \frac{1}{\log T} = 0$$
 Thus both GMM-BIC and GMM-HQ provide consistent moment selection.
  
 \subsection{Asymptotics for GMM-AIC}
-We saw in the previous subsection that GMM-AIC does not satisfy the necessary conditions for consistent moment selection. The question remains: how does this criterion behave in the limit? To answer this question, 
+We saw in the previous subsection that GMM-AIC does not satisfy the sufficient conditions for consistent moment selection. The question remains: how does this criterion behave in the limit? To answer this question, we revisit the proof of consistent selection from above. It turns out that GMM-AIC behaves \emph{differently} in the two cases considered in the proof. Combining them, we will see that GMM-AIC is \emph{not} a consistent moment selection criterion.
+
+\paragraph{Case 2} In this case, we examined $c_2 \neq c_0$ such that $E[f(v_t, \theta; c_2)]\neq 0$ for any $\theta \in \Theta$. In other words, the moment conditions indexed by $c_2$ are \emph{not} satisfied for \emph{any} parameter value $\theta$. Asymptotically, GMM-AIC will \emph{never} select such a set of moment conditions. To see why, recall that $\kappa_T = 2$ for GMM-AIC. Although it does not diverge, this choice of $\kappa_T$ is \emph{still} $o(T)$. Thus, the argument from Case 2 \emph{still applies} to the GMM-AIC. We did not in fact use the assumption that $\kappa_T$ diverges in the proof of this case! 
+
+\paragraph{Case 1} In this case, we examined $c_1\neq c_0$ such that $E[f(v_t, \theta_1;c_1)]=0$ \emph{for a unique} $\theta_1$. In other words, we considered a situation in which there \emph{is} a parameter vector $\theta_1$ at which the moment conditions indexed by $c_1$ are satisfied. Now, the difference of $J$-test statistics continues to be $O_p(1)$ regardless of the choice of $\kappa_T$, provided the regularity conditions are satisfied. Thus, substituting $\kappa_T = 2$, we have
+	$$\Delta_T(c_1,c_0) = O_p(1) + 2\left[h(|c_0|) - h(|c|) \right]$$
+But since the second term is a \emph{constant}, this is simply $\Delta_T(c_1,c_0) = O_p(1)$. In other words, the GMM-AIC is a \emph{random variable}, even in the limit as $T\rightarrow \infty$.
+
+So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in Case 1 GMM-AIC is \emph{random even in the limit}. Putting these two results together, we see that, although it will never select a set of false moment conditions, GMM-AIC chooses \emph{randomly} among the set of correct moment conditions. In other words, it will not necessarily select $c_0$ as $T\rightarrow \infty$. 
 
 \section{The Focused Moment Selection Criterion}
 DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
 
 Add asymptotics for Andrews criteria under my asymptotics.
 
-\section{Other Approaches}
 
 \end{document}
