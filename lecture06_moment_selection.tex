@@ -85,7 +85,20 @@ The consistency and asymptotic normality results for GMM estimation reviewed abo
 Roughly speaking, the intuition is as follows. When we studied AIC, BIC and friends, we discussed how the maximized log-likelihood measures model fit but unfairly advantages models with more parameters. The various model selection criteria we examined amounted to adding some kind of ``penalty'' term to correct for this by \emph{penalizing} more complicated models. In a similar vein, so long as we have more moment conditions than parameters, the $J$-test statistic provides a measure of how well the data ``fit'' the moment conditions: the bigger the statistic, the greater the evidence that the moment conditions are violated. The problem is that $J$-test statistic tends to increase as we add additional moment conditions \emph{even if they are correct}. Thus, if we simply compared $J$-statistics, we would be led to select \emph{too few} moment conditions. To correct for this, Andrews (1999) considers a variety of ``bonus terms'' that \emph{reward} estimators based on a lager number of moment conditions. Using this idea, he derives GMM analogues of AIC, BIC and the Hannan-Quinn information criterion, and studies the conditions under which a bonus term will yield consistent moment selection.
 
 \subsection{Notation}
-Talk about why identification is tricky in this setting.
+Let $f_{max}$ be a $(q\times 1)$ vector containing all of the moment functions under consideration. Let $c$ be a \emph{selection vector}, a $(q\times 1)$ vector of ones and zeros indicating which elements of $f_{max}$ we use in estimation for a \emph{particular candidate specification}. Let $\mathcal{C}$ denote the set of all candidates and $|c|$ denote the number of moment conditions used to estimate candidate $c$. Naturally, we require that there are at least as many moment conditions as parameters to estimate.
+
+Let $\widehat{\theta}_T(c)$ be the (efficient two-step) GMM estimator based on $E[f(v_t,\theta, c)]=0$ and let $V_\theta(c) = \left[G_0(c) S(c)^{-1} G_0(c) \right]^{-1}$ where $G_0(c) = E[\nabla_\theta' f(v_t, \theta_0; c)]$ and $S(c) = \lim_{T\rightarrow\infty} Var\left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \theta_0;c)\right]$
+
+
+So how should we choose $c$? Talk about why identification is tricky in this setting. Explain about asymptotic efficiency. Adding moment valid moment conditions can never increase asymptotic variance (give reference or maybe even the proof) so it makes sense to use any and all correctly specified moment conditions.
+
+Define $J_T(c) = \left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \widehat{\theta}_T(c);c) \right]' \widehat{S}_T(c)^{-1}\left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \widehat{\theta}_T(c);c) \right]$
+
+Consider moment selection criteria of the form $\mbox{MSC}(c) = J_T(c) - B(T, |c|)$ where $B$ is a ``bonus term.''
+
+Select according to $\widehat{c}_T = \underset{c\in\mathcal{C}}{\arg\min} \;\mbox{MSC}(c)$
+
+Rate of divergence of J-test statistic under mis-specification. Centered covariance matrix estimator.
 
 \subsection{Consistent Selection}
 
@@ -168,6 +181,9 @@ So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in
 
 \section{The Focused Moment Selection Criterion}
 DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
+
+\paragraph{Problems With Andrews Approach}
+First, we don't usually care about finding the true MCs. Bias-variance tradeoff, allow slightly incorrect MC to bring down variance. Second, the issue of irrelevant moment conditions. Briefly mention the Hall \& Peixe paper.
 
 \todo[inline]{Add asymptotics for Andrews criteria under my asymptotics.}
 
