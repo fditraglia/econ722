@@ -31,13 +31,51 @@
 
 \begin{document}
 
-\title{Lecture 5: Moment Selection for GMM}
+\title{Lecture 6: Moment Selection for GMM}
 
 \author{Francis J.\ DiTraglia}
 
 \maketitle 
 
 \section{Review of GMM}
+The best reference for GMM is Hall (2005). This review follows Chapter 3.
+\subsection{The Basic Idea}
+	$$\widehat{\theta} = \underset{\theta \in \Theta}{\arg \min} \left[\frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\right]' W_T \left[ \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\right]$$
+
+\subsection{Basic Assumptions for GMM}
+Let $f$ be a $q$-vector of functions of an observable random $r$-vector $v_t$ and a $p$-vector of parameters $\theta \in \Theta \subseteq \mathbb{R}^p$. The basic assumptions for GMM estimation are as follows.
+
+\paragraph{Strict Stationarity} The sequence $\{v_t\colon -\infty <t <\infty\}$ of random $r$-vectors is a strictly stationary process with sample space $\mathcal{V}\subseteq \mathbb{R}^r$. Importantly, this implies that the expectations of \emph{any} functions of $v_t$ are constant over time.
+
+\paragraph{Regularity Conditions for Moment Functions}
+The $q$ moment functions $f\colon \mathcal{V}\times \Theta \rightarrow \mathbb{R}^q$ satisfy the following conditions:
+	\begin{enumerate}[(i)]
+		\item $f$ is $v_t$-almost surely continuous on $\Theta$
+		\item $E[f(v_t, \theta)]<\infty$ exists $\forall \theta \in \Theta$
+		\item $E[f(v_t,\theta)]$ is continuous on $\Theta$
+	\end{enumerate}
+
+\paragraph{Population Moment Condition} $E[f(v_t, \theta_0)]=0$
+
+\paragraph{Regularity Conditions for Derivative Matrix}
+	\begin{enumerate}[(i)]
+		\item The $q\times p$ derivative matrix $\nabla_\theta f(v_t, \theta)'$ exists and is $v_t$-almost continuous on $\Theta$
+		\item $\theta_0 \in \mbox{interior}(\Theta)$ [Needed for Mean-value Expansion]
+		\item $E[\nabla_{\theta}f(v_t, \theta_0)]<\infty$ exists
+	\end{enumerate}
+
+\paragraph{Global Identification} For any $\widetilde{\theta}\in \Theta$ such that $\widetilde{\theta}\neq \theta_0$, $E[f(v_t,\widetilde{\theta})]\neq 0 $.
+
+\paragraph{Local Identification}
+
+\paragraph{Weighting Matrix} The weighting matrix $W_T$ is positive semi-definite and converges in probability to a postitive definite constant matrix $W$.
+
+
+\subsection{Identifying and Overidentifying Restrictions}
+The ``Generalized'' in Generalized Method of Moments, comes from the fact that we may use more moment conditions in estimation than we have parameters to estimate. In this case we say that our estimator is ``overidentified.'' In the overidentified case, the GMM estimator does \emph{not} in fact use all of the information contained in the moment conditions for estimation. This turns out to be \emph{crucial} because it is what allows us to carry out specification tests and moment selection. The key point is that GMM estimation can be viewed as a \emph{plain-vanilla method of moments} problem for a \emph{transformed} set of moment conditions.
+
+The population moment condition for GMM estimation is $E[f(v_t, \theta_0)]=0$ where $f$ is $q\times 1$. If $f$ is differentiable and we can interchange expectation and derivative, then
+
 
 \section{Andrews (1999)}
 
