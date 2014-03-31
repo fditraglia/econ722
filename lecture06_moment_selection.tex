@@ -37,38 +37,60 @@
 
 \maketitle 
 
-\section{Review of GMM}
-The best reference for GMM is Hall (2005). This review follows Chapter 3.
-\subsection{The Basic Idea}
-	$$\widehat{\theta} = \underset{\theta \in \Theta}{\arg \min} \left[\frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\right]' W_T \left[ \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\right]$$
+\section{Review of Generalized Method of Moments}
+The best reference for GMM is Hall (2005). 
 
-\subsection{Basic Assumptions for GMM}
-Let $f$ be a $q$-vector of functions of an observable random $r$-vector $v_t$ and a $p$-vector of parameters $\theta \in \Theta \subseteq \mathbb{R}^p$. The basic assumptions for GMM estimation are as follows.
+\subsection{Key Assumptions}
+Let $f$ be a $q$-vector of functions of an observable random $r$-vector $v_t$ and a $p$-vector of parameters $\theta \in \Theta \subseteq \mathbb{R}^p$ where $\Theta$ is compact. The GMM estimator is defined as follows:
+	\begin{eqnarray*}
+		\bar{f}_T(\theta) &=& \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\\
+		\widehat{\theta}_T &=& \underset{\theta \in \Theta}{\arg \min} \; \bar{f}_T(\theta)'W_T \bar{f}_T(\theta) 
+	\end{eqnarray*}
+The basic assumptions that make this problem well-defined are as follows.
 
 \paragraph{Strict Stationarity} The sequence $\{v_t\colon -\infty <t <\infty\}$ of random $r$-vectors is a strictly stationary process with sample space $\mathcal{V}\subseteq \mathbb{R}^r$. Importantly, this implies that the expectations of \emph{any} functions of $v_t$ are constant over time.
+
+\paragraph{Population Moment Condition} $E[f(v_t, \theta_0)]=0$ for some $\theta_0 \in \mbox{interior}(\Theta)$.
+
+\paragraph{Global Identification} For any $\widetilde{\theta}\in \Theta$ such that $\widetilde{\theta}\neq \theta_0$, $E[f(v_t,\widetilde{\theta})]\neq 0 $.
+
+
+\paragraph{Weighting Matrix} The weighting matrix $W_T$ is positive semi-definite and converges in probability to a postitive definite constant matrix $W$.
+
+\subsection{Regularity Conditions}
+
 
 \paragraph{Regularity Conditions for Moment Functions}
 The $q$ moment functions $f\colon \mathcal{V}\times \Theta \rightarrow \mathbb{R}^q$ satisfy the following conditions:
 	\begin{enumerate}[(i)]
 		\item $f$ is $v_t$-almost surely continuous on $\Theta$
-		\item $E[f(v_t, \theta)]<\infty$ exists $\forall \theta \in \Theta$
-		\item $E[f(v_t,\theta)]$ is continuous on $\Theta$
+		\item $E[f(v_t, \theta)]<\infty$ exists and is continuous on $\Theta$
 	\end{enumerate}
-
-\paragraph{Population Moment Condition} $E[f(v_t, \theta_0)]=0$
 
 \paragraph{Regularity Conditions for Derivative Matrix}
 	\begin{enumerate}[(i)]
-		\item The $q\times p$ derivative matrix $\nabla_\theta f(v_t, \theta)'$ exists and is $v_t$-almost continuous on $\Theta$
-		\item $\theta_0 \in \mbox{interior}(\Theta)$ [Needed for Mean-value Expansion]
-		\item $E[\nabla_{\theta}f(v_t, \theta_0)]<\infty$ exists
+		\item The $q\times p$ matrix $\nabla_\theta f(v_t, \theta)'$ exists and is $v_t$-almost continuous on $\Theta$ 
+		\item $E[\nabla_{\theta}f(v_t, \theta_0)]<\infty$ exists and is continuous in a  neighborhood $N_\epsilon$ of $\theta_0$
+		\item $\underset{\theta \in N_\epsilon}{\sup}\left| \left| T^{-1} \sum_{t=1}^T \nabla_\theta f(v_t, \theta) - E[\nabla_\theta f(v_t, \theta)]\right|\right| \overset{p}{\rightarrow} 0$
 	\end{enumerate}
 
-\paragraph{Global Identification} For any $\widetilde{\theta}\in \Theta$ such that $\widetilde{\theta}\neq \theta_0$, $E[f(v_t,\widetilde{\theta})]\neq 0 $.
+\paragraph{Regularity Conditions for Variance of Sample Moment Conditions}
+\begin{enumerate}[(i)]
+	\item 
+\end{enumerate}
 
-\paragraph{Local Identification}
+\subsection{Basic Asymptotic Results}
+Under the set of assumptions given above, we obtain the following basic asymptotic results.
 
-\paragraph{Weighting Matrix} The weighting matrix $W_T$ is positive semi-definite and converges in probability to a postitive definite constant matrix $W$.
+\paragraph{Consistency of GMM Estimator}
+
+\paragraph{Asymptotic Normality of GMM Estimator}
+
+\paragraph{Asymptotic Normality of Estimated Sample Moment} Under standard regularity conditions, most importantly that $E[f(v_t, \theta_0)]=0$, 
+	$$W_T^{1/2} \sqrt{T} \bar{f}_T(\widehat{\theta}_T) \overset{d}{\rightarrow} $$
+
+
+
 
 
 \subsection{Identifying and Overidentifying Restrictions}
