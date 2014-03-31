@@ -38,15 +38,15 @@
 \maketitle 
 
 \section{Review of Generalized Method of Moments}
-The best reference for GMM is Hall (2005). 
+The best reference for GMM is Hall (2005). These notes draw on several chapters 3, 5, 6, and 7 of the book.
 
 \subsection{Key Assumptions}
 Let $f$ be a $q$-vector of functions of an observable random $r$-vector $v_t$ and a $p$-vector of parameters $\theta \in \Theta \subseteq \mathbb{R}^p$ where $\Theta$ is compact. The GMM estimator is defined as follows:
 	\begin{eqnarray*}
-		\bar{f}_T(\theta) &=& \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\\
-		\widehat{\theta}_T &=& \underset{\theta \in \Theta}{\arg \min} \; \bar{f}_T(\theta)'W_T \bar{f}_T(\theta) 
+		\bar{g}_T(\theta) &=& \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)\\
+		\widehat{\theta}_T &=& \underset{\theta \in \Theta}{\arg \min} \; \bar{g}_T(\theta)'W_T \bar{g}_T(\theta) 
 	\end{eqnarray*}
-The basic assumptions that make this problem well-defined are as follows.
+The basic assumptions required for GMM estimation are as follows.
 
 \paragraph{Strict Stationarity} The sequence $\{v_t\colon -\infty <t <\infty\}$ of random $r$-vectors is a strictly stationary process with sample space $\mathcal{V}\subseteq \mathbb{R}^r$. Importantly, this implies that the expectations of \emph{any} functions of $v_t$ are constant over time.
 
@@ -55,7 +55,7 @@ The basic assumptions that make this problem well-defined are as follows.
 \paragraph{Global Identification} For any $\widetilde{\theta}\in \Theta$ such that $\widetilde{\theta}\neq \theta_0$, $E[f(v_t,\widetilde{\theta})]\neq 0 $.
 
 
-\paragraph{Weighting Matrix} The weighting matrix $W_T$ is positive semi-definite and converges in probability to a postitive definite constant matrix $W$.
+\paragraph{Weighting Matrix} The $(q\times q)$ weighting matrix $W_T$ is positive semi-definite and converges in probability to a postitive definite constant matrix $W$.
 
 \subsection{Regularity Conditions}
 
@@ -69,34 +69,62 @@ The $q$ moment functions $f\colon \mathcal{V}\times \Theta \rightarrow \mathbb{R
 
 \paragraph{Regularity Conditions for Derivative Matrix}
 	\begin{enumerate}[(i)]
-		\item The $q\times p$ matrix $\nabla_\theta f(v_t, \theta)'$ exists and is $v_t$-almost continuous on $\Theta$ 
+		\item The $q\times p$ matrix $\nabla_{\theta'} f(v_t, \theta)$ exists and is $v_t$-almost continuous on $\Theta$ 
 		\item $E[\nabla_{\theta}f(v_t, \theta_0)]<\infty$ exists and is continuous in a  neighborhood $N_\epsilon$ of $\theta_0$
 		\item $\underset{\theta \in N_\epsilon}{\sup}\left| \left| T^{-1} \sum_{t=1}^T \nabla_\theta f(v_t, \theta) - E[\nabla_\theta f(v_t, \theta)]\right|\right| \overset{p}{\rightarrow} 0$
 	\end{enumerate}
 
 \paragraph{Regularity Conditions for Variance of Sample Moment Conditions}
 \begin{enumerate}[(i)]
-	\item 
+	\item $E[f(v_t, \theta_0)f(v_t, \theta_0)']$ exists and is finite.
+	\item $\underset{T\rightarrow \infty}{\lim} Var\left[\sqrt{T}\bar{g}_T(\theta_0)\right]=S$ exists and is a finite, positive definite matrix.
 \end{enumerate}
 
 \subsection{Basic Asymptotic Results}
-Under the set of assumptions given above, we obtain the following basic asymptotic results.
+Under the set of assumptions given above, we obtain the following:
 
-\paragraph{Consistency of GMM Estimator}
+\paragraph{Consistency of GMM Estimator} $\widehat{\theta}_T \overset{p}{\rightarrow} \theta_0$
 
 \paragraph{Asymptotic Normality of GMM Estimator}
+$\sqrt{T} (\widehat{\theta}_T - \theta_0)\overset{d}{\rightarrow} \mathcal{N}(0,MSM')$
+	\begin{eqnarray*}
+		M &=& (G_0 W G_0)^{-1} G_0'W\\
+		G_0 &=& E[\nabla_{\theta'} f(v_t, \theta_0)]
+	\end{eqnarray*}
 
-\paragraph{Asymptotic Normality of Estimated Sample Moment} Under standard regularity conditions, most importantly that $E[f(v_t, \theta_0)]=0$, 
-	$$W_T^{1/2} \sqrt{T} \bar{f}_T(\widehat{\theta}_T) \overset{d}{\rightarrow} $$
+
+\section{The J-test Statistic}
+\subsection{Identifying and Overidentifying Restrictions}The ``Generalized'' in Generalized Method of Moments, comes from the fact that we may use more moment conditions in estimation than we have parameters to estimate. In this case we say that our estimator is ``overidentified.'' In the overidentified case, the GMM estimator does \emph{not} in fact use all of the information contained in the moment conditions for estimation. This turns out to be \emph{crucial} because it is what allows us to carry out specification tests and moment selection. The key point is that GMM estimation can be viewed as  \emph{plain-vanilla method of moments} for a \emph{transformed} set of moment conditions.
+
+GMM can be viewed as an extremum estimation problem in the language of Newey \& McFadden (1994). The population criterion function for this problem is 
+	$$Q(\theta) = E[f(v_t, \theta)']WE[f(v_t, \theta)]$$
+so the first order condition is
+	$$\underset{(p\times q)}{E[\nabla_{\theta'}f(v_t,\theta_0)]'} \underset{(q\times q)}{W_T} \underset{(q\times 1)}{E[f(v_t, \theta_0)]} = 0$$ 
+If we define 
+	$$F(\theta_0) = W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]$$
+we can re-write the FOC as 
+	$$F(\theta_0)' W^{1/2} E[f(v_t, \theta_0)] = 0$$
+Since $W$ is positive definite, so is $W^{1/2}$. This means that  $W^{1/2} E[f(v_t, \theta)]$ can only be zero if $E[f(v_t, \theta)]$ is zero. This occurs \emph{precisely} when $\theta = \theta_0$ by our identification assumption.
+
+Here is the key point: if $p=q$, then $\mbox{rank}\{F(\theta_0)\}=q$. In this case, the first order condition $F(\theta_0)' W^{1/2} E[f(v_t, \theta_0)] = 0$ is \emph{equivalent to} $E[f(v_t, \theta_0)]=0$. More generally, however, when $q >p$ we have $\mbox{rank}\{F(\theta_0)\}=p$.
+ 
+\paragraph{Asymptotic Normality of Estimated Sample Moment}  
+	\begin{eqnarray*}
+		W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) &\overset{d}{\rightarrow}& \mathcal{N}(0, NW^{1/2}S W^{1/2}N')\\
+		N &=& I_q - P(\theta_0)\\
+		P(\theta_0) &=& F(\theta_0) \left[F(\theta_0)' F(\theta_0) \right]^{-1} F(\theta_0)'\\
+		F(\theta_0) &=& W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]
+	\end{eqnarray*}
 
 
 
 
 
-\subsection{Identifying and Overidentifying Restrictions}
-The ``Generalized'' in Generalized Method of Moments, comes from the fact that we may use more moment conditions in estimation than we have parameters to estimate. In this case we say that our estimator is ``overidentified.'' In the overidentified case, the GMM estimator does \emph{not} in fact use all of the information contained in the moment conditions for estimation. This turns out to be \emph{crucial} because it is what allows us to carry out specification tests and moment selection. The key point is that GMM estimation can be viewed as a \emph{plain-vanilla method of moments} problem for a \emph{transformed} set of moment conditions.
 
-The population moment condition for GMM estimation is $E[f(v_t, \theta_0)]=0$ where $f$ is $q\times 1$. If $f$ is differentiable and we can interchange expectation and derivative, then
+
+
+
+
 
 
 \section{Andrews' GMM Moment Selection Criteria}
@@ -204,7 +232,7 @@ But since the second term is a \emph{constant}, this is simply $\Delta_T(c_1,c_0
 So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in Case 1 GMM-AIC is \emph{random even in the limit}. Putting these two results together, we see that, although it will never select a set of false moment conditions, GMM-AIC chooses \emph{randomly} among the set of correct moment conditions. In other words, it will not necessarily select $c_0$ as $T\rightarrow \infty$. 
 
 \subsection{Problems with Andrews' Approach}
-Irrelevant moment conditions: Hall \& Peixe. Identification condition is stronger than it sounds, can easily fail in simple examples. Comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$. This motivates FMSC, descibed in the next section.
+Irrelevant moment conditions: Hall \& Peixe. Identification condition is stronger than it sounds, can easily fail in simple examples. Another issue worth pointing out is that the GMM-AIC isn't \emph{really} an AIC-type criterion: it simply has a penalty term that looks like AIC. But remember that there was a particular \emph{reason} why the AIC took the form that it did. This isn't how Andrews proceeds, since the paper is mainly interested in sufficient conditions for consistent selection. Comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$. This motivates FMSC, descibed in the next section.
 
 \section{The Focused Moment Selection Criterion}
 DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
