@@ -96,21 +96,26 @@ $\sqrt{T} (\widehat{\theta}_T - \theta_0)\overset{d}{\rightarrow} \mathcal{N}(0,
 \section{The J-test Statistic}
 \subsection{Identifying and Overidentifying Restrictions}The ``Generalized'' in Generalized Method of Moments, comes from the fact that we may use more moment conditions in estimation than we have parameters to estimate. In this case we say that our estimator is ``overidentified.'' In the overidentified case, the GMM estimator does \emph{not} in fact use all of the information contained in the moment conditions for estimation. This turns out to be \emph{crucial} because it is what allows us to carry out specification tests and moment selection. The key point is that GMM estimation can be viewed as  \emph{plain-vanilla method of moments} for a \emph{transformed} set of moment conditions.
 
+% GMM can be viewed as an extremum estimation problem in the language of Newey \& McFadden (1994). The population criterion function for this problem is 
+% 	$$Q(\theta) = E[f(v_t, \theta)']WE[f(v_t, \theta)]$$
+% so the first order condition is
+% 	$$\underset{(p\times q)}{E[\nabla_{\theta'}f(v_t,\theta_0)]'} \underset{(q\times q)}{W_T} \underset{(q\times 1)}{E[f(v_t, \theta_0)]} = 0$$ 
+% If we define 
+% 	$$F(\theta_0) = W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]$$
+% we can re-write the FOC as 
+% Since $W$ is positive definite, so is $W^{1/2}$. This means that  $W^{1/2} E[f(v_t, \theta)]$ can only be zero if $E[f(v_t, \theta)]$ is zero. This occurs \emph{precisely} when $\theta = \theta_0$ by our identification assumption.
+
+% Here is the key point: if $p=q$, then $\mbox{rank}\{F(\theta_0)\}=q$. In this case, the first order condition $F(\theta_0)' W^{1/2} E[f(v_t, \theta_0)] = 0$ is \emph{equivalent to} $E[f(v_t, \theta_0)]=0$. More generally, however, when $q >p$ we have $\mbox{rank}\{F(\theta_0)\}=p$.
  
-\paragraph{Asymptotic Normality of Estimated Sample Moment}  
+\paragraph{Asymptotic Normality of Estimated Sample Moment}Using Taylor Expansion arguments, we can show that 
+	$$W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) = \left[I_q - P(\theta_0) \right]W^{1/2} \sqrt{T} \bar{g}_T(\theta_0) + o_p(1)$$
+where 
 	\begin{eqnarray*}
-		W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) &\overset{d}{\rightarrow}& \mathcal{N}(0, NW^{1/2}S W^{1/2}N')\\
-		N &=& I_q - P(\theta_0)\\
-		P(\theta_0) &=& F(\theta_0) \left[F(\theta_0)' F(\theta_0) \right]^{-1} F(\theta_0)'\\
+	P(\theta_0) &=& F(\theta_0) \left[F(\theta_0)' F(\theta_0) \right]^{-1} F(\theta_0)'\\
 		F(\theta_0) &=& W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]
 	\end{eqnarray*}
-
-
-
-
-
-
-
+The matrix $P(\theta_0)$ is called the \emph{identifying restrictions} and corresponds to the particular projection of $W^{1/2}E[f(v_t,\theta)]$ actually used in GMM estimation. Its orthogonal complement, $N = I_q - P(\theta_0)$, is called the \emph{overidentifying restrictions}. The expansion just stated shows that the asymptotic behavior of the estimated sample moment is \emph{entirely governed by the overidentifying restrictions}. Via a CLT for $\sqrt{T} \bar{g}_T(\theta_0)$, it follows that
+	$$W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) \overset{d}{\rightarrow} \mathcal{N}(0, NW^{1/2}S W^{1/2}N')$$
 
 
 
