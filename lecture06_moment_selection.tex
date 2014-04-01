@@ -103,6 +103,7 @@ $\sqrt{T} (\widehat{\theta}_T - \theta_0)\overset{d}{\rightarrow} \mathcal{N}(0,
 % If we define 
 % 	$$F(\theta_0) = W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]$$
 % we can re-write the FOC as 
+% 	$$F(\theta_0)' W^{1/2} E[f(v_t, \theta_0)] = 0$$
 % Since $W$ is positive definite, so is $W^{1/2}$. This means that  $W^{1/2} E[f(v_t, \theta)]$ can only be zero if $E[f(v_t, \theta)]$ is zero. This occurs \emph{precisely} when $\theta = \theta_0$ by our identification assumption.
 
 % Here is the key point: if $p=q$, then $\mbox{rank}\{F(\theta_0)\}=q$. In this case, the first order condition $F(\theta_0)' W^{1/2} E[f(v_t, \theta_0)] = 0$ is \emph{equivalent to} $E[f(v_t, \theta_0)]=0$. More generally, however, when $q >p$ we have $\mbox{rank}\{F(\theta_0)\}=p$.
