@@ -128,7 +128,7 @@ Let $f_{max}$ be a $(q\times 1)$ vector containing all of the moment functions u
  	V_\theta(c) &=& \left[G_0(c) S(c)^{-1} G_0(c) \right]^{-1}\\
  	G_0(c) &=& E[\nabla_\theta' f(v_t, \theta_0; c)]\\
  	S(c) &=& \lim_{T\rightarrow\infty} Var\left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \theta_0;c)\right]\\
- 	J_T(c) &=& \left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \widehat{\theta}_T(c);c) \right]' \widehat{S}_T(c)^{-1}\left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \widehat{\theta}_T(c);c) \right]
+ 	J_T(c) &=& T \bar{g}_T\left(\widehat{\theta}_T(c);c\right)'\widehat{S}_T(c)^{-1}\bar{g}_T\left(\widehat{\theta}_T(c);c\right)
  \end{eqnarray*}
 where $\widehat{S}(c)$ is a consistent estimator of $S(c)$.
 
@@ -137,16 +137,16 @@ So how should we choose $c$? Two principles come to mind. First, we know that us
 
 But what exactly does this mean? Identification is a bit tricky when we start to consider the possibility that some of our moment conditions do not have expectation zero. The potential problem is that different subsets of $f_{\max}$ could satisfy the population moment condition at \emph{different values} of $\theta$. We will need to rule this possbility out somehow. Let $\mathcal{Z}^0$ denote the set of all candidates $c$ such that $E[f(v_t, \theta; c)] = 0$ \emph{for some} $\theta\in \Theta$. Then, of all the candidates $c\in \mathcal{Z}^0$, let $\mathcal{MZ}^0$ denote those that contain the \emph{maximum number} of elements of $f_{max}$. For Andrews' suggestion to be meaningful, we need to assume that $\mathcal{MZ}^0$ contains \emph{exactly one element}, which we'll call $c_0$.
 
+Andrews proposes adding a ``bonus term'' to the $J$-test statistic, leading to moment selection critera (MSC) of the form
+	$$MSC(c) = J_T(c) - B(T, |c|)$$
+where $B$ is a ``bonus term'' that ``rewards'' specifications that use more moment conditions in estimation and may depend on sample size. In calculating the $J$-test statistic, Andrews recommends using a \emph{centered} covariance matrix estimator
+	$$\widehat{S}(c) = \frac{1}{T} \sum_{t=1}^T \left[f(v_t, \widehat{\theta}_T(c);c) - \bar{g}_T(\widehat{\theta}_T(c); c) \right]\left[f(v_t, \widehat{\theta}_T(c);c) - \bar{g}_T(\widehat{\theta}_T(c); c) \right]'$$
+based on the weighing matrix that \emph{would be} efficient if the moment conditions were correctly specified. This estimator is consistent for $S(c)$ \emph{regardless} of whether the population moment conditions hold. To carry out moment selection, we choose $c$ to \emph{minimize} the criterion, defining $\widehat{c}_T = \underset{c\in\mathcal{C}}{\arg\min} \;\mbox{MSC}(c)$.
 
 
-
-Consider moment selection criteria of the form $\mbox{MSC}(c) = J_T(c) - B(T, |c|)$ where $B$ is a ``bonus term.''
-
-Select according to $\widehat{c}_T = \underset{c\in\mathcal{C}}{\arg\min} \;\mbox{MSC}(c)$
-
-Centered covariance matrix estimator.
 
 \subsection{Consistent Selection}
+The main point of Andrews (1999) is to establish sufficient conditions on the bonus term that guarantee consistent selection of any and all correctly specified moment conditions with probability approaching one in the limit. First we'll take a look at the conditions, and then the proof.
 
 \paragraph{Regularity Conditions for the $J$-test Statistic}
 	\begin{enumerate}[(i)]
@@ -155,7 +155,7 @@ Centered covariance matrix estimator.
 	\end{enumerate}
 
 
-\paragraph{Regularity Conditions for Bonus Term}
+\paragraph{Regularity Conditions for Bonus Term} The bonus term can be written as $B(|c|,T) = \kappa_T h(|c|)$, where
 	\begin{enumerate}[(i)]
 		\item $h(\cdot)$ is strictly increasing
 		\item $\kappa_T \rightarrow \infty$ as $T\rightarrow \infty$ and $\kappa_T =o(T)$
@@ -201,7 +201,7 @@ By the second Regularity Condition for the $J$-test Statistic, $a(c_2) >0$. Thus
 \end{proof}
 
 \subsection{Which Criteria Are Consistent?}
-Recall from above that:
+Among some other possibility, Andrews (1999) considers the following criteria which are constructed by making the bonus term resemble some of our old friends from maximum likelihood model selection:
 \begin{eqnarray*}
 	\mbox{GMM-BIC}(c) &=& J_T(c) - \left(|c| - p\right)\log(T)\\
 	\mbox{GMM-HQ}(c) &=& J_T(c) - 2.01\left(|c| - p\right)\log(\log(T))\\
@@ -225,7 +225,11 @@ But since the second term is a \emph{constant}, this is simply $\Delta_T(c_1,c_0
 So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in Case 1 GMM-AIC is \emph{random even in the limit}. Putting these two results together, we see that, although it will never select a set of false moment conditions, GMM-AIC chooses \emph{randomly} among the set of correct moment conditions. In other words, it will not necessarily select $c_0$ as $T\rightarrow \infty$. 
 
 \subsection{Problems with Andrews' Approach}
+The identification condition is actually much stronger than it sounds. It's easy to write down simple and completely reasonable examples where we'd like to be able to carry out moment selection but the assumption fails.
+
 Irrelevant moment conditions: Hall \& Peixe. Identification condition is stronger than it sounds, can easily fail in simple examples. Another issue worth pointing out is that the GMM-AIC isn't \emph{really} an AIC-type criterion: it simply has a penalty term that looks like AIC. But remember that there was a particular \emph{reason} why the AIC took the form that it did. This isn't how Andrews proceeds, since the paper is mainly interested in sufficient conditions for consistent selection. Comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$. This motivates FMSC, descibed in the next section.
+
+\todo[inline]{Cite various other papers: Hong, Preston and Shum; Andrews and Lu; Liao; Cheng \& Liao, etc.}
 
 \section{The Focused Moment Selection Criterion}
 DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
