@@ -13,6 +13,7 @@
 \usepackage{threeparttable}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{hyperref}
 
 \newtheorem{assump}{Assumption}[section]
 \newtheorem{pro}{Proposition}[section]
@@ -224,18 +225,29 @@ But since the second term is a \emph{constant}, this is simply $\Delta_T(c_1,c_0
 
 So where does this leave us? In Case 2 GMM-AIC cosistently selects $c_0$, but in Case 1 GMM-AIC is \emph{random even in the limit}. Putting these two results together, we see that, although it will never select a set of false moment conditions, GMM-AIC chooses \emph{randomly} among the set of correct moment conditions. In other words, it will not necessarily select $c_0$ as $T\rightarrow \infty$. 
 
-\subsection{Problems with Andrews' Approach}
-The identification condition is actually much stronger than it sounds. It's easy to write down simple and completely reasonable examples where we'd like to be able to carry out moment selection but the assumption fails.
+\subsection{Extensions of Andrews (1999)}
+Two followup papers extended the criteria described above. Andrews and Lu (2001) consider simultaneous model \emph{and} moment selection for GMM. The basic idea is the same, except that the parameter vector $\theta$ is restricted under some specifications. For example, we may consider setting a coefficient to zero. Accordingly, the ``bonus term'' depends both on the number of moment conditions used in estimation and the number of parameters that are estimated. Hong, Preston \& Shum (2003) extend Andrews and Lu (2001) to Generalized Empirical Likelihood estimators. For details on this class of estimators and their properties, see Newey \& Smith (2004). 
 
-Irrelevant moment conditions: Hall \& Peixe. Identification condition is stronger than it sounds, can easily fail in simple examples. Another issue worth pointing out is that the GMM-AIC isn't \emph{really} an AIC-type criterion: it simply has a penalty term that looks like AIC. But remember that there was a particular \emph{reason} why the AIC took the form that it did. This isn't how Andrews proceeds, since the paper is mainly interested in sufficient conditions for consistent selection. Comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$. This motivates FMSC, descibed in the next section.
+\subsection{Drawbacks to Andrews' Approach}
+Andrews (1999) has a very specific goal: to state conditions under which it is possible to carry out consistent moment selection for GMM. This is an important and very useful contribution. Nevertheless, there are several reasons why the framework used in Andrews (1999) may not be appropriate in practical applications of GMM moment selection. 
 
-\todo[inline]{Cite various other papers: Hong, Preston and Shum; Andrews and Lu; Liao; Cheng \& Liao, etc.}
+First, the identification condition $\mathcal{MZ}^0 = \{c_0\}$ is in fact stronger than it may appear. Section 7.3.1 of Hall (2005) gives an example: a linear IV model with one endogenous regressor, jointly normal errors, and eight instruments. Six of the instruments are exogenous, but two are in fact endogenous. The goal of moment selection is to find the exogenous instruments. Even in this very simple setting, the identification condition fails: there are two \emph{different} candidates, each containing six moment conditions, for which it is possible to find a parameter value at which the population moment conditions are satisfied. One of these parameters is the true $\theta$ and the other is not. The problem with the identification assumption isn't so much that it's strong. Without strong assumptions, it's hard to learn anything. The problem is that it's not especially \emph{transparent}: when considering a particular problem it can be hard to get a handle on whether this assumption makes sense.  
+
+
+A second problem concerns irrelevant moment conditions. The idea of using any and all correctly specified moment conditions in estimation is based on the fact that the asymptotic variance of the GMM estimator \emph{cannot increase} as we use additional moment conditions in estimation. The finite-sample situation, however, can be very different. Moment conditions that add very little information, so-called ``irrelevant moment conditions,'' can lead to very poor finite sample performance. The GMM-MSC of Andrews (1999) does not address this problem. Two papers that do are Hall \& Peixe (2003) and Hall, Inoue, Jana \& Shin (2003). More recently, Chen \& Liao (2013) suggest using LASSO, which we'll study in an upcoming lecture, to choose the valid and revelant moment conditions.
+
+
+A third issue concerns the nature of the analogy between the AIC and BIC and their GMM-MSC counterpoints. Like BIC, GMM-BIC is consistent and like AIC, GMM-AIC is not. The relationship ends here, however. As we saw in our first lectures of the semester there is a \emph{very specific idea} behind both the AIC and the BIC: the former attempts to correct the bias in the maximized log-likelihood as an estimator of the KL divergence, and the latter provides a large-sample approximation to the Bayesian posterior model probabilities under a uniform prior. Neither of these ideas has anything to do with the arguments behind the GMM-MSC criteria. Beyond conditions on the asymptotic behavior of the bonus term, any relationship to the AIC and BIC is merely cosmetic. This raises an interesting question: can we re-work any of the principles we used to derive model selection criteria for maximum likelihood so that they can be applied to GMM moment selection? The answer turns out to be \emph{yes}, as we will see below.
+
+
 
 \section{The Focused Moment Selection Criterion}
-DiTraglia (2014). The motivation is simply that it's comparatively rare that we are actually interested in determining whether our moment conditions are correct. More typically, the goal is to estimate $\theta$.
+This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.\footnote{If you're really interested in this, check back again after the semester is over. I'll be posted an updated version with R and C++ source code soon.}
 
+\subsection{Introduction}
+In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
 
-\todo[inline]{Add asymptotics for Andrews criteria under my asymptotics.}
+\subsection{Basic Framework and Notation}
 
 
 \end{document}
