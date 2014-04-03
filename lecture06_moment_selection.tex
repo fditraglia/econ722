@@ -307,29 +307,25 @@ Where
 $$\sqrt{n}\left(\widehat{\mu}_S - \mu_0\right)\rightarrow_d-\nabla_\theta\mu(\theta_0)'K_S M_S$$
 $$\mbox{AMSE}\left(\widehat{\mu}_S\right) = \nabla_\theta\mu(\theta_0)'K_S \Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\tau\tau'\end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)$$
 
-\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition. Let $\widehat{\theta}_v$ denote the \emph{valid estimator}, that is the estimator that uses only moment conditions in $g$. Our identification assumption ensures that this estimator identifies $\theta_0$. We have
+\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition. Let $\widehat{\theta}_{valid}$ denote the \emph{valid estimator}, that is the estimator that uses only moment conditions in $g$. Our identification assumption ensures that this estimator identifies $\theta_0$. We have
 \begin{eqnarray*}
-	\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) &=&  -K_v \sqrt{n}g_n(\theta_0) + o_p(1)\\
+	\sqrt{n}\left(\widehat{\theta}_{valid} - \theta_0 \right) &=&  -K_v \sqrt{n}g_n(\theta_0) + o_p(1)\\
 	&\overset{d}{\rightarrow}& -K_v M_h
 \end{eqnarray*}
-So this estimator has \emph{no asymptotic bias}. Under local mis-specification, no consistent estimator of $\tau$ exists, but we can construct an asymptotically unbiased estimator by plugging $\widehat{\theta}_v$ into the sample analogue of the $h$ moment conditions as follows:
-
-
-valid estimator uses only moment conditions in $g$: $\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) =  -K_v \sart{n}g_n(\theta_0) + o_p(1) \overset{d}{\rightarrow} -K_v M_h$
-
-Suppose that $p\geq r$. Then, $\widehat{\tau} = \sqrt{n} h_n(\widehat{\theta}_v) \rightarrow_d\Psi M$ where $\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$. Therefore, we have $\Psi M \sim \mathcal{N}_q(\tau, \Psi \Omega \Psi')$.
-
-By a mean-value expansion:
-	\begin{eqnarray*}
-	\widehat{\tau} &=& \sqrt{n} h_n\left(\widehat{\theta}_{valid}\right) = \sqrt{n}h_n(\theta_0) + H \sqrt{n}\left(\widehat{\theta}_{valid} - \theta_0\right) + o_p(1)\\
+So this estimator has \emph{no asymptotic bias}. Under local mis-specification, no consistent estimator of $\tau$ exists, but we can construct an asymptotically unbiased estimator by plugging $\widehat{\theta}_{valid}$ into the sample analogue of the $h$ moment conditions. In particular, the estimator is $\sqrt{n} h_n\left(\widehat{\theta}_{valid}\right)$. By a Mean-Value Expansion:
+\begin{eqnarray*}
+	\widehat{\tau} &=& \sqrt{n} h_n\left(\widehat{\theta}_{valid}\right)\\
+	& =& \sqrt{n}h_n(\theta_0) + H \sqrt{n}\left(\widehat{\theta}_{valid} - \theta_0\right) + o_p(1)\\
 		&=&-HK_{v} \sqrt{n}f_n(\theta_0) + \mathbf{I}_q\sqrt{n}h_n(\theta_0) +o_p(1)\\
-		&=& \Psi \sqrt{n}f_n(\theta_0) + o_p(1) \rightarrow_d\Psi M
+		&=& \Psi \sqrt{n}f_n(\theta_0) + o_p(1)
 \end{eqnarray*}
+Thus, $\widehat{\tau}\overset{d}{\rightarrow}\Psi M$ where $\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$, so we have $\Psi M \sim \mathcal{N}_q(\tau, \Psi \Omega \Psi')$.
+
 
 \paragraph{Asymptotically Unbiased Estimator of $\tau\tau'$}
 Let $\widehat{\Omega}$ and $\widehat{\Psi}$ be consistent estimators of $\Omega$ and $\Psi$. Then, $ \widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' \rightarrow_d\Psi \left(MM' - \Omega\right)\Psi' $. That is, $\widehat{\tau}\widehat{\tau}' - \ \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' $ provides an asymptotically unbiased estimator of $\tau\tau'$.
 
-\paragraph{The Focused Moment Selection Criterion} The following expression provides an asymptotically unbiased estimator of $\mbox{AMSE}(\widehat{\mu}_S)$
+\paragraph{The Focused Moment Selection Criterion} At long last, we can write down the FMSC. The following expression provides an asymptotically unbiased estimator of $\mbox{AMSE}(\widehat{\mu}_S)$
 $$\mbox{FMSC}_n(S) = \nabla_\theta\mu(\widehat{\theta})'\widehat{K}_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}'\end{array}\right] + \widehat{\Omega}\right\}\Xi_S'\widehat{K}_S' \nabla_\theta\mu(\widehat{\theta})$$
 
 \subsection{A Very Simple Example}
@@ -340,7 +336,7 @@ This is the simplest possible example of the FMSC: choosing between OLS and 2SLS
 		\end{eqnarray*}
 It's no problem accomodating additional exogenous control regressors: just project them out of the system before proceeding. 
 
-Now, if we want to estimate $\beta$, the one option is to use the 2SLS estimator
+Now, if we want to estimate $\beta$, one option is to use the 2SLS estimator
 	$$\widetilde{\beta} = \left[ \textbf{x}'P_Z\textbf{x}\right]^{-1}\textbf{x}'P_Z \textbf{y}$$
 Another option is to use the OLS estimator
 	$$\widehat{\beta} = \left(\textbf{x}'\textbf{x} \right)^{-1}\textbf{x}'\textbf{y}$$
@@ -354,7 +350,7 @@ Because everything is linear, it's straightforward to derive the limiting distri
   \mbox{AMSE(2SLS)} &=& \frac{\sigma_\epsilon^2}{\gamma^2}
   \end{eqnarray*}
 where $\sigma_x^2 = \gamma^2 + \sigma_v^2$, $\gamma^2 = \boldsymbol{\pi}'Q_z \boldsymbol{\pi}$, and $Q_z =\mbox{plim} \; Z'Z/n$. Thus, the AMSE of the OLS estimator is lower than that of the IV estimator whenever
-$$\frac{\tau^2}{\sigma_v^2 \sigma_\epsilon^2}  < \frac{\boldsymbol{\pi}'Q_z \boldsymbol{\pi} + \sigma_v^2}{\boldsymbol{\pi}'Q_z \boldsymbol{\pi}} = \frac{\sigma_x^2}{\gamma^2} $$
+$$\frac{\tau^2}{\sigma_v^2 \sigma_\epsilon^2}  < \frac{\sigma_x^2}{\gamma^2} $$
 The usual estimators of $\sigma_x^2$, $\gamma^2$, and $\sigma_v^2$ remain consistent under local mis-specification:
   \begin{eqnarray*}
      \widehat{\sigma}_x^2 &=& n^{-1}\mathbf{x}' \mathbf{x} \overset{p}{\rightarrow} \boldsymbol{\pi}'Q_z \boldsymbol{\pi} + \sigma_v^2\\
@@ -371,5 +367,5 @@ Hence
 	$$\widehat{\tau}^2 - \widehat{\sigma}_\epsilon^2\widehat{\sigma}_x^2 \left(\frac{\widehat{\sigma}_v^2}{\widehat{\gamma}^2}\right)$$
 is an asymptotically unbiased estimator of $\tau^2$. Substituting this quantity and rearranging, the FMSC tells us to use the OLS estimator whenever
 	$$\widehat{T}_{FMSC} = \frac{\widehat{\tau}^2 \widehat{\gamma}^2}{\widehat{\sigma}_v^2 \widehat{\sigma}_\epsilon^2 \widehat{\sigma}_x^2} < 2$$
-After some algebra, it turns out that $\widehat{T}_{FMSC}$ is \emph{numerically equivalent} to the Hausman Test statistic and that $\widehat{T}_{FMSC} \underset{d}{\rightarrow} \chi^2(1)$ when $\tau = 0$. Thus, in the simple example of choosing between OLS and 2SLS, the FMSC is identical to carrying out a Hausman Test with a critical value of 2, which corresponds to a 16\% significance level. Notice that this is exactly the same significance level that appeared when we interpreted the AIC as a hypothesis test in our simple example of estimating a normal mean! 
+After some algebra, it turns out that $\widehat{T}_{FMSC}$ is \emph{numerically equivalent} to the Hausman Test statistic and that $\widehat{T}_{FMSC} \overset{d}{\rightarrow} \chi^2(1)$ when $\tau = 0$. Thus, in the simple example of choosing between OLS and 2SLS, the FMSC is identical to carrying out a Hausman Test with a critical value of 2, which corresponds to a 16\% significance level. Notice that this is exactly the same significance level that appeared when we interpreted the AIC as a hypothesis test in our simple example of estimating a normal mean! This relationship only holds, so far as I know, for the present example. Viewed from the opposite perspective, these derivations indicate that the textbook procedure of using a Hausman Test to choose between OLS and 2SLS can be be rigorously grounded in a loss-based framework. The usual significance levels of 5 or 10\%, however, are \emph{too lenient}: they would lead us to use OLS in some situations that do \emph{not} lead to a favorable bias-variance tradeoff. 
 \end{document}
