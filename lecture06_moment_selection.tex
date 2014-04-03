@@ -242,7 +242,7 @@ A third issue concerns the nature of the analogy between the AIC and BIC and the
 
 
 \section{The Focused Moment Selection Criterion}
-This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.\footnote{If you're really interested in this, check back again after the semester is over. I'll be posted an updated version with R and C++ source code soon.}
+This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.\footnote{If you're really interested in this, check back again after the semester is over. I'll be posting an updated version with R and C++ source code soon.}
 
 \subsection{Introduction}
 In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. The basic idea is that we might want to use a moment condition that is \emph{slightly mis-specified} provided that it is sufficiently informative about $\mu$: the decrease in variance could easily outweigh the increase in bias in a MSE-sense. This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
@@ -260,24 +260,41 @@ In practical applications of GMM, we are rarely interested in determining which 
 
 \paragraph{Identification Condition} $E[g(Z_{ni},\theta_0)]=0$ identifies $\theta_0$.
 
-\paragraph{Moment Selection Matrix} $\Xi_S$
+\paragraph{Moment Selection Matrix} The matrix of zeros and ones $\Xi_S$ selects the moment conditions used to estimate candidate specification $S$.
 
 \paragraph{Candidate GMM Estimator}
 	$$\widehat{\theta}_S = \underset{\theta \in \Theta}{\arg \min} \left[\Xi_S f_n(\theta)\right]' \left[ \Xi_S \widetilde{W} \Xi_S'\right] \; \left[ \Xi_S f_n(\theta)\right]$$
-
+where
 $$f_n(\theta) = \frac{1}{n}\sum_{i=1}^n f(Z_{ni},\theta) = \left[\begin{array}{c} g_n(\theta)\\ h_n(\theta) \end{array} \right]=\left[\begin{array}{c}n^{-1}\sum_{i=1}^n g(Z_{ni},\theta) \\ n^{-1}\sum_{i=1}^n h(Z_{ni},\theta) \end{array}\right]$$
+and $\widetilde{W}$ is positive semi-definite weighting matrix that converges in probability to a positive definite matrix $W$.
 
-\paragraph{Notation}
-Let $G = \expect\left[\nabla_{\theta} \; g(Z,\theta_0)\right]$, $H = \expect\left[\nabla_{\theta} \; h(Z,\theta_0)\right]$, and $F = (G', H')'$. Similarly, let $\Omega = Var\left[ f(Z,\theta_0) \right]$ where $\Omega$ is partitioned into blocks $\Omega_{gg}$, $\Omega_{gh}$, $\Omega_{hg}$, and $\Omega_{hh}$ conformably with the partition of $f$ by $g$ and $h$. Notice that each of these expressions involves the limit random variable $Z$ rather than $Z_{ni}$, so that the corresponding expectations are taken with respect to a distribution for which all moment conditions are correctly specified.
+\paragraph{Some Notation}
+	Let $Z$ denote the limiting random variable, for which \emph{all moment conditions are correctly specified} and define
+	$$F = \left[\begin{array}
+	{c} G \\ H
+\end{array} \right] = \left[ \begin{array}
+	{c} \nabla_{\theta} \; g(Z,\theta_0) \\ \nabla_{\theta} \; h(Z,\theta_0)
+\end{array}\right]$$
+and
+	$$\Omega = Var\left[ f(Z,\theta_0) \right] = \left[\begin{array}
+		{cc}
+		\Omega_{gg} & \Omega_{gh}\\
+		\Omega_{hg} & \Omega_{hh}
+	\end{array} \right]$$
+
 
 \paragraph{High-Level Condition I -- Expansion for GMM}
-To simplify the notation let $F_S = \Xi_S F$, $W_S = \Xi_S W\Xi_S'$, $M_S = \Xi_S M$, $\Omega_S = \Xi_S \Omega\Xi_S'$, and define $K_S  = [F_S'W_SF_S]^{-1} F_S'W_S$.
-
-
 $$\sqrt{n}\left(\widehat{\theta}_S - \theta_0\right) = -K_S\sqrt{n}\left[\Xi_S f_n(\theta_0)\right] + o_p(1)$$
+Where
+	\begin{eqnarray*}
+	 	F_S &=& \Xi_S F\\
+	 	W_S &=& \Xi_S W\Xi_S'\\
+	 	M_S &=& \Xi_S M\\
+	 	\Omega_S &=& \Xi_S \Omega\Xi_S'\\
+	 	K_S  &=& [F_S'W_SF_S]^{-1} F_S'W_S
+	 \end{eqnarray*} 
 
 
-$$K_S = \left(F_S' W_S F_S  \right)^{-1}F_S'W_S$$
 
 \paragraph{High-Level Condition II -- CLT} $\sqrt{n}f_n(\theta_0) \overset{d}{\rightarrow}M$ where
 	$$M = \left[\begin{array}{c} M_g \\ M_h\end{array} \right] \sim N\left( \left[\begin{array}{c}0\\ \tau \end{array} \right], \Omega \right)$$
@@ -290,7 +307,15 @@ $$K_S = \left(F_S' W_S F_S  \right)^{-1}F_S'W_S$$
 $$\sqrt{n}\left(\widehat{\mu}_S - \mu_0\right)\rightarrow_d-\nabla_\theta\mu(\theta_0)'K_S M_S$$
 $$\mbox{AMSE}\left(\widehat{\mu}_S\right) = \nabla_\theta\mu(\theta_0)'K_S \Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\tau\tau'\end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)$$
 
-\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition: valid estimator uses only moment conditions in $g$: $\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) =  -K_v \sart{n}g_n(\theta_0) + o_p(1) \overset{d}{\rightarrow} -K_v M_h$
+\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition. Let $\widehat{\theta}_v$ denote the \emph{valid estimator}, that is the estimator that uses only moment conditions in $g$. Our identification assumption ensures that this estimator identifies $\theta_0$. We have
+\begin{eqnarray*}
+	\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) &=&  -K_v \sqrt{n}g_n(\theta_0) + o_p(1)\\
+	&\overset{d}{\rightarrow}& -K_v M_h
+\end{eqnarray*}
+So this estimator has \emph{no asymptotic bias}. Under local mis-specification, no consistent estimator of $\tau$ exists, but we can construct an asymptotically unbiased estimator by plugging $\widehat{\theta}_v$ into the sample analogue of the $h$ moment conditions as follows:
+
+
+valid estimator uses only moment conditions in $g$: $\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) =  -K_v \sart{n}g_n(\theta_0) + o_p(1) \overset{d}{\rightarrow} -K_v M_h$
 
 Suppose that $p\geq r$. Then, $\widehat{\tau} = \sqrt{n} h_n(\widehat{\theta}_v) \rightarrow_d\Psi M$ where $\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$. Therefore, we have $\Psi M \sim \mathcal{N}_q(\tau, \Psi \Omega \Psi')$.
 
@@ -308,6 +333,43 @@ Let $\widehat{\Omega}$ and $\widehat{\Psi}$ be consistent estimators of $\Omega$
 $$\mbox{FMSC}_n(S) = \nabla_\theta\mu(\widehat{\theta})'\widehat{K}_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}'\end{array}\right] + \widehat{\Omega}\right\}\Xi_S'\widehat{K}_S' \nabla_\theta\mu(\widehat{\theta})$$
 
 \subsection{A Very Simple Example}
-OLS versus IV. Don't do the derivation, just show them hot to set it up, tell them the answer, and relate it to the Hausman Test and AIC.
+This is the simplest possible example of the FMSC: choosing between OLS and 2SLS. Suppose that we have a vector of valid instruments $\mathbf{z}$ and we want to estimate the coefficient $\beta$ on a single endogenous regressor $x$ in the following linear system:
+    	\begin{eqnarray*}
+			y_{i} &=& \beta x_{i}  + \epsilon_{i}\\
+	x_{i} &=& \mathbf{z}_{i}' \boldsymbol{\pi} + v_{i}
+		\end{eqnarray*}
+It's no problem accomodating additional exogenous control regressors: just project them out of the system before proceeding. 
 
+Now, if we want to estimate $\beta$, the one option is to use the 2SLS estimator
+	$$\widetilde{\beta} = \left[ \textbf{x}'P_Z\textbf{x}\right]^{-1}\textbf{x}'P_Z \textbf{y}$$
+Another option is to use the OLS estimator
+	$$\widehat{\beta} = \left(\textbf{x}'\textbf{x} \right)^{-1}\textbf{x}'\textbf{y}$$
+But why on earth would we ever want to use OLS? If $x$ is endogenous and we have some valid instruments, shouldn't we use 2SLS? The answer, as you may have guessed is: ``it depends: there's a bias-variance tradeoff.'' By using 2SLS, we guarantee that our estimator will be asymptotically unbiased, but this comes at the cost of a much higher asymptotic variance. If $x$ is not \emph{too endogenous} it could make sense to use OLS rather than IV. This is exactly the idea that the FMSC tries to capture.
+
+To put this problem into the FMSC framework, we write
+	 $$E_n \left[\begin{array}{c} \mathbf{z}_i \epsilon_i \\ x_i \epsilon_i \end{array}\right] = \left[\begin{array}{c} \mathbf{0} \\ \tau/\sqrt{n} \end{array}\right]$$
+Because everything is linear, it's straightforward to derive the limiting distributions of the OLS and 2SLS estimators. After some algebra, we find that the AMSE expressions take a very simple form:
+  \begin{eqnarray*}
+  \mbox{AMSE(OLS)} &=& \frac{\tau^2}{\sigma_x^4} + \frac{\sigma_\epsilon^2}{\sigma_x^2}\\
+  \mbox{AMSE(2SLS)} &=& \frac{\sigma_\epsilon^2}{\gamma^2}
+  \end{eqnarray*}
+where $\sigma_x^2 = \gamma^2 + \sigma_v^2$, $\gamma^2 = \boldsymbol{\pi}'Q_z \boldsymbol{\pi}$, and $Q_z =\mbox{plim} \; Z'Z/n$. Thus, the AMSE of the OLS estimator is lower than that of the IV estimator whenever
+$$\frac{\tau^2}{\sigma_v^2 \sigma_\epsilon^2}  < \frac{\boldsymbol{\pi}'Q_z \boldsymbol{\pi} + \sigma_v^2}{\boldsymbol{\pi}'Q_z \boldsymbol{\pi}} = \frac{\sigma_x^2}{\gamma^2} $$
+The usual estimators of $\sigma_x^2$, $\gamma^2$, and $\sigma_v^2$ remain consistent under local mis-specification:
+  \begin{eqnarray*}
+     \widehat{\sigma}_x^2 &=& n^{-1}\mathbf{x}' \mathbf{x} \overset{p}{\rightarrow} \boldsymbol{\pi}'Q_z \boldsymbol{\pi} + \sigma_v^2\\
+      \widehat{\gamma}^2 &=& n^{-1}\mathbf{x}' Z (Z'Z)^{-1}Z' \mathbf{x} \overset{p}{\rightarrow} \boldsymbol{\pi}'Q_z \boldsymbol{\pi} \\
+      \widehat{\sigma}_v^2 &=& \widehat{\sigma}_x^2 - \widehat{\gamma}^2
+  \end{eqnarray*}
+To get a consistent estimator of $\sigma_\epsilon^2$ under local mis-specification, we can use either the residuals from OLS or 2SLS, but 2SLS may be more robust. To implement the FMSC for this problem, we simply need an asymptotically unbiased estimator of $\tau^2$. 
+
+The asymptotically unbiased estimator of $\tau$ for this problem is 
+  $$\widehat{\tau} = \sqrt{n} \left[\mathbf{x}'(\mathbf{y} - \mathbf{x}\widetilde{\beta})/n\right] = n^{-1/2}\mathbf{x}'(\mathbf{y} - \mathbf{x}\widetilde{\beta})$$ 
+since $\widehat{\tau} \overset{d}{\rightarrow} N(\tau, V)$ where
+    $$V = \sigma^2_\epsilon \sigma^2_x \left( \frac{\sigma^2_v}{\gamma^2}\right)$$
+Hence
+	$$\widehat{\tau}^2 - \widehat{\sigma}_\epsilon^2\widehat{\sigma}_x^2 \left(\frac{\widehat{\sigma}_v^2}{\widehat{\gamma}^2}\right)$$
+is an asymptotically unbiased estimator of $\tau^2$. Substituting this quantity and rearranging, the FMSC tells us to use the OLS estimator whenever
+	$$\widehat{T}_{FMSC} = \frac{\widehat{\tau}^2 \widehat{\gamma}^2}{\widehat{\sigma}_v^2 \widehat{\sigma}_\epsilon^2 \widehat{\sigma}_x^2} < 2$$
+After some algebra, it turns out that $\widehat{T}_{FMSC}$ is \emph{numerically equivalent} to the Hausman Test statistic and that $\widehat{T}_{FMSC} \underset{d}{\rightarrow} \chi^2(1)$ when $\tau = 0$. Thus, in the simple example of choosing between OLS and 2SLS, the FMSC is identical to carrying out a Hausman Test with a critical value of 2, which corresponds to a 16\% significance level. Notice that this is exactly the same significance level that appeared when we interpreted the AIC as a hypothesis test in our simple example of estimating a normal mean! 
 \end{document}
