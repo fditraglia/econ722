@@ -231,7 +231,7 @@ Two followup papers extended the criteria described above. Andrews and Lu (2001)
 \subsection{Drawbacks to Andrews' Approach}
 Andrews (1999) has a very specific goal: to state conditions under which it is possible to carry out consistent moment selection for GMM. This is an important and very useful contribution. Nevertheless, there are several reasons why the framework used in Andrews (1999) may not be appropriate in practical applications of GMM moment selection. 
 
-First, the identification condition $\mathcal{MZ}^0 = \{c_0\}$ is in fact stronger than it may appear. Section 7.3.1 of Hall (2005) gives an example: a linear IV model with one endogenous regressor, jointly normal errors, and eight instruments. Six of the instruments are exogenous, but two are in fact endogenous. The goal of moment selection is to find the exogenous instruments. Even in this very simple setting, the identification condition fails: there are two \emph{different} candidates, each containing six moment conditions, for which it is possible to find a parameter value at which the population moment conditions are satisfied. One of these parameters is the true $\theta$ and the other is not. The problem with the identification assumption isn't so much that it's strong. Without strong assumptions, it's hard to learn anything. The problem is that it's not especially \emph{transparent}: when considering a particular problem it can be hard to get a handle on whether this assumption makes sense.  
+First, the identification condition $\mathcal{MZ}^0 = \{c_0\}$ is stronger than it may appear. Section 7.3.1 of Hall (2005) gives an example: a linear IV model with one endogenous regressor, jointly normal errors, and eight instruments. Six of the instruments are exogenous, but two are in fact endogenous. The goal of moment selection is to find the exogenous instruments. Even in this very simple setting, the identification condition fails: there are two \emph{different} candidates, each containing six moment conditions, for which it is possible to find a parameter value at which the population moment conditions are satisfied. One of these parameters is the true $\theta$ and the other is not. The problem with the identification assumption isn't so much that it's strong. Without strong assumptions, it's hard to learn anything. The problem is that it's not especially \emph{transparent}: when considering a particular problem it can be hard to get a handle on whether this assumption makes sense.  
 
 
 A second problem concerns irrelevant moment conditions. The idea of using any and all correctly specified moment conditions in estimation is based on the fact that the asymptotic variance of the GMM estimator \emph{cannot increase} as we use additional moment conditions in estimation. The finite-sample situation, however, can be very different. Moment conditions that add very little information, so-called ``irrelevant moment conditions,'' can lead to very poor finite sample performance. The GMM-MSC of Andrews (1999) does not address this problem. Two papers that do are Hall \& Peixe (2003) and Hall, Inoue, Jana \& Shin (2003). More recently, Chen \& Liao (2013) suggest using LASSO, which we'll study in an upcoming lecture, to choose the valid and revelant moment conditions.
@@ -245,9 +245,62 @@ A third issue concerns the nature of the analogy between the AIC and BIC and the
 This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.\footnote{If you're really interested in this, check back again after the semester is over. I'll be posted an updated version with R and C++ source code soon.}
 
 \subsection{Introduction}
-In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
+In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. The basic idea is that we might want to use a moment condition that is \emph{slightly mis-specified} provided that it is sufficiently informative about $\mu$: the decrease in variance could easily outweigh the increase in bias in a MSE-sense. This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
 
-\subsection{Basic Framework and Notation}
+\subsection{Overview of FMSC Derivation}
+
+\paragraph{Local Mis-specification}
+	$$E\left[\begin{array}
+		{c}
+		g(Z_{ni},\theta_0)\\
+		h(Z_{ni}, \theta_0)
+	\end{array} \right] = \left[ \begin{array}
+		{c} 0 \\ \tau/\sqrt{n}
+	\end{array}\right]$$
+
+\paragraph{Identification Condition} $E[g(Z_{ni},\theta_0)]=0$ identifies $\theta_0$.
+
+\paragraph{Moment Selection Matrix} $\Xi_S$
+
+\paragraph{Candidate GMM Estimator}
+	$$\widehat{\theta}_S = \underset{\theta \in \Theta}{\arg \min} \left[\Xi_S f_n(\theta)\right]' \left[ \Xi_S \widetilde{W} \Xi_S'\right] \; \left[ \Xi_S f_n(\theta)\right]$$
+
+$$f_n(\theta) = \frac{1}{n}\sum_{i=1}^n f(Z_{ni},\theta) = \left[\begin{array}{c} g_n(\theta)\\ h_n(\theta) \end{array} \right]=\left[\begin{array}{c}n^{-1}\sum_{i=1}^n g(Z_{ni},\theta) \\ n^{-1}\sum_{i=1}^n h(Z_{ni},\theta) \end{array}\right]$$
+
+\paragraph{Notation}
+Let $G = \expect\left[\nabla_{\theta} \; g(Z,\theta_0)\right]$, $H = \expect\left[\nabla_{\theta} \; h(Z,\theta_0)\right]$, and $F = (G', H')'$. Similarly, let $\Omega = Var\left[ f(Z,\theta_0) \right]$ where $\Omega$ is partitioned into blocks $\Omega_{gg}$, $\Omega_{gh}$, $\Omega_{hg}$, and $\Omega_{hh}$ conformably with the partition of $f$ by $g$ and $h$. Notice that each of these expressions involves the limit random variable $Z$ rather than $Z_{ni}$, so that the corresponding expectations are taken with respect to a distribution for which all moment conditions are correctly specified.
+
+\paragraph{High-Level Condition I -- Expansion for GMM}
+To simplify the notation let $F_S = \Xi_S F$, $W_S = \Xi_S W\Xi_S'$, $M_S = \Xi_S M$, $\Omega_S = \Xi_S \Omega\Xi_S'$, and define $K_S  = [F_S'W_SF_S]^{-1} F_S'W_S$.
+
+
+$$\sqrt{n}\left(\widehat{\theta}_S - \theta_0\right) = -K_S\sqrt{n}\left[\Xi_S f_n(\theta_0)\right] + o_p(1)$$
+
+
+$$K_S = \left(F_S' W_S F_S  \right)^{-1}F_S'W_S$$
+
+\paragraph{High-Level Condition II -- CLT} $\sqrt{n}f_n(\theta_0) \overset{d}{\rightarrow}M$ where
+	$$M = \left[\begin{array}{c} M_g \\ M_h\end{array} \right] \sim N\left( \left[\begin{array}{c}0\\ \tau \end{array} \right], \Omega \right)$$
+
+\paragraph{Asymptotic Distribution of GMM Estimator} $\sqrt{n}(\widehat{\theta}_S - \theta_0 ) \rightarrow_d-K_S  M_S$
+
+\paragraph{Target Parameter} $\mu_0 = \mu(\theta_0)$, $\widehat{\mu}_S = \mu(\widehat{\theta}_S)$ where $\mu(\cdot)$ is differentiable.
+
+\paragraph{Asymptotic Distribution of $\widehat{\mu}_S$} 
+$$\sqrt{n}\left(\widehat{\mu}_S - \mu_0\right)\rightarrow_d-\nabla_\theta\mu(\theta_0)'K_S M_S$$
+$$\mbox{AMSE}\left(\widehat{\mu}_S\right) = \nabla_\theta\mu(\theta_0)'K_S \Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\tau\tau'\end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)$$
+
+\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition:
+
+Suppose that $p\geq r$. Then, $\widehat{\tau} = \sqrt{n} h_n(\widehat{\theta}_v) \rightarrow_d\Psi M$ where $\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$. Therefore, we have $\Psi M \sim \mathcal{N}_q(\tau, \Psi \Omega \Psi')$.
+
+\paragraph{Asymptotically Unbiased Estimator of $\tau\tau'$}
+Let $\widehat{\Omega}$ and $\widehat{\Psi}$ be consistent estimators of $\Omega$ and $\Psi$. Then, $ \widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' \rightarrow_d\Psi \left(MM' - \Omega\right)\Psi' $. That is, $\widehat{\tau}\widehat{\tau}' - \ \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' $ provides an asymptotically unbiased estimator of $\tau\tau'$.
+
+\paragraph{The Focused Moment Selection Criterion} The following expression provides an asymptotically unbiased estimator of $\mbox{AMSE}(\widehat{\mu}_S)$
+$$\mbox{FMSC}_n(S) = \nabla_\theta\mu(\widehat{\theta})'\widehat{K}_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}'\end{array}\right] + \widehat{\Omega}\right\}\Xi_S'\widehat{K}_S' \nabla_\theta\mu(\widehat{\theta})$$
+
+\subsection{A Very Simple Example}
 
 
 \end{document}
