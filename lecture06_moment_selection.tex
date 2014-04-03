@@ -290,9 +290,16 @@ $$K_S = \left(F_S' W_S F_S  \right)^{-1}F_S'W_S$$
 $$\sqrt{n}\left(\widehat{\mu}_S - \mu_0\right)\rightarrow_d-\nabla_\theta\mu(\theta_0)'K_S M_S$$
 $$\mbox{AMSE}\left(\widehat{\mu}_S\right) = \nabla_\theta\mu(\theta_0)'K_S \Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\tau\tau'\end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)$$
 
-\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition:
+\paragraph{Asymptotically Unbiased Estimator of $\tau$} Here is where we use the identification condition: valid estimator uses only moment conditions in $g$: $\sqrt{n}\left(\widehat{\theta}_v - \theta_0 \right) =  -K_v \sart{n}g_n(\theta_0) + o_p(1) \overset{d}{\rightarrow} -K_v M_h$
 
 Suppose that $p\geq r$. Then, $\widehat{\tau} = \sqrt{n} h_n(\widehat{\theta}_v) \rightarrow_d\Psi M$ where $\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$. Therefore, we have $\Psi M \sim \mathcal{N}_q(\tau, \Psi \Omega \Psi')$.
+
+By a mean-value expansion:
+	\begin{eqnarray*}
+	\widehat{\tau} &=& \sqrt{n} h_n\left(\widehat{\theta}_{valid}\right) = \sqrt{n}h_n(\theta_0) + H \sqrt{n}\left(\widehat{\theta}_{valid} - \theta_0\right) + o_p(1)\\
+		&=&-HK_{v} \sqrt{n}f_n(\theta_0) + \mathbf{I}_q\sqrt{n}h_n(\theta_0) +o_p(1)\\
+		&=& \Psi \sqrt{n}f_n(\theta_0) + o_p(1) \rightarrow_d\Psi M
+\end{eqnarray*}
 
 \paragraph{Asymptotically Unbiased Estimator of $\tau\tau'$}
 Let $\widehat{\Omega}$ and $\widehat{\Psi}$ be consistent estimators of $\Omega$ and $\Psi$. Then, $ \widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' \rightarrow_d\Psi \left(MM' - \Omega\right)\Psi' $. That is, $\widehat{\tau}\widehat{\tau}' - \ \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}' $ provides an asymptotically unbiased estimator of $\tau\tau'$.
@@ -301,6 +308,6 @@ Let $\widehat{\Omega}$ and $\widehat{\Psi}$ be consistent estimators of $\Omega$
 $$\mbox{FMSC}_n(S) = \nabla_\theta\mu(\widehat{\theta})'\widehat{K}_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}'\end{array}\right] + \widehat{\Omega}\right\}\Xi_S'\widehat{K}_S' \nabla_\theta\mu(\widehat{\theta})$$
 
 \subsection{A Very Simple Example}
-
+OLS versus IV. Don't do the derivation, just show them hot to set it up, tell them the answer, and relate it to the Hausman Test and AIC.
 
 \end{document}
