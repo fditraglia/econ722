@@ -1,0 +1,103 @@
+
+\documentclass[12pt]{article}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{todonotes}
+\usepackage{amssymb,amsmath,amsthm,graphicx}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage{threeparttable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+\newtheorem{assump}{Assumption}[section]
+\newtheorem{pro}{Proposition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{ineq}{Inequality}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{rem}{Remark}[section]
+\newtheorem{ex}{Example}[section]
+\theoremstyle{definition}
+\newtheorem{alg}{Algorithm}[section]
+
+
+\linespread{1.3}
+
+\begin{document}
+
+\title{Lecture 7: High-Dimensional Linear Regression}
+
+\author{Francis J.\ DiTraglia}
+
+\maketitle 
+
+\section{Review of Matrix Decompositions}
+
+
+\subsection{The QR Decomposition}
+Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. The columns of $A$ are \emph{orthogonalized} in $Q$ via the Gram-Schmidt process. Since $Q$ has orthogonal columns, we have $Q'Q = I_k$. It is \emph{not} in general true that $QQ' = I$, however. In the special case where $A$ is square, $Q^{-1} = Q'$.
+
+\paragraph{Note:} The way we have defined things here is here is sometimes called the ``thin'' or ``economical'' form of the QR decomposition, e.g.\ \texttt{qr\_econ} in Armadillo. In our ``thin'' version, $Q$ is an $n\times k$ matrix with orthogonal columns. In the ``thick'' version, $Q$ is an $n\times n$ \emph{orthogonal} matrix. Let $A = QR$ be the ``thick'' version and $A = Q_1 R_1$ be the ``thin'' version. The connection between the two is as follows:
+  $$A = QR = Q \left[\begin{array}
+    {c} R_1 \\ 0 
+  \end{array} \right] = \left[  \begin{array}
+    {cc} Q_1 & Q_2
+  \end{array}\right]\left[\begin{array}
+    {c} R_1 \\ 0 
+  \end{array} \right] = Q_1 R_1$$
+
+\paragraph{Least-Squares via the QR Decomposition} We can calculate the least squares estimator of $\beta$ as follows
+\begin{eqnarray*}
+  \widehat{\beta} &=& (X'X)^{-1} X'y = \left[(QR)' (QR) \right]^{-1} (QR)' y\\
+    &=&\left[ R' Q' Q R\right]^{-1} R'Q' y = (R'R)^{-1} R'Q y\\
+    &=& R^{-1} (R')^{-1} R' Qy = R^{-1} Qy
+\end{eqnarray*}
+In other words, $\widehat{\beta}$ is the solution to $R\beta = Qy$. While it may not be immediately apparent, this is a much easier system to solve that the normal equations $(X'X) \beta = X'y$. Because $R$ is \emph{upper triangular} we can solve $R\beta = Qy$ extremely quickly. The product $Qy$ is simply a vector, call it $v$, so the system is simply
+  $$\left[
+    \begin{array}
+      {cccccc}
+      r_{11} & r_{12}  & r_{13}& \cdots & r_{1,n-1} & r_{1k} \\
+      0 & r_{22} & r_{23}&\cdots & r_{2,n-1} & r_{2k}\\
+      0&  0 &  r_{33}& \cdots & r_{3,n-1} & r_{3k}\\  
+      \vdots & \vdots & \ddots& \ddots & \vdots & \vdots\\
+      0 & 0 & \cdots &0  & r_{k-1, k-1} & r_{k-1, k} \\
+      0 & 0 & \cdots & 0 & 0 & r_{k}
+    \end{array}
+  \right] \left[ \begin{array}
+    {ccc}
+    \beta_1 \\ \beta_2 \\ \beta_3 \\ \vdots \\ \beta_{k-1} \\ \beta_k
+  \end{array}\right] = \left[ \begin{array}
+    {c}
+    v_1  \\ v_2  \\ v_3 \\  \vdots \\ v_{k-1} \\ v_{k}
+  \end{array}\right]
+  $$
+Hence, $\beta_k = v_k / r_k$ which we can substitute into $\beta_{k-1} r_{k-1,k-1} + \beta_k r_{k-1,k} = v_{k-1}$ to solve for $\beta_{k-1}$, and so on. This is called \textbf{back substitution}. We can use the same idea when a matrix is \emph{lower triangular} only in reverse: this is called \textbf{forward substitution}.
+
+To calculate the variance matrix $\sigma^2 (X'X)^{-1}$ for the least-squares estimator, simply note from the derivation above that $(X'X)^{-1} = R^{-1} (R^{-1})'$ . Inverting $R$, however, is easy: we simply apply back-substitution \emph{repeatedly}. Let $A$ be the inverse of $R$, $\mathbf{a}_j$ be the $j$th column of $A$, and $\mathbf{e}_j$ be the $j$th element of the $k\times k$ identity matrix, i.e.\ the $j$th standard basis vector. Inverting $R$ is equivalent to solving $R \mathbf{a}_1 = \mathbf{e}_1$, followed by $R \mathbf{a}_2 = \mathbf{e}_2$, and so on all the way up to $R \mathbf{a}_k = \mathbf{e}_k$. In Armadillo, if you enclose a matrix in \texttt{trimatu()} or \texttt{trimatl()}, and then request the inverse, the library will carry out backward or forward substitution, respectively.
+
+\paragraph{Othogonal Projection Matrices and the QR Decomposition}
+Consider a projection matrix $P_X = X (X'X)^{-1}X'$. Provided that $X$ has full column rank, we have
+begin
+  $$P_X  = QR(R'R)^{-1}R'Q' = QRR^{-1} (R')^{-1}R'Q' = QQ'$$
+Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q = I$. It's important to keep this in mind when using the QR decomposition for more complicated matrix calculations, such as linear GMM.
+
+\subsection{The Singular Value Decomposition}
+The Singular Value Decomposition (SVD) is probably the most elegant result in linear algebra. It's also an invaluable computational and theoretical tool in statistics and econometrics. I can only give a brief overview here, but I'd encourage you to learn more when you have time. Some excellent references are Strang (1993) and Kalman (2002).
+
+
+\section{Gauss-Markov, meet James-Stein}
+Consider the linear regression model
+	$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$
+In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldssymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? Does some form of the Gauss-Markov Theorem still hold?
+
+
+\paragraph{A Fundamental Decomposition} 
+
+\end{document}
