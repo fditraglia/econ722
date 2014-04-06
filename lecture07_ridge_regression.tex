@@ -86,7 +86,27 @@ To calculate the variance matrix $\sigma^2 (X'X)^{-1}$ for the least-squares est
 Consider a projection matrix $P_X = X (X'X)^{-1}X'$. Provided that $X$ has full column rank, we have
 begin
   $$P_X  = QR(R'R)^{-1}R'Q' = QRR^{-1} (R')^{-1}R'Q' = QQ'$$
-Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q = I$. It's important to keep this in mind when using the QR decomposition for more complicated matrix calculations, such as linear GMM.
+Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q = I$ because we're using the \emph{economical} QR decomposition in which $Q$ has orthonormal columns but may not be a square matrix. Just to make this completely transparent, consider a very simple example:
+	$$X = \left[ \begin{array}
+		{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0
+	\end{array}\right]$$
+Then, we have
+	$$X'X = \left[\begin{array}
+		{ccc} 1& 0 & 0 \\ 0 & 1 & 0
+	\end{array} \right]\left[ \begin{array}
+		{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0
+	\end{array}\right] = \left[\begin{array}
+		{cc} 1 & 0 \\ 0 & 1
+	\end{array} \right]$$
+but 
+	$$XX' = \left[ \begin{array}
+		{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0
+	\end{array}\right]\left[\begin{array}
+		{ccc} 1& 0 & 0 \\ 0 & 1 & 0
+	\end{array} \right] = \left[\begin{array}
+		{ccc} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0
+	\end{array} \right]$$
+It's important to keep the fact that $UU' \neq I$ in mind when using the QR decomposition for more complicated matrix calculations.
 
 \subsection{The Singular Value Decomposition}
 The Singular Value Decomposition (SVD) is probably the most elegant result in linear algebra. It's also an invaluable computational and theoretical tool in statistics and econometrics. I can only give a brief overview here, but I'd encourage you to learn more when you have time. Some excellent references are Strang (1993) and Kalman (2002).
@@ -100,12 +120,26 @@ The Singular Value Decomposition (SVD) is probably the most elegant result in li
 	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
 	 \end{itemize} 
 
+\paragraph{The Four Fundamental Subspaces} It turns out that the SVD provides orthonormal bases for each of the so-called ``fundamental subspaces'' of a matrix $A$. In particular:
+	\begin{enumerate}
+		\item \textbf{column space}: first $r$ columns of $U$
+		\item \textbf{row space}: first $r$ columns of $V$
+		\item \textbf{null space}: last $n - r$ columns of $V$
+		\item \textbf{left null space}: last $m - r$ columns of $U$
+	\end{enumerate}
+
 \paragraph{SVD for Symmetric Matrices} If $A$ is symmetric then, by the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors. In this case, $U = V = Q$ and $D$ is simply the absolute value of $\Lambda$ (i.e.\ negative eigenvalues become positive singular values).
 
 \paragraph{SVD for Positive Definite Matrices} If $A$ is not only symmetric but \emph{positive definite}, then $A = Q\Lambda Q'$ is the \emph{same decomposition} as $A = UDV'$: $U=V=Q$ and $\Lambda = D$.
 
 \paragraph{The ``Economical'' SVD}
-Typically write this with the singular values ordered from largest to smallest, for reasons that will become clear shortly.
+The number of singular values equals $r$, the rank of $A$, which is at most $\max\{m,n\}$. This means that some of the columns of $U$ or $V$ will be \emph{irrelevant} since they will be multiplied by zeros in $D$. Accordingly, most linear algebra libraries provide an ``economical'' SVD that only calculate the columns of $U$ and $V$ that are multiplied by non-zero values in $D$. In Armadillo, for example, the command is \texttt{svd\_econ}. 
+
+We can write the economical SVD in summation form as 
+	$$A = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
+where $r = \mbox{rank}(A)$ and the singular values $d_i$ are arranged in order from largest to smallest. In matrix form, this is given by:
+	$$\underset{(n\times p)}{A} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$$
+In the economical SVD, $U$ and $V$ may no longer be square, so they are not orthogonal matrices but their \emph{columns} are still orthonormal, so we have $U'U = I_r$ and $V'V = I_r$.
 
 \paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is given by
 	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
@@ -171,14 +205,31 @@ Which we can show as follows:
 		&=& \mbox{RSS}(\beta) + \lambda \left|\left| \beta\right|\right|_2^2
 \end{eqnarray*}
 
-\paragraph{Ridge is Always Unique} We know that the OLS estimator is only unique provided that the design matrix has full column rank. In constrast there is \emph{always} a unique solution to the Ridge Regression problem, even when there are more regressors than observations. This follows \emph{immediately} from the preceding: the columns of $\sqrt{\lambda}I_p$ are linearly independent, so the columns of the augmented data matrix $\widetilde{X}$ are \emph{also} linearly independent, \emph{regardless} of whether the same holds for the columns of $X$.
+\subsection{Ridge is Always Unique} We know that the OLS estimator is only unique provided that the design matrix has full column rank. In constrast there is \emph{always} a unique solution to the Ridge Regression problem, even when there are more regressors than observations. This follows \emph{immediately} from the preceding: the columns of $\sqrt{\lambda}I_p$ are linearly independent, so the columns of the augmented data matrix $\widetilde{X}$ are \emph{also} linearly independent, \emph{regardless} of whether the same holds for the columns of $X$. Thus we can use Ridge Regression even in settings in which there are more regressors than observations!
 
-\paragraph{Calculations for Ridge Regression}
+\subsection{Efficient Calculations for Ridge Regression}
 
 \paragraph{Calculations When $p\gg n$} 
 
 
 \subsection{Predictive Bias and Variance of OLS and Ridge}
+
+Take the \emph{economical} singular value decomposition of the $(n\times p)$ centered (and possibly standardized) design matrix $X$. We have
+	$$\underset{(n\times p)}{X} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$$
+where $r = \mbox{rank}(X)$ and thus
+	$$X'X = (UDV')'(UDV') = VDU'UDV' = VD^2V'$$
+Provided that the columns of $X$ are linearly indepdendent, $r = p$ and hence $VD^2 V'$ is the \emph{eigen-decomposition} of $X'X$. Since $X$ is centered, the sample covariance matrix of the regressors is $S = X'X/n$. Since it is simply a scalar multiple of $X'X$, the sample covariance matrix $S$ has the \emph{same eigenvectors} as $X'X$, namely the columns of $V$.
+
+
+Continuing under the assumption that $r = p$ so that $V$ is $(p\times p)$ and $V'V = V'V = I_p$, we have
+	\begin{eqnarray*}
+		\widehat{\beta}_{Ridge} &=& \left(X'X  +\lambda I_p\right)^{-1} X'\mathbf{y} \\
+		&=& \left(VD^2V' + \lambda I_p\right)(UDV')' \mathbf{y}\\
+		&=& \left(VD^2V' + \lambda VV'\right)VDU' \mathbf{y}\\
+		&=& V(D^2 + \lambda I_p)V'VDU'\mathbf{y}\\
+		&=&V(D^2 + \lambda I_p)DU' \mathbf{y}\\
+		&=& \sum_{i=1}^p \mathbf{v}
+	\end{eqnarray*}
 
 \section{Principal Components Regression}
 
