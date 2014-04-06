@@ -57,9 +57,9 @@ Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, 
 \begin{eqnarray*}
   \widehat{\beta} &=& (X'X)^{-1} X'y = \left[(QR)' (QR) \right]^{-1} (QR)' y\\
     &=&\left[ R' Q' Q R\right]^{-1} R'Q' y = (R'R)^{-1} R'Q y\\
-    &=& R^{-1} (R')^{-1} R' Qy = R^{-1} Qy
+    &=& R^{-1} (R')^{-1} R' Q'y = R^{-1} Q'y
 \end{eqnarray*}
-In other words, $\widehat{\beta}$ is the solution to $R\beta = Qy$. While it may not be immediately apparent, this is a much easier system to solve that the normal equations $(X'X) \beta = X'y$. Because $R$ is \emph{upper triangular} we can solve $R\beta = Qy$ extremely quickly. The product $Qy$ is simply a vector, call it $v$, so the system is simply
+In other words, $\widehat{\beta}$ is the solution to $R\beta = Q'y$. While it may not be immediately apparent, this is a much easier system to solve that the normal equations $(X'X) \beta = X'y$. Because $R$ is \emph{upper triangular} we can solve $R\beta = Q'y$ extremely quickly. The product $Q'y$ is a vector, call it $v$, so the system is simply
   $$\left[
     \begin{array}
       {cccccc}
@@ -99,5 +99,42 @@ In Econ 705 you learned that ordinary least squares (OLS) is the minimum varianc
 
 
 \paragraph{A Fundamental Decomposition} 
+
+
+
+\section{Ridge Regression}
+\subsection{Ridge as Bayesian Linear Regression}
+
+
+\subsection{Another Way to Express Ridge Regression}
+Data-dependent mapping.
+
+\subsection{Ridge Regression via OLS}
+From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augemented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
+
+$$\widetilde{\textbf{y}} = \left[ \begin{array}
+	{c} \textbf{y} \\ \textbf{0}_p
+\end{array}\right], \quad \quad \widetilde{X} = \left[ \begin{array}
+	{c} X \\ \sqrt{\lambda} I_p
+\end{array}\right]$$
+The objective function for Ridge Rgression is \emph{identical} to the OLS objective function for the augmented dataset, namely
+	$$\underset{\beta}{\arg \min} \left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)'\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)$$
+Which we can show as follows:
+\begin{eqnarray*}
+	\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)'\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right) &=& \left[\begin{array}
+		{cc} (\mathbf{y} - X\beta)' & (-\sqrt{\lambda}\beta)'
+	\end{array} \right] \left[\begin{array}
+		{c} (\mathbf{y} - X\beta) \\ -\sqrt{\lambda} \beta
+	\end{array} \right]\\
+		&=& (\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta\\
+		&=& \mbox{RSS}(\beta) + \lambda \left|\left| \beta\right|\right|_2^2
+\end{eqnarray*}
+
+\paragraph{Ridge is Always Unique} We know that the OLS estimator is only unique provided that the design matrix has full column rank. In constrast there is \emph{always} a unique solution to the Ridge Regression problem, even when there are more regressors than observations. This follows \emph{immediately} from the preceding: the columns of $\sqrt{\lambda}I_p$ are linearly independent, so the columns of the augmented data matrix $\widetilde{X}$ are \emph{also} linearly independent, \emph{regardless} of whether the same holds for the columns of $X$.
+
+\paragraph{Calculations for Ridge Regression}
+
+\paragraph{Calculations When $p\gg n$} 
+
 
 \end{document}
