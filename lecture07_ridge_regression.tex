@@ -100,16 +100,22 @@ The Singular Value Decomposition (SVD) is probably the most elegant result in li
 	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
 	 \end{itemize} 
 
-\paragraph{SVD for Symmetric Matrices} If $A$ is a symmetric matrix then, by the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors. In this case, $U = V = Q$ and $D$ is simply the absolute value of $\Lambda$. (That is, any negative eigenvalues become positive singular values.)
+\paragraph{SVD for Symmetric Matrices} If $A$ is symmetric then, by the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors. In this case, $U = V = Q$ and $D$ is simply the absolute value of $\Lambda$ (i.e.\ negative eigenvalues become positive singular values).
 
 \paragraph{SVD for Positive Definite Matrices} If $A$ is not only symmetric but \emph{positive definite}, then $A = Q\Lambda Q'$ is the \emph{same decomposition} as $A = UDV'$: $U=V=Q$ and $\Lambda = D$.
 
 \paragraph{The ``Economical'' SVD}
+Typically write this with the singular values ordered from largest to smallest, for reasons that will become clear shortly.
 
-\paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is defined by
+\paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is given by
 	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
-Using this norm as a measure of ``approximation error'', it can be shown that the SVD provides a means of calculating the \emph{best low rank approximation} to a matrix $X$. This is an extremely important idea both in statistics and image compression.
+Using this norm as a measure of ``approximation error'', it can be shown that the SVD provides the \emph{best low rank approximation} to a matrix $X$. 
 
+Using the ``economical'' form of the SVD, we can write
+	$$X = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
+where the index is $i$ is defined such that the \emph{largest} singular value comes first, followed by the second largest, and so on. This expression gives the rank-$r$ matrix $X$ as a \emph{sum} of $r$ rank-1 matrices. Now suppose that the rank of $X$ is large and we wanted to \emph{approximate} $X$ using a matrix $\widehat{X}_L$ with rank $L<k$. If we measure the reconstruction error using the Frobenius norm, it can be shown that the \emph{truncated SVD}
+	$$\widehat{X}_L = \sum_{i=1}^{L} d_i \textbf{u}_i \textbf{v}_i'$$ 	
+provides the best rank $L$ approximation to $X$. In other words, $\widehat{X}_L$ is the $\arg \min$  over all rank $L$ matrices of the quantity $||X - \widehat{X}_L||_F$. It is also possible to provide bounds on the quality of the approximation, and thus choose an appropriate truncation. 
 
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
@@ -173,5 +179,9 @@ Which we can show as follows:
 
 
 \subsection{Predictive Bias and Variance of OLS and Ridge}
+
+\section{Principal Components Regression}
+
+\section{LASSO}
 
 \end{document}
