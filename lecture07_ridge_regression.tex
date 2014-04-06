@@ -172,8 +172,7 @@ where $\textbf{1}_n$ is an $(n\times 1)$ vector of ones, $\beta_0$ denotes the r
 Throughout these notes we will assume that everything has been de-meaned so there is no intercept.
 
 
-\paragraph{Ridge is \emph{Not} Scale Invariant}
-
+\paragraph{Ridge is \emph{Not} Scale Invariant} When we carry out OLS, if we re-scale a regressor $\mathbf{x}$, replacing it with $c \mathbf{x}$ where $c$ is some nonzero constant, then the corresponding OLS coefficient estimate is scaled by $1/c$ to compensate. In other words, OLS is \emph{scale invariant}. The same is not true of Ridge Regression, so it is common to convert the columns of the design matrix to the same units before proceeding. The usual way of handling this is simply to \emph{standardize} each of the regressors.
 
 \subsection{Ridge as Bayesian Linear Regression}
 As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
