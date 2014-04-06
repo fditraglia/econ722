@@ -139,7 +139,7 @@ We can write the economical SVD in summation form as
 	$$A = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
 where $r = \mbox{rank}(A)$ and the singular values $d_i$ are arranged in order from largest to smallest. In matrix form, this is given by:
 	$$\underset{(n\times p)}{A} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$$
-In the economical SVD, $U$ and $V$ may no longer be square, so they are not orthogonal matrices but their \emph{columns} are still orthonormal, so we have $U'U = I_r$ and $V'V = I_r$.
+In the economical SVD, $U$ and $V$ may no longer be square, so they are not orthogonal matrices but their \emph{columns} are still orthonormal.
 
 \paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is given by
 	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
@@ -165,9 +165,11 @@ In Econ 705 you learned that ordinary least squares (OLS) is the minimum varianc
 \subsection{The Positive-Part James-Stein Estimator}
 
 \section{Ridge Regression} 
-Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking} the estimated coefficients \emph{towards zero and towards each other} by adding a squared $L_2$-norm ``penalty'' to the OLS objective function:
-	$$\widehat{\beta}_{Ridge} = $$
-Note that we do \emph{not} penalize the intercept. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding.
+Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking the estimated coefficients towards zero and towards each other}. This is accomplished by adding a squared $L_2$-norm ``penalty'' to the OLS objective function, yielding
+	$$\widehat{\beta}_{Ridge} = (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \beta'\beta$$
+where $\textbf{1}_n$ is an $(n\times 1)$ vector of ones, $\beta_0$ denotes the regression intercept and $\beta = (\beta_1, \hdots, \beta_p)'$ the remaining coefficients. Note that we do \emph{not} penalize the intercept in Ridge Regression. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding. so that there is no intercept and the problem becomes
+	$$\widehat{\beta}_{Ridge} =(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta$$
+Throughout these notes we will assume that everything has been de-meaned so there is no intercept.
 
 
 \paragraph{Ridge is \emph{Not} Scale Invariant}
@@ -202,7 +204,6 @@ Which we can show as follows:
 		{c} (\mathbf{y} - X\beta) \\ -\sqrt{\lambda} \beta
 	\end{array} \right]\\
 		&=& (\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta\\
-		&=& \mbox{RSS}(\beta) + \lambda \left|\left| \beta\right|\right|_2^2
 \end{eqnarray*}
 
 \subsection{Ridge is Always Unique} We know that the OLS estimator is only unique provided that the design matrix has full column rank. In constrast there is \emph{always} a unique solution to the Ridge Regression problem, even when there are more regressors than observations. This follows \emph{immediately} from the preceding: the columns of $\sqrt{\lambda}I_p$ are linearly independent, so the columns of the augmented data matrix $\widetilde{X}$ are \emph{also} linearly independent, \emph{regardless} of whether the same holds for the columns of $X$. Thus we can use Ridge Regression even in settings in which there are more regressors than observations!
@@ -230,6 +231,9 @@ Continuing under the assumption that $r = p$ so that $V$ is $(p\times p)$ and $V
 		&=&V(D^2 + \lambda I_p)DU' \mathbf{y}\\
 		&=& \sum_{i=1}^p \mathbf{v}
 	\end{eqnarray*}
+
+\subsection{Choosing $\lambda$}
+Degrees of freedom, compare to OLS. AIC, BIC, cross-validation, k-fold.
 
 \section{Principal Components Regression}
 
