@@ -91,6 +91,25 @@ Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q =
 \subsection{The Singular Value Decomposition}
 The Singular Value Decomposition (SVD) is probably the most elegant result in linear algebra. It's also an invaluable computational and theoretical tool in statistics and econometrics. I can only give a brief overview here, but I'd encourage you to learn more when you have time. Some excellent references are Strang (1993) and Kalman (2002).
 
+\paragraph{The SVD} Any $m \times n$ matrix $A$ of arbitrary rank $r$ can be decomposed according to 
+	$$X = UDV' = (\mbox{orthogonal})(\mbox{diagonal})(\mbox{orthogonal})$$
+	\begin{itemize}
+	 	\item $U$ is an $m\times m$ orthogonal matrix whose columns contain the eigenvectors of $AA'$
+	 	\item $V$ is an $n\times n$ orthogonal matrix whose columns contain the eigenvectors of $A'A$
+	 	\item $D$ is an $m\times n$ matrix whose first $r$ main diagonal elements are the  \emph{singular values} $d_1, \hdots, d_r$. All other elements of $D$ are zero.
+	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
+	 \end{itemize} 
+
+\paragraph{SVD for Symmetric Matrices} If $A$ is a symmetric matrix then, by the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors. In this case, $U = V = Q$ and $D$ is simply the absolute value of $\Lambda$. (That is, any negative eigenvalues become positive singular values.)
+
+\paragraph{SVD for Positive Definite Matrices} If $A$ is not only symmetric but \emph{positive definite}, then $A = Q\Lambda Q'$ is the \emph{same decomposition} as $A = UDV'$: $U=V=Q$ and $\Lambda = D$.
+
+\paragraph{The ``Economical'' SVD}
+
+\paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is defined by
+	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
+Using this norm as a measure of ``approximation error'', it can be shown that the SVD provides a means of calculating the \emph{best low rank approximation} to a matrix $X$. This is an extremely important idea both in statistics and image compression.
+
 
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
@@ -98,7 +117,6 @@ Consider the linear regression model
 In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? Does some form of the Gauss-Markov Theorem still hold?
 
 
-\paragraph{A Fundamental Decomposition} 
 
 \paragraph{Admissibility}
 
@@ -153,5 +171,7 @@ Which we can show as follows:
 
 \paragraph{Calculations When $p\gg n$} 
 
+
+\subsection{Predictive Bias and Variance of OLS and Ridge}
 
 \end{document}
