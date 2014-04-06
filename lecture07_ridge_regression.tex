@@ -94,17 +94,34 @@ The Singular Value Decomposition (SVD) is probably the most elegant result in li
 
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
-	$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$
-In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldssymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? Does some form of the Gauss-Markov Theorem still hold?
+	$$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$$
+In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? Does some form of the Gauss-Markov Theorem still hold?
 
 
 \paragraph{A Fundamental Decomposition} 
 
+\paragraph{Admissibility}
+
+\subsection{The James-Stein Estimator}
+
+\subsection{The Positive-Part James-Stein Estimator}
+
+\section{Ridge Regression} 
+Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking} the estimated coefficients \emph{towards zero and towards each other} by adding a squared $L_2$-norm ``penalty'' to the OLS objective function:
+	$$\widehat{\beta}_{Ridge} = $$
+Note that we do \emph{not} penalize the intercept. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding.
 
 
-\section{Ridge Regression}
+\paragraph{Ridge is \emph{Not} Scale Invariant}
+
+
 \subsection{Ridge as Bayesian Linear Regression}
-
+As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
+	\begin{eqnarray*}
+		y|\mathbf{x}, \beta, \sigma^2 &\sim& N(\mathbf{x}'\beta|\sigma^2) \\
+		\beta &\sim& N_p(\mathbf{0}, \tau^2 I_p)
+	\end{eqnarray*}
+where $\sigma^2$ is assumed known and $\lambda = \sigma^2/\tau^2$. In other words, Ridge Regression gives the \textbf{posterior mode}. Since this model is conjugate, the posterior is normal. Thus, in addition to being the MAP estimator, the solution to Ridge Regression is also the posterior mean.
 
 \subsection{Another Way to Express Ridge Regression}
 Data-dependent mapping.
