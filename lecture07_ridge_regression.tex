@@ -166,13 +166,15 @@ In Econ 705 you learned that ordinary least squares (OLS) is the minimum varianc
 
 \section{Ridge Regression} 
 Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking the estimated coefficients towards zero and towards each other}. This is accomplished by adding a squared $L_2$-norm ``penalty'' to the OLS objective function, yielding
-	$$\widehat{\beta}_{Ridge} = (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \beta'\beta$$
+	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \beta'\beta$$
 where $\textbf{1}_n$ is an $(n\times 1)$ vector of ones, $\beta_0$ denotes the regression intercept and $\beta = (\beta_1, \hdots, \beta_p)'$ the remaining coefficients. Note that we do \emph{not} penalize the intercept in Ridge Regression. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding. so that there is no intercept and the problem becomes
-	$$\widehat{\beta}_{Ridge} =(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta$$
+	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min}(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta$$
 Throughout these notes we will assume that everything has been de-meaned so there is no intercept.
 
+\subsection{Ridge is \emph{Not} Scale Invariant} When we carry out OLS, if we re-scale a regressor $\mathbf{x}$, replacing it with $c \mathbf{x}$ where $c$ is some nonzero constant, then the corresponding OLS coefficient estimate is scaled by $1/c$ to compensate. In other words, OLS is \emph{scale invariant}. The same is not true of Ridge Regression, so it is common to convert the columns of the design matrix to the same units before proceeding. The usual way of handling this is simply to \emph{standardize} each of the regressors.
 
-\paragraph{Ridge is \emph{Not} Scale Invariant} When we carry out OLS, if we re-scale a regressor $\mathbf{x}$, replacing it with $c \mathbf{x}$ where $c$ is some nonzero constant, then the corresponding OLS coefficient estimate is scaled by $1/c$ to compensate. In other words, OLS is \emph{scale invariant}. The same is not true of Ridge Regression, so it is common to convert the columns of the design matrix to the same units before proceeding. The usual way of handling this is simply to \emph{standardize} each of the regressors.
+\subsection{Another Way to Express Ridge Regression}
+Data-dependent mapping.
 
 \subsection{Ridge as Bayesian Linear Regression}
 As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
@@ -182,8 +184,27 @@ As you may recall from the first part of the semester, Bayesian models with info
 	\end{eqnarray*}
 where $\sigma^2$ is assumed known and $\lambda = \sigma^2/\tau^2$. In other words, Ridge Regression gives the \textbf{posterior mode}. Since this model is conjugate, the posterior is normal. Thus, in addition to being the MAP estimator, the solution to Ridge Regression is also the posterior mean.
 
-\subsection{Another Way to Express Ridge Regression}
-Data-dependent mapping.
+
+\subsection{An Explicit Formula for Ridge Regression}
+The objective function is
+\begin{eqnarray*}
+	Q_{ridge}&=& (\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta\\
+	&=&\mathbf{y}'\mathbf{y} - \beta'X \mathbf{y} - \mathbf{y}'X\beta + \beta'X'X \beta + \lambda \beta' I_p \beta\\
+	&=& \mathbf{y}'\mathbf{y} - 2 \mathbf{y}'X\beta + \beta'(X'X + \lambda I_p)\beta
+\end{eqnarray*}
+Recall the following facts about matrix differentiation\footnote{See, for example, Harville (1997; Chapter 15).}
+	\begin{eqnarray*}
+		\frac{\partial (\mathbf{a}' \mathbf{x})}{\partial \mathbf{x}}  &=& \mathbf{a}\\
+		\frac{\partial( \mathbf{x}'A \mathbf{x})}{\partial \mathbf{x}} &=& (A + A')\mathbf{x}
+	\end{eqnarray*}
+Thus, we have 
+$$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\bf{y} + 2(X'X + \lambda I_p)\beta$$
+since $(X'X + \lambda I_p)$ is symmetric. Thus, the first order condition is 
+	$$X'\textbf{y} = (X'X + \lambda I_p)\beta$$
+Hence,
+	$$\widehat{\beta}_{Ridge} = (X'X + \lambda I_p)^{-1} X'\textbf{y}$$
+So is $(X'X + \lambda I_p)$ guaranteed to be invertible? We need this to be the case for the solution of the Ridge Regression problem to be unique. In the following section, we'll provide an alternative way of analyzing the problem by turning it into something we're more familiar with: OLS.
+
 
 \subsection{Ridge Regression via OLS}
 From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augemented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
