@@ -179,7 +179,7 @@ Data-dependent mapping.
 \subsection{Ridge as Bayesian Linear Regression}
 As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
 	\begin{eqnarray*}
-		y|\mathbf{x}, \beta, \sigma^2 &\sim& N(\mathbf{x}'\beta|\sigma^2) \\
+		y|X, \beta, \sigma^2 &\sim& N(X\beta|\sigma^2 I_n) \\
 		\beta &\sim& N_p(\mathbf{0}, \tau^2 I_p)
 	\end{eqnarray*}
 where $\sigma^2$ is assumed known and $\lambda = \sigma^2/\tau^2$. In other words, Ridge Regression gives the \textbf{posterior mode}. Since this model is conjugate, the posterior is normal. Thus, in addition to being the MAP estimator, the solution to Ridge Regression is also the posterior mean.
