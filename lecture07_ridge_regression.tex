@@ -158,7 +158,8 @@ In Econ 705 you learned that ordinary least squares (OLS) is the minimum varianc
 
 
 
-\paragraph{Admissibility}
+\subsection{Admissibility}
+To understand what follows, we'll need a concept from decision theory called \emph{admissibility}. We say that an estimator $\widehat{\theta}$ of some parameter $\theta$ is \textbf{admissible} if there
 
 \subsection{The James-Stein Estimator}
 
@@ -174,13 +175,13 @@ Throughout these notes we will assume that everything has been de-meaned so ther
 \subsection{Ridge is \emph{Not} Scale Invariant} When we carry out OLS, if we re-scale a regressor $\mathbf{x}$, replacing it with $c \mathbf{x}$ where $c$ is some nonzero constant, then the corresponding OLS coefficient estimate is scaled by $1/c$ to compensate. In other words, OLS is \emph{scale invariant}. The same is not true of Ridge Regression, so it is common to convert the columns of the design matrix to the same units before proceeding. The usual way of handling this is simply to \emph{standardize} each of the regressors.
 
 \subsection{Another Way to Express Ridge Regression}
-Data-dependent mapping.
+\todo[inline]{Data-dependent mapping with ``fitting budget.''}
 
 \subsection{Ridge as Bayesian Linear Regression}
 As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
 	\begin{eqnarray*}
-		y|X, \beta, \sigma^2 &\sim& N(X\beta|\sigma^2 I_n) \\
-		\beta &\sim& N_p(\mathbf{0}, \tau^2 I_p)
+		y|X, \beta, \sigma^2 &\sim& N(X\beta,\sigma^2 I_n) \\
+		\beta &\sim& N(\mathbf{0}, \tau^2 I_p)
 	\end{eqnarray*}
 where $\sigma^2$ is assumed known and $\lambda = \sigma^2/\tau^2$. In other words, Ridge Regression gives the \textbf{posterior mode}. Since this model is conjugate, the posterior is normal. Thus, in addition to being the MAP estimator, the solution to Ridge Regression is also the posterior mean.
 
@@ -205,6 +206,9 @@ Hence,
 	$$\widehat{\beta}_{Ridge} = (X'X + \lambda I_p)^{-1} X'\textbf{y}$$
 So is $(X'X + \lambda I_p)$ guaranteed to be invertible? We need this to be the case for the solution of the Ridge Regression problem to be unique. In the following section, we'll provide an alternative way of analyzing the problem by turning it into something we're more familiar with: OLS.
 
+
+\subsection{Bias and Variance}
+\todo[inline]{Explain how $\lambda$ controls both, using the preceding formula. Makes it very clear how the bias arises and why the variance is lower. Compare to OLS formulas.}
 
 \subsection{Ridge Regression via OLS}
 From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augemented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
@@ -245,15 +249,38 @@ Provided that the columns of $X$ are linearly indepdendent, $r = p$ and hence $V
 Continuing under the assumption that $r = p$ so that $V$ is $(p\times p)$ and $V'V = V'V = I_p$, we have
 	\begin{eqnarray*}
 		\widehat{\beta}_{Ridge} &=& \left(X'X  +\lambda I_p\right)^{-1} X'\mathbf{y} \\
-		&=& \left(VD^2V' + \lambda I_p\right)(UDV')' \mathbf{y}\\
-		&=& \left(VD^2V' + \lambda VV'\right)VDU' \mathbf{y}\\
-		&=& V(D^2 + \lambda I_p)V'VDU'\mathbf{y}\\
-		&=&V(D^2 + \lambda I_p)DU' \mathbf{y}\\
-		&=& \sum_{i=1}^p \mathbf{v}
+		&=& \left(VD^2V' + \lambda I_p\right)^{-1}(UDV')' \mathbf{y}\\
+		&=& \left(VD^2V' + \lambda VV'\right)^{-1}VDU' \mathbf{y}\\
+		&=& \left[V(D^2 + \lambda I_p)V'\right]^{-1}VDU'\mathbf{y}\\
+		&=&(V')^{-1}(D^2 + \lambda I_p)^{-1}V^{-1}VDU' \mathbf{y}\\
+		&=& V(D^2 + \lambda I_p)^{-1}DU'\mathbf{y}\\
+		&=& \left[\sum_{i=1}^p \mathbf{v}_i \left(\frac{d_i}{d_i^2 + \lambda}\right) \mathbf{u}_i'\right] \mathbf{y}
 	\end{eqnarray*}
+
+\begin{eqnarray*}
+	\widehat{y}_{Ridge} &=& X\widehat{\beta}_{Ridge} = (UDV')V(D^2 + \lambda I_p)^{-1}DU'\mathbf{y}\\
+	&=& UD(D^2 + \lambda I_p)^{-1}DU'\mathbf{y} = UD^2(D^2 + \lambda I_p)^{-1}U'\mathbf{y}\\
+	&=&\left[\sum_{i=1}^p \mathbf{u}_i \left(\frac{d_i^2}{d_i^2 +\lambda}\right)\mathbf{u}_i' \right] \mathbf{y}
+\end{eqnarray*}
+Can we relate this to PCR now? Yes! the principal components are the eigenvectors of the sample covariance matrix of $X$. These are the \emph{same} as the eigenvectors of $X'X$ which are simply the columns of $V$, namely the $\mathbf{v}_i$.
+
+This is a linear smoother! We can use our trick for leave-one-out cross-validation here.
 
 \subsection{Choosing $\lambda$}
 Degrees of freedom, compare to OLS. AIC, BIC, cross-validation, k-fold.
+
+Degrees of freedom. For OLS there are $p$ free parameters and this is also the trace of the hat matrix:
+	$$\mbox{trace}(H) = \mbox{trace}\left\{ X(X'X)^{-1}X'\right\} = \mbox{trace}\left\{X'X(X'X)^{-1} \right\} = \mbox{trace}\left\{ I_p\right\}=p$$
+Use this analogy for Ridge:
+	\begin{eqnarray*}
+		\mbox{df}(\lambda) &=& \mbox{trace}\left\{ H(\lambda)\right\} =  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}\\
+		&=&\mbox{trace}\left\{UD^2(D^2 + \lambda I_p)^{-1}U'\right\}\\
+		&=& \mbox{trace}\left\{U'UD^2(D^2 + \lambda I_p)^{-1}\right\}\\
+		&=& \mbox{trace}\left\{D^2(D^2 + \lambda I_p)^{-1}\right\}\\
+		&=& \sum_{i=1}^p \frac{d_i^2}{d_i^2 + \lambda}
+	\end{eqnarray*}
+so we see that the degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which is OLS. We're assuming here that $X$ has full rank. 
+
 
 \section{Principal Components Regression}
 
