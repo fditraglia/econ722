@@ -38,9 +38,12 @@
 
 \maketitle 
 
+\section{Introduction}
+So far we've looked at model selection. For example, we considered the problem of choosing the ``best'' set of regressors for a forecasting problem. Here, the idea was to consider dropping regressors with small coefficients to get a favorable bias-variance tradeoff. There are several problems with this approach. First, variable selection can be unstable because of the discrete nature of the problem: small changes in the underlying data could lead to large changes in the selected set of regressors. Second, it is only computationally infeasible to consider all possible subsets of regressors when $p < 30$. Our colleague Andy Postelwaite actually has a microeconomic theory paper about this called ``Fact Free Learning.'' You should check it out: it's very interesting!
+
+In this lecture we'll consider an alternative to model selection called ``shrinkage.'' The idea is roughly as follows: rather than making a discrete choice of which variables are ``in'' and which are ``out,'' it might make more sense to leave everything in the model but ``regularize'' or ``shrink'' the estimated coefficients away from the maximum likelihood estimator, much as a Bayesian prior does. Rather than attempting to incorporate prior beliefs, however, here the idea is merely to find a clever way of adding bias that buys us a large decrease in variance. There will still be a model selection component here, but it will involve a single, continuous ``tuning'' or ``smoothing'' parameter.
+
 \section{Review of Matrix Decompositions}
-
-
 \subsection{The QR Decomposition}
 Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. The columns of $A$ are \emph{orthogonalized} in $Q$ via the Gram-Schmidt process. Since $Q$ has orthogonal columns, we have $Q'Q = I_k$. It is \emph{not} in general true that $QQ' = I$, however. In the special case where $A$ is square, $Q^{-1} = Q'$.
 
@@ -154,16 +157,20 @@ provides the best rank $L$ approximation to $X$. In other words, $\widehat{X}_L$
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
 	$$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$$
-In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? Does some form of the Gauss-Markov Theorem still hold?
+In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? 
 
 
 
-\subsection{Admissibility}
-To understand what follows, we'll need a concept from decision theory called \emph{admissibility}. We say that an estimator $\widehat{\theta}$ of some parameter $\theta$ is \textbf{admissible} if there
+\subsection{Dominance and Admissibility}
+To understand what follows, we'll need two concepts from decision theory: \textbf{dominance} and \emph{admissibility}. Let $\widehat{\theta}$ and $\widetilde{\theta}$ be two estimators of $\theta$, and $R$ be a risk function, e.g.\ MSE. We say that $\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\widehat{\theta},\theta) \leq R(\widetilde{\theta},\theta)$ for \emph{all} possible values of $\theta$ wand the inequality is \emph{strict} for \emph{at least one} possible value of $\theta$. We say that $\widehat{\theta}$ is \textbf{admissible} if there is no estimator that dominates it. To prove that an estimator is \textbf{inadmissible} it suffices to find an estimator that dominates it.
 
 \subsection{The James-Stein Estimator}
+It turns out that OLS is inadmissible relative to MSE loss when $p\geq 3$. This result was so surprising when first discovered that it is sometimes called ``Stein's Paradox.'' Efron and Morris (1977) provide a nice discussion. An estimator that can be shown to dominate OLS is the so-called ``positive-part James-Stein estimator'' which is given by
+	$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\sigma^2}{\widehat{\beta}' \widehat{\beta}} \right]_+$$
+where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$. To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. 
 
-\subsection{The Positive-Part James-Stein Estimator}
+Now that we know there is at least one estimator that can beat OLS, we'll consider the idea of shrinkage more generally, starting with Ridge Regression.
+
 
 \section{Ridge Regression} 
 Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking the estimated coefficients towards zero and towards each other}. This is accomplished by adding a squared $L_2$-norm ``penalty'' to the OLS objective function, yielding
