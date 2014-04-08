@@ -43,6 +43,9 @@ So far we've looked at model selection. For example, we considered the problem o
 
 In this lecture we'll consider an alternative to model selection called ``shrinkage.'' The idea is roughly as follows: rather than making a discrete choice of which variables are ``in'' and which are ``out,'' it might make more sense to leave everything in the model but ``regularize'' or ``shrink'' the estimated coefficients away from the maximum likelihood estimator, much as a Bayesian prior does. Rather than attempting to incorporate prior beliefs, however, here the idea is merely to find a clever way of adding bias that buys us a large decrease in variance. There will still be a model selection component here, but it will involve a single, continuous ``tuning'' or ``smoothing'' parameter.
 
+\section{References}
+Some good references for the material discussed here are Hastie, Tibshirani \& Friedman (2008; Chapter 3), and Murphy (2012; Chapters 7 \& 13). I'll also refer to some specifid papers which I'll post on Canvas.
+
 \section{Review of Matrix Decompositions}
 \subsection{The QR Decomposition}
 Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. The columns of $A$ are \emph{orthogonalized} in $Q$ via the Gram-Schmidt process. Since $Q$ has orthogonal columns, we have $Q'Q = I_k$. It is \emph{not} in general true that $QQ' = I$, however. In the special case where $A$ is square, $Q^{-1} = Q'$.
@@ -297,7 +300,32 @@ But what about AIC and BIC? I am not aware of any results that extend the asympt
 
 
 \section{Principal Components Regression}
+There is another kind of shrinkage estimation that is very closely related to Ridge Regression called \textbf{principal components regression} (PCR). The procedure is very simple:
+	\begin{enumerate}
+		\item Calculate the principal components $\mathbf{z}_1, \hdots, \mathbf{z}_p$ of the design matrix $X$.
+		\item Throw away all but the first $k$ principal components, where $k <p$.
+		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$ using OLS. 
+	\end{enumerate}
+Recall from above that Ridge Regression shrinks all principal components towards zero but shrinks low variance directions more than high variance directions. In constrast, PCR \emph{truncates} all principal components beyond the $k$th, shrinking them ``all the way'' to zero, and doesn't apply \emph{any} shrinkage to the first $k$ principal components. In essence, PCR is a much less smooth version of Ridge Regression. The received wisdom is that PCR typically results in worse predictions than Ridge because it shrinks the low variance directions too much and doesn't shrink the high variance directions at all. A recent paper suggests this evaluation may not be entirely accurate. Dhillon et al (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression. (In fact, the constant is 4.) In contrast, there are situations in which Ridge Regression can be \emph{arbitrarily worse} than PCR. Admittedly, the scenario they outline is extreme, but the basic point is sound: Ridge Regression may be better than PCR in some situations, but clearly not in all. 
 
 \section{LASSO}
+Much more can be said about LASSO from a theoretical perspective. Good references include Chernozhukov \& Hansen's 2013 slides for the NBER summer institute, Belloni, Chernozhukov \& Hansen (2010) and the book by van de Geer and B\"{u}hlman (2011).
 
+\subsection{Choosing the LASSO Penalty}
+Two different goals: recovering the ``true'' zeros, versus good predictive power. We'll focus on the latter.
+Flynn, Hurvich and Simonoff (2013).
+
+\todo[inline]{Caution about ``effective degrees of freedom metaphor.'' Two recent papers.}
+
+\subsection{Elastic Net}
+
+\subsection{Group LASSO}
+
+\subsection{Fused LASSO}
+
+\section{What about Inference?}
+Could go Bayesian. For a Frequentist, this is a very hard problem. A couple of recent papers, including Belloni et al.
+
+\section{Computations Using R}
+Chapter 6 of James et al.\ (2013) ends with three ``Labs''illustrating how to carry out various model selection and shrinkage procedures in R. The second and third of these illustrate Ridge Regression, Lasso, and PCR. There are some errors in the code as it appears in the book, so I've put together a corrected version called \texttt{ISLR\_ch6\_lab\_.R} and posted it in the GitHub repository for this class, available at \url{https://github.com/fditraglia/econ722}. This code makes heavy use of the excellent \texttt{GLMNET} package for R which is documented in Friedman, Hastie \& Tibshirani (2010).   
 \end{document}
