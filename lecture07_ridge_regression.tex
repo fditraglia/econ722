@@ -176,7 +176,7 @@ Since James-Stein beats OLS, we know that shrinkage is a good idea. Now we'll co
 \section{Ridge Regression} 
 Ridge regression is a technique that was originally designed to address the problem of multicollinearity. When two or more predictors are very strongly correlated, OLS can become unstable. For example, if $x_1$ and $x_2$ are \emph{nearly} linearly dependent, a large positive coefficient $\beta_1$ could effectively \emph{cancel out} a large negative coefficient $\beta_2$. Ridge Regression attempts to solve this problem by \emph{shrinking the estimated coefficients towards zero and towards each other}. This is accomplished by adding a squared $L_2$-norm ``penalty'' to the OLS objective function, yielding
 	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \beta'\beta$$
-where $\textbf{1}_n$ is an $(n\times 1)$ vector of ones, $\beta_0$ denotes the regression intercept and $\beta = (\beta_1, \hdots, \beta_p)'$ the remaining coefficients. Note that we do \emph{not} penalize the intercept in Ridge Regression. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding. so that there is no intercept and the problem becomes
+where $\textbf{1}_n$ is an $(n\times 1)$ vector of ones, $\beta_0$ denotes the regression intercept and $\beta = (\beta_1, \hdots, \beta_p)'$ the remaining coefficients. The Ridge Penalty parameter $\lambda$ is a non-negative constant that we have to choose. Note that we do \emph{not} penalize the intercept in Ridge Regression. The easiest and most common way to handle this is simply to de-mean both $X$ and $\mathbf{y}$ before proceeding. so that there is no intercept and the problem becomes
 	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min}(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta$$
 Throughout these notes we will assume that everything has been de-meaned so there is no intercept.
 
@@ -261,36 +261,34 @@ To better understand this quantity, we first take the economical SVD of $X$, nam
 	\end{eqnarray*}
 We see that the effective degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which simply gives OLS. 
 
-\subsection{Predictive Bias and Variance of OLS and Ridge}
+\subsection{Comparing the Ridge and OLS Predictions}
 
-Take the \emph{economical} singular value decomposition of the $(n\times p)$ centered (and possibly standardized) design matrix $X$. We have
+Take the \emph{economical} singular value decomposition of the $(n\times p)$ centered  design matrix $X$. We have
 	$$\underset{(n\times p)}{X} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$$
 where $r = \mbox{rank}(X)$ and thus
 	$$X'X = (UDV')'(UDV') = VDU'UDV' = VD^2V'$$
-Provided that the columns of $X$ are linearly indepdendent, $r = p$ and hence $VD^2 V'$ is the \emph{eigen-decomposition} of $X'X$. Since $X$ is centered, the sample covariance matrix of the regressors is $S = X'X/n$. Since it is simply a scalar multiple of $X'X$, the sample covariance matrix $S$ has the \emph{same eigenvectors} as $X'X$, namely the columns of $V$.
-
-
-Continuing under the assumption that $r = p$ so that $V$ is $(p\times p)$ and $V'V = V'V = I_p$, we have
+Provided that the columns of $X$ are linearly independent, $r = p$ and hence $VD^2 V'$ is the \emph{eigen-decomposition} of $X'X$. Since $X$ is centered, the sample covariance matrix of the regressors is $S = X'X/n$. Since it is simply a scalar multiple of $X'X$, the sample covariance matrix $S$ has the \emph{same eigenvectors} as $X'X$, namely the columns of $V$. Since $V$ diagonalizes $X$,
 	\begin{eqnarray*}
-		\widehat{\beta}_{Ridge} &=& \left(X'X  +\lambda I_p\right)^{-1} X'\mathbf{y} \\
-		&=& \left(VD^2V' + \lambda I_p\right)^{-1}(UDV')' \mathbf{y}\\
-		&=& \left(VD^2V' + \lambda VV'\right)^{-1}VDU' \mathbf{y}\\
-		&=& \left[V(D^2 + \lambda I_p)V'\right]^{-1}VDU'\mathbf{y}\\
-		&=&(V')^{-1}(D^2 + \lambda I_p)^{-1}V^{-1}VDU' \mathbf{y}\\
-		&=& V(D^2 + \lambda I_p)^{-1}DU'\mathbf{y}\\
-		&=& \left[\sum_{i=1}^p \mathbf{v}_i \left(\frac{d_i}{d_i^2 + \lambda}\right) \mathbf{u}_i'\right] \mathbf{y}
+		X'X &=& VD^2 V'\\
+		V'X'X V &=& D^2\\
+		V' (X'X/n)V &=& D^2/n\\
+		V' S V &=& D^2/n
 	\end{eqnarray*}
-
+In other words,
+	$$\textbf{v}_i' S \textbf{v}_i = d_i^2/n$$
+The left hand side is simply the \emph{sample variance} of the linear combination $X v_i$ of the predictor data, and this variance equals $d_i^2/n$. In fact, since $\mathbf{v}_i$ is the $i$th eigenvector of $S$, it follows that $X v_i$ contains the observations for the $i$th sample principal component of $\mathbf{x}$! Now, since $X = UDV'$, we have $XV = UD$ and hence $X \mathbf{v}_i = \mathbf{u}_i d_i$. Thus, up to scale, the basis vector $\mathbf{u}_i$ for the column space of $X$ \emph{is identical} to the $i$th sample principal component. This gives us a nice way of understanding how Ridge shrinks. Continuing under the assumption that $r = p$ so that $V$ is $(p\times p)$ and $V'V = V'V = I_p$, we have
 \begin{eqnarray*}
 	\widehat{y}_{Ridge} &=& X\widehat{\beta}_{Ridge} = (UDV')V(D^2 + \lambda I_p)^{-1}DU'\mathbf{y}\\
 	&=& UD(D^2 + \lambda I_p)^{-1}DU'\mathbf{y} = UD^2(D^2 + \lambda I_p)^{-1}U'\mathbf{y}\\
 	&=&\left[\sum_{i=1}^p \mathbf{u}_i \left(\frac{d_i^2}{d_i^2 +\lambda}\right)\mathbf{u}_i' \right] \mathbf{y}
 \end{eqnarray*}
-Can we relate this to PCR now? Yes! the principal components are the eigenvectors of the sample covariance matrix of $X$. These are the \emph{same} as the eigenvectors of $X'X$ which are simply the columns of $V$, namely the $\mathbf{v}_i$.
+Now, the singular values $d_i$ are arranged from largest to smallest and this corresponds to the variance of $X \mathbf{v}_i$ and hence $\mathbf{u}_i$. The smaller $d_i^2$ the greater the shrinkage. Thus, Ridge Regression shrinks \emph{low variance} directions by a large amount, and high variance directions by a small amount. In contrast, for OLS we have 
+	\begin{eqnarray*}
+		\widehat{\beta} &=& UU'\mathbf{y} = \sum_{i=1}^p \mathbf{u}_i \mathbf{u_i}' \mathbf{y}
+	\end{eqnarray*}
+so there is \emph{no} shrinkage in any direction.
 
-This is a linear smoother! We can use our trick for leave-one-out cross-validation here.
-
-\subsection{Choosing $\lambda$}
+\subsection{Choosing $\lambda$ for Ridge}
 To implement Ridge Regression we need a method of choosing $\lambda$. One idea is cross-validation, either k-fold or leave-one-out. Since Ridge Regression is a linear smoother, we can use the computational trick you derived on Problem Set 5 to avoid directly calculating the leave-one-out estimators. The role of the OLS ``hat matrix'' $H = X(X'X)^{-1}X'$ is played by $H(\lambda) = X(X'X + \lambda I_p)^{-1} X'$.
 
 But what about AIC and BIC? I am not aware of any results that extend the asymptotic results we examined for AIC and BIC in maximum likelihood estimation to Ridge Regression. There are some analogous results for LASSO, which we'll talk about below, based on replacing the the number of parameters in the penalty term with the ``effective degrees of freedom.'' One could try the analogous procedure for Ridge. It would be interesting to compare the results to cross-validation. The Generalized Information Criterion (GIC) of Konishi and Kitagawa (1996) provides an extension of TIC to maximum penalized likelihood estimation, which includes Ridge as a special case. I haven't seen this used in practice, but it might be worth trying.
