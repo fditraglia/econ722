@@ -243,7 +243,23 @@ Since we've reduced Ridge Regression to OLS on a modified dataset, we can use th
 	$$\widehat{\beta}_{Ridge} = (\widetilde{X}' \widetilde{X})^{-1} \widetilde{X}'\,\widetilde{\textbf{y}} = R^{-1} Q' \,\widetilde{\textbf{y}}$$
 which we can obtain by back-solving the system $R\widehat{\beta}_{Ridge} = Q'\, \widetilde{\mathbf{y}}$. In situations where $p \gg n$, it's actually much faster to use the SVD rather than the QR decomposition because the rank of $X$ will be $n$ in this case. For details on how to implement this, see Murphy (2012; Section 7.5.2).
 
+\subsection{Effective Degrees of Freedom for Ridge Regression}
 
+For OLS, model complexity depends on the number of free parameters: $p$. This is equal to the trace of the hat matrix:
+	$$\mbox{trace}(H) = \mbox{trace}\left\{ X(X'X)^{-1}X'\right\} = \mbox{trace}\left\{X'X(X'X)^{-1} \right\} = \mbox{trace}\left\{ I_p\right\}=p$$
+The situation is more complicated for Ridge Regression since, although there are $p$ parameters, they are not free: the $L_2$ penalty shrinks them towards zero and towards each other. By analogy to OLS, the ``effective degrees of freedom'' of Ridge Regression, a measure of model complexity, is defined as the trace of the analogue of the OLS hat matrix:
+	 $$\mbox{df}(\lambda) =\mbox{trace}\left\{ H(\lambda)\right\} =  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}$$
+To better understand this quantity, we first take the economical SVD of $X$, namely $X = UDV'$. Under the assumption that $\mbox{rank}(X) = p$, $V$ is $(p\times p)$ and hence $V'V = V'V = I_p$. Thus, we have
+	\begin{eqnarray*}
+		\mbox{df}(\lambda) &=&  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}\\
+		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda I_p)^{-1}VDU' \right\}\\
+		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda VV')^{-1}VDU' \right\}\\
+		&=& \mbox{trace}\left\{UDV' \left[V(D^2 + \lambda I_p)V' \right]^{-1}VDU' \right\}\\
+		&=&\mbox{trace}\left\{UD(D^2 + \lambda I_p)^{-1}DU'\right\}\\
+		&=& \mbox{trace}\left\{D^2(D^2 + \lambda I_p)^{-1}\right\}\\
+		&=& \sum_{i=1}^p \frac{d_i^2}{d_i^2 + \lambda}
+	\end{eqnarray*}
+We see that the effective degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which simply gives OLS. 
 
 \subsection{Predictive Bias and Variance of OLS and Ridge}
 
@@ -277,19 +293,9 @@ This is a linear smoother! We can use our trick for leave-one-out cross-validati
 \subsection{Choosing $\lambda$}
 To implement Ridge Regression we need a method of choosing $\lambda$. One idea is cross-validation, either k-fold or leave-one-out. Since Ridge Regression is a linear smoother, we can use the computational trick you derived on Problem Set 5 to avoid directly calculating the leave-one-out estimators. The role of the OLS ``hat matrix'' $H = X(X'X)^{-1}X'$ is played by $H(\lambda) = X(X'X + \lambda I_p)^{-1} X'$.
 
-Degrees of freedom, compare to OLS. AIC, BIC, cross-validation, k-fold.
+But what about AIC and BIC? I am not aware of any results that extend the asymptotic results we examined for AIC and BIC in maximum likelihood estimation to Ridge Regression. There are some analogous results for LASSO, which we'll talk about below, based on replacing the the number of parameters in the penalty term with the ``effective degrees of freedom.'' One could try the analogous procedure for Ridge. It would be interesting to compare the results to cross-validation. The Generalized Information Criterion (GIC) of Konishi and Kitagawa (1996) provides an extension of TIC to maximum penalized likelihood estimation, which includes Ridge as a special case. I haven't seen this used in practice, but it might be worth trying.
 
-Degrees of freedom. For OLS there are $p$ free parameters and this is also the trace of the hat matrix:
-	$$\mbox{trace}(H) = \mbox{trace}\left\{ X(X'X)^{-1}X'\right\} = \mbox{trace}\left\{X'X(X'X)^{-1} \right\} = \mbox{trace}\left\{ I_p\right\}=p$$
-Use this analogy for Ridge:
-	\begin{eqnarray*}
-		\mbox{df}(\lambda) &=& \mbox{trace}\left\{ H(\lambda)\right\} =  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}\\
-		&=&\mbox{trace}\left\{UD^2(D^2 + \lambda I_p)^{-1}U'\right\}\\
-		&=& \mbox{trace}\left\{U'UD^2(D^2 + \lambda I_p)^{-1}\right\}\\
-		&=& \mbox{trace}\left\{D^2(D^2 + \lambda I_p)^{-1}\right\}\\
-		&=& \sum_{i=1}^p \frac{d_i^2}{d_i^2 + \lambda}
-	\end{eqnarray*}
-so we see that the degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which is OLS. We're assuming here that $X$ has full rank. 
+
 
 
 \section{Principal Components Regression}
