@@ -167,9 +167,10 @@ To understand what follows, we'll need two concepts from decision theory: \textb
 \subsection{The James-Stein Estimator}
 It turns out that OLS is inadmissible relative to MSE loss when $p\geq 3$. This result was so surprising when first discovered that it is sometimes called ``Stein's Paradox.'' Efron and Morris (1977) provide a nice discussion. An estimator that can be shown to dominate OLS is the so-called ``positive-part James-Stein estimator'' which is given by
 	$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\sigma^2}{\widehat{\beta}' \widehat{\beta}} \right]_+$$
-where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$. To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. 
+where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$. To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. We see that this estimator shrinks us \emph{away} from the least-squares fit and towards zero. 
 
-Now that we know there is at least one estimator that can beat OLS, we'll consider the idea of shrinkage more generally, starting with Ridge Regression.
+Since James-Stein beats OLS, we know that shrinkage is a good idea. Now we'll consider some more general forms of shrinkage, starting with Ridge Regression.
+
 
 
 \section{Ridge Regression} 
@@ -182,7 +183,9 @@ Throughout these notes we will assume that everything has been de-meaned so ther
 \subsection{Ridge is \emph{Not} Scale Invariant} When we carry out OLS, if we re-scale a regressor $\mathbf{x}$, replacing it with $c \mathbf{x}$ where $c$ is some nonzero constant, then the corresponding OLS coefficient estimate is scaled by $1/c$ to compensate. In other words, OLS is \emph{scale invariant}. The same is not true of Ridge Regression, so it is common to convert the columns of the design matrix to the same units before proceeding. The usual way of handling this is simply to \emph{standardize} each of the regressors.
 
 \subsection{Another Way to Express Ridge Regression}
-\todo[inline]{Data-dependent mapping with ``fitting budget.''}
+The following is an equivalent statement of the Ridge Regression problem:
+$$\widehat{\beta}_{Ridge} = \underset{\beta}{\arg \min}(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) \quad \mbox{subject to} \quad \beta'\beta \leq t$$
+In other words, Ridge Regression is like least squares ``on a budget.'' If you want to make one coefficient estimate larger, you have to make another one smaller. The ``income'' level $t$ maps one-to-one to $\lambda$, although the mapping is data-dependent.
 
 \subsection{Ridge as Bayesian Linear Regression}
 As you may recall from the first part of the semester, Bayesian models with informative priors automatically provide a form of shrinkage. Indeed, many frequentist shrinkage estimators can be expressed in Bayesian terms. Provided that we ignore the regression constant, the solution to Ridge Regression is \emph{equivalent} to MAP (maximum a posteriori) estimation based on the following  Bayesian regression model
@@ -213,10 +216,6 @@ Hence,
 	$$\widehat{\beta}_{Ridge} = (X'X + \lambda I_p)^{-1} X'\textbf{y}$$
 So is $(X'X + \lambda I_p)$ guaranteed to be invertible? We need this to be the case for the solution of the Ridge Regression problem to be unique. In the following section, we'll provide an alternative way of analyzing the problem by turning it into something we're more familiar with: OLS.
 
-
-\subsection{Bias and Variance}
-\todo[inline]{Explain how $\lambda$ controls both, using the preceding formula. Makes it very clear how the bias arises and why the variance is lower. Compare to OLS formulas.}
-
 \subsection{Ridge Regression via OLS}
 From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augemented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
 
@@ -240,8 +239,10 @@ Which we can show as follows:
 \subsection{Ridge is Always Unique} We know that the OLS estimator is only unique provided that the design matrix has full column rank. In constrast there is \emph{always} a unique solution to the Ridge Regression problem, even when there are more regressors than observations. This follows \emph{immediately} from the preceding: the columns of $\sqrt{\lambda}I_p$ are linearly independent, so the columns of the augmented data matrix $\widetilde{X}$ are \emph{also} linearly independent, \emph{regardless} of whether the same holds for the columns of $X$. Thus we can use Ridge Regression even in settings in which there are more regressors than observations!
 
 \subsection{Efficient Calculations for Ridge Regression}
+Since we've reduced Ridge Regression to OLS on a modified dataset, we can use the QR decomposition for efficient and stable calculations. First take the QR decomposition of $\widetilde{X}$, namely $\widetilde{X} = QR$. Then, 
+	$$\widehat{\beta}_{Ridge} = (\widetilde{X}' \widetilde{X})^{-1} \widetilde{X}'\,\widetilde{\textbf{y}} = R^{-1} Q' \,\widetilde{\textbf{y}}$$
+which we can obtain by back-solving the system $R\widehat{\beta}_{Ridge} = Q'\, \widetilde{\mathbf{y}}$. In situations where $p \gg n$, it's actually much faster to use the SVD rather than the QR decomposition because the rank of $X$ will be $n$ in this case. For details on how to implement this, see Murphy (2012; Section 7.5.2).
 
-\paragraph{Calculations When $p\gg n$} 
 
 
 \subsection{Predictive Bias and Variance of OLS and Ridge}
@@ -274,6 +275,8 @@ Can we relate this to PCR now? Yes! the principal components are the eigenvector
 This is a linear smoother! We can use our trick for leave-one-out cross-validation here.
 
 \subsection{Choosing $\lambda$}
+To implement Ridge Regression we need a method of choosing $\lambda$. One idea is cross-validation, either k-fold or leave-one-out. Since Ridge Regression is a linear smoother, we can use the computational trick you derived on Problem Set 5 to avoid directly calculating the leave-one-out estimators. The role of the OLS ``hat matrix'' $H = X(X'X)^{-1}X'$ is played by $H(\lambda) = X(X'X + \lambda I_p)^{-1} X'$.
+
 Degrees of freedom, compare to OLS. AIC, BIC, cross-validation, k-fold.
 
 Degrees of freedom. For OLS there are $p$ free parameters and this is also the trace of the hat matrix:
