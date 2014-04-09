@@ -302,13 +302,29 @@ But what about AIC and BIC? I am not aware of any results that extend the asympt
 \section{Principal Components Regression}
 There is another kind of shrinkage estimation that is very closely related to Ridge Regression called \textbf{principal components regression} (PCR). The procedure is very simple:
 	\begin{enumerate}
-		\item Calculate the principal components $\mathbf{z}_1, \hdots, \mathbf{z}_p$ of the design matrix $X$.
-		\item Throw away all but the first $k$ principal components, where $k <p$.
-		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$ using OLS. 
+		\item Calculate the SVD $X=UDV'$ and let $\mathbf{v}_i$ be the $i$th column of $V$.
+		\item Construct the sample principal components: $\mathbf{z}_i = X \mathbf{v}_i$.
+		\item Throw away all but the first $M$ principal components, where $M <p$.
+		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$. 
 	\end{enumerate}
 Recall from above that Ridge Regression shrinks all principal components towards zero but shrinks low variance directions more than high variance directions. In constrast, PCR \emph{truncates} all principal components beyond the $k$th, shrinking them ``all the way'' to zero, and doesn't apply \emph{any} shrinkage to the first $k$ principal components. In essence, PCR is a much less smooth version of Ridge Regression. The received wisdom is that PCR typically results in worse predictions than Ridge because it shrinks the low variance directions too much and doesn't shrink the high variance directions at all. A recent paper suggests this evaluation may not be entirely accurate. Dhillon et al (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression. (In fact, the constant is 4.) In contrast, there are situations in which Ridge Regression can be \emph{arbitrarily worse} than PCR. Admittedly, the scenario they outline is extreme, but the basic point is sound: Ridge Regression may be better than PCR in some situations, but clearly not in all. 
 
 \section{LASSO}
+Ridge Regression adds a squared $L_2$-norm penalty to the usual OLS criterion function:
+	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \left| \left| \beta\right| \right|_2^2$$
+By analogy, we could imagine trying some \emph{other} penalty function to get a different kind of shrinkage behavior. The Least Absolute Shrinkage and Selection Operator (LASSO) does exactly this by adding an $L_1$ penalty to the OLS criterion function:
+	$$\widehat{\beta}_{Lasso} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
+Like Ridge, LASSO avoids the problem of coefficient estimates that are ``unreasonably large'' by penalizing the legnth of $\beta$. Yet the \emph{way} in which it penalizes is quite different, as we will see. Again, we usually center both $X$ and $\mathbf{y}$ to eliminate the unpenalized intercept. The rest of these notes assume this has already been done, so the problem becomes:
+	$$\widehat{\beta}_{Lasso} =\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
+Like Ridge, Lasso is \emph{not} scale invariant, so we typically standardize the columns of $X$ before proceeding.
+
+\subsection{Why Use an $L_1$ Penalty?}
+
+
+Want a sparse solution, variable selection, shrink large coeffs less. Still want convex problem.
+
+For computational reasons, convex penalty functions are typically favored.\footnote{See Taddy (2013) for a description of }
+
 Much more can be said about LASSO from a theoretical perspective. Good references include Chernozhukov \& Hansen's 2013 slides for the NBER summer institute, Belloni, Chernozhukov \& Hansen (2010) and the book by van de Geer and B\"{u}hlman (2011).
 
 \subsection{Choosing the LASSO Penalty}
