@@ -25,7 +25,7 @@ RMSE <- function(pred, truth){
 x <- model.matrix(Salary ~ ., data = Hitters)
 y <- Hitters$Salary
 
-#The argument 0 <= alpha <= 1 is the elastic net mixing parameter. A value of 0 gives ridge and a value of 1 gives ridge
+#The argument 0 <= alpha <= 1 is the elastic net mixing parameter. A value of 0 gives ridge and a value of 1 gives Lasso
 
 #By default glmnet() standardizes variables. To change this, set standardize = FALSE.
 
@@ -143,7 +143,7 @@ cbind(ridge.coef, lasso.coef)
 library(pls)
 ?pcr
 
-#Essentially, the syntax of this function is the same as lm but there are some nifty options. If we set scale = TRUE all predictors are standardized before generating the principal components. If we wet validation = "CV" then tenfold cross-validation is used to choose the number of principle components used. We can examine the fit using summary.
+#Essentially, the syntax of this function is the same as lm but there are some nifty options. If we set scale = TRUE all predictors are standardized before generating the principal components. If we set validation = "CV" then tenfold cross-validation is used to choose the number of principle components used. We can examine the fit using summary.
 
 #QUESTION: There are discrete predictors in this dataset, right? Doesn't that screw up PCA? 
 
