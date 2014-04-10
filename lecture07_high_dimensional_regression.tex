@@ -381,8 +381,32 @@ Thus, for the case of orthonormal regressors we have:
 	\widehat{\beta}_{Lasso} &=& \underset{\beta}{\arg \min} (\beta'\beta - 2\beta' \widehat{\beta}_{MLE})  +  \lambda \left| \left| \beta\right| \right|_1\\
 		&=& \underset{\beta}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
 \end{eqnarray*}
+Here's the key: because the regressors are orthonormal, the optimization problem has been ``de-coupled.'' Since each $\beta_j$ only appears in one term of the sum, we can solve the overall optimization problem by solving $p$ \emph{completely independent} optimization problems:
+	$$\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)$$
+Each of these $p$ objective functions has three terms. The first and third are always positive: they depend only on the absolute magnitude of $\beta_j$. In contrast, the second term could be either positive or negative depending on the signs of $\widehat{\beta}^{MLE}_j$ and $\beta_j$. Now, $\widehat{\beta}^{MLE}_j$ is outside our control: it's simply a function of the data. And whatever the \emph{magnitude} of $\beta_j$ changing its sign will not effect either $\beta_j^2$ or $\lambda|\beta_j|$. It follows that since we want to \emph{minimize} the criterion, we should \emph{match} the sign of $\beta_j$ to that of $\widehat{\beta}^{MLE}_j$. This ensures that the second term is negative. Accordingly, we consider two cases. 
 
+\paragraph{Case I: $\widehat{\beta}^{MLE}_j >0$} As explained above we need to match the sign of $\beta_j$ to that of the MLE. Thus, we must have $\beta_j > 0$. Since $\beta_j >0$, it follows that $|\beta_j| = \beta_j$ and the problem becomes
+	$$\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \; \beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\beta_j$$
+Now that that pesky absolute value is gone, this is a straightforward calculus problem. The first order condition is $2\beta_j + \lambda = 2 \widehat{\beta}^{MLE}_j$. Solving, we have
+	$$\beta_j = \widehat{\beta}^{MLE}_j - \frac{\lambda}{2}$$
+But we're not quite done: we need $\beta_j > 0$ but the preceding expression will give a \emph{negative} value for $\beta_j$ if $\lambda$ is big enough. To keep this from happening, our corner solution must be to set $\beta_j = 0$ in this case. In other words, we have
+	$$\widehat{\beta}^{Lasso}_j = \left(\widehat{\beta}^{MLE}_j - \frac{\lambda}{2} \right)_+ = \mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\left(\left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right)_+$$
 
+\paragraph{Case II: $\widehat{\beta}^{MLE}_j \leq 0$} In this case, we must have $\beta_j \leq 0$ to match the sign of the MLE. It follows that $|\beta_j| = -\beta_j$ so the problem becomes
+$$\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \; \beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j - \lambda\beta_j$$
+The first order condition is $2\beta_j = 2\widehat{\beta}^{MLE}_j +\lambda$. Solving,
+	$$\widehat{\beta}_j = \widehat{\beta}^{MLE}_j + \frac{\lambda}{2}$$
+In this case we need $\beta_j <0$, just like $\widehat{\beta}^{MLE}_j$. But if $\lambda$ is sufficiently large, this requirement will be violated. To keep this from happening, our corner solution is, again, $\beta_j = 0$. We can express this as 
+	$$\widehat{\beta}^{Lasso}_j =\mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\left(\left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right)_+$$
+Hooray! We got the same answer in each case! To summarize, provided that $X$ is orthonormal, the Ridge and Lasso estimators are as follows:
+	\begin{eqnarray*}
+		\widehat{\beta}^{Ridge}_j &=&  \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j\\
+		\widehat{\beta}^{Lasso}_j &=&\mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\left(\left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right)_+
+	\end{eqnarray*}
+Figure \ref{fig:ridge_lasso_shrink} depicts the difference between these two procedures. Whereas Ridge shrinks each element of $\widehat{\beta}_{MLE}$ by the same \emph{proportion}, namely $1/(1+\lambda)$, Lasso sets any elements of $\widehat{\beta}_{MLE}$ that are less than $\lambda/2$ to zero and \emph{translates} all other elements by a constant distance $\lambda/2$. 
+
+\subsection{Effective Degrees of Freedom for Lasso}
+For a given value of $\lambda$ how complex is the corresponding Ridge fit compared to the Lasso fit? Is there a way for us to express these very different procedures in common units? We argued above that a reasonable measure of the complexity of Ridge Regression 
 
 \begin{figure}
 	\centering
