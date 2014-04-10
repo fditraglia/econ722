@@ -362,22 +362,26 @@ When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their 
 \end{figure}
 
 Yet another way to understand the difference between Ridge and Lasso is algebraically. For simplicity, and without loss of generality, suppose that $X$ is orthonormal. Another way of putting this is, suppose that we've replaced $X$ with its principal components. Then $X'X = I$ so we have
-\begin{eqnarray*}
-	(\mathbf{y}-X\beta)'(\mathbf{y}-X\beta) &=&
-		\mathbf{y}'\mathbf{y} + \beta'X'X\beta -2\beta'X' \mathbf{y} \\
-		&=& \mathbf{y}'\mathbf{y} +\beta'\beta -2\beta' X'\mathbf{y}\\
-		&=& (\mbox{constant}) + \sum_{j=1}^p \beta_j^2 - 2 \beta'\left( \sum_{i=1}^n \mathbf{x}_i y_i\right)\\
-		&=& (\mbox{constant}) + \sum_{j=1}^p \beta_j^2 - 2 \sum_{j=1}^p \sum_{i=1}^n \beta_j x_{ij}y_i\\
-\end{eqnarray*}
-Thanks to this convenient simplification, solving for the MLE is simple. The derivative of the criterion function with respect to $\beta_j$ is 
-	$$2\beta_j  - 2 \sum_{i=1}^n x_{ij} y_i$$
-so the MLE is
+	$$\widehat{\beta}_{MLE} = (X'X)^{-1}X'\textbf{y} = X'\textbf{y}$$
+or written elementwise,
 	$$\widehat{\beta}^{MLE}_j = \sum_{i=1}^n x_{ij}y_i$$
-The solution to Ridge Regression is also very simple in the case of orthonormal regressors. We have:
-	$$\widehat{\beta}_{Ridge} =\left(X'X + \lambda I_p \right)^{-1}X'y = \left(I_p + \lambda I_p \right)^{-1}\left( \sum_{i=1}^n \mathbf{x}_i y_i\right)$$
+Similarly, for Ridge Regression we have
+	$$\widehat{\beta}_{Ridge} =\left(X'X + \lambda I_p \right)^{-1}X'y = \left(I_p + \lambda I_p \right)^{-1} \widehat{\beta}_{MLE}$$
 hence
-	$$\widehat{\beta}^{Ridge}_j = \frac{1}{1+\lambda} \sum_{i=1}^n x_{ij}y_i = \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j$$
-The calculations for Lasso are a bit more involved since there is no closed-form solution. 
+	$$\widehat{\beta}^{Ridge}_j =  \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j$$
+The calculations for Lasso are a bit more involved since there is no closed-form solution. We're trying to solve
+	$$\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
+Now using $X'X = I$ along with $\widehat{\beta}_{MLE} = X'\textbf{y}$, we can expand the first term as
+	\begin{eqnarray*}
+		 (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) &=& \mathbf{y}'\mathbf{y} - 2\beta' X' \mathbf{y} + \beta' X'X \beta \\
+		 	&=& (\mbox{constant}) - 2\beta' \widehat{\beta}_{MLE} + \beta'\beta
+	\end{eqnarray*}
+Thus, for the case of orthonormal regressors we have:
+\begin{eqnarray*}
+	\widehat{\beta}_{Lasso} &=& \underset{\beta}{\arg \min} (\beta'\beta - 2\beta' \widehat{\beta}_{MLE})  +  \lambda \left| \left| \beta\right| \right|_1\\
+		&=& \underset{\beta}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
+\end{eqnarray*}
+
 
 
 \begin{figure}
