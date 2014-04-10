@@ -306,7 +306,7 @@ There is another kind of shrinkage estimation that is very closely related to Ri
 		\item Throw away all but the first $M$ principal components, where $M <p$.
 		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$. 
 	\end{enumerate}
-Recall from above that Ridge Regression shrinks all principal components towards zero but shrinks low variance directions more than high variance directions. In constrast, PCR \emph{truncates} all principal components beyond the $k$th, shrinking them ``all the way'' to zero, and doesn't apply \emph{any} shrinkage to the first $k$ principal components. In essence, PCR is a much less smooth version of Ridge Regression. The received wisdom is that PCR typically results in worse predictions than Ridge because it shrinks the low variance directions too much and doesn't shrink the high variance directions at all. A recent paper suggests this evaluation may not be entirely accurate. Dhillon et al (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression. (In fact, the constant is 4.) In contrast, there are situations in which Ridge Regression can be \emph{arbitrarily worse} than PCR. Admittedly, the scenario they outline is extreme, but the basic point is sound: Ridge Regression may be better than PCR in some situations, but clearly not in all. 
+Recall from above that Ridge Regression shrinks all principal components towards zero but shrinks low variance directions more than high variance directions. In constrast, PCR \emph{truncates} all principal components beyond the $k$th, shrinking them ``all the way'' to zero, and doesn't apply \emph{any} shrinkage to the first $k$ principal components. In essence, PCR is a much less smooth version of Ridge Regression. The received wisdom is that PCR typically results in worse predictions than Ridge because it shrinks the low variance directions too much and doesn't shrink the high variance directions at all. A recent paper, however, suggests this evaluation may not be entirely accurate. Dhillon et al (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression. (In fact, the constant is 4.) In contrast, there are situations in which Ridge Regression can be \emph{arbitrarily worse} than PCR. Admittedly, the scenario they outline is extreme, but the basic point is sound: Ridge Regression may be better than PCR in some situations, but not all. 
 
 \section{LASSO}
 Ridge Regression adds a squared $L_2$-norm penalty to the usual OLS criterion function:
@@ -338,23 +338,52 @@ where the parameter $\mu$ is the mean, as well as median and mode, while the var
 
 
 \subsection{Why Use an $L_1$ Penalty?}
-The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage procedure for high-dimensional linear regression that combined the best features of Ridge and subset selection, while avoiding their drawbacks. Subset selection provides interpretable results -- each regressor is either ``in'' or ``out'' -- and estimates the coefficients on selected regressors without bias. Unfortunately, it suffers from a very high variance due to the discrete nature of the problem and is computationally infeasible when $p$ is greater than 30 or so. Ridge has a low variance, but this comes at the cost of biased estimates. Moreover, since Ridge includes all regressors in the model, the results can be hard to interpret. The idea behind Lasso is to both \emph{shrink and select}: all coefficient estimates are regularized away from MLE but some are regularized all the way to zero and hence discarded from the model. In other words, the Lasso solution is \emph{always sparse} provided that $\lambda$ is sufficiently large. For this reason, there has been quite a lot of interest in Lasso as a \emph{variable selection technique} in recent years. Since we are mainly interested in efficient forecasting, we won't 
+The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage procedure for high-dimensional linear regression that combined the best features of Ridge and subset selection, while avoiding their drawbacks. Subset selection provides interpretable results -- each regressor is either ``in'' or ``out'' -- and estimates the coefficients on selected regressors without bias. Unfortunately, it suffers from a very high variance due to the discrete nature of the problem and is computationally infeasible when $p$ is greater than 30 or so. Ridge has a low variance, but this comes at the cost of biased estimates. Moreover, since Ridge includes all regressors in the model, the results can be hard to interpret. The idea behind Lasso is to both \emph{shrink and select}: all coefficient estimates are regularized away from MLE but some are regularized all the way to zero and hence discarded from the model. At the same time, we want to make sure keep the computational complexity under control. The Lasso solution is \emph{always sparse} provided that $\lambda$ is sufficiently large. For this reason, there has been quite a lot of interest in Lasso as a \emph{variable selection technique} in recent years. Since we are mainly interested in efficient forecasting, we won't go into detail on this. Some good recent references that approach this issue from a theoretical perspective include Belloni, Chernozhukov \& Hansen (2010) and the book \emph{Statistics for High-Dimensional Data} by B\"{u}hlmann and van de Geer (2011). See also Chernozhukov \& Hansen's 2013 slides for the NBER Summer Institute. 
 
-Because of the nature of its penalty function, Lasso tends to shrink large coefficients \emph{less} than Ridge and small coefficients \emph{more}. Let's try to understand why this is so.
+One of the most important features of Lasso is that it is a \emph{convex} optimization problem. More generally, consider a penalty term of the form $\sum_{j=1}^p |\beta_j|^q$. When $q=1$ we have Lasso, and when $q = 2$ we have Ridge.  There is an important tradeoff here: a desire for sparse solutions and low bias pushes us towards \emph{non-convex} penalties and suggests that we make $q$ very small. On the other hand, a desire for computational feasibility and low variance pushes suggests that we use \emph{larger} values of $q$. Lasso uses the \emph{smallest value of $q$ that keeps the problem convex}, effectively trying to take the best of both worlds. For recent a treatment of \emph{non-convex} penalty functions, see Taddy (2013).
+
+\subsection{Comparing Lasso to Ridge}
+Because of the nature of its penalty function, Lasso tends to shrink large coefficients \emph{less} than Ridge and small coefficients \emph{more}, leading to a sparse solution. One way of understanding this is to take a Bayesian perspective. Since its prior has fatter tails and is highly peaked around zero, Lasso ``expects'' a few fairly large coefficients and many coefficients that are effectively zero. This is illustrated in Figure \ref{fig:ridge_lasso_prior}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.85]{ISLR_ch6_fig11}
+	\caption{Both Ridge and Lasso can be viewed as MAP estimators based on a Bayesian linear regression model. Whereas Ridge, at left, puts a normal prior on the regression coefficients, Lasso, at right, uses a Laplace prior, which has fatter tails and a taller peak at zero. This figure appears in Chapter 6 of James et al.\ (2013).}
+	\label{fig:ridge_lasso_prior}
+\end{figure}
+
+When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their ``budget constraint'' form. Both have the same objective function, which is proportional to the normal likelihood and describes a set of elliptical contours in $(\beta_1,\beta_2)$ -- space, centered at the MLE. Whereas Ridge has a circular constraint set, however, Lasso has a diamond-shaped one. Figure \ref{fig:ridge_lasso_constraint} shows how this difference in penalty functions leads to very different results. Sometimes the likelihood surface will hit a ``corner'' of the Lasso constraint set, leading to a zero coefficient estimate. In contrast, the Ridge constraint set has no corners.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.7]{ISLR_ch6_fig7}
+	\caption{In each panel $\widehat{\beta}$ denotes the MLE and the ellipses represent the contours of the likelihood. Both Lasso, at left, and Ridge, at right, shrink towards zero and away from the MLE. Because of its diamond-shaped constraint set, however, Lasso leads to a sparse solution, whereas Ridge does not. This figure appears in Chapter 6 of James et al (2013).}
+	\label{fig:ridge_lasso_constraint}
+\end{figure}
+
+Yet another way to understand the difference between Ridge and Lasso is algebraically
+
+For simplicity, and without loss of generality, suppose that $X$ is orthonormal. (Another way of putting this is, suppose that we've replaced $X$ with its principal components.) Then $X'X = I$ so we have
+\begin{eqnarray*}
+	
+\end{eqnarray*}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.7]{ISLR_ch6_fig10}
+	\caption{This figure appears in Chapter 6 of James et al (2013).}
+	\label{fig:ridge_lasso_shrink}
+\end{figure}
 
 
-Two highly correlated regressors: Ridge gives them similar coefs but Lasso sets one of them, more or less chosen randomly, to zero.
-
-Want a sparse solution, variable selection, shrink large coeffs less. Still want convex problem.
-
-For computational reasons, convex penalty functions are typically favored.\footnote{See Taddy (2013) for a description of }
-
-Much more can be said about LASSO from a theoretical perspective. Good references include Chernozhukov \& Hansen's 2013 slides for the NBER summer institute, Belloni, Chernozhukov \& Hansen (2010) and the book by van de Geer and B\"{u}hlman (2011).
 
 
-\todo[inline]{Caution about ``effective degrees of freedom metaphor.'' Two recent papers.}
+\subsection{Don't be Fooled by Sparsity}
+Many researchers favor Lasso because they consider sparse solutions interpretable. But just because your solution is sparse, that doesn't make it meaningful. When two predictors are highly correlated, Ridge assigns them very similar coefficients. In contrast, Lasso more or less arbitrarily gives one a zero coefficient and the other a nonzero coefficient. Extremely small changes to the dataset can easily flip the identities of the zero and nonzero coefficients. This suggests that we sould be cautious about trying to use Lasso for variable selection. Indeed, the theoretical results that justify its use in this fashion lean heavily on the assumption that the DGP \emph{is in fact sparse}. This is a very strong assumption, particularly in social science. There are many situations in which Lasso works well, but it isn't magic: it's an algorithm, and algorithms don't do our science for us.
+
 
 \subsection{Elastic Net}
+There are arguments in favor of Ridge, and there are arguments in favor of Lasso. So why not try combining them? This is precisely the idea behind the so-called \emph{elastic net}, named, according to its creators, for its tendency to
 
 \subsection{Group LASSO}
 
@@ -365,6 +394,9 @@ Two different goals: recovering the ``true'' zeros, versus good predictive power
 Flynn, Hurvich and Simonoff (2013).
 
 Also Bayesian Lasso Park and Casella (2008).
+
+
+\todo[inline]{Caution about ``effective degrees of freedom metaphor.'' Two recent papers.}
 
 \subsection{Inference for LASSO}
 All of this regularized linear regression stuff sounds great: it's computationally efficient and helps us make more reasonable predictions in a ``data-rich'' environment. But what if we want to carry out \emph{inference} for these models? Is there a simple way to proceed? 
