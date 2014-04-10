@@ -448,7 +448,7 @@ The tuning parameter $\alpha$ controls ``how close'' the elastic net is to Ridge
 % Could go Bayesian. For a Frequentist, this is a very hard problem. A couple of recent papers, including Belloni et al.
 
 \subsection{The Bayesian Lasso}
-As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian regression model with a Laplace prior, treating the error variance as known. The posterior mode, however, is a somewhat less than ideal summary. If forced to summarize a posterior using a single number we'd typically be much more comfortable with the mean or median. Unlike Ridge Regression
+As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian regression model with a Laplace prior, treating the error variance as known. The posterior mode, however, is a somewhat less than ideal summary. If forced to summarize a posterior using a single number we'd typically be much more comfortable with the mean or median. Park and Casella (2008) propose fully Bayesian version of the Lasso using a conditional Laplace prior for $\beta$ and a noninformative, scale-invariant prior for the error variance $\sigma^2$. Using the marginal likelihood to select $\lambda$, the posterior mean provides an estimator that is not exactly sparse, but appears to represent a compromise between Ridge and Lasso. By writing the Laplace distribution as a exponential scale mixture of normals, they show how to Gibbs sample the model and additionally consider inference and hyperpriors for $\lambda$.
 
 
 \section{Shrinkage Estimation Using R}
