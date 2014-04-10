@@ -343,7 +343,7 @@ The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage proc
 One of the most important features of Lasso is that it is a \emph{convex} optimization problem. More generally, consider a penalty term of the form $\sum_{j=1}^p |\beta_j|^q$. When $q=1$ we have Lasso, and when $q = 2$ we have Ridge.  There is an important tradeoff here: a desire for sparse solutions and low bias pushes us towards \emph{non-convex} penalties and suggests that we make $q$ very small. On the other hand, a desire for computational feasibility and low variance pushes suggests that we use \emph{larger} values of $q$. Lasso uses the \emph{smallest value of $q$ that keeps the problem convex}, effectively trying to take the best of both worlds. For recent a treatment of \emph{non-convex} penalty functions, see Taddy (2013).
 
 \subsection{Comparing Lasso to Ridge}
-Because of the nature of its penalty function, Lasso tends to shrink large coefficients \emph{less} than Ridge and small coefficients \emph{more}, leading to a sparse solution. One way of understanding this is to take a Bayesian perspective. Since its prior has fatter tails and is highly peaked around zero, Lasso ``expects'' a few fairly large coefficients and many coefficients that are effectively zero. This is illustrated in Figure \ref{fig:ridge_lasso_prior}
+Because of the nature of its penalty function, Lasso tends to shrink large coefficients \emph{less} than Ridge and small coefficients \emph{more}, leading to a sparse solution. One way of understanding this is to take a Bayesian perspective. Since its prior has fatter tails and is highly peaked around zero, Lasso ``expects'' a few fairly large coefficients and many coefficients that are effectively zero. This is illustrated in Figure \ref{fig:ridge_lasso_prior}.
 
 \begin{figure}
 	\centering
@@ -352,26 +352,38 @@ Because of the nature of its penalty function, Lasso tends to shrink large coeff
 	\label{fig:ridge_lasso_prior}
 \end{figure}
 
-When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their ``budget constraint'' form. Both have the same objective function, which is proportional to the normal likelihood and describes a set of elliptical contours in $(\beta_1,\beta_2)$ -- space, centered at the MLE. Whereas Ridge has a circular constraint set, however, Lasso has a diamond-shaped one. Figure \ref{fig:ridge_lasso_constraint} shows how this difference in penalty functions leads to very different results. Sometimes the likelihood surface will hit a ``corner'' of the Lasso constraint set, leading to a zero coefficient estimate. In contrast, the Ridge constraint set has no corners.
+When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their ``budget constraint'' form. Both have the same objective function, which is proportional to the normal likelihood and describes a set of elliptical contours in $(\beta_1,\beta_2)$ -- space, centered at the MLE. Whereas Ridge has a circular constraint set, however, Lasso has a diamond-shaped one. Figure \ref{fig:ridge_lasso_constraint} shows how this difference in penalty functions leads to very different results. Sometimes the likelihood surface will hit a ``corner'' of the Lasso constraint set, leading to a zero coefficient estimate. In contrast, the Ridge constraint set has no corners and since it's circular there's nothing ``special'' about points on either axis.
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.7]{ISLR_ch6_fig7}
+	\includegraphics[scale=0.6]{ISLR_ch6_fig7}
 	\caption{In each panel $\widehat{\beta}$ denotes the MLE and the ellipses represent the contours of the likelihood. Both Lasso, at left, and Ridge, at right, shrink towards zero and away from the MLE. Because of its diamond-shaped constraint set, however, Lasso leads to a sparse solution, whereas Ridge does not. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_constraint}
 \end{figure}
 
-Yet another way to understand the difference between Ridge and Lasso is algebraically
-
-For simplicity, and without loss of generality, suppose that $X$ is orthonormal. (Another way of putting this is, suppose that we've replaced $X$ with its principal components.) Then $X'X = I$ so we have
+Yet another way to understand the difference between Ridge and Lasso is algebraically. For simplicity, and without loss of generality, suppose that $X$ is orthonormal. Another way of putting this is, suppose that we've replaced $X$ with its principal components. Then $X'X = I$ so we have
 \begin{eqnarray*}
-	
+	(\mathbf{y}-X\beta)'(\mathbf{y}-X\beta) &=&
+		\mathbf{y}'\mathbf{y} + \beta'X'X\beta -2\beta'X' \mathbf{y} \\
+		&=& \mathbf{y}'\mathbf{y} +\beta'\beta -2\beta' X'\mathbf{y}\\
+		&=& (\mbox{constant}) + \sum_{j=1}^p \beta_j^2 - 2 \beta'\left( \sum_{i=1}^n \mathbf{x}_i y_i\right)\\
+		&=& (\mbox{constant}) + \sum_{j=1}^p \beta_j^2 - 2 \sum_{j=1}^p \sum_{i=1}^n \beta_j x_{ij}y_i\\
 \end{eqnarray*}
+Thanks to this convenient simplification, solving for the MLE is simple. The derivative of the criterion function with respect to $\beta_j$ is 
+	$$2\beta_j  - 2 \sum_{i=1}^n x_{ij} y_i$$
+so the MLE is
+	$$\widehat{\beta}^{MLE}_j = \sum_{i=1}^n x_{ij}y_i$$
+The solution to Ridge Regression is also very simple in the case of orthonormal regressors. We have:
+	$$\widehat{\beta}_{Ridge} =\left(X'X + \lambda I_p \right)^{-1}X'y = \left(I_p + \lambda I_p \right)^{-1}\left( \sum_{i=1}^n \mathbf{x}_i y_i\right)$$
+hence
+	$$\widehat{\beta}^{Ridge}_j = \frac{1}{1+\lambda} \sum_{i=1}^n x_{ij}y_i = \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j$$
+The calculations for Lasso are a bit more involved since there is no closed-form solution. 
+
 
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.7]{ISLR_ch6_fig10}
-	\caption{This figure appears in Chapter 6 of James et al (2013).}
+	\caption{These plots illustrate Ridge and Lasso shrinkage for the special case of orthonormal regressors. The horizontal axis in each plot is the MLE, while the vertical axis is the shrinkage estimator. Ridge appears at left and Lasso at right. The dashed 45-degree line in each plot corresponds to zero shrinkage. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_shrink}
 \end{figure}
 
@@ -409,7 +421,7 @@ Things are much more complicated for Frequentists.
 Could go Bayesian. For a Frequentist, this is a very hard problem. A couple of recent papers, including Belloni et al.
 
 \subsection{The Bayesian Lasso}
-As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian regression model with a Laplace prior, treating the error variance as known. The posterior mode, however, is a somewhat less than idea summary. If forced to summarize a posterior using a single number we'd typically be much more comfortable with the mean or median. Unlike Ridge Regression
+As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian regression model with a Laplace prior, treating the error variance as known. The posterior mode, however, is a somewhat less than ideal summary. If forced to summarize a posterior using a single number we'd typically be much more comfortable with the mean or median. Unlike Ridge Regression
 
 
 \section{Shrinkage Estimation Using R}
