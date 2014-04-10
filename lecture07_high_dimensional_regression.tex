@@ -1,4 +1,3 @@
-
 \documentclass[12pt]{article}
 \usepackage[margin=1.5in]{geometry}
 \usepackage{todonotes}
@@ -312,14 +311,39 @@ Recall from above that Ridge Regression shrinks all principal components towards
 \section{LASSO}
 Ridge Regression adds a squared $L_2$-norm penalty to the usual OLS criterion function:
 	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \left| \left| \beta\right| \right|_2^2$$
-By analogy, we could imagine trying some \emph{other} penalty function to get a different kind of shrinkage behavior. The Least Absolute Shrinkage and Selection Operator (LASSO) does exactly this by adding an $L_1$ penalty to the OLS criterion function:
+By analogy, we could imagine trying some \emph{other} penalty function to get a different kind of shrinkage behavior. Tibshirani's (1996) ``Least Absolute Shrinkage and Selection Operator'' (LASSO) does exactly this by adding an $L_1$ penalty to the OLS criterion function:
 	$$\widehat{\beta}_{Lasso} =\underset{\beta}{\arg \min} (\mathbf{y} - \textbf{1}_n\beta_0 - X\beta)' (\mathbf{y} - \textbf{1}_n \beta_0 - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
-Like Ridge, LASSO avoids the problem of coefficient estimates that are ``unreasonably large'' by penalizing the legnth of $\beta$. Yet the \emph{way} in which it penalizes is quite different, as we will see. Again, we usually center both $X$ and $\mathbf{y}$ to eliminate the unpenalized intercept. The rest of these notes assume this has already been done, so the problem becomes:
+where $\left| \left| \beta\right|\right|_1 = \sum_{j=1}^p |\beta_j|$. Like Ridge, LASSO avoids the problem of coefficient estimates that are ``unreasonably large'' by penalizing the legnth of $\beta$. Yet the \emph{way} in which it penalizes is quite different, as we will see. Again, we usually center both $X$ and $\mathbf{y}$ to eliminate the unpenalized intercept. The rest of these notes assume this has already been done, so the problem becomes:
 	$$\widehat{\beta}_{Lasso} =\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
 Like Ridge, Lasso is \emph{not} scale invariant, so we typically standardize the columns of $X$ before proceeding.
 
-\subsection{Why Use an $L_1$ Penalty?}
+\subsection{No Closed Form for LASSO}
+Unlike Ridge Regression, which can be written as an explicit linear function of \textbf{y}, the solution to Lasso is non-linear: no closed form solution exists. There are very fast iterative procedures, however, that can solve the Lasso problem for a whole range of $\lambda$ values. For details, see Murphy (2012; Chapter 13) and Friedman, Hastie \& Tibshirani (2010). 
 
+\subsection{An Equivalent Formulation of the LASSO}
+Like Ridge Regression, the Lasso optimization problem can be recast as minimization subject to a budget constraint, specifically
+	$$\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) \quad \mbox{subject to}\quad \sum_{j=1}^p |\beta_j| \leq t$$
+There is a data-dependent, one-to-one mapping between $\lambda$ and $t$.
+
+\subsection{LASSO as a Bayesian MAP Estimator}
+Like Ridge, LASSO can be viewed as a maximum a posteriori (MAP) estimator for a Bayesian linear regression model with a known error variance $\sigma^2$, ignoring the intercept.\footnote{Another way of saying this is that we put an improper uniform prior on the intercept.} What differs is the \emph{prior}. Whereas Ridge uses a conjugate normal prior, Lasso uses a non-conjugate Laplace, aka ``double exponential'' prior. Specifically, the model is as follows:
+	\begin{eqnarray*}
+		\mathbf{y}|X,\beta, \sigma^2 &\sim& N(X\beta,\sigma^2 I_n)\\
+		\beta&\sim& \prod_{j=1}^p \mbox{Lap}(\beta_j|0, \tau)\\
+	\end{eqnarray*}
+where $\lambda = 1/\tau$. The Laplace Density is given by
+	$$\mbox{Lap}(x|\mu,\tau)= \frac{1}{2\tau}\exp\left
+	\{-\frac{|x-\mu|}{\tau} \right\}$$
+where the parameter $\mu$ is the mean, as well as median and mode, while the variance is $2\tau^2$. Compared to the normal distribution, the Laplace has much fatter tails and a higher peak at its mean. Moreover, the Laplace density has a ``kink'' at $\mu$.
+
+
+\subsection{Why Use an $L_1$ Penalty?}
+The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage procedure for high-dimensional linear regression that combined the best features of Ridge and subset selection, while avoiding their drawbacks. Subset selection provides interpretable results -- each regressor is either ``in'' or ``out'' -- and estimates the coefficients on selected regressors without bias. Unfortunately, it suffers from a very high variance due to the discrete nature of the problem and is computationally infeasible when $p$ is greater than 30 or so. Ridge has a low variance, but this comes at the cost of biased estimates. Moreover, since Ridge includes all regressors in the model, the results can be hard to interpret. The idea behind Lasso is to both \emph{shrink and select}: all coefficient estimates are regularized away from MLE but some are regularized all the way to zero and hence discarded from the model. In other words, the Lasso solution is \emph{always sparse} provided that $\lambda$ is sufficiently large. For this reason, there has been quite a lot of interest in Lasso as a \emph{variable selection technique} in recent years. Since we are mainly interested in efficient forecasting, we won't 
+
+Because of the nature of its penalty function, Lasso tends to shrink large coefficients \emph{less} than Ridge and small coefficients \emph{more}. Let's try to understand why this is so.
+
+
+Two highly correlated regressors: Ridge gives them similar coefs but Lasso sets one of them, more or less chosen randomly, to zero.
 
 Want a sparse solution, variable selection, shrink large coeffs less. Still want convex problem.
 
@@ -327,9 +351,6 @@ For computational reasons, convex penalty functions are typically favored.\footn
 
 Much more can be said about LASSO from a theoretical perspective. Good references include Chernozhukov \& Hansen's 2013 slides for the NBER summer institute, Belloni, Chernozhukov \& Hansen (2010) and the book by van de Geer and B\"{u}hlman (2011).
 
-\subsection{Choosing the LASSO Penalty}
-Two different goals: recovering the ``true'' zeros, versus good predictive power. We'll focus on the latter.
-Flynn, Hurvich and Simonoff (2013).
 
 \todo[inline]{Caution about ``effective degrees of freedom metaphor.'' Two recent papers.}
 
@@ -339,9 +360,26 @@ Flynn, Hurvich and Simonoff (2013).
 
 \subsection{Fused LASSO}
 
-\section{What about Inference?}
+\subsection{Choosing the LASSO Penalty}
+Two different goals: recovering the ``true'' zeros, versus good predictive power. We'll focus on the latter.
+Flynn, Hurvich and Simonoff (2013).
+
+Also Bayesian Lasso Park and Casella (2008).
+
+\subsection{Inference for LASSO}
+All of this regularized linear regression stuff sounds great: it's computationally efficient and helps us make more reasonable predictions in a ``data-rich'' environment. But what if we want to carry out \emph{inference} for these models? Is there a simple way to proceed? 
+
+One option is go Bayesian: as long as we can sample from the posterior, we can construct credible intervals for any quantity of interest. Indeed, if we follow Park \& Casella and put a hyper-prior on ... we can even take uncertainty in the choose of smoothing parameter into account by integrating it out! 
+
+Things are much more complicated for Frequentists. 
+
+
 Could go Bayesian. For a Frequentist, this is a very hard problem. A couple of recent papers, including Belloni et al.
 
-\section{Computations Using R}
-Chapter 6 of James et al.\ (2013) ends with three ``Labs''illustrating how to carry out various model selection and shrinkage procedures in R. The second and third of these illustrate Ridge Regression, Lasso, and PCR. There are some errors in the code as it appears in the book, so I've put together a corrected version called \texttt{ISLR\_ch6\_lab\_.R} and posted it in the GitHub repository for this class, available at \url{https://github.com/fditraglia/econ722}. This code makes heavy use of the excellent \texttt{GLMNET} package for R which is documented in Friedman, Hastie \& Tibshirani (2010).   
+\subsection{The Bayesian Lasso}
+As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian regression model with a Laplace prior, treating the error variance as known. The posterior mode, however, is a somewhat less than idea summary. If forced to summarize a posterior using a single number we'd typically be much more comfortable with the mean or median. Unlike Ridge Regression
+
+
+\section{Shrinkage Estimation Using R}
+Chapter 6 of James et al.\ (2013) ends with three ``Labs'' illustrating how to carry out various model selection and shrinkage procedures in R. The second and third of these contain Ridge Regression, Lasso, and PCR. There are some errors in the code as it appears in the book, so I've put together a corrected version with extensive comments called \texttt{ISLR\_ch6\_lab.R} and posted it in the GitHub repository for this class: \url{https://github.com/fditraglia/econ722}. This code makes heavy use of the excellent \texttt{GLMNET} package for R which is documented in Friedman, Hastie \& Tibshirani (2010). If you want to do your calculations using Matlab I'm afraid I can't offer you any guidance on the appropriate packages but if you send me some details, I'll include them in future versions of this document.
 \end{document}
