@@ -166,9 +166,9 @@ Classical Factor Analysis specifies a joint distribution on the observable rando
 		Z &\perp& \epsilon\\
 		X &=& \mu + \Lambda Z + \epsilon
 	\end{eqnarray*}
-where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ matrix of parameters called the \emph{factor loading matrix}, and $\Psi$ is a $p\times p$ \emph{diagonal} matrix of parameters. Factor Analysis can be viewed as a ``low rank parameterization'' of a multivariate normal distribution. The idea ois that, while $X$ is a random $p$-vector, its realizations lie \emph{close} to a $k$-dimensional affine subspace: $\Lambda$ maps $Z$ from $\mathbb{R}^k$ to a linear subspace of $\mathbb{R}^p$, $\mu$ shifts this subspace away from the origin, and $\epsilon$ adds axis-aligned Gaussian noise. Hence it makes sense to require that $k$ is strictly less than both $p$, the dimension of $X$, and $T$, the sample size. 
+where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ matrix of parameters called the \emph{factor loading matrix}, and $\Psi$ is a $p\times p$ \emph{diagonal} matrix of parameters. Factor Analysis can be viewed as a ``low rank parameterization'' of a multivariate normal distribution. The idea is that, while $X$ is a random $p$-vector, its realizations lie \emph{close} to a $k$-dimensional affine subspace: $\Lambda$ maps $Z$ from $\mathbb{R}^k$ to a linear subspace of $\mathbb{R}^p$, $\mu$ shifts this subspace away from the origin, and $\epsilon$ adds axis-aligned Gaussian noise. Hence it makes sense to require that $k$ is strictly less than both $p$, the dimension of $X$, and $T$, the sample size. 
 
-The intution is as follows: Factor Analysis ``forces'' $Z$ to ``explain'' the correlation structure of $X$. This is why $\Psi$ is required to be diagonal. The diagonal elements of $\Psi$ are sometimes called the \emph{idiosyncratic variance terms}, since each corresponds to a \emph{single} component of $X$. 
+The intution is as follows: Factor Analysis ``forces'' $Z$ to ``explain'' the correlation structure of $X$. This is why $\Psi$ is required to be diagonal. The diagonal elements of $\Psi$ are sometimes called the \emph{idiosyncratic variance terms}, since each corresponds to a \emph{single} component of $X$. This is the key point: \emph{conditional} on the factors $Z$, the elements of $X$ are \emph{independent}. 
 \begin{figure}
 	\includegraphics[scale=0.5]{factor_analysis}
 	\caption{Illustration of Factor Analysis, although the notation is slightly different from mine. (I need to draw my own version of this.) This appears as figure 12.1 in Murphy (2012).}
@@ -318,7 +318,7 @@ Writing the joint distribution with $X$ as the first block rather than $Z$, we h
 		\end{array}\right] 
 		&\sim&  N\left(
 		\left[\begin{array}{c}
-			0_k \\ \mu
+			 \mu \\ 0_k 
 	\end{array}\right], 
 		\left[\begin{array}{cc}
 			 \Lambda \Lambda' + \Psi & \Lambda\\
@@ -442,10 +442,38 @@ since $\lambda$ is a scalar and $\boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = 
 
 \paragraph{The Second Principal Component}
 
+\paragraph{Reconstruction Error}
+
+\paragraph{Computing Sample PCs}
+
+\subsection{PCA for the Sample Covariance Matrix}
+Let $X$ be a design matrix from which we have subtracted the column means. Then the \textbf{sample covariance matrix} $S$ is defined as
+	$$S = \frac{X'X}{T}$$
+This is the MLE for $\Sigma$ under multivariate normality. If you prefer the unbiased estimator, simply divide by $(T-1)$ rather than $T$.
 
 \subsection{Probabilistic PCA}
-Talk about the link between factor analysis and PCA. How they can give different results, etc. Relate via PPCA and the restrictions that lead to ordinary PCA.
 
+\paragraph{Comparison of PCA and Factor Analysis}
+So far we have examined factor analysis and PCA. Both procedures yield a lower-dimensional approximation to a covariance matrix $\Sigma$, but they behave in very different ways. As we saw above, the goal in PCA is to find directions of \emph{maximal variance}. In essence, PCA directs its attention to the \emph{diagonal} elements of $\Sigma$. Indeed, one can show that the solution to $\max_B \mbox{trace}\left\{Var(B'\mathbf{x}) \right\}$ where $B$ is a $p \times q$ matrix is given by placing the first $q$ Principal Components of $\Sigma$ into the columns of $B$. The transformed variables $B'\mathbf{x}$ attempt to ``preserve'' as much variance as possible. In many cases, \emph{it turns out} that PCA also does a reasonable job of summarizing the off-diagonal elements of $\Sigma$. By the Spectral Decomposition, we can write
+	$$\Sigma = \sum_{k=1}^p \lambda_k \alpha_k \alpha_k'$$
+Now, because the $\lambda_k$ are decreasing and we have imposed the normalization constraint $\alpha_k'\alpha_k =1$, the elements of $\lambda_k \alpha_k \alpha_k'$ \emph{tend} to decrease as $k$ increases. However, they are not \emph{guaranteed} to decrease. In particular, if the elements of $\mathbf{x}$ have different variances, PCA will \emph{miss} much of the covariance structure in its attempt to maximize variance. In contrast, Factor Analysis is \emph{only} concerned with the off-diagonal elements of $\Sigma$. The diagonal elements are modeled by a vector of idiosyncratic errors, so the factor loadings are only concerned with the correlations \emph{between} elements of $\mathbf{x}$.
+
+A related issue is scale-invariance. Because variances are not scale-invariant, PCA is not scale invariant. In contrast, suppose we were to define a new random vector $Y$ obtained by multiplying $\mathbf{x}$ by a diagonal matrix $C$. The transformed factor model would be
+	\begin{eqnarray*}
+		Y &=& C X\\
+			&=& C\mu + C\Lambda Z + C\epsilon\\
+			&=& \widetilde{\mu} + \widetilde{\Lambda}Z + \widetilde{\epsilon}
+	\end{eqnarray*}
+where $\widetilde{\epsilon}$ has variance matrix $C\Psi$. In other words, the re-scaling is simply \emph{absorbed} into the model coefficients, as in linear regression, and the factors themselves, $Z$, remain as before. Thus, we see that Factor Analysis is scale-invariant. As a consequence we do \emph{not} need to normalize variables before carrying out Factor Analysis: the idiosyncratic variances $\Psi$ ``handle it for us.''
+
+Another difference between PCA and Factor Analysis concerns the relationships between the estimated ``factors.'' Suppose we fit a $k$-factor model and then change our minds and decide to fit a $(k+1)$-factor model. We will \emph{not} get the same values for the first $k$ factor scores, the estimates of $Z$, as we did before! This is in stark contrast to PCA. If I decide to use, say, $k$ PCs in PCR and then change my mind and use $k+1$, the first $k$ ``factors,'' the PC scores, \emph{remain unchanged}. 
+
+The most fundamental distinction between PCA and Factor Analysis, however, is that Factor Analysis provides a \emph{generative probabilistic model} for the data. If you know the parameters, you can \emph{simulate} data that has a factor structure. PCA, on the other hand, is merely an \emph{algorithm}. There's no likelihood involved. It \emph{is possible}, however, to \emph{construct} a probabilistic model that behaves like PCA. This provides a very helpful way of relating PCA to Factor Analysis and drawing out their differcenes.
+
+\paragraph{A Generative Model for PCA: Tipping \& Bishop (1999)}
+To construct a probabilistic model for PCA, Tipping and Bishop (1999) take the standard factor model considered above and restrict $\Psi$ to be \emph{isotropic}. That is, they assume $\Psi = \sigma^2 I$ so that the idiosyncratic variances are \emph{equal} across components of $X$. Under this simplification, they derive an \emph{explicit} formula for the estimated factor loadings, namely:
+$$\widehat{\Lambda}_{ML} = U_q (\Gamma_q - \sigma^2 I)^{1/2}R$$
+where $U_q$ is a matrix containing the first $q$ eigenvectors of the sample covariance matrix $S$ of the data, $\Gamma_q = \mbox{diag}\{\lambda_i\}_{i=1}^q$ contains the corresponding eigenvalues, and $R$ is an \emph{arbitrary} $q\times q$ orthogonal rotation matrix. 
 
 
 
