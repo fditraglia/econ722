@@ -513,18 +513,18 @@ To construct a probabilistic model for PCA, Tipping and Bishop (1999) take the s
 $$\widehat{\Lambda}_{ML} = V_q(L_q - \sigma^2 I)^{1/2}R$$
 where $V_q$ is a matrix containing the first $q$ eigenvectors of the sample covariance matrix $S$, $L_q = \mbox{diag}\{\lambda_i\}_{i=1}^q $constains the corresponding eigenvalues, and $R$ is an \emph{arbitrary} $q\times q$ orthogonal rotation matrix. Since it's arbitrary, there is no loss in generality from settting $R = I$. The MLE for $\sigma^2$ is shown to be
 	$$\widehat{\sigma}^2_{ML} = \frac{1}{p - q} \sum_{j=q+1}^p \lambda_j$$
-This is the \emph{average variance} of the components that are discarded by ordinary PCA! 
+This is the \emph{average variance} of the components that are discarded by ordinary PCA! In the limit as $\sigma^2 \rightarrow 0$, the factor scores become the sample PC scores.
 
-\begin{eqnarray*}
-	\widehat{\textbf{z}}_i = \widehat{\Lambda}' \left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1}\left(\textbf{x}_i - \bar{\textbf{x}}\right) 
-\end{eqnarray*}
+% \begin{eqnarray*}
+% 	\widehat{\textbf{z}}_i = \widehat{\Lambda}' \left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1}\left(\textbf{x}_i - \bar{\textbf{x}}\right) 
+% \end{eqnarray*}
 
-We see that as $\sigma^2 \rightarrow 0$, $\widehat{\Lambda}_{ML} \rightarrow V_q L_q^{1/2}R$ and $\widehat{\Psi} = \widehat{\sigma}^2I \rightarrow 0$. Hence, we have 
-\begin{eqnarray*}
-	\left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1} \rightarrow \left(\widehat{\Lambda} \widehat{\Lambda}'\right)^{-1} &=&\left[(V_q L_q^{1/2}R)(V_q L_q^{1/2}R)'\right]^{-1}\\
-	&=&\left[V_q L_q^{1/2}RR'L_q^{1/2}V_q'\right]^{-1}\\
-	&=& \left[V_q L_q V_q' \right]^{-1}
-\end{eqnarray*}
+% We see that as $\sigma^2 \rightarrow 0$, $\widehat{\Lambda}_{ML} \rightarrow V_q L_q^{1/2}R$ and $\widehat{\Psi} = \widehat{\sigma}^2I \rightarrow 0$. Hence, we have 
+% \begin{eqnarray*}
+% 	\left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1} \rightarrow \left(\widehat{\Lambda} \widehat{\Lambda}'\right)^{-1} &=&\left[(V_q L_q^{1/2}R)(V_q L_q^{1/2}R)'\right]^{-1}\\
+% 	&=&\left[V_q L_q^{1/2}RR'L_q^{1/2}V_q'\right]^{-1}\\
+% 	&=& \left[V_q L_q V_q' \right]^{-1}
+% \end{eqnarray*}
 
 
 
