@@ -454,12 +454,40 @@ since $\lambda$ is a scalar and $\boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = 
 
 \paragraph{Reconstruction Error}
 
-\paragraph{Computing Sample PCs}
 
 \subsection{PCA for the Sample Covariance Matrix}
 Let $X$ be a design matrix from which we have subtracted the column means. Then the \textbf{sample covariance matrix} $S$ is defined as
 	$$S = \frac{X'X}{T}$$
-This is the MLE for $\Sigma$ under multivariate normality. If you prefer the unbiased estimator, simply divide by $(T-1)$ rather than $T$.
+This is the MLE for $\Sigma$ under multivariate normality. If you prefer the unbiased estimator, simply divide by $(T-1)$ rather than $T$. Now we can simply proceed as above with $S$ playing the role of $\Sigma$. 
+
+\paragraph{Computing Sample PCs} 
+The best way to calculate the sample PCs is to use the singular value decomposition (SVD) of the centered design matrix $X$.\footnote{For details on this decomposition, see the lecture notes for shrinkage estimation.} We have $X = UDV'$ and hence 
+$$X'X = VDU'UDV' = VD^2V'$$
+Right-multiplying by $V$ gives $(X'X)V = VD^2$. Thus, letting $\mathbf{v}_i$ denote the $i$th column of $V$, we have $(X'X)\mathbf{v}_i = d_i^2 \mathbf{v}_i$. Dividing both sides by $T$ gives $S \mathbf{v}_i = T^{-1}d_i^2\mathbf{v_i}$. Thus, $(\mathbf{v}_i, T^{-1}d_i^2)$ are the eigenvector-eigenvalue pairs of the sample covariance matrix. 
+
+The PC \emph{loadings} for $S$ are the $\mathbf{v}_i$. The PC \emph{scores} of the dataset are $\mathbf{v}_i' \mathbf{x}_t$ where $\mathbf{x}_t$ is the vector of observations for individual (or time period) $t$. Collecting these for all individuals in the dataset gives the vector of PC \emph{scores} for the $i$th PC:
+ $$\textbf{z}_i = \left[ \begin{array}
+ 	{cc} z_{i1} \\ \vdots \\ z_{iT}
+ \end{array}\right] =\left[\begin{array}
+ 	{cc} \textbf{v}_i' \textbf{x}_1 \\ \vdots \\ \textbf{v}_i' \textbf{x}_T  
+ \end{array} \right] = \left[\begin{array}
+ 	{cc}  \textbf{x}_1 \\ \vdots \\  \textbf{x}_T  
+ \end{array} \right]\textbf{v}_i = X \textbf{v}_i$$
+Since $X$ has been demeaned, we have
+	$$\bar{z}_i = \frac{1}{T} \sum_{t=1}^T\textbf{v}_i' \textbf{x}_t =\textbf{v}_i' \left( \frac{1}{T} \sum_{t=1}^T \textbf{x}_t\right) = \textbf{v}_i' \textbf{0} = 0$$
+Thus, we can calculate the variance of the $i$th PC score as follows:
+	$$\frac{1}{T}\sum_{t=1}^T (z_{it} - \bar{z}_i)^2 = \frac{1}{T}\sum_{i=1}^T z_{it}^2 = \frac{1}{T} \textbf{z}_i' \textbf{z}_i = \frac{1}{T} (X \textbf{v}_i)'(X \textbf{v}_i) = T^{-1}d_i^2$$
+since $V'(X"X)V = D$. In fact, we do not need to calculate $X \mathbf{v}_i$ to get the PC scores: we get them for free from the SVD! To see this, note that $XV = UDV'V = UD$. That is,
+	$$X\left[ \begin{array}
+		{ccc} \textbf{u}_1 & \cdots & \textbf{v}_p
+	\end{array}\right]= \left[ \begin{array}
+		{ccc} \textbf{u}_1 & \cdots & \textbf{u}_p
+	\end{array}\right] \left[\begin{array}
+		{ccc} d_i & &0 \\
+		& \ddots &\\
+		0& & d_p
+	\end{array} \right]$$
+In other words, $\mathbf{z}_i = d_i \mathbf{u}_i$. And we're done!
 
 \subsection{Probabilistic PCA}
 
