@@ -413,6 +413,16 @@ So as long as $\mu^{(j-1)} = \bar{\mathbf{x}}$, the conditional expectations wil
 \subsubsection{EM for Factor Analysis: Summary of the Algorithm}
 
 
+\subsection{Estimating the Factor Scores}
+We saw above that
+	\begin{eqnarray*}
+		Z|X &\sim& N_k(\mu_{Z|X}, \Sigma_{Z|X})\\
+		\mu_{Z|X} &=& \Lambda' (\Lambda \Lambda' + \Psi)^{-1}(X - \mu) \\
+		\Sigma_{Z|X} &=& \mathbf{I}_k - \Lambda'(\Lambda \Lambda' + \Psi)^{-1}\Lambda
+	\end{eqnarray*}
+So if we want to \emph{estimate} the realizations $\mathbf{z}_i$ of the latent vector $X$ that correspond to the observations $\mathbf{x}_i$, the obvious choice is the conditional mean evaulated at the maximum likelihood estimators, namely
+	$$\widehat{\textbf{z}}_i = \widehat{\Lambda}' \left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1}\left(\textbf{x}_i - \bar{\textbf{x}}\right) $$
+Notice that this is \emph{precisely} the collection of values that emerge from the \emph{final} M-step since $\bar{x}$ is the MLE for $\mu$ and we showed that it is never updated.
 
 \section{Principal Components Analysis}
 If asked to summarize a $k$-dimensional random vector $\mathbf{x}$ our first inclination might be to examine its moments: the mean vector $\boldsymbol{\mu}$ and variance-covariance matrix $\Sigma$. As mentioned above, it might be difficult or impossible to estimate $\Sigma$ if $k$ is large relative to the sample size. More fundamentally, however, even if it were \emph{known} rather than estimated, $\Sigma$ would still be challenging to \emph{interpret} unless $k$ is fairly small. Principal Components Analysis (PCA) is a classical statistical technique that is designed to help us discover ``structure'' in a variance-covariance matrix by considering particular linear combinations of the elements of $\mathbf{x}$. We can apply PCA either to a population covariance matrix or a sample covariance matrix: the basic idea is the same in either case. To bring out some important relationships between ideas we will examine PCA from several different, but equivalent perspectives. To begin, we will consider what is sometimes called the ``analysis view'' of PCA which amounts to solving a simple optimization problem. 
@@ -471,18 +481,22 @@ Another difference between PCA and Factor Analysis concerns the relationships be
 The most fundamental distinction between PCA and Factor Analysis, however, is that Factor Analysis provides a \emph{generative probabilistic model} for the data. If you know the parameters, you can \emph{simulate} data that has a factor structure. PCA, on the other hand, is merely an \emph{algorithm}. There's no likelihood involved. It \emph{is possible}, however, to \emph{construct} a probabilistic model that behaves like PCA. This provides a very helpful way of relating PCA to Factor Analysis and drawing out their differcenes.
 
 \paragraph{A Generative Model for PCA: Tipping \& Bishop (1999)}
-To construct a probabilistic model for PCA, Tipping and Bishop (1999) take the standard factor model considered above and restrict $\Psi$ to be \emph{isotropic}. That is, they assume $\Psi = \sigma^2 I$ so that the idiosyncratic variances are \emph{equal} across components of $X$. Under this simplification, they derive an \emph{explicit} formula for the estimated factor loadings, namely:
-$$\widehat{\Lambda}_{ML} = U_q (\Gamma_q - \sigma^2 I)^{1/2}R$$
-where $U_q$ is a matrix containing the first $q$ eigenvectors of the sample covariance matrix $S$ of the data, $\Gamma_q = \mbox{diag}\{\lambda_i\}_{i=1}^q$ contains the corresponding eigenvalues, and $R$ is an \emph{arbitrary} $q\times q$ orthogonal rotation matrix. 
+To construct a probabilistic model for PCA, Tipping and Bishop (1999) take the standard factor model considered above and restrict $\Psi$ to be \emph{isotropic}. That is, they assume $\Psi = \sigma^2 I$ so that the idiosyncratic variances are \emph{equal} across components of $X$. Under this simplification, they derive an \emph{explicit} formula for the maximum likelihood estimators of the model parameters, namely:
+$$\widehat{\Lambda}_{ML} = V_q(L_q - \sigma^2 I)^{1/2}R$$
+where $V_q$ is a matrix containing the first $q$ eigenvectors of the sample covariance matrix $S$, $L_q = \mbox{diag}\{\lambda_i\}_{i=1}^q $constains the corresponding eigenvalues, and $R$ is an \emph{arbitrary} $q\times q$ orthogonal rotation matrix. Since it's arbitrary, there is no loss in generality from settting $R = I$. The MLE for $\sigma^2$ is shown to be
+	$$\widehat{\sigma}^2_{ML} = \frac{1}{p - q} \sum_{j=q+1}^p \lambda_j$$
+This is the \emph{average variance} of the components that are discarded by ordinary PCA! 
 
+\begin{eqnarray*}
+	\widehat{\textbf{z}}_i = \widehat{\Lambda}' \left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1}\left(\textbf{x}_i - \bar{\textbf{x}}\right) 
+\end{eqnarray*}
 
-
-
-
-
-
-
-
+We see that as $\sigma^2 \rightarrow 0$, $\widehat{\Lambda}_{ML} \rightarrow V_q L_q^{1/2}R$ and $\widehat{\Psi} = \widehat{\sigma}^2I \rightarrow 0$. Hence, we have 
+\begin{eqnarray*}
+	\left(\widehat{\Lambda} \widehat{\Lambda}' + \widehat{\Psi}\right)^{-1} \rightarrow \left(\widehat{\Lambda} \widehat{\Lambda}'\right)^{-1} &=&\left[(V_q L_q^{1/2}R)(V_q L_q^{1/2}R)'\right]^{-1}\\
+	&=&\left[V_q L_q^{1/2}RR'L_q^{1/2}V_q'\right]^{-1}\\
+	&=& \left[V_q L_q V_q' \right]^{-1}
+\end{eqnarray*}
 
 
 
