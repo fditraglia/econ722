@@ -2,9 +2,7 @@
 \usepackage[margin=1.5in]{geometry}
 \usepackage{todonotes}
 \usepackage{amssymb,amsmath,amsthm,graphicx}
-\usepackage{geometry}
 \usepackage{rotating}
-\usepackage{multirow}
 \usepackage{setspace}
 \usepackage{enumerate}
 \usepackage{graphicx}
@@ -14,6 +12,7 @@
 \usepackage{threeparttable}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{hyperref}
 
 \newtheorem{assump}{Assumption}[section]
 \newtheorem{pro}{Proposition}[section]
@@ -28,9 +27,10 @@
 \newtheorem{alg}{Algorithm}[section]
 
 
+\linespread{1.3}
 \begin{document}
 
-\title{``Classical'' Factor Analysis and PCA}
+\title{Lecture 8: Classical Factor Analysis and PCA}
 
 \author{Francis J.\ DiTraglia}
 
@@ -54,7 +54,8 @@ Roughly speaking, the EM algorithm converts a single complicated optimization pr
 
 \begin{figure}
 	\centering
-	\caption{Picture of the EM Algorithm}
+	\includegraphics[scale=0.5]{EM_algorithm}
+	\caption{Illustration of the EM Algorithm: to maximize the log likelihood, the red curve, we create a sequence of successive approximations, the blue and green curves, and maximize these. This appears as Figure 9.14 in Bishop's (2006) \emph{Pattern Recognitiion and Machine Learning}.}
 \end{figure}
 
 \subsection{Jensen's Inequality}
@@ -169,7 +170,8 @@ where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ ma
 
 The intution is as follows: Factor Analysis ``forces'' $Z$ to ``explain'' the correlation structure of $X$. This is why $\Psi$ is required to be diagonal. The diagonal elements of $\Psi$ are sometimes called the \emph{idiosyncratic variance terms}, since each corresponds to a \emph{single} component of $X$. 
 \begin{figure}
-	\caption{Picture of Factor Analysis}
+	\includegraphics[scale=0.5]{factor_analysis}
+	\caption{Illustration of Factor Analysis, although the notation is slightly different from mine. (I need to draw my own version of this.) This appears as figure 12.1 in Murphy (2012).}
 \end{figure}
 
 The factor analysis model implies that the joint distribution of $Z$ and $X$ is normal. Specifically,
@@ -268,7 +270,8 @@ The unobserved random variables $Z_1, \hdots, Z_T$ that generate $X_1, \hdots, X
 
 
 \subsection{EM for Classical Factor Analysis}
-\todo[inline]{Why is this a great problem for EM? If $Z$ were observed this would just a standard multivariate regression problem!}
+This is a great problem for the EM algorithm since it can be viewed as a case of missing data: if $Z$ were observed, this would just be a standard multivariate regression problem!
+
 
 \subsubsection{The E-step: Inferring the Latent Factors} In this step we set $f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t|\mathbf{x}_t; \theta^{(j-1)})$ for each $t$ where $\theta^{(j-1)}$ is the value of $\theta$ that solved the optimization problem from the \emph{preceding} M-step or, if $j=2$, the starting value. In the notation of the factor analysis problem we need to calculate:
 	$$f_t^{(j-1)}(\mathbf{z}_t) = p(\mathbf{z}_t | \mathbf{x}_t; \mu^{(j-1)}, \Lambda^{(j-1)}, \Psi^{(j-1)})$$
