@@ -415,7 +415,12 @@ Multiplying through by $-2$ and rearranging, we have\footnote{Remember that $f_t
 \end{eqnarray*}
 Substituting the result of the E-step, we have
 \begin{eqnarray*}
-	\Psi &=&\frac{1}{T}\sum_{t=1}^T \int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \;d \textbf{z}_t
+	\Psi &=&\frac{1}{T}\sum_{t=1}^T \int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \;d \textbf{z}_t\\
+		&=&\frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)(\mathbf{x}_t - \mu)' - \frac{1}{T}\sum_{t=1}^T \Lambda \left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t\;d \textbf{z}_t  \right](\mathbf{x}_t - \mu)'\\
+		&& \quad \quad  - \frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)\left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t'\;d \textbf{z}_t  \right]\Lambda'\\
+		&& \quad \quad + \frac{1}{T}\sum_{t=1}^T \Lambda \left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t \mathbf{z}_t'\;d \textbf{z}_t\right] \Lambda'\\
+		&=& \frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)(\mathbf{x}_t - \mu)' - \frac{1}{T} \sum_{t=1}^T \Lambda \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} (\mathbf{x}_t - \mu)' -  \frac{1}{T} \sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)'\Lambda' \\
+			&& \quad \quad + \frac{1}{T} \sum_{t=1}^T \Lambda \left[ \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\right]\Lambda'
 \end{eqnarray*}
 
 
