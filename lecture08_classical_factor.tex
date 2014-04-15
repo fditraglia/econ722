@@ -415,14 +415,19 @@ Multiplying through by $-2$ and rearranging, we have\footnote{Remember that $f_t
 \end{eqnarray*}
 Substituting the result of the E-step, we have
 \begin{eqnarray*}
-	\Psi &=&\frac{1}{T}\sum_{t=1}^T \int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \;d \textbf{z}_t\\
+	\Psi^{(j)} &=&\frac{1}{T}\sum_{t=1}^T \int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)(\mathbf{x}_t - \mu -  \Lambda \textbf{z}_t)' \;d \textbf{z}_t\\
 		&=&\frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)(\mathbf{x}_t - \mu)' - \frac{1}{T}\sum_{t=1}^T \Lambda \left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t\;d \textbf{z}_t  \right](\mathbf{x}_t - \mu)'\\
 		&& \quad \quad  - \frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)\left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t'\;d \textbf{z}_t  \right]\Lambda'\\
 		&& \quad \quad + \frac{1}{T}\sum_{t=1}^T \Lambda \left[\int  \mathcal{N}\left(\mathbf{z}_t|\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}, \Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right) \mathbf{z}_t \mathbf{z}_t'\;d \textbf{z}_t\right] \Lambda'\\
-		&=& \frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)(\mathbf{x}_t - \mu)' - \frac{1}{T} \sum_{t=1}^T \Lambda \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} (\mathbf{x}_t - \mu)' -  \frac{1}{T} \sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)'\Lambda' \\
-			&& \quad \quad + \frac{1}{T} \sum_{t=1}^T \Lambda \left[ \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\right]\Lambda'
+		&=& \frac{1}{T}\sum_{t=1}^T  (\mathbf{x}_t - \mu)(\mathbf{x}_t - \mu)' -\Lambda \left[\frac{1}{T} \sum_{t=1}^T  \mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} (\mathbf{x}_t - \mu)'\right] -  \left[\frac{1}{T} \sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)'\right]\Lambda' \\
+			&& \quad \quad + \Lambda\left[\frac{1}{T} \sum_{t=1}^T  \left\{ \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t}\right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\right\} \right]\Lambda'
 \end{eqnarray*}
-
+This is a really complicated expression, but we can simplify it by substituting the updates for the other parameters. Using $\mu = \bar{\mathbf{x}}$, we see that the first term is the sample covariance matrix $S$. Using
+$$\Lambda^{(j)} = \left[\sum_{t=1}^T (\mathbf{x}_t - \mu)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)'\right]\left[\sum_{t=1}^T \left\{ \left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)\left(\mu^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right)' + \left(\Sigma^{(j-1)}_{\mathbf{z}_t|\mathbf{x}_t} \right) \right\}  \right]^{-1} = AB^{-1}$$
+and noting that $B^{-1}$ is symmetric, we have
+\begin{eqnarray*}
+	\Psi^{(j)} &=& S - AB^{-1}\left(\frac{1}{T}A'\right) - \left(\frac{1}{T} A\right)B^{-1}A'
+\end{eqnarray*}
 
 
 \subsubsection{EM for Factor Analysis: Summary of the Algorithm}
