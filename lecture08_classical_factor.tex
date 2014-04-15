@@ -489,9 +489,28 @@ Substituting this into the objective function,
 since $\lambda$ is a scalar and $\boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = 1$. In other words, the variance of the first principal component equals $\lambda$. Since this is what we want to \emph{maximize}, we should make $\lambda$ as large as possible. But $\lambda$ must be one of the eigenvalues of $\Sigma$. Therefore, $\boldsymbol{\alpha}_1$ is the eigenvector corresponding to the \emph{largest eigenvalue} of $\Sigma$. Recall that since $\Sigma$ is a variance-covariance matrix, is must be positive semi-definite hence all its eigenvalues must be non-negative.
 
 \paragraph{The Second Principal Component}
+To find the second PC $\boldsymbol{\alpha}_2' \mathbf{x}$ we maximize $Var(\boldsymbol{\alpha}_2' \mathbf{x}) =\boldsymbol{\alpha}_2' \Sigma \boldsymbol{\alpha}_2$ subject the the normalization constraint $\alpha_2' \alpha_2 = 1$ and the \emph{additional constraint} that $\boldsymbol{\alpha}_2' \mathbf{x}$ be uncorrelated with $\boldsymbol{\alpha}_1' \mathbf{x}$. It is equivalent, of course, to impose zero covariance. We have
+$$Var\left(\left[\begin{array}
+	{cc} \boldsymbol{\alpha}_1' \\ \boldsymbol{\alpha}_2'
+\end{array} \right] \textbf{x}\right) = \left[\begin{array}
+	{c} \boldsymbol{\alpha}_1' \\ \boldsymbol{\alpha}_2'
+\end{array} \right] \Sigma \left[\begin{array}
+	{cc} \boldsymbol{\alpha}_1 & \boldsymbol{\alpha}_2
+\end{array}\right] = \left[ \begin{array}
+	{cc} \boldsymbol{\alpha}_1' \Sigma \boldsymbol{\alpha}_1' & \boldsymbol{\alpha}_1'\Sigma \boldsymbol{\alpha}_2'\\
+	\boldsymbol{\alpha}_2' \Sigma \boldsymbol{\alpha}_1 & \boldsymbol{\alpha}_2' \Sigma \boldsymbol{\alpha}_2
+\end{array}\right]$$
+Hence,
+\begin{eqnarray*}
+	Cov\left(\boldsymbol{\alpha}_1' \mathbf{x}, \boldsymbol{\alpha}_2' \mathbf{x} \right) &=& \boldsymbol{\alpha}_1'\Sigma \boldsymbol{\alpha}_2' = \boldsymbol{\alpha}_2' \Sigma \boldsymbol{\alpha}_1 \\
+		&=&
+\end{eqnarray*}
+where we have used the fact that $\Sigma \boldsymbol{\alpha}_1 = \Lambda \boldsymbol{\alpha}_1$ as we found in our derivation of the first PC.
 
-\paragraph{Reconstruction Error Interpretation}
-Fill in later.
+
+
+\subsection{Reconstruction Error Interpretation}
+\todo[inline]{Fill in later.}
 
 \subsection{PCA for the Sample Covariance Matrix}
 Let $X$ be a design matrix from which we have subtracted the column means. Then the \textbf{sample covariance matrix} $S$ is defined as
