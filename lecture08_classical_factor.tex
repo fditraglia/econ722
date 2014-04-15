@@ -503,10 +503,20 @@ $$Var\left(\left[\begin{array}
 Hence,
 \begin{eqnarray*}
 	Cov\left(\boldsymbol{\alpha}_1' \mathbf{x}, \boldsymbol{\alpha}_2' \mathbf{x} \right) &=& \boldsymbol{\alpha}_1'\Sigma \boldsymbol{\alpha}_2' = \boldsymbol{\alpha}_2' \Sigma \boldsymbol{\alpha}_1 \\
-		&=&
+		&=&\boldsymbol{\alpha}_2'\lambda_1 \boldsymbol{\alpha}_1 = \lambda_1\boldsymbol{\alpha}_2'\boldsymbol{\alpha}_1 =  \lambda_1\boldsymbol{\alpha}_1'\boldsymbol{\alpha}_2 
 \end{eqnarray*}
-where we have used the fact that $\Sigma \boldsymbol{\alpha}_1 = \Lambda \boldsymbol{\alpha}_1$ as we found in our derivation of the first PC.
+where we have used the fact that $\Sigma \boldsymbol{\alpha}_1 = \lambda_1 \boldsymbol{\alpha}_1$ as we found in our derivation of the first PC. Since $\lambda_1 \neq 0$ we see that the covariance is zero precisely when $\boldsymbol{\alpha}_1'\boldsymbol{\alpha}_2  = 0$, so we'll use this as our second constraint. The Lagrangian for this problem is 
+	$$\mathcal{L}(\boldsymbol{\alpha}_2, \lambda, \phi) = \boldsymbol{\alpha}_2'\Sigma\boldsymbol{\alpha}_2  - \lambda(\boldsymbol{\alpha}_2'\boldsymbol{\alpha}_2 - 1) - \phi \boldsymbol{\alpha}_2' \boldsymbol{\alpha}_1$$
+hence the first order condition for $\boldsymbol{\alpha}_2$ is
+	$$2\Sigma \boldsymbol{\alpha}_2 - 2\lambda I \boldsymbol{\alpha}_2 - \phi \boldsymbol{\alpha}_1 = 0$$
+Left-multiplying by $\boldsymbol{\alpha}_1'$, we have
+$$2 \boldsymbol{\alpha}_1'\Sigma \boldsymbol{\alpha}_2 - 2\lambda \boldsymbol{\alpha}_1'\boldsymbol{\alpha}_2 - \phi \boldsymbol{\alpha}_1\boldsymbol{\alpha}_1 = 0$$
+But now the first and second terms are both zero, from our calculation of $Cov\left(\boldsymbol{\alpha}_1' \mathbf{x}, \boldsymbol{\alpha}_2' \mathbf{x} \right)$ and the last term equals one by the normalization constraint for $\boldsymbol{\alpha}_1$. Thus, we see that $\phi = 0$ so the first order condition simplifies to
+	$$2\Sigma \boldsymbol{\alpha}_2 - 2\lambda  \boldsymbol{\alpha}_2 = 0$$
+which is equivalent to $\Sigma \boldsymbol{\alpha}_2 = \lambda  \boldsymbol{\alpha}_2$
+Therefore, $\boldsymbol{\alpha}_2$ is an eigenvector of $\Sigma$ corresponding to the eigenvalue $\lambda$. As we argued in our derivation of the first PC, since $\lambda$ is the variance we want it to be as large as possible. For the second PC, however, we must respect the constraint that $\boldsymbol{\alpha}_1'\boldsymbol{\alpha}_2  = 0$ so we \emph{cannot} take $$\boldsymbol{\alpha}_2 = \boldsymbol{\alpha}_1$$ since this would make the inner product equal one! Instead, we take the next largest variance $\lambda_2$. Thus, the second PC is constructed from the eigenvector corresponding to the \emph{second largest} eigvenvalue of $\Sigma$.
 
+\paragraph{The $j$th Principal Component} By now you probably see the pattern: the $j$th PC is the linear combination $\boldsymbol{\alpha}_j' \mathbf{x}$ where $\boldsymbol{\alpha}_j'$ is the eigenvector corresponding to the $j$th eigenvalue, $\lambda_j$, of the covariance matrix $\Sigma$. The PCs are mutually uncorrelated and have variance $\lambda_j$.
 
 
 \subsection{Reconstruction Error Interpretation}
