@@ -1,0 +1,119 @@
+\documentclass[handout]{beamer}  
+
+%Smaller gap at between top and bottom of block when there are displayed equations
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+{\setlength{\belowdisplayskip}{0pt}}
+
+
+\usepackage{setspace}
+\linespread{1.2}
+\usepackage{amssymb, amsmath, amsthm} 
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{synttree}
+\usepackage{verbatim}
+\usepackage{fancybox}
+\usepackage{color}
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds}
+\usepackage{hyperref}
+\usetikzlibrary{trees}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\expect}{\mathbb{E}}
+
+
+%\setbeamertemplate{blocks}[rounded][shadow=true] 
+%gets rid of bottom navigation bars
+\setbeamertemplate{footline}{
+   \begin{beamercolorbox}[ht=4ex,leftskip=0.3cm,rightskip=0.3cm]{author in head/foot}
+%    \usebeamercolor{UniBlue}
+    \vspace{0.1cm}
+    %\insertshorttitle \ - \insertdate 
+    \hfill \insertframenumber / \inserttotalframenumber
+   \end{beamercolorbox}
+   \vspace*{0.1cm}
+} 
+
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+
+%Include or exclude the notes?
+%\setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title[Econ 722]{Dynamic Factor Models} 
+\author[F. DiTraglia]{Francis J.\ DiTraglia}
+\institute{University of Pennsylvania}
+\date{Econ 722}
+
+
+\begin{document} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}[plain]
+	\titlepage 
+	
+
+\end{frame} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \begin{frame}
+ 	\frametitle{Last Time: Classical Factor Analysis Model}
+
+ $$\underset{(N\times 1)}{X_t} &=& \underset{(N\times 1)}{\mu} +\underset{(N\times k)}{\Lambda} \underset{(k\times 1)}{Z_t} +\underset{(N\times 1)}{\epsilon_t}$$
+
+ \vspace{2em}
+
+ \small
+$$\left[\begin{array}
+	{c} Z_t \\ \epsilon_t
+\end{array} \right] \overset{iid}{\sim} \mathcal{N} \left(\left[ \begin{array}
+	{c} 0_k \\ 0_N
+\end{array}\right], \left[ \begin{array}
+	{cc} I_k & 0 \\
+	0 & I_N
+\end{array}\right]\right)$$
+
+
+ \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{What Can We Do with Factors?}
+
+There are just a few possibilities:
+\begin{enumerate}
+	\item Use them as Instumental Variables 
+	\item Use them to construct Forecasts
+	\item Use them to ``Augment'' a VAR
+\end{enumerate}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{``IV Estimation in a Data Rich Environment'' (Bai \& Ng, 2010)}
+\begin{block}
+   	{Endogenous Regressors $x_t$}
+$$y_t = x_t' \beta + \epsilon_t \quad \quad E[x_t\epsilon_t] \neq 0 $$
+\end{block}   
+
+ \begin{block}
+ 	{Unobserved Variables $F_t$ are Strong IVs}
+$$\underset{(k\times 1)}{x_t} = \underset{(k\times r)}{\Psi'}\underset{(r\times 1)}{F_t} + \underset{(k\times 1)}{u_t} \quad \quad E[F_t \epsilon_t] = 0$$
+ \end{block}
+
+\begin{block}
+	{Observe Large Panel $z_{1t}, \hdots, z_{Nt}$}
+		$$z_{it} = \lambda_i' F_t + e_{it}$$
+\end{block}
+
+\end{frame}
+
+\end{document}
