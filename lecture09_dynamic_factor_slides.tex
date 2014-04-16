@@ -63,32 +63,86 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \begin{frame}
- 	\frametitle{Last Time: Classical Factor Analysis Model}
+\begin{frame}
+\frametitle{Survey Articles on Dynamic Factor Models}
 
- $$\underset{(N\times 1)}{X_t} &=& \underset{(N\times 1)}{\mu} +\underset{(N\times k)}{\Lambda} \underset{(k\times 1)}{Z_t} +\underset{(N\times 1)}{\epsilon_t}$$
+\begin{block}
+	{Stock \& Watson (2010)}
+	Best general overview of dynamic factor models and applications.
+\end{block}
 
- \vspace{2em}
+\begin{block}
+	{Bai \& Ng (2008)}
+Comprehensive review of large-sample results for high-dimensional factor models estimated via PCA.
+\end{block}
 
- \small
-$$\left[\begin{array}
+\begin{block}
+	{Stock \& Watson (2006)}
+	Handbook chapter on forecasting with many predictors. One section is devoted to dynamic factor models.
+\end{block}
+
+\begin{block}
+	{Breitung \& Eickmeyer (2006)}
+	Brief overview with an application to Euro-area business cycles. 
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Why Factor Models?}
+   
+\begin{enumerate}
+	\item Factors could be intrinsically interesting if they arise from a theoretical model (e.g.\ Financial Economics)
+	\item Many variables without running out of degrees of freedom\begin{itemize}
+			\item More information could improve forecasts/macro analysis
+			\item Mimic central banks ``looking at everything'' 
+		\end{itemize}
+	\item Eliminate measurement error and idiosyncratic shocks to provide more reliable information for policy
+	\item ``Remain Agnostic about the Structure of the Economy''\begin{itemize}
+		\item Advantages over SVARs: don't have to choose variables to control degrees of freedom, and can allow fewer underlying shocks than variables. 
+	\end{itemize}
+\end{enumerate}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Last Time: Classical Factor Analysis Model}
+    
+$$\underset{(N\times 1)}{X_t} = \mu + \Lambda \underset{(k\times 1)}{Z_t} + \epsilon_t$$
+
+\vspace{2em}
+
+\small
+
+$$
+\left[ \begin{array}
 	{c} Z_t \\ \epsilon_t
-\end{array} \right] \overset{iid}{\sim} \mathcal{N} \left(\left[ \begin{array}
-	{c} 0_k \\ 0_N
-\end{array}\right], \left[ \begin{array}
-	{cc} I_k & 0 \\
-	0 & I_N
+\end{array}\right]
+\overset{iid}{\sim} \mathcal{N}\left(
+\left[ \begin{array}
+	{c} 0\\ 0 
+\end{array}\right],
+\left[ \begin{array}
+	{cc} I_k & 0\\
+	0 & \Psi
 \end{array}\right]\right)$$
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Adding Some Dynamics}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
- \end{frame}
-
+\begin{frame}
+	\frametitle{Choosing the Number of Factors}
+	Onatski paper: no one in the class listed it as a preference! Bai \& Ng (2002).
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{What Can We Do with Factors?}
 
-There are just a few possibilities:
+Among other possibilities:
 \begin{enumerate}
 	\item Use them as Instrumental Variables 
 	\item Use them to construct Forecasts
