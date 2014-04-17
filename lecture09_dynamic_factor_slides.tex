@@ -175,7 +175,8 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Some Terminology}
+\begin{frame}[c]\frametitle{Some (Confusing) Terminology}
+\framesubtitle{Caution: different authors use different conventions!}
  
 \begin{description}
 	\item[Static] $X_t$ depends only on $F_t$
@@ -242,7 +243,7 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 	
 \begin{block}
 	{Assumption I}
-	Factors are \emph{pervasive}: $\Lambda' \Lambda'/N \rightarrow D_\Lambda$ an $(r\times r)$ full rank matrix.
+	Factors are \emph{pervasive}: $\Lambda' \Lambda/N \rightarrow D_\Lambda$ an $(r\times r)$ full rank matrix.
 \end{block}
 
 \begin{block}
@@ -377,20 +378,6 @@ $$\boxed{
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Forecasting with Dynamic Factors}
-    
- \begin{itemize}
- 	\item Similar to Principal Components Regression (PCR)
- 	\item Estimate factors $\widehat{F}_t$ from a large number of regressors $X_t$
- 	\item Run a regression to forecast $y_t$ using $\widehat{F}_t$ rather than $X_t$ 
- \end{itemize}
-
-\vspace{2em}
-
-\alert{We'll talk about this more next time and compare to other high-dimensional forecasting procedures.}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
     
 \begin{block}
@@ -402,6 +389,20 @@ $$\boxed{
 		\item Provided that $\sqrt{T}/N \rightarrow 0$, all of the observed instruments $z_{it}$ can be \emph{endogenous} as long as $F_t$ is exogenous
 	\end{enumerate}
 \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Forecasting with Dynamic Factors}
+    
+ \begin{itemize}
+ 	\item Similar to Principal Components Regression (PCR)
+ 	\item Estimate factors $\widehat{F}_t$ from a large number of regressors $X_t$
+ 	\item Run a regression to forecast $y_t$ using $\widehat{F}_t$ rather than $X_t$ 
+ \end{itemize}
+
+\vspace{2em}
+
+\alert{We'll talk about this more next time and compare to other high-dimensional forecasting procedures.}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -438,7 +439,7 @@ $$\boxed{
 \small
 $\underset{(M\times 1)}{Y_t} = $  observable variables that ``drive dynamics of the economy''\\ \vspace{1em}
 $\underset{(K\times 1)}{F_t} = $ Small \# of unobserved factors: ``additional information''\\ \vspace{1em}
-$\underset{(N\times 1)}{F_t} = $ Large \# of observed ``informational time series''
+$\underset{(N\times 1)}{X_t} = $ Large \# of observed ``informational time series''
 \end{block}
 
 \end{frame}
