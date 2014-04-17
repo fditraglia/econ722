@@ -88,6 +88,23 @@ Comprehensive review of large-sample results for high-dimensional factor models 
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{The Basic Idea}
+	We're interested in settings with a large number of time series $N$ and a comparable number of time periods $T$. 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Example: Stock and Watson Dataset}
+    
+
+	\begin{figure}
+		\centering
+		\includegraphics[scale = 0.3]{stock_watson_dataset}
+	\end{figure}
+Monthly Macroeconomic Indicators: $N > 200, T >400$
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Why Factor Models?}
    
 \begin{enumerate}
@@ -104,8 +121,8 @@ Comprehensive review of large-sample results for high-dimensional factor models 
 
 
 \end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[c]\frametitle{Last Time: Classical Factor Analysis Model}
     
 
@@ -179,7 +196,7 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 
 \begin{enumerate}
 	\item The difference between ``static'' and ``dynamic'' is unclear \begin{itemize}
-		\item Can write ``dynamic'' model as a static one with more factors!
+		\item Can write dynamic model as a static one with more factors
 		\item Static representation involves ``different'' factors, but we may not care: are the factors ``real'' or just a data summary?
 	\end{itemize} 
 	\item Not really possible to allow cross-sectional dependence in $\epsilon_t$ \begin{itemize}
@@ -195,12 +212,17 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 	\frametitle{Methods of Estimation for Dynamic Factor Models}
 
 	\begin{enumerate}
-		\item Likelihood-based
-			\begin{enumerate}[(a)]
-				\item Fully Bayesian Estimation 
-				\item EM-algorithm + Kalman Filter
-			\end{enumerate}
-		\item ``Nonparametric''
+		\item Bayesian Estimation
+		\item Maximum Likelihood: EM-Algorithm + Kalman Filter \begin{itemize}
+			\item Watson \& Engle (1983)
+			\item Ghahramani \& Hinton (1996)
+			\item Jungbacker \& Koopman (2008)
+			\item Doz, Giannone \& Reichlin (2012)
+		\end{itemize}
+		\item ``Nonparametric'' Estimation
+			\begin{itemize}
+				\item Just carry out PCA on $X$ and ignore the time-series element
+			\end{itemize}
 	\end{enumerate}
 \end{frame}
 
@@ -211,12 +233,48 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-	Alternative ways of estimating: two-step, EM algorithm, Bayesian.
+	\frametitle{Doz, Giannone \& Reichlin (2012)}
+\begin{block}
+	{Typical Justifications for PCA Approach}
+	\begin{itemize}
+		\item Consistent estimation of factors under very weak assumptions 
+		\item MLE is computationally infeasible for large $N$
+	\end{itemize}
+\end{block}
+
+\begin{block}
+	{But Neither is True!}
+	\begin{itemize}
+		\item EM-algorithm + Kalman Filter is \emph{very efficient} -- complexity depends on number of \emph{factors}, not number of series
+		\item Treat exact, static factor model (the one I wrote out) as a mis-specified \emph{approximating model} (Quasi-MLE)
+		\item Identical large-sample results as PC under similar assumptions, but better finite-sample properties and temporal smoothing
+	\end{itemize}
+\end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\frametitle{Choosing the Number of Factors}
-	Onatski paper: no one in the class listed it as a preference! Bai \& Ng (2002).
+If we use Likelihood-based or Bayesian estimation, we could try to resort to the familiar tools from earlier in the semester.There are a lot of parameters in factor models, however, so the asymptotic approximations (I'm looking at you, AIC) could be poor. 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Choosing the Number of Factors -- Scree Plot}
+    
+If we use PC estimation, we can look a something called a ``scree plot'' to help us decide how many PCs to include:
+\begin{figure}
+	\centering
+	\includegraphics[scale =0.3]{scree}
+\end{figure}
+This figure depicts the eigenvalues for an $N=1148, T = 252$ dataset of excess stock returns
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Choosing the Number of Factors -- Bai \& Ng (2002)}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Onatski (2013)}
+	Nobody volunteered to present this paper! Unlike Bai \& Ng (2002), the idea here is \emph{not} to consistently estimate the number of factors. Instead, and in the spirit of AIC and $C_p$, we try to reconstruct the factors with minimum quadratic loss. The results in the paper apply both to ``strong'' and ``weak'' factor asymptotics.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
