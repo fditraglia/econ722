@@ -108,7 +108,11 @@ Comprehensive review of large-sample results for high-dimensional factor models 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Last Time: Classical Factor Analysis Model}
     
-$$\underset{(N\times 1)}{X_t} = \mu + \Lambda \underset{(k\times 1)}{Z_t} + \epsilon_t$$
+
+\alert{I've eliminated the mean $\mu$ and renamed the factor $F_t$}
+
+\vspace{1em}
+$$\underset{(N\times 1)}{X_t} =  \Lambda \underset{(k\times 1)}{F_t} + \epsilon_t$$
 
 \vspace{2em}
 
@@ -116,7 +120,7 @@ $$\underset{(N\times 1)}{X_t} = \mu + \Lambda \underset{(k\times 1)}{Z_t} + \eps
 
 $$
 \left[ \begin{array}
-	{c} Z_t \\ \epsilon_t
+	{c} F_t \\ \epsilon_t
 \end{array}\right]
 \overset{iid}{\sim} \mathcal{N}\left(
 \left[ \begin{array}
@@ -133,16 +137,75 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-	\frametitle{Adding Some Dynamics}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Some (Confusing) Terminology}
-    
-Static vs Dynamic, Exact vs Approximate
+	\frametitle{Adding Time-Dependence}
+
+\begin{eqnarray*}
+	\underset{(N\times 1)}{X_t} &=&  \Lambda \underset{(k\times 1)}{F_t} + \epsilon_t \\ \\
+	\underset{(k\times 1)}{F_t} &=& A_1 F_{t-1} + \hdots + A_p F_{t-p} + u_t \\ \\
+	\left[ \begin{array}
+	{c} u_t \\ \epsilon_t
+\end{array}\right]
+&\overset{iid}{\sim}& \mathcal{N}\left(
+\left[ \begin{array}
+	{c} 0\\ 0 
+\end{array}\right],
+\left[ \begin{array}
+	{cc} I_k & 0\\
+	0 & \Psi
+\end{array}\right]\right)
+\end{eqnarray*}	
+
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Some Terminology}
+ 
+\begin{description}
+	\item[Static] $X_t$ depends only on $F_t$
+	\item[Dynamic] $X_t$ depends on lags of $F_t$ as well
+	\item[Exact] $\Psi$ is diagonal and $\epsilon_t$ independent over time
+	\item[Approximate] Some cross-sectional \& temporal dependence in $\epsilon_t$
+\end{description}
+
+\vspace{1em}
+
+\alert{The model I wrote down on the previous slide is sometimes called an ``exact, static factor model'' even though it has dynamics! I'll still call it a dynamic factor model...}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+	\frametitle{Editorial: This is all a bit confused...}
+
+\begin{enumerate}
+	\item The difference between ``static'' and ``dynamic'' is unclear \begin{itemize}
+		\item Can write ``dynamic'' model as a static one with more factors!
+		\item Static representation involves ``different'' factors, but we may not care: are the factors ``real'' or just a data summary?
+	\end{itemize} 
+	\item Not really possible to allow cross-sectional dependence in $\epsilon_t$ \begin{itemize}
+		\item Unless the off-diagonal elements of $\Psi$ are close to zero we can't tell them apart from the common factors
+		\item ``Approximate'' factor models basically assume conditions under which the off-diagonal elements of $\Psi$ are negligible
+		\item Similarly, time series dependence in $\epsilon_t$ can't be very strong (stationary ARMA is ok)
+	\end{itemize}
+\end{enumerate}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Methods of Estimation for Dynamic Factor Models}
+
+	\begin{enumerate}
+		\item Likelihood-based
+			\begin{enumerate}[(a)]
+				\item Fully Bayesian Estimation 
+				\item EM-algorithm + Kalman Filter
+			\end{enumerate}
+		\item ``Nonparametric''
+	\end{enumerate}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
 	PCA stuff, when and why it works, what the basic conditions are, and when it fails.
 \end{frame}
@@ -221,7 +284,15 @@ $$\boxed{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Forecasting with Dynamic Factors}
     
-Big literature on this and we'll talk more about it next time, but give an overview here.
+ \begin{itemize}
+ 	\item Similar to Principal Components Regression (PCR)
+ 	\item Estimate factors $\widehat{F}_t$ from a large number of regressors $X_t$
+ 	\item Run a regression to forecast $y_t$ using $\widehat{F}_t$ rather than $X_t$ 
+ \end{itemize}
+
+\vspace{2em}
+
+\alert{We'll talk about this more next time and compare to other high-dimensional forecasting procedures.}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
