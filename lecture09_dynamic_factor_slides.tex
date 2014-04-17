@@ -126,13 +126,31 @@ $$
 	{cc} I_k & 0\\
 	0 & \Psi
 \end{array}\right]\right)$$
+\vspace{1em}
+
+$\Lambda = $ matrix of factor loadings\\
+$\Psi = $ diagonal matrix of idiosyncratic variances.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\frametitle{Adding Some Dynamics}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Some (Confusing) Terminology}
+    
+Static vs Dynamic, Exact vs Approximate
 
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	PCA stuff, when and why it works, what the basic conditions are, and when it fails.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	Alternative ways of estimating: two-step, EM algorithm, Bayesian.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\frametitle{Choosing the Number of Factors}
 	Onatski paper: no one in the class listed it as a preference! Bai \& Ng (2002).
@@ -160,14 +178,129 @@ $$y_t = x_t' \beta + \epsilon_t \quad \quad E[x_t\epsilon_t] \neq 0 $$
 
  \begin{block}
  	{Unobserved Variables $F_t$ are Strong IVs}
-$$\underset{(k\times 1)}{x_t} = \underset{(k\times r)}{\Psi'}\underset{(r\times 1)}{F_t} + \underset{(k\times 1)}{u_t} \quad \quad E[F_t \epsilon_t] = 0$$
+$$\underset{(k\times 1)}{x_t} = \Psi'\underset{(r\times 1)}{F_t} + u_t \quad \quad E[F_t \epsilon_t] = 0$$
  \end{block}
 
 \begin{block}
-	{Observe Large Panel $z_{1t}, \hdots, z_{Nt}$}
+	{Observe Large Panel $(z_{1t}, \hdots, z_{Nt})$}
 		$$z_{it} = \lambda_i' F_t + e_{it}$$
 \end{block}
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
+
+\small
+
+$$\boxed{
+	y_t = x_t' \beta + \epsilon_t, \quad \quad
+	x_t = \Psi'F_t + u_t, \quad \quad
+	z_{it} = \lambda_i' F_t + e_{it}
+}$$
+\vspace{1em}
+
+\begin{block}
+	{Procedure}
+	\begin{enumerate}
+		\item Calculate the PCs of Z
+		\item Calculate $\widetilde{F}_t$ using the first $r$ PCs of Z
+		\item Use $\widetilde{F}_t$ in place of $F_t$ for IV estimation
+	\end{enumerate}
+\end{block}
+
+\begin{block}
+	{Main Result}
+	Under certain assumptions, as $(N,T) \rightarrow \infty$ ``estimation and inference can proceed as though $F_t$ were known.'' The resulting estimator is consistent and asymptotically normal.
+\end{block}
+
+\normalsize
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Forecasting with Dynamic Factors}
+    
+Big literature on this and we'll talk more about it next time, but give an overview here.
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
+    
+\begin{block}
+	{Why Might This be Helpful?}
+	\begin{enumerate}
+		\item Avoid many instruments bias
+		\item Avoid bias from irrelevant instruments
+		\item Allow more observed instruments $z_{it}$ than sample size $T$
+		\item Provided that $\sqrt{T}/N \rightarrow 0$, all of the observed instruments $z_{it}$ can be \emph{endogenous} as long as $F_t$ is exogenous
+	\end{enumerate}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{FAVARs -- Bernanke, Boivin \& Eliasz (2005)}
+   
+   \begin{block}
+    	{Two Problems with Structural VARs}
+    	\begin{enumerate}
+    		\item Number of parameters is \emph{quadratic} in the number of variables. Unrestricted VAR infeasible unless $T$ is large relative to $N$.\begin{itemize}
+    			\item You've studied one solution to this problem already this semester: Bayesian Estimation with informative priors 
+    		\end{itemize}
+    		\item To keep estimation tractable we typically use a small number of variables, but then the VAR innovations ``might not span the space of structural shocks.''
+    	\end{enumerate}
+    \end{block} 
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{FAVARs -- Bernanke, Boivin \& Eliasz (2005)}
+
+\begin{block}{Factor-Augmented VAR Model}
+	\begin{eqnarray*}
+		\left[\begin{array}
+			{c} Y_t \\ F_t
+		\end{array} \right] &=& \Phi(L)\left[\begin{array}
+			{c} F_{t-1} \\ Y_{t-1}
+		\end{array} \right] + v_t\\ \\
+		X_t &=& \Lambda^f F_t + \Lambda^y Y_t + e_t
+	\end{eqnarray*}
+
+\vspace{2em}
+
+\small
+$\underset{(M\times 1)}{Y_t} = $  observable variables that ``drive dynamics of the economy''\\ \vspace{1em}
+$\underset{(K\times 1)}{F_t} = $ Small \# of unobserved factors: ``additional information''\\ \vspace{1em}
+$\underset{(N\times 1)}{F_t} = $ Large \# of observed ``informational time series''
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{FAVARs -- Bernanke, Boivin \& Eliasz (2005)}
+
+\small
+$$\boxed{\quad \left[\begin{array}
+			{c} Y_t \\ F_t
+		\end{array} \right] = \Phi(L)\left[\begin{array}
+			{c} F_{t-1} \\ Y_{t-1}
+		\end{array} \right] + v_t \quad \quad \quad \quad
+		 X_t = \Lambda^f F_t + \Lambda^y Y_t + e_t \quad}$$
+\normalsize
+
+\begin{block}{Consider Two Estimation Procedures}
+	\begin{enumerate}
+		\item Two-step Procedure:\begin{itemize}
+			\item Estimate space spanned by factors using first $K + M$ PCs of $X$
+			\item Estimate VAR with $\widehat{F}_t$ in place of $F_t$
+		\end{itemize}
+		\item Full Bayes (Gibbs Sampler)
+	\end{enumerate}
+\end{block}
+
+\begin{block}{Empirical Application}
+Additional information contained in FVAR is ``important to properly identify the monetary transmission mechanism.''
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
