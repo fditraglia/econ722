@@ -129,7 +129,7 @@ Monthly Macroeconomic Indicators: $N > 200, T >400$
 \alert{I've eliminated the mean $\mu$ and renamed the factor $F_t$}
 
 \vspace{1em}
-$$\underset{(N\times 1)}{X_t} =  \Lambda \underset{(k\times 1)}{F_t} + \epsilon_t$$
+$$\underset{(N\times 1)}{X_t} =  \Lambda \underset{(r\times 1)}{F_t} + \epsilon_t$$
 
 \vspace{2em}
 
@@ -144,7 +144,7 @@ $$
 	{c} 0\\ 0 
 \end{array}\right],
 \left[ \begin{array}
-	{cc} I_k & 0\\
+	{cc} I_r & 0\\
 	0 & \Psi
 \end{array}\right]\right)$$
 \vspace{1em}
@@ -157,8 +157,8 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 	\frametitle{Adding Time-Dependence}
 
 \begin{eqnarray*}
-	\underset{(N\times 1)}{X_t} &=&  \Lambda \underset{(k\times 1)}{F_t} + \epsilon_t \\ \\
-	\underset{(k\times 1)}{F_t} &=& A_1 F_{t-1} + \hdots + A_p F_{t-p} + u_t \\ \\
+	\underset{(N\times 1)}{X_t} &=&  \Lambda \underset{(r\times 1)}{F_t} + \epsilon_t \\ \\
+	\underset{(r\times 1)}{F_t} &=& A_1 F_{t-1} + \hdots + A_p F_{t-p} + u_t \\ \\
 	\left[ \begin{array}
 	{c} u_t \\ \epsilon_t
 \end{array}\right]
@@ -167,7 +167,7 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 	{c} 0\\ 0 
 \end{array}\right],
 \left[ \begin{array}
-	{cc} I_k & 0\\
+	{cc} I_r & 0\\
 	0 & \Psi
 \end{array}\right]\right)
 \end{eqnarray*}	
@@ -222,14 +222,44 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 		\item ``Nonparametric'' Estimation
 			\begin{itemize}
 				\item Just carry out PCA on $X$ and ignore the time-series element
+				\item The first $r$ PCs are our estimates $\widehat{F}_t$
+				\item Essentially treats $F_t$ as an $r$-dimensional \emph{parameter} to be estimated from an $N$-dimensional observation $X_t$
 			\end{itemize}
 	\end{enumerate}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{frame}
-	PCA stuff, when and why it works, what the basic conditions are, and when it fails.
+\frametitle{Estimation by PCA}
+
+\begin{block}
+	{PCA Normalization}
+		\begin{itemize}
+			\item $F'F/T = I_r$ where $F = (F_1, \hdots, F_T)'$
+			\item $\Lambda' \Lambda =\mbox{diag}(\mu_1, \hdots, \mu_r)$ where $\mu_1 \geq \mu_2 \geq \cdots \geq \mu_r$
+		\end{itemize}
+\end{block}
+	
+\begin{block}
+	{Assumption I}
+	Factors are \emph{pervasive}: $\Lambda' \Lambda'/N \rightarrow D_\Lambda$ an $(r\times r)$ full rank matrix.
+\end{block}
+
+\begin{block}
+	{Assumption II}
+	$\max \;\mbox{e-value}\; E[\epsilon_t\epsilon_t']\leq c \leq \infty$ for all $N$.
+\end{block}
+
+\begin{block}
+	{Upshot of the Assumptions}
+If we average over the cross-section, the contribution from the factors persists and the contribution from the idiosyncratic terms disappears as $N\rightarrow \infty$.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Key Result for PCA Estimation}
+	Under the assumptions on the previous slide and some other technical conditions, the first $r$ PCs of $X$ consistently estimate the space spanned by the factors as $N,T \rightarrow \infty$.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -252,6 +282,8 @@ $\Psi = $ diagonal matrix of idiosyncratic variances.
 \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Is more data better? Problems with cross-sectional averaging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\frametitle{Choosing the Number of Factors}
 If we use Likelihood-based or Bayesian estimation, we could try to resort to the familiar tools from earlier in the semester.There are a lot of parameters in factor models, however, so the asymptotic approximations (I'm looking at you, AIC) could be poor. 
@@ -270,6 +302,11 @@ This figure depicts the eigenvalues for an $N=1148, T = 252$ dataset of excess s
 \begin{frame}
 	\frametitle{Choosing the Number of Factors -- Bai \& Ng (2002)}
 
+Choose $r$ to minimize an information criterion:
+$$IC(r) = \log V_r(\widehat{\Lambda}, \widehat{F}) + r \cdot g(N,T)$$
+where
+	$$V_r(\Lambda, F) = \frac{1}{NT}\sum_{t=1}^T (X_t - \Lambda F_t)'(X_t - \Lambda F_t)$$
+and $g$ is a penalty function. The paper provides conditions on the penalty function that guarantee consistent estimation of the true number of factors. 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
