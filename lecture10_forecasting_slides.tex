@@ -35,6 +35,8 @@
    \vspace*{0.1cm}
 } 
 
+%Put the math in red
+\setbeamercolor{math text}{fg=red}
 
 %gets rid of navigation symbols
 \setbeamertemplate{navigation symbols}{}
@@ -60,7 +62,33 @@
 	
 
 \end{frame} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{What Have We Learned So Far?}
+    
 
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{What's Different About High-Dimensional Problems?}
+    
+\begin{itemize}
+	\item OLS performs very badly if the number of regressors is large relative to sample size.
+	\item Estimation uncertainty can be a problem
+	\item Noise accumulation in PCA
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Main References}
+	\begin{block}
+		{Stock \& Watson (2006) -- ``Forecasting with Many Predictors''} Overview of high-dimesional forecasting with a review of forecast combination, factor models, and Bayesian approaches.
+	\end{block}
+	\begin{block}
+		{Ng (2013) -- ``Variable Selection in Predictive Regressions''}
+		Reviews and relates a number of shrinkage \& selection methods.
+	\end{block}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -80,4 +108,158 @@
 	\end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002a,b)}
+ \framesubtitle{JASA paper has the theory, JBES paper has macro forecasting example.}
+
+\begin{block}
+	{Basic Setup}
+	Forecast scalar time series $y_{t+1}$ using $N$-dimensional collection of time series $X_t$ where we observe periods $t = 1, \hdots, T$.
+\end{block}
+
+\begin{block}
+	{Assumption}
+	Static representation of Dynamic Factor Model:
+	\begin{eqnarray*}
+		y_{t}&\alert{=}& \beta' F_t + \gamma(L)y_t + \epsilon_{t+1}\\
+		\alert{X_t} &\alert{=}& \alert{\Lambda F_t + e_t}
+	\end{eqnarray*}
+\end{block}
+
+\begin{block}
+	{``Direct'' Multistep Ahead Forecasts}
+	``Iterated'' forecast would be linear in $F_t$, $y_t$ and lags:
+	$$y_{t+h}^h = \alpha_h + \beta_h(L) + \gamma_h(L)+ \gamma_h(L)y_t + \epsilon^h_{t+h}$$
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{center}
+	\Huge This is really just PCR
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002a,b)}
+    
+    \begin{block}
+    	{Estimation Procedure}
+    	\begin{enumerate}
+    		\item Data Pre-processing
+    			\begin{enumerate}
+    			\item Transform all series to stationarity (logs or first difference)
+				\item Center and standardize all series
+				\item Remove outliers (ten times IQR from median)
+				\item Optionally augment $X_t$ with lags
+    			\end{enumerate}
+    		\item Estimate the Factors
+    			\begin{itemize}
+    				\item No missing observations: PCA on $X_t$ to estimate $\widehat{F}_t$ 
+		\item Missing observations/Mixed-frequency: EM-algorithm
+    			\end{itemize}
+    		\item Fit the Forecasting Regression
+    		\begin{itemize}
+    			\item Regress $y_{t}$ on a constant and lags of $\widehat{F}_t$ and $y_t$ to estimate the parameters of the ``Direct'' multistep forecasting regression.
+    		\end{itemize}
+    	\end{enumerate}
+    \end{block}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002b)}
+    
+\alert{Recall from last time that, under certain assumptions, PCA consistently estimates the space spanned by the factors. Broadly similar assumptions are at work here.}
+
+\vspace{2em}
+
+\begin{block}
+	{Main Theoretical Result}
+	Moment restrictions on $(\epsilon, e, F)$ plus a ``rank condition'' on $\Lambda$ imply that the MSE of the procedure on the previous slide converges to that of the infeasible optimal procedure, provided that  $N,T \rightarrow \infty$.
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002a)}
+    
+\begin{block}
+	{Forecasting Experiment}
+	\begin{itemize}
+		\item Simulated real-time forecasting of eight monthly macro variables from 1959:1 to 1998:12
+		\item Forecasting Horizons: 6, 12, and 24 months
+		\item ``Training Period'' 1959:1 through 1970:1
+		\item Predict $h$-steps ahead out-of-sample, roll and re-estimate.
+		\item BIC to select lags and \# of Factors in forecasting regression
+		\item Compare Diffusion Index Forecasts to Benchmark
+			\begin{itemize}
+				\item AR only
+				\item Factors only
+				\item AR + Factors
+			\end{itemize}
+	\end{itemize}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002a)}
+   \begin{block}
+   	{Empirical Results}
+   	\begin{itemize}
+   		\item Factors provide a substantial improvement over benchmark forecasts in terms of MSPE
+   		\item Six factors explain 39\% of the variance in the 215 series; twelve explain 53\%  
+   		\item Using all 215 series tends to work better than restricting to balanced panel of 149 (PCA estimation)
+   		\item Augmenting $X_t$ with lags isn't helpful
+   	\end{itemize}
+   \end{block}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}
