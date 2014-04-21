@@ -219,11 +219,11 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-	\frametitle{Another Line of Research on Factor Models}
+% \begin{frame}
+% 	\frametitle{Another Line of Research on Factor Models}
 
-The assumption of a factor structure sure is convenient, but how does it relate to other kinds of assumptions we're more familiar with? (e.g.\ everything follows a VAR). Does this structure come out of our economic models, or is it just an assumption of convenience? I haven't seen much work on this, but it seems important to me. Two recent papers that consider questions along these lines: Onatski and Ruge (2012), Dufour \& Stevanovic
-\end{frame}
+% The assumption of a factor structure sure is convenient, but how does it relate to other kinds of assumptions we're more familiar with? (e.g.\ everything follows a VAR). Does this structure come out of our economic models, or is it just an assumption of convenience? I haven't seen much work on this, but it seems important to me. Two recent papers that consider questions along these lines: Onatski and Ruge (2012), Dufour \& Stevanovic
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{What about Ridge and Lasso}
@@ -280,7 +280,7 @@ Bai and Ng targeted predictors paper adds transformations of original series. (T
  	{Why Bagging?}
  		\begin{itemize}
  			\item Aims to reduce the forecast error of ``unstable'' procedures such as variable selection of Lasso, by reducing their variance.
- 			\item Completely portable, provided you have an appropriate way to carry out the bootstrap.
+ 			\item Completely portable: you can bag \emph{anything} provided you have an appropriate way to carry out the bootstrap.
  			\item May provide a way of attacking the problem of inference post-model selection. See Efron (JASA, \emph{Forthcoming}) ``Estimation and Accuracy after Model Selection''
  		\end{itemize}
  \end{block} 
@@ -307,7 +307,26 @@ Bai and Ng targeted predictors paper adds transformations of original series. (T
 		\end{itemize}
 	\end{block}
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Boosting}
+	\begin{block}
+		{Ensemble Methods}
+		Machine learning term for ``non-Bayesian model averaging''
+	\end{block}
+	\begin{block}
+		{What is Boosting?}
+		\begin{itemize}
+			\item Combine large number of ``weak learners'' (i.e.\ crappy predictive models) so that the \emph{ensemble} predicts well.
+			\item Explicitly designed around predictive loss
+			\item Arbitrarily improve in-sample fit of arbitrarily the weak learners!
+		\end{itemize}
+	\end{block}
+	\begin{block}
+		{Book-Length Treatment}
+		Shapire \& Freund (2012) -- \emph{Boosting: Foundations and Algorithms}
+	\end{block}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Bai \& Ng (2009) -- Boosting Diffusion Indices}
