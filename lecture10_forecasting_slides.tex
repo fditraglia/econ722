@@ -65,9 +65,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{What Have We Learned So Far?}
     
-
+    \begin{enumerate}
+    	\item ``Classical'' Model Selection
+    	\item Focused Model Selection
+    	\item Moment Selection for GMM
+    	\item Shrinkage Estimation
+    	\item Factor Models
+    \end{enumerate}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Today's Lecture}
+    
+``Tie everything together'' by looking at high-dimensional forecasting problems, consider some avenues for future research.
+
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{What's Different About High-Dimensional Problems?}
     
@@ -88,25 +101,14 @@
 		{Ng (2013) -- ``Variable Selection in Predictive Regressions''}
 		Reviews and relates a number of shrinkage \& selection methods.
 	\end{block}
+	\begin{block}
+		{Stock \& Watson (2012)}
+	\end{block}
+	\begin{block}
+		{Kim \& Nelson (2013)}
+	\end{block}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-	\frametitle{Overview}
-	\footnotesize
-	\begin{itemize}
-		\item What have we covered in the course so far? Try to tie everything together today, suggest extensions and open problems.
-		\item Survey articles
-		\item Diffusion index forecasting (Stock and Watson 2002)
-		\item Other ways of extracting factors: Sparse PCA, ICA
-		\item Other ways of forecasting: Stock and Watson 2012, Kim and Swanson
-		\item Target or not? Bai and Ng (2008), Kelly \& Pruitt, PLS, etc.
-		\item Nonlinear stuff? Kernel methods, Bai and Ng (2008), that recent paper from a job candidate...
-		\item Boosting and Bagging
-		\item Open Questions: selection with generated predictors, how should we choose lasso and ridge parameters for dependent data? 
-		\item Inference post-selection with shrinkage estimators.
-	\end{itemize}
-\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Diffusion Index Forecasting -- Stock \& Watson (2002a,b)}
  \framesubtitle{JASA paper has the theory, JBES paper has macro forecasting example.}
@@ -239,7 +241,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\begin{frame}
+	\frametitle{Overview}
+	\footnotesize
+	\begin{itemize}
+		\item Other ways of extracting factors: Sparse PCA, ICA
+		\item Other ways of forecasting: Stock and Watson 2012, Kim and Swanson
+		\item Target or not? Bai and Ng (2008), Kelly \& Pruitt, PLS, etc.
+		\item Nonlinear stuff? Kernel methods, Bai and Ng (2008), that recent paper from a job candidate...
+		\item Boosting and Bagging
+		\item Open Questions: selection with generated predictors, how should we choose lasso and ridge parameters for dependent data? 
+		\item Inference post-selection with shrinkage estimators.
+	\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
