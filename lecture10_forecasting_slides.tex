@@ -251,10 +251,64 @@ Bai and Ng targeted predictors paper adds transformations of original series. (T
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Bootstrap Aggregation -- ``Bagging''}
     
-    Inoue \& Killian among others. Designed to ``smooth out'' discrete stuff (e.g.\ variable selection or LASSO) to reduce variance. General procedure although most econometrians examine an asymptotic approximation to a special version of the procedure (based on a pre-test with size 0.05) rather than considering it in more generality.
+    % Inoue \& Killian among others. Designed to ``smooth out'' discrete stuff (e.g.\ variable selection or LASSO) to reduce variance. General procedure although most econometrians examine an asymptotic approximation to a special version of the procedure (based on a pre-test with size 0.05) rather than considering it in more generality.
+
+\begin{block}
+	{Bagging Algorithm}
+	\begin{enumerate}
+		\item Make a bootstrap draw  
+		\item Carry out selection/shrinkage/estimation using boostrap data
+		\item Use estimated parameters from to construct a forecast $\widehat{y}_{T+h}^{(b)}$
+		\item Repeat for $b = 1, \hdots, B$
+		\item Average to get ``Bagged'' Forecast: $\widehat{y}_{T+h}^{(Bag)} = \frac{1}{B}\sum_{b=1}^B \widehat{y}_{T+h}^{(b)}$
+	\end{enumerate}
+\end{block}
+
+\begin{block}
+	{Details}
+	\begin{itemize}
+		\item If the data are dependent, need block bootstrap.
+		\item In step 3, we forecast using the \emph{parameters} estimated from the bootstrap data but the \emph{predictors} from the \emph{real} dataset.
+	\end{itemize}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Bootstrap Aggregation -- ``Bagging''}
+
+\begin{block}
+ 	{Why Bagging?}
+ 		\begin{itemize}
+ 			\item Aims to reduce the forecast error of ``unstable'' procedures such as variable selection of Lasso, by reducing their variance.
+ 			\item Completely portable, provided you have an appropriate way to carry out the bootstrap.
+ 			\item May provide a way of attacking the problem of inference post-model selection. See Efron (JASA, \emph{Forthcoming}) ``Estimation and Accuracy after Model Selection''
+ 		\end{itemize}
+ \end{block} 
 
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Bagging in Economics}
+	\begin{block}
+		{Inoue \& Killian (2008, JASA)}
+		Compares performance of bagged ``pre-test'' estimator (variable selection via a t-test) to other methods of forecasting US Inflation. Bagging is carried out via a block bootstrap.
+	\end{block}
+	\begin{block}
+		{Stock \& Watson (2012)}
+		Among other shrinkage procedures, they consider a large-sample approximation to bagging pre-test estimators that doesn't require making bootstrap draws.
+	\end{block}
+	\begin{block}
+		{Other Papers That Use Bagging}
+		\begin{itemize}
+			\item Hillebrand \& Medeiros (2010): Realized Volatility Forecasts
+			\item Hillebrand et al (2012): Forecasting the Equity Premium
+			\item \alert{Kim and Swanson (2013)}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Bai \& Ng (2009) -- Boosting Diffusion Indices}
     
@@ -264,13 +318,16 @@ We'll learn more about boosting in the student presentations!
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{What Should We Make of This Literature}
-    
+    \footnotesize
 \begin{itemize}
 	\item Shrinkage is essential in high-dimensional problems and often beats model averaging.
 	\item There's no single best procedure for every problem
-	\item Worth considering new ways of extracting factors and combining with shrinkage
+	\item Worth considering new ways of extracting factors \& combining with shrinkage
+	\item How and when should we target? Relationship to spurious correlation and overfitting? There are strong opinions on both sides, but I haven't seen any compelling justifications.
 	\item No one has any idea what's going on with model selection for these problems: generated regressors, target-specific, consistency vs. efficiency. Onatski paper is one contribution but it deals with a somewhat odd version of the problem: forecasting the whole $X_t$
-	\item Inference is very hard post-selection and for shrinkage estimation (unless you're a Bayesian). There is a paper on this for the factor stuff by Bai \& Ng.
+	\item Want shrinkage to be data-driven. There are results on rates for consistency of Lasso, etc, but that's not what we care about for forecasting. People just use the default CV procedure in matlab (or R) which has no justification in the time-series setting. 
+	\item Two-step procedures, generated regressors.
+	\item Inference is very hard post-selection and for shrinkage estimation (unless you're a Bayesian). There is a paper on this for the factors by Bai \& Ng.
 \end{itemize}
 
 \end{frame}
