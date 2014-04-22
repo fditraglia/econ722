@@ -264,17 +264,18 @@
     
     \begin{block}
     	{Sparse PCA}
+    	Add a Lasso-type penalty to the ``regression'' formulation of PCA: encourage the factors to load on small number of variables.
     \end{block}
 
     \begin{block}
     	{Independent Components Analysis (ICA)}
+    	Extract factors that maximize non-Gaussianity
     \end{block}
 
-   	\begin{block}
-   		{Targeted Factors?}
-   		Notice that PCA (and indeed ICA and sparse PCA) completely ignore $Y$ when extracting factors!
-   	\end{block}
-Bai and Ng targeted predictors paper adds transformations of original series. (Talk more about this in relation to kernel stuff). To target or not to target? Why should the PCs of $X$ be related to $Y$? Lots of ways to target. Bai and Ng as well as PLS Groen \& Kapetanios, Kelly \& Pruitt. Sparse PCA, ICA.
+\vspace{1em}
+
+\alert{Both of these are considered in Kim \& Swanson (2014) and seem to work very well when combined with second-stage shrinkage.}
+
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -282,12 +283,16 @@ Bai and Ng targeted predictors paper adds transformations of original series. (T
     
     \begin{block}
     	{Problem with PCA and Friends}
-    	Completely ignores $Y$ in constructing the factors!    
+    	Completely ignores $Y$ in constructing the factors! Should we take the forecast target into account when extracting factors?
 	\end{block}
 
-\begin{eqnarray*}
-	X_t &=& 
-\end{eqnarray*}
+\begin{block}
+	{Some References}
+	\begin{itemize}
+		\item Bai \& Ng (2008) -- Forecasting Economic Time Series Using Targeted Predictors
+		\item Kelly \& Pruitt (2012) -- The Three-pass Regression Filter 
+	\end{itemize}
+\end{block}
 
 \end{frame}
 
@@ -303,9 +308,12 @@ subject to $||\alpha ||=1$ and the constraint that each PLS ``factor'' is orthog
 
 \begin{block}
 	{As a Probabilistic Model}
+	``Shared'' factor $F_t$ and $X$-specific factor $Z_t$
 	\begin{eqnarray*}
-		
+		Y_t &=& \mu_Y + \Lambda_Y F_t + \epsilon_t\\
+		X_t &=& \mu_X + \Lambda_X F_t + \Pi Z_t + u_t
 	\end{eqnarray*}
+	where $F_t \perp Z_t$
 \end{block}
 
 \end{frame}
@@ -390,21 +398,35 @@ subject to $||\alpha ||=1$ and the constraint that each PLS ``factor'' is orthog
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Bai \& Ng (2009) -- Boosting Diffusion Indices}
+\begin{frame}[c]\frametitle{Boosting}
     
-Also, Buchen \& Wohlrabe (2011) -- boosting compared to the Stock and Watson 2006 example.
 
-We'll learn more about boosting in the student presentations!
+ \begin{block}
+ 	{Bai \& Ng (2009) -- Boosting Diffusion Indices}
+ 	Use boosting to select which lags of factors to include in a forecasting regression estimated following PCA. 
+ \end{block}
+
+ \begin{block}
+ 	{Buchen \& Wohlrabe (2011) -- Is Boosting a Viable Alternative?}
+ 	Boosting performs well compared to other methods in the example from the 2006 Stock \& Watson Handbook Chapter.
+ \end{block}
+
+\vspace{1em}
+\alert{We'll learn more about boosting in the presentations!}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Some Avenues to Explore}
    
 \begin{itemize}
-	\item Kernel Methods (Exterkate et al, 2013)
+	\item Kernel Methods (Exterkate et al, 2013) 
+		\begin{itemize}
+			\item Nonlinear factors
+		\end{itemize}
 	\item Model selection for factor / shrinkage estimators
 		\begin{itemize}
 			\item Generated regressor problem
 			\item Choice of Lasso and Ridge Penalties in time-series Forecasting 
+			\item Efficient selection of number of factors
 		\end{itemize}
 	\item When and how should we extract targeted factors?
 	\item Can we provide an economic or statistical justification for sparse PCA or ICA?
