@@ -82,13 +82,24 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{What's Different About High-Dimensional Problems?}
+\begin{frame}[c]\frametitle{Some Special Problems in High-dimensional Problems}
     
-\begin{itemize}
-	\item OLS performs very badly if the number of regressors is large relative to sample size.
-	\item Estimation uncertainty can be a problem
-	\item Noise accumulation in PCA: that Fan and Li paper, also Boivin \& Ng
-\end{itemize}
+
+\begin{block}
+	{Estimation Uncertainty} 
+	We've already seen that OLS can perform very badly if the number of regressors is large relative to sample size.
+\end{block}
+
+\begin{block}
+	{Best Subsets Infeasible}
+	With more than 30 or so regressors, we can't check all subsets of predictors making classical model selection problematic.
+\end{block}
+
+\begin{block}
+	{Noise Accumulation} 
+	Large $N$ is supposed to help in factor models: averaging over the cross-section gives a consistent estimator of factor space. This can fail in practice, however, since it relies on the assumption that the factors are \emph{pervasive}. See Boivin \& Ng (2006).
+\end{block}
+
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,9 +114,11 @@
 	\end{block}
 	\begin{block}
 		{Stock \& Watson (2012)}
+		Examines a wide range of shrinkage procedures to see if they can improve on diffusion index forecasts.
 	\end{block}
 	\begin{block}
 		{Kim \& Nelson (2013)}
+		``Horse Race'' of various factor and shrinkage methods for forecasting.
 	\end{block}
 \end{frame}
 
@@ -226,33 +239,81 @@
 % \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{What about Ridge and Lasso}
+\begin{frame}[c]\frametitle{What about Ridge and Lasso?}
     
-Diffusion Index is really just PCR. What about Ridge and Lasso? Rather than extract factors, just do penalized forecasting regression and ``toss everything in.''
+ \begin{block}
+ 	{Basic Idea}
+ 	Diffusion index forecasts are really just PCR. Why not try Ridge or Lasso with all predictors rather than estimating factors?
+ \end{block}
 
-De Mol, Giannone \& Reichlin (2008) -- Compare performance of Ridge and Lasso to PCA-based forecasts (PCR). Small out-of-sample experiment Same data as Stock \& Watson 2005 -- implications of Dynamic Factors for VAR analysis). With appropriate choice of penalty parameters, Ridge and Lasso forecasts performance similar to that of Diffusion Index (PCR). Analyze asymptotic behavior of ridge under the assumptions used to justify PCA by Stock \& Watson inter alia. 
+ \begin{block}
+ 	{De Mol, Giannone \& Reichlin (2008)}
+ 	\begin{itemize}
+ 		\item Compare PCA-based factor forecasts to Ridge and Lasso
+ 		\item In a small out-of-sample experiment, Ridge and Lasso with appropriate penalty parameters give results comparable to diffusion index.
+ 		\item Analyze asymptotics of Ridge under assumptions typically used to justify PCA
+ 	\end{itemize}
+ 
+ \end{block}
 
-Talk more about this looking at the two more recent papers.
+
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[c]\frametitle{Other Ways of Extracting Factors}
     
+    \begin{block}
+    	{Sparse PCA}
+    \end{block}
+
+    \begin{block}
+    	{Independent Components Analysis (ICA)}
+    \end{block}
+
+   	\begin{block}
+   		{Targeted Factors?}
+   		Notice that PCA (and indeed ICA and sparse PCA) completely ignore $Y$ when extracting factors!
+   	\end{block}
 Bai and Ng targeted predictors paper adds transformations of original series. (Talk more about this in relation to kernel stuff). To target or not to target? Why should the PCs of $X$ be related to $Y$? Lots of ways to target. Bai and Ng as well as PLS Groen \& Kapetanios, Kelly \& Pruitt. Sparse PCA, ICA.
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Kernel Methods}
-   
-   Hasn't been explored much in econometrics, but very popular in machine learning. One recent econometrics paper is Exterkate et al (2013) ``Nonlinear Forecasting with Many Predictors Using Kernel Ridge Regression''
+\begin{frame}[c]\frametitle{To Target or Not to Target?}
+    
+    \begin{block}
+    	{Problem with PCA and Friends}
+    	Completely ignores $Y$ in constructing the factors!    
+	\end{block}
 
+\begin{eqnarray*}
+	X_t &=& 
+\end{eqnarray*}
 
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[c]\frametitle{Partial Least Squares (PLS)}
+
+\begin{block}
+	{As an Optimization Problem}
+	Construct a sequence of linear combinations of $X$ that solve
+	$$\underset{\alpha}{\max} \; Corr^2(\textbf{y}, X\alpha)Var(X\alpha)$$
+subject to $||\alpha ||=1$ and the constraint that each PLS ``factor'' is orthogonal to the preceding ones.
+\end{block}
+
+\begin{block}
+	{As a Probabilistic Model}
+	\begin{eqnarray*}
+		
+	\end{eqnarray*}
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[c]\frametitle{Bootstrap Aggregation -- ``Bagging''}
     
-    % Inoue \& Killian among others. Designed to ``smooth out'' discrete stuff (e.g.\ variable selection or LASSO) to reduce variance. General procedure although most econometrians examine an asymptotic approximation to a special version of the procedure (based on a pre-test with size 0.05) rather than considering it in more generality.
-
 \begin{block}
 	{Bagging Algorithm}
 	\begin{enumerate}
@@ -336,17 +397,17 @@ Also, Buchen \& Wohlrabe (2011) -- boosting compared to the Stock and Watson 200
 We'll learn more about boosting in the student presentations!
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{What Should We Make of This Literature}
-    \footnotesize
+\begin{frame}[c]\frametitle{Some Avenues to Explore}
+   
 \begin{itemize}
-	\item Shrinkage is essential in high-dimensional problems and often beats model averaging.
-	\item There's no single best procedure for every problem
-	\item Worth considering new ways of extracting factors \& combining with shrinkage
-	\item How and when should we target? Relationship to spurious correlation and overfitting? There are strong opinions on both sides, but I haven't seen any compelling justifications.
-	\item No one has any idea what's going on with model selection for these problems: generated regressors, target-specific, consistency vs. efficiency. Onatski paper is one contribution but it deals with a somewhat odd version of the problem: forecasting the whole $X_t$
-	\item Want shrinkage to be data-driven. There are results on rates for consistency of Lasso, etc, but that's not what we care about for forecasting. People just use the default CV procedure in matlab (or R) which has no justification in the time-series setting. 
-	\item Two-step procedures, generated regressors.
-	\item Inference is very hard post-selection and for shrinkage estimation (unless you're a Bayesian). There is a paper on this for the factors by Bai \& Ng.
+	\item Kernel Methods (Exterkate et al, 2013)
+	\item Model selection for factor / shrinkage estimators
+		\begin{itemize}
+			\item Generated regressor problem
+			\item Choice of Lasso and Ridge Penalties in time-series Forecasting 
+		\end{itemize}
+	\item When and how should we extract targeted factors?
+	\item Can we provide an economic or statistical justification for sparse PCA or ICA?
 \end{itemize}
 
 \end{frame}
