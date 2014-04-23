@@ -544,7 +544,7 @@ Since $X$ has been demeaned, we have
 	$$\bar{z}_i = \frac{1}{T} \sum_{t=1}^T\textbf{v}_i' \textbf{x}_t =\textbf{v}_i' \left( \frac{1}{T} \sum_{t=1}^T \textbf{x}_t\right) = \textbf{v}_i' \textbf{0} = 0$$
 Thus, we can calculate the variance of the $i$th PC score as follows:
 	$$\frac{1}{T}\sum_{t=1}^T (z_{it} - \bar{z}_i)^2 = \frac{1}{T}\sum_{i=1}^T z_{it}^2 = \frac{1}{T} \textbf{z}_i' \textbf{z}_i = \frac{1}{T} (X \textbf{v}_i)'(X \textbf{v}_i) = T^{-1}d_i^2$$
-since $V'(X"X)V = D$. In fact, we do not need to calculate $X \mathbf{v}_i$ to get the PC scores: we get them for free from the SVD! To see this, note that $XV = UDV'V = UD$. That is,
+since $V'(X'X)V = D$. In fact, we do not need to calculate $X \mathbf{v}_i$ to get the PC scores: we get them for free from the SVD! To see this, note that $XV = UDV'V = UD$. That is,
 	$$X\left[ \begin{array}
 		{ccc} \textbf{u}_1 & \cdots & \textbf{v}_p
 	\end{array}\right]= \left[ \begin{array}
