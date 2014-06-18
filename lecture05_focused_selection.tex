@@ -122,15 +122,15 @@ Drifting parameter sequences of the kind described above are also used in the we
 When we derived Mallow's $C_p$, the idea was to compare models on the basis of predictive mean-squared error. 
 Bigger models generally have a lower bias but a higher variance because there are more parameters to estimate. 
 In the example we considered in class, everything was linear and we made enough assumptions about the finite sample distribution that we could deduce the \emph{exact} MSE conditional on $X$. 
-In many settings, however, finite sample results unavailable and we are forced to rely on asymptotic approximations. 
+In many settings, however, finite sample results are unavailable and we are forced to rely on asymptotic approximations. 
 We know there is a tradeoff between bias and variance in the finite sample and we'd like to capture this idea in our limit results. 
 The question is how?
 
 Suppose that $\widehat{\mu}$ is a \emph{potentially biased} estimator of $\mu$. 
 Then we have
 $$MSE(\widehat{\mu}) = E[(\widehat{\mu} - \mu)^2] = \left(E[\widehat{\mu} - \mu]\right)^2 + Var(\widehat{\mu})$$
-Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can't calculate the proceeding expression. 
-So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this to as a ``stand-in'' for the exact, finite-sample quantity. 
+Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can't calculate the preceding expression. 
+So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this as a ``stand-in'' for the exact, finite-sample quantity. 
 Let $\mu_0$ be the probability limit of $\widehat{\mu}$ and $\mu$ be the ``true'' parameter value.
 Suppose that
 $$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
@@ -145,7 +145,7 @@ Let's try recentering by adding and subtracting $\sqrt{T}\mu$ as follows:
 &=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-$$\sqrt{T}\left( \widehat{\mu} - \mu_0\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
+$$\sqrt{T}\left( \widehat{\mu} - \mu\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
 Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' 
 Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! 
 We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. 
@@ -184,7 +184,7 @@ Instead we have what is called a ``triangular array DGP'' and we need to index r
 && \vdots\\
 &&Y_{n1}, Y_{n2}, \hdots, Y_{nn}
 \end{eqnarray*}
-When we want to avoid the double subscript on the random variables, it's common to add one to the expectation and variance operators so indicate the distribution with respect to which the given moment is being evaulated.
+When we want to avoid the double subscript on the random variables, it's common to add a subscript to the expectation and variance operators to indicate the distribution with respect to which the given moment is being evaluated.
 
 To give you a sense of how triangular array DGPs work, I'll show you some very simple results. 
 For much more general, and also much more technical, results for triangular array DGPs, see Andrews (1988) and Andrews (1992).
@@ -193,13 +193,14 @@ For much more general, and also much more technical, results for triangular arra
 Suppose $Y_1, \hdots, Y_n \sim \mbox{iid}$ with mean $\mu + \delta/\sqrt{n}$ and variance $\sigma^2_n$. 
 Can we still establish a LLN for the sample mean $\bar{Y}_n = n^{-1} \sum_{i=1}^n Y_i$? If so how? 
 By Chebyshev's Inequality, we know that one simple way to establish a WLLN is via an $L_2$ argument.
-In this case, it is sufficient to show that $E_n[\bar{Y}_n] \rightarrow \mu$ and $Var_n[\bar{Y}_n] \rightarrow 0$. Although the triangular array of RVs in this example is not identically distributed in the strict sense, it \emph{is} identically distributed \emph{for fixed $n$}. 
+In this case, it is sufficient to show that $E_n[\bar{Y}_n] \rightarrow \mu$ and $Var_n[\bar{Y}_n] \rightarrow 0$. 
+Although the triangular array of RVs in this example is not identically distributed in the strict sense, it \emph{is} identically distributed \emph{for fixed $n$}. 
 Thus, we have,
 $$E_n[\bar{Y}_n] = \frac{1}{n} \sum_{i=1}^n E_n[Y_i] = \mu + \delta/\sqrt{n} \rightarrow \mu$$
 Using independence, we have
 $$Var_n(\bar{Y}_n) =\frac{1}{n^2} \sum_{i=1}^n Var_n(Y_i) = \frac{\sigma_n^2}{n}$$
 Thus, as long as $\sigma_n^2$ is \emph{uniformly bounded} by some constant $M$, we have $Var_n(\bar{Y}_n) \rightarrow 0$ and it follows that $\bar{Y}_n \overset{p}{\rightarrow} \mu$. 
-Although this example as so simple as to be nearly trivial it illustrates the basic flavor of triangular array asymptotics: they're very similar to the usual asymptotics you see in first year, but typically require some kind of uniform bound on the array.
+Although this example is so simple as to be nearly trivial it illustrates the basic flavor of triangular array asymptotics: they're very similar to the usual asymptotics you see in first year, but typically require some kind of uniform bound on the array.
 
 \paragraph{Lindeberg-Feller CLT}
 The previous example showed a simple LLN for triangular arrays. 
@@ -335,7 +336,7 @@ J_{10} & J_{11}
 \end{array}$$
 where the the zero subscript indicates that the expectation is being taken with respect to the distribution in which $\gamma = \gamma_0$. 
 This is the \emph{limiting} DGP which is \emph{different} from the DGP for any finite sample size under local mis-specification. 
-We partition the inverset of the information matrix for the full model as follows
+We partition the inverse of the information matrix for the full model as follows
 $$J_{Full}^{-1} = \left[\begin{array}{cc}
 J^{00} & J^{01}\\
 J^{10} & J^{11}
