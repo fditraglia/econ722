@@ -1,42 +1,7 @@
-
-\documentclass[12pt]{article}
-\usepackage[margin=1.5in]{geometry}
-\usepackage{todonotes}
-\usepackage{amssymb,amsmath,amsthm,graphicx}
-\usepackage{rotating}
-\usepackage{setspace}
-\usepackage{enumerate}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{multirow}
-\usepackage{color}
-\usepackage{threeparttable}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{hyperref}
-
-\newtheorem{assump}{Assumption}[section]
-\newtheorem{pro}{Proposition}[section]
-\newtheorem{lem}{Lemma}[section]
-\newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}{Corollary}[section]
-\newtheorem{ineq}{Inequality}[section]
-\newtheorem{defn}{Definition}[section]
-\newtheorem{rem}{Remark}[section]
-\newtheorem{ex}{Example}[section]
-\theoremstyle{definition}
-\newtheorem{alg}{Algorithm}[section]
+%!TEX root = ../main.tex
+\chapter{Moment Selection for GMM}
 
 
-\linespread{1.3}
-
-\begin{document}
-
-\title{Lecture 6: Moment Selection for GMM}
-
-\author{Francis J.\ DiTraglia}
-
-\maketitle 
 
 \section{Review of Generalized Method of Moments}
 The best all-around reference for for GMM is Hall (2005). These notes draw on chapters 3--7 of his book and use essentially the same notation.
@@ -368,4 +333,4 @@ Hence
 is an asymptotically unbiased estimator of $\tau^2$. Substituting this quantity and rearranging, the FMSC tells us to use the OLS estimator whenever
 	$$\widehat{T}_{FMSC} = \frac{\widehat{\tau}^2 \widehat{\gamma}^2}{\widehat{\sigma}_v^2 \widehat{\sigma}_\epsilon^2 \widehat{\sigma}_x^2} < 2$$
 After some algebra, it turns out that $\widehat{T}_{FMSC}$ is \emph{numerically equivalent} to the Hausman Test statistic and that $\widehat{T}_{FMSC} \overset{d}{\rightarrow} \chi^2(1)$ when $\tau = 0$. Thus, in the simple example of choosing between OLS and 2SLS, the FMSC is identical to carrying out a Hausman Test with a critical value of 2, which corresponds to a 16\% significance level. Notice that this is exactly the same significance level that appeared when we interpreted the AIC as a hypothesis test in our simple example of estimating a normal mean! This relationship only holds, so far as I know, for the present example. Viewed from the opposite perspective, these derivations indicate that the textbook procedure of using a Hausman Test to choose between OLS and 2SLS can be be rigorously grounded in a loss-based framework. The usual significance levels of 5 or 10\%, however, are \emph{too lenient}: they would lead us to use OLS in some situations that do \emph{not} lead to a favorable bias-variance tradeoff. 
-\end{document}
+

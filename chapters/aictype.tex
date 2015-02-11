@@ -1,44 +1,5 @@
-	
-
-\documentclass[12pt]{article}
-\usepackage[margin=1.5in]{geometry}
-\usepackage{todonotes}
-\usepackage{amssymb,amsmath,amsthm,graphicx}
-\usepackage{rotating}
-\usepackage{setspace}
-\usepackage{enumerate}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{multirow}
-\usepackage{color}
-\usepackage{threeparttable}
-\usepackage{caption}
-\usepackage{subcaption}
-
-\newtheorem{assump}{Assumption}[section]
-\newtheorem{pro}{Proposition}[section]
-\newtheorem{lem}{Lemma}[section]
-\newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}{Corollary}[section]
-\newtheorem{ineq}{Inequality}[section]
-\newtheorem{defn}{Definition}[section]
-\newtheorem{rem}{Remark}[section]
-\newtheorem{ex}{Example}[section]
-\theoremstyle{definition}
-\newtheorem{alg}{Algorithm}[section]
-
-\linespread{1.3}
-
-\begin{document}
-
-\title{Lecture 1: ``AIC-type'' Information Criteria}
-
-\author{Francis J.\ DiTraglia}
-
-\maketitle
-
- 
-
+%!TEX root = ../main.tex
+\chapter{``AIC-type'' Information Criteria}
 \section{Introduction}
 Akaike's Information Criterion (AIC) summarizes the quality of a model by trading fit, measured by the maximized log likelihood, against complexity, measured by the number of estimated parameters. But where does this complexity penalty come from? In these notes we'll take a closer look at the AIC along with two related information criteria: Takeuichi's Information Criterion (TIC), and the Corrected AIC (AIC$_c$) of Hurvich and Tsai (1989). All three are based on approximations to the \textbf{Kullback-Leibler Divergence}, a fundamental quantity from information theory that is inextricably linked to maximum likelihood information.
 
@@ -183,4 +144,3 @@ does not exist in all cases. The bias correction remains reasonable in this case
 
 
 
-\end{document}

@@ -1,42 +1,5 @@
-\documentclass[12pt]{article}
-\usepackage[margin=1.5in]{geometry}
-\usepackage{todonotes}
-\usepackage{amssymb,amsmath,amsthm,graphicx}
-\usepackage{rotating}
-\usepackage{setspace}
-\usepackage{enumerate}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{multirow}
-\usepackage{color}
-\usepackage{threeparttable}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{hyperref}
-
-\newtheorem{assump}{Assumption}[section]
-\newtheorem{pro}{Proposition}[section]
-\newtheorem{lem}{Lemma}[section]
-\newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}{Corollary}[section]
-\newtheorem{ineq}{Inequality}[section]
-\newtheorem{defn}{Definition}[section]
-\newtheorem{rem}{Remark}[section]
-\newtheorem{ex}{Example}[section]
-\theoremstyle{definition}
-\newtheorem{alg}{Algorithm}[section]
-
-
-\linespread{1.3}
-
-\begin{document}
-
-\title{Lecture 7: High-Dimensional Linear Regression}
-
-\author{Francis J.\ DiTraglia}
-
-\maketitle 
-
+%!TEX root = ../main.tex
+\chapter{High-Dimensional Linear Regression}
 \section{Introduction}
 So far we've looked at model selection. For example, we considered the problem of choosing the ``best'' set of regressors for a forecasting problem. Here, the idea was to consider dropping regressors with small coefficients to get a favorable bias-variance tradeoff. There are several problems with this approach. First, variable selection can be unstable because of the discrete nature of the problem: small changes in the underlying data could lead to large changes in the selected set of regressors. Second, it is only computationally infeasible to consider all possible subsets of regressors when $p < 30$. Our colleague Andy Postelwaite actually has a microeconomic theory paper about this called ``Fact Free Learning.'' You should check it out: it's very interesting!
 
@@ -351,7 +314,7 @@ Because of the nature of its penalty function, Lasso tends to shrink large coeff
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.85]{ISLR_ch6_fig11}
+	\includegraphics[scale=0.85]{../img/ISLR_ch6_fig11}
 	\caption{Both Ridge and Lasso can be viewed as MAP estimators based on a Bayesian linear regression model. Whereas Ridge, at left, puts a normal prior on the regression coefficients, Lasso, at right, uses a Laplace prior, which has fatter tails and a taller peak at zero. This figure appears in Chapter 6 of James et al.\ (2013).}
 	\label{fig:ridge_lasso_prior}
 \end{figure}
@@ -360,7 +323,7 @@ When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their 
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.6]{ISLR_ch6_fig7}
+	\includegraphics[scale=0.6]{../img/ISLR_ch6_fig7}
 	\caption{In each panel $\widehat{\beta}$ denotes the MLE and the ellipses represent the contours of the likelihood. Both Lasso, at left, and Ridge, at right, shrink towards zero and away from the MLE. Because of its diamond-shaped constraint set, however, Lasso leads to a sparse solution, whereas Ridge does not. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_constraint}
 \end{figure}
@@ -413,7 +376,7 @@ Figure \ref{fig:ridge_lasso_shrink} depicts the difference between these two pro
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.7]{ISLR_ch6_fig10}
+	\includegraphics[scale=0.7]{../img/ISLR_ch6_fig10}
 	\caption{These plots illustrate Ridge and Lasso shrinkage for the special case of orthonormal regressors. The horizontal axis in each plot is the MLE, while the vertical axis is the shrinkage estimator. Ridge appears at left and Lasso at right. The dashed 45-degree line in each plot corresponds to zero shrinkage. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_shrink}
 \end{figure}
@@ -453,4 +416,3 @@ As mentioned above, the Lasso can be viewed as the MAP estimator from a Bayesian
 
 \section{Shrinkage Estimation Using R}
 Chapter 6 of James et al.\ (2013) ends with three ``Labs'' illustrating how to carry out various model selection and shrinkage procedures in R. The second and third of these contain Ridge Regression, Lasso, and PCR. There are some errors in the code as it appears in the book, so I've put together a corrected version with extensive comments called \texttt{ISLR\_ch6\_lab.R} and posted it in the GitHub repository for this class: \url{https://github.com/fditraglia/econ722}. This code makes heavy use of the excellent \texttt{GLMNET} package for R which is documented in Friedman, Hastie \& Tibshirani (2010). If you want to do your calculations using Matlab I'm afraid I can't offer you any guidance on the appropriate packages but if you send me some details, I'll include them in future versions of this document.
-\end{document}
