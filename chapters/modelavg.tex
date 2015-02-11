@@ -183,7 +183,7 @@ We can then substitute the two normal distributions and then either numerically 
 			&=& \tau_0^2 + \omega' K \omega
 \end{eqnarray*}
 And accordingly $\tau_{full} = (\tau_0^2 + \omega' K \omega)^{1/2}$. Now let $\hat{\omega}$ be a consistent estimator of $\omega$ and $\widehat{\kappa}$ be a consistent estimator of $\tau_{full}$. Define
-	$$T_n =\slfrac{\left[\sqrt{n}(\hat{\mu} - \mu_{true})  - \widehat{\omega}'\left\{D_n -  \sum_{S\in \mathcal{A}} c(S|D_n)G_S D_n \right\} \right]}{\widehat{\kappa}}$$
+	$$T_n =\frac{\left[\sqrt{n}(\hat{\mu} - \mu_{true})  - \widehat{\omega}'\left\{D_n -  \sum_{S\in \mathcal{A}} c(S|D_n)G_S D_n \right\} \right]}{\widehat{\kappa}}$$
  From above, we know that the following converges jointly in distribution:
 	$$
 	\left[\begin{array}{c}
@@ -197,7 +197,7 @@ And accordingly $\tau_{full} = (\tau_0^2 + \omega' K \omega)^{1/2}$. Now let $\h
 $$
 Thus
 	\begin{eqnarray*}	
-T_n &\overset{d}{\rightarrow}& \slfrac{\left[\Lambda_0 + \omega' \left\{ \delta - \sum_{S \in \mathcal{A}}  c(S|D)G_S D \right\}  - \omega'\left\{D -  \sum_{S\in \mathcal{A}} c(S|D)G_S D \right\} \right]}{\tau_{full}}\\ \\
+T_n &\overset{d}{\rightarrow}& \frac{\left[\Lambda_0 + \omega' \left\{ \delta - \sum_{S \in \mathcal{A}}  c(S|D)G_S D \right\}  - \omega'\left\{D -  \sum_{S\in \mathcal{A}} c(S|D)G_S D \right\} \right]}{\tau_{full}}\\ \\
 		&=& (\tau_0^2 + \omega' K \omega)^{-1/2}\left[\Lambda_0 + \omega'\left( \delta - D\right)\right] 
 \end{eqnarray*}
 We know from above that

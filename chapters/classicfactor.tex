@@ -18,7 +18,7 @@ Roughly speaking, the EM algorithm converts a single complicated optimization pr
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.5]{../img/EM_algorithm}
+	\includegraphics[scale=0.5]{./img/EM_algorithm}
 	\caption{Illustration of the EM Algorithm: to maximize the log likelihood, the red curve, we create a sequence of successive approximations, the blue and green curves, and maximize these. This appears as Figure 9.14 in Bishop's (2006) \emph{Pattern Recognitiion and Machine Learning}.}
 \end{figure}
 
@@ -134,7 +134,7 @@ where $\mu$ is a $p\times 1$ vector of parameters, $\Lambda$ is a $p\times k$ ma
 
 The intution is as follows: Factor Analysis ``forces'' $Z$ to ``explain'' the correlation structure of $X$. This is why $\Psi$ is required to be diagonal. The diagonal elements of $\Psi$ are sometimes called the \emph{idiosyncratic variance terms}, since each corresponds to a \emph{single} component of $X$. This is the key point: \emph{conditional} on the factors $Z$, the elements of $X$ are \emph{independent}. 
 \begin{figure}
-	\includegraphics[scale=0.5]{../img/factor_analysis}
+	\includegraphics[scale=0.5]{./img/factor_analysis}
 	\caption{Illustration of Factor Analysis, although the notation is slightly different from mine. (I need to draw my own version of this.) This appears as figure 12.1 in Murphy (2012).}
 \end{figure}
 

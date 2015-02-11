@@ -314,7 +314,7 @@ Because of the nature of its penalty function, Lasso tends to shrink large coeff
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.85]{../img/ISLR_ch6_fig11}
+	\includegraphics[scale=0.85]{./img/ISLR_ch6_fig11}
 	\caption{Both Ridge and Lasso can be viewed as MAP estimators based on a Bayesian linear regression model. Whereas Ridge, at left, puts a normal prior on the regression coefficients, Lasso, at right, uses a Laplace prior, which has fatter tails and a taller peak at zero. This figure appears in Chapter 6 of James et al.\ (2013).}
 	\label{fig:ridge_lasso_prior}
 \end{figure}
@@ -323,7 +323,7 @@ When $p=2$, we can draw a picture of both the Ridge and Lasso problems in their 
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.6]{../img/ISLR_ch6_fig7}
+	\includegraphics[scale=0.6]{./img/ISLR_ch6_fig7}
 	\caption{In each panel $\widehat{\beta}$ denotes the MLE and the ellipses represent the contours of the likelihood. Both Lasso, at left, and Ridge, at right, shrink towards zero and away from the MLE. Because of its diamond-shaped constraint set, however, Lasso leads to a sparse solution, whereas Ridge does not. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_constraint}
 \end{figure}
@@ -376,7 +376,7 @@ Figure \ref{fig:ridge_lasso_shrink} depicts the difference between these two pro
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.7]{../img/ISLR_ch6_fig10}
+	\includegraphics[scale=0.7]{./img/ISLR_ch6_fig10}
 	\caption{These plots illustrate Ridge and Lasso shrinkage for the special case of orthonormal regressors. The horizontal axis in each plot is the MLE, while the vertical axis is the shrinkage estimator. Ridge appears at left and Lasso at right. The dashed 45-degree line in each plot corresponds to zero shrinkage. This figure appears in Chapter 6 of James et al (2013).}
 	\label{fig:ridge_lasso_shrink}
 \end{figure}
@@ -389,7 +389,7 @@ A cautionary note: two recent papers suggest that there are some complications i
 \subsection{How to Choose $\lambda$ for LASSO?}
 Unlike Ridge, there's no computational shortcut for leave-one-out cross-validation that we can apply to Lasso. We can still use this procedure, but we have to do it the hard way. Of course we could also use $k$-fold cross-validation. But what about those model selection criteria we studied earlier in the semester? Is it possible to say anything about AIC, AIC$_C$, BIC, and $C_p$ in the context of Lasso estimation? The answer turns out to be \emph{yes} and many familiar properties carry over. Flynn, Hurvich and Simonoff (2013) show that the natural extensions of AIC, AIC$_C$ and $C_p$ to Lasso, using the effective degrees of freedom in place of the number of parameters, are asymptotically efficient. In a simulation study, they find that AIC, BIC and $C_p$ sometimes select values of $\lambda$ that are far too small: they ``catastrophically overfit.'' In contrast, AIC$_C$ performs well, just as it did in the case of ordinary linear regression. 
 
-There is also a literature on the appropriate choice of $\lamba$ in settings where we hope to use Lasso to carry out variable selection. See the book \emph{Statistics for High-Dimensional Data} by B\"{u}hlmann and van de Geer (2011) for details and further references.
+There is also a literature on the appropriate choice of $\lambda$ in settings where we hope to use Lasso to carry out variable selection. See the book \emph{Statistics for High-Dimensional Data} by B\"{u}hlmann and van de Geer (2011) for details and further references.
 
 
 \subsection{Elastic Net}
