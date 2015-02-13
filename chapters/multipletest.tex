@@ -1,2 +1,63 @@
 %!TEX root = ../main.tex
 \chapter{Multiple Testing and Forecast Evaluation}
+
+\section{Multiple Testing}
+The main reference for the multiple testing material is Romano, Shaikh and Wolf (2008).
+There's also some useful general information in Harvey, Liu and Zhu (2014) which is one of the papers that I'll assign you to present.
+For Bayesian perspectives, see James Scott's PhD dissertation (2009) or the papers that emerged from it in addition to Gelman and Tuerlinckx (2000).
+If there's time, I'll try to incorporate some of this material as well.
+
+\paragraph{The Setup} 
+The p-value formulas from your textbook are only valid for an \emph{individual test} of a hypothesis that was specified \emph{before} looking at the data.
+What happens if we want to carry out a large number of tests, and use statistical significance as a ``filter'' to discover scientifically interesting relationships?
+
+\paragraph{Examples}
+Mutual fund performance, genetics, etc.
+\todo[inline]{Fill in later}
+
+\paragraph{Notation} 
+Suppose that we carry out $N$ hypothesis tests.
+Let $F$ denote the number of \emph{false rejections}, i.e.\ the number of times that we reject a \emph{true} null hypothesis.
+Let $R$ denote the total number of rejections: including both true and false rejections.
+
+\paragraph{Family-wise Error Rate (FWER)}
+The classical theory for testing a single null hypothesis aims to control the Type I error rate: the probability of rejecting a true null hypothesis.
+The family-wise error rate (FWER) extends this idea to multiple hypothesis testing by controlling the probability of rejecting \emph{at least one} true null hypothesis when carrying out a series of tests.
+Formally,
+\begin{equation*}
+  \mbox{FWE} = P(F\geq 1)
+\end{equation*}
+
+\paragraph{The False Discovery Rate (FDR)}
+The false discovery rate (FDR) is a more recent suggestion in the multiple testing literature that aims to be ``less stark'' than the FWER by trading of an increase in the rate of false positives in exchange for a greater number of total rejections, a.k.a.\ ``discoveries.''
+The FDR is defined in terms of a quantity called the false discovery proportion (FDP) which is the ratio of false positives to total rejections
+\begin{equation*}
+  \mbox{FDP} = \left\{ \begin{array}{c}
+    \displaystyle\frac{F}{R}, \; R > 0 \\
+    0, \; R = 0
+  \end{array}\right.
+\end{equation*}
+Both $F$ and $R$ are random variables whose joint distribution depends on the multiple testing procedure we're using.
+Accordingly, FDP is \emph{itself} a random variable.
+Ideally we would like this random variable to be ``small'' in some sense: we prefer that most of our positives are true positives rather than false positives.
+The FDR 
+
+\paragraph{Proof that FDR $\leq$ FWER}
+
+
+\paragraph{Bonferroni's Method}
+Like many things in probability and statistics, this method is badly named, since it is actually a consequence of a result called Boole's Inequality which states that
+\begin{equation*}
+  P\left( \bigcup_{i}^{n} A_i \right) \leq \sum_{i}^{n} P\left( A_{i} \right)
+\end{equation*}
+where $A_1, \hdots, A_n$ is a finite collection of events.\footnote{Boole's inequality is easily extended to countable collections of events, but it's a bad idea to carry out an infinite number of hypothesis tests!}
+The most familiar case of Boole's Inequality is when $n=2$.
+Since $P(A\cup B) = P(A) + P(B) - P(A\cup B)$ and $P(A\cup B)\geq 0$ we obtain the desired result.
+To prove this in general, we use an inductive argument.
+First, for $n=1$, we clearly have $P(A_1)\leq P(A_1)$.
+Now suppose that the result holds for $n=k$, namely that
+\begin{equation*}
+  P\left( \bigcup_{i}^{k} A_i \right) \leq \sum_{i}^{k} P\left( A_{i} \right)
+\end{equation*}
+
+
