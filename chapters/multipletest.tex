@@ -6,17 +6,21 @@ The main reference for the multiple testing material is Romano, Shaikh and Wolf 
 There's also some useful general information in Harvey, Liu and Zhu (2014) which is one of the papers that I'll assign you to present.
 For Bayesian perspectives, see James Scott's PhD dissertation (2009) or the papers that emerged from it in addition to Gelman and Tuerlinckx (2000).
 If there's time, I'll try to incorporate some of this material as well.
+\todo[inline]{I need to try to make clear the dependence of everything on the distribution of effect sizes in the population as well as the properties of the testing procedure. This is something that I think the Bayesian approach does a better job of being explicit about especially insofar as it bears on the fact that we care about Type II errors as well as Type I errors. Should also try to bring in some of the Gelman et al.\ material on type ``S'' and Type ``M'' errors, and possibly some of the Kahneman \& Tversky ``Law of Small Numbers'' stuff.}
 
 \paragraph{The Setup} 
 The p-value formulas from your textbook are only valid for an \emph{individual test} of a hypothesis that was specified \emph{before} looking at the data.
 What happens if we want to carry out a large number of tests, and use statistical significance as a ``filter'' to discover scientifically interesting relationships?
 
 \paragraph{Examples}
-Mutual fund performance, genetics, etc.
+The main examples from Romano et al (2008) are testing of investment strategies: comparing several strategies to a common benchmark, comparing absolute performance of strategies, comparing relative performance, and testing for ``alpha'' in a CAPM model.
+There's also a paper by Sullivan, Timmerman \& White (1999, Journal of Finance), and various others.
+Also there's the paper I'll assign them by Campbell Harvey et al (2014).
+
 \todo[inline]{Fill in later}
 
 \paragraph{Notation} 
-Suppose that we carry out $N$ hypothesis tests.
+Suppose that we carry out $S$ hypothesis tests.
 Let $F$ denote the number of \emph{false rejections}, i.e.\ the number of times that we reject a \emph{true} null hypothesis.
 Let $R$ denote the total number of rejections: including both true and false rejections.
 
@@ -43,21 +47,79 @@ Ideally we would like this random variable to be ``small'' in some sense: we pre
 The FDR 
 
 \paragraph{Proof that FDR $\leq$ FWER}
-
-
-\paragraph{Bonferroni's Method}
-Like many things in probability and statistics, this method is badly named, since it is actually a consequence of a result called Boole's Inequality which states that
+Let $Y$ be the indicator of the event that we reject at least one null hypothesis, that is $Y = \mathbf{1}\left\{R > 0 \right\}$.
+By the Law of Iterated Expectations, we have
+\begin{eqnarray*}
+  \mbox{FDR} &=& E\left[ \mbox{FDP} \right] = E_Y\left[ E\left[ \mbox{FDP}|Y \right] \right]\\
+  &=& P\left( Y=0 \right) E\left[ \mbox{FDP}|Y=0 \right] + P\left( Y=1 \right) E\left[ \mbox{FDP}|Y=1 \right]\\
+  &=& P(Y=0) \times 0 + P(Y=1) \times E\left[\left( F/R \right) \left| Y=1 \right. \right]\\
+  &=&  P(Y=1)\times E\left[\left( F/R \right) \left| Y=1 \right. \right]
+\end{eqnarray*}
+\emph{Conditional} on $Y=1$ we know that $R>0$.
+In this case the ratio $F/R$ is finite since $F$ is the number of false rejections, and $R>0$ is the number of total rejections.
+Accordingly, conditional on $Y=1$, we have the inequality
 \begin{equation*}
-  P\left( \bigcup_{i}^{n} A_i \right) \leq \sum_{i}^{n} P\left( A_{i} \right)
+  \left( F/R \right) \leq \mathbf{1}\left\{ F \geq 1 \right\}
 \end{equation*}
-where $A_1, \hdots, A_n$ is a finite collection of events.\footnote{Boole's inequality is easily extended to countable collections of events, but it's a bad idea to carry out an infinite number of hypothesis tests!}
-The most familiar case of Boole's Inequality is when $n=2$.
-Since $P(A\cup B) = P(A) + P(B) - P(A\cup B)$ and $P(A\cup B)\geq 0$ we obtain the desired result.
-To prove this in general, we use an inductive argument.
-First, for $n=1$, we clearly have $P(A_1)\leq P(A_1)$.
-Now suppose that the result holds for $n=k$, namely that
+since $F$ is necessarily no greater than $R$.
+Thus, by the monotonicity of conditional expectation, we find that
+\begin{eqnarray*}
+  \mbox{FDR} &=& E\left[ \mbox{FDP} \right] = P(Y=1)\times E\left[\left( F/R \right) \left| Y=1 \right. \right]\\
+  &\leq& P(Y=1) \times E\left[ \mathbf{1}\left\{ F \geq 1 \right\}| Y=1 \right] \\
+  &=& P(Y=1) \times P\left( F\geq 1 | Y=1 \right)\\
+  &=& P(Y=1) \times P\left( F\geq 1 \cap Y =1 \right) / P(Y=1)\\
+  &=& P(F\geq 1 \cap Y=1) \leq P(F \geq 1) = \mbox{FWER}
+\end{eqnarray*}
+as asserted. 
+Regardless of what multiple testing procedure we are considering, the FDR is \emph{always} a less stringent criterion than the FWER.
+
+
+\paragraph{The Bonferroni Method}
+This is the simplest of all possible multiple testing procedures: if you carry out $S$ tests and want to ensure a FWER no greater than $\alpha$ the Bonferroni Method simply instructs you to divide all of your p-values by $S$.
+In other words, 
+\begin{equation*}
+  \widehat{p}_{T,s} \leq \alpha/S \implies \mbox{ reject } H_s
+\end{equation*}
+where $\widehat{p}_{T,s}$ is the estimated p-value for a test of the null hypothesis $H_s$ based on a sample size of $T$ observations, $\alpha$ is the desired FWER, and $S$ is the total number of tests.
+
+Like many things in probability and statistics, the Bonferroni Method is badly named, since it is actually a consequence of a result called Boole's Inequality:
+\begin{equation*}
+  P\left( \bigcup_{i}^{S} A_i \right) \leq \sum_{i}^{S} P\left( A_{i} \right)
+\end{equation*}
+where $A_1, \hdots, A_S$ is a finite collection of events.\footnote{Boole's inequality is easily extended to countable collections of events, but it's a bad idea to carry out an infinite number of hypothesis tests!}
+The most familiar case of Boole's Inequality is when $S=2$.
+By the Addition Rule, also known as the Inclusion-Exclusion Principle, 
+\begin{equation*}
+  P(A_1\cup A_2) = P(A_1) + P(A_2) - P(A_1\cap A_2)
+\end{equation*}
+and since $P(A_1\cup A_2)\geq 0$ we obtain $P(A_1\cup A_2)\leq P(A_1) + P(A_2)$.
+To prove Boole's Inequality in general, we use an inductive argument.
+First, for $S=1$, we clearly have $P(A_1)\leq P(A_1)$.
+Now suppose that the result holds for $N=k$, namely that
 \begin{equation*}
   P\left( \bigcup_{i}^{k} A_i \right) \leq \sum_{i}^{k} P\left( A_{i} \right)
 \end{equation*}
+Applying the Addition Rule, substituting the inductive hypothesis, and using the fact that the probability of any event must be non-negative, we have
+\begin{eqnarray*}
+  P\left( \bigcup_{i=1}^{k+1} A_i \right) &=& P\left(\left[ \bigcup_{i=1}^{k} A_i\right] \cup A_{k+1} \right)\\
+  &=& P\left(\left[ \bigcup_{i=1}^{k} A_i\right] \right) + P(A_{k+1}) - P\left(\left[ \bigcup_{i=1}^{k} A_i \right] \cap A_{k+1}  \right)\\
+  &\leq& P\left( \sum_i^k A_i \right) + P(A_{k+1}) - P\left(\left[ \bigcup_{i=1}^{k} A_i \right] \cap A_{k+1}  \right)\\
+  &\leq& P\left( \sum_i^k A_i \right) + P(A_{k+1}) \\
+  &=& P\left( \sum_i^{k+1} A_i \right)
+\end{eqnarray*}
+and the result follows.
+So how does this lead to Bonferroni's Method?
 
+To begin, 
+\begin{equation*}
+  FWER = P(F\geq 1) = P\left(  \right)
+\end{equation*}<++>
+
+\paragraph{Controlling FWER with Holm's Method}
+Bonferroni is one-step procedure and can be very conservative.
+Try to be less conservative using a ``step-down'' procedure.
+
+\paragraph{FWER Control That Accounts for Dependence} Both Bonferroni's method and Holm's method essentially make the ``worse case'' assumption about the probabilistic dependence between tests: independence.
+\todo[inline]{Add a simple example of some kind illustrating this.}
+Outline alternatives that aim to take dependence into account while controlling FWER: White's (2001, Econometrica) ``Bootstrap Reality Check'' as well as Hansen (2005, JBES), and the ``StepM'' procedure of Romano \& Wolf (2005, Econometrica).
 
