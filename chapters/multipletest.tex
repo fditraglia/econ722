@@ -81,7 +81,9 @@ In other words,
   \widehat{p}_{T,s} \leq \alpha/S \implies \mbox{ reject } H_s
 \end{equation*}
 where $\widehat{p}_{T,s}$ is the estimated p-value for a test of the null hypothesis $H_s$ based on a sample size of $T$ observations, $\alpha$ is the desired FWER, and $S$ is the total number of tests.
+To understand why this works, we first need to take a short detour.
 
+\paragraph{Detour: Boole's Inequality}
 Like many things in probability and statistics, the Bonferroni Method is badly named, since it is actually a consequence of a result called Boole's Inequality:
 \begin{equation*}
   P\left( \bigcup_{i}^{S} A_i \right) \leq \sum_{i}^{S} P\left( A_{i} \right)
@@ -95,7 +97,7 @@ By the Addition Rule, also known as the Inclusion-Exclusion Principle,
 and since $P(A_1\cup A_2)\geq 0$ we obtain $P(A_1\cup A_2)\leq P(A_1) + P(A_2)$.
 To prove Boole's Inequality in general, we use an inductive argument.
 First, for $S=1$, we clearly have $P(A_1)\leq P(A_1)$.
-Now suppose that the result holds for $N=k$, namely that
+Now suppose that the result holds for $S=k$, namely that
 \begin{equation*}
   P\left( \bigcup_{i}^{k} A_i \right) \leq \sum_{i}^{k} P\left( A_{i} \right)
 \end{equation*}
@@ -104,16 +106,32 @@ Applying the Addition Rule, substituting the inductive hypothesis, and using the
   P\left( \bigcup_{i=1}^{k+1} A_i \right) &=& P\left(\left[ \bigcup_{i=1}^{k} A_i\right] \cup A_{k+1} \right)\\
   &=& P\left(\left[ \bigcup_{i=1}^{k} A_i\right] \right) + P(A_{k+1}) - P\left(\left[ \bigcup_{i=1}^{k} A_i \right] \cap A_{k+1}  \right)\\
   &\leq& P\left( \sum_i^k A_i \right) + P(A_{k+1}) - P\left(\left[ \bigcup_{i=1}^{k} A_i \right] \cap A_{k+1}  \right)\\
-  &\leq& P\left( \sum_i^k A_i \right) + P(A_{k+1}) \\
-  &=& P\left( \sum_i^{k+1} A_i \right)
+  &\leq& P\left( \sum_i^k A_i \right) + P(A_{k+1}) = P\left( \sum_i^{k+1} A_i \right)
 \end{eqnarray*}
 and the result follows.
-So how does this lead to Bonferroni's Method?
+So how do we get from here to Bonferroni's Method?
+To answer this question, we first need to understand the behavior of a p-value corresponding to a null hypothesis that \emph{happens to be true}.
 
-To begin, 
-\begin{equation*}
-  FWER = P(F\geq 1) = P\left(  \right)
-\end{equation*}<++>
+\paragraph{On the Distribution of P-values}
+A sample p-value is a random variable: $\widehat{p}_{T,s}$ is a function of the sample data which, for a Frequentist, is a collection of random variables.
+Recall that a p-value is defined as the probability of observing a test statistic at least as extreme as the one actually observed assuming that the null hypothesis is true.
+We know that a small p-value suggests that the null is false.
+But what does a \emph{true} null imply about the \emph{sampling distribution of an estimated p-value}?
+\todo[inline]{I need to work out some better notation here!}
+Let $F$ be the asymptotic distribution of the test statisic.
+Then, in the limit we have (since it's the limit, I should probably loose the $T$ subscript)
+\begin{eqnarray*}
+  P(\widehat{p}\leq u|H_0) &=&  P(1- F(t)<u|H_0) \\
+  &=& P\left[ F(t) > \left( 1-p \right)|H_0  \right] = 1 - P\left[ F(t) < (1-p) |H_0 \right]\\
+  &=& 1 - F\left[ F^{-1}(1-u)|H_0\right] = 1 - (1-u) = u
+\end{eqnarray*}
+
+\paragraph{Back to Bonferroni}
+Now we're finally ready to prove that Bonferroni's Method controls the FWER.
+We don't know the number of true negatives among the hypotheses we're testing: call it $N$.
+Note that the event $F\geq 1$ means rejecting one or more of the $N$ true negatives.
+This is a union, and bound it using Boole's Inequality 
+\todo[inline]{Fill in later}
 
 \paragraph{Controlling FWER with Holm's Method}
 Bonferroni is one-step procedure and can be very conservative.
