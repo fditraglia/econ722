@@ -112,7 +112,6 @@ In the economical SVD, $U$ and $V$ may no longer be square, so they are not orth
 \paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is given by
 	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
 Using this norm as a measure of ``approximation error'', it can be shown that the SVD provides the \emph{best low rank approximation} to a matrix $X$. 
-
 Using the ``economical'' form of the SVD, we can write
 	$$X = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
 where the index is $i$ is defined such that the \emph{largest} singular value comes first, followed by the second largest, and so on. This expression gives the rank-$r$ matrix $X$ as a \emph{sum} of $r$ rank-1 matrices. Now suppose that the rank of $X$ is large and we wanted to \emph{approximate} $X$ using a matrix $\widehat{X}_L$ with rank $L<k$. If we measure the reconstruction error using the Frobenius norm, it can be shown that the \emph{truncated SVD}
@@ -127,13 +126,86 @@ In Econ 705 you learned that ordinary least squares (OLS) is the minimum varianc
 
 
 \subsection{Dominance and Admissibility}
-To understand what follows, we'll need two concepts from decision theory: \textbf{dominance} and \emph{admissibility}. Let $\widehat{\theta}$ and $\widetilde{\theta}$ be two estimators of $\theta$, and $R$ be a risk function, e.g.\ MSE. We say that $\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\widehat{\theta},\theta) \leq R(\widetilde{\theta},\theta)$ for \emph{all} possible values of $\theta$ wand the inequality is \emph{strict} for \emph{at least one} possible value of $\theta$. We say that $\widehat{\theta}$ is \textbf{admissible} if there is no estimator that dominates it. To prove that an estimator is \textbf{inadmissible} it suffices to find an estimator that dominates it.
+To understand what follows, we'll need two concepts from decision theory: \textbf{dominance} and \emph{admissibility}. 
+Let $\widehat{\theta}$ and $\widetilde{\theta}$ be two estimators of $\theta$, and $R$ be a risk function, e.g.\ MSE.
+We say that $\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\widehat{\theta},\theta) \leq R(\widetilde{\theta},\theta)$ for \emph{all} possible values of $\theta$ wand the inequality is \emph{strict} for \emph{at least one} possible value of $\theta$.
+We say that $\widehat{\theta}$ is \textbf{admissible} if there is no estimator that dominates it.
+To prove that an estimator is \textbf{inadmissible} it suffices to find an estimator that dominates it.
 
-\subsection{The James-Stein Estimator}
-It turns out that OLS is inadmissible relative to MSE loss when $p\geq 3$. This result was so surprising when first discovered that it is sometimes called ``Stein's Paradox.'' Efron and Morris (1977) provide a nice discussion. An estimator that can be shown to dominate OLS is the so-called ``positive-part James-Stein estimator'' which is given by
+
+\subsection{A Very Simple Example}
+Suppose we observe a random $p$-vector $X \sim N\left( \theta, I \right)$ and our task is to estimate the $p$-vector of unknown parameters $\theta$.
+The maximum likelihood estimate for this problem is the sample mean which, since we have only one observation, is $\hat{\theta} = X$.
+To calculate the MSE of this estimator, first note that
+\begin{equation*}
+  \left( \hat{\theta} - \theta \right)' \left( \hat{\theta}- \theta \right) = \left( X - \theta \right)'\left( X-\theta \right)= \sum_{i = 1}^{p} \left( X_{i} - \theta_i \right)^2 \sim \chi^2_p 
+\end{equation*}
+Since the mean of a $\chi^2$ random variable equals its degrees of freedom, we see that $MSE(\hat{\theta})=p$.
+We will now show that there exists another estimator that strictly dominates the MLE for this problem provided that $p \geq 3$, namely
+\begin{equation*}
+  \hat{\theta}^{JS} = \hat{\theta}\left( 1 - \frac{p-2}{\hat{\theta}'\hat{\theta}} \right) = X - \frac{\left( p-2 \right)X}{X'X}
+\end{equation*}
+This is the so-called James-Stein Estimator which outperforms MLE by ``shrinking'' the components of the sample mean vector towards zero.
+The more elements in $\theta$ that we wish to estimate, the more strongly it shrinks towards zero.
+Similarly, the smaller in magnitude the MLE as measured by $\hat{\theta}'\hat{\theta}$ the more it shrinks towards zero.
+We can express the MSE of $\hat{\theta}^{JS}$ as follows:
+\begin{eqnarray*}
+  MSE\left( \hat{\theta}^{JS} \right) &=& E\left[ \left( \hat{\theta}^{JS} - \theta \right)'\left( \hat{\theta}^{JS} - \theta \right) \right]\\
+  &=& E\left[ \left\{ \left( X - \theta \right) - \frac{(p-2)X}{X'X} \right\}' \left\{ \left( X - \theta \right) - \frac{(p-2)X}{X'X} \right\} \right]  \\
+  &=&E\left[ \left( X - \theta \right)'\left( X - \theta \right) \right] - 2 (p-2)E\left[ \frac{X'(X-\theta)}{X'X} \right] + \left( p-2 \right)^{2} E\left[ \frac{1}{X'X} \right] \\
+  &=& p - 2 (p-2)E\left[ \frac{X'(X-\theta)}{X'X} \right] + \left( p-2 \right)^{2} E\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+where the final equality uses the fact that $X$ is the MLE for this problem so that $E\left[ \left( X - \theta \right)'\left( X - \theta \right) \right]=p$ as we calculated above. 
+This expression is not particularly helpful as it stands, but we can greatly simplify things by taking a closer look at the second term.
+Writing the numerator out in summation form, we have
+\begin{equation*}
+  E\left[ \frac{X'(X-\theta)}{X'X} \right] = E\left[ \frac{\sum_{i=1}^{p} X_i\left( X_i - \theta_i \right)}{X'X} \right] = \sum_{i=1}^{p} E\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right]
+\end{equation*}
+While this is in no way obvious at first glance it turns out that 
+\begin{equation*}
+  E\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right] = E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right]
+\end{equation*}
+for $i = 1, \hdots, p$.\footnote{See Section \ref{sec:JamesSteinIntegral} for a proof.}
+Using this fact, we have
+\begin{eqnarray*}
+  E\left[ \frac{X'(X-\theta)}{X'X} \right] &=&  \sum_{i=1}^{p} E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right] = p E\left[ \frac{1}{X'X} \right] - 2 E\left[ \frac{\sum_{i=1}^{p} X_i^2}{(X'X)^2} \right]\\
+  &=& p E\left[ \frac{1}{X'X} \right] - 2 E\left[ \frac{X'X}{(X'X)^2} \right] = \left( p-2 \right)E\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+and substituting this into our expression for the MSE of the James-Stein estimator, we find that
+\begin{eqnarray*}
+  MSE\left( \hat{\theta}^{JS} \right) &=& p - 2(p-2)\left\{ \left( p-2 \right) E\left[ \frac{1}{X'X} \right] \right\} + \left( p-2 \right)^{2}E\left[ \frac{1}{X'X} \right]\\
+  &=& p - \left( p-2 \right) E\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+Since $E\left[ 1/(X'X) \right] > 0$, the sign of the second term is determined by the sign of $\left( p-2 \right)$.
+When $p\geq 3$, the second term is negative.
+Since the first term is the MSE of the MLE we have shown that the James-Stein Estimator strictly dominates whenever $p\geq 3$.
+
+
+
+\subsection{Appendix to ``A Very Simple Example''}
+\label{sec:JamesSteinIntegral}
+\todo[inline]{Write out the expectation as a $p$-fold integral and use integration by parts to show the following:} 
+\begin{equation*}
+  E\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right] = E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right]
+\end{equation*}
+
+\subsection{The James Stein Estimator More Generally}
+\todo[inline]{Try to give the intuition for what's going on here and be clear about why the $p\geq 3$ requirement is possibly a little strange for the typical estimation problem in economics but is very sensible for forecasting. Explain that James-Stein itself is inadmissible and explain about the positive-part version that avoids shrinking ``past'' zero. (Even that one isn't admissible though!) Explain how we could shrink towards any value we like, possibly something suggested by economic theory, and give the general version for regression. Give some references to Hansen stuff etc.} 
+
+
+
+
+
+
+\subsection{The James-Stein Estimator (OLD VERSION)}
+It turns out that OLS is inadmissible under squared error loss when $p\geq 3$.
+This result was so surprising when first discovered that it is sometimes called ``Stein's Paradox.''
+Efron and Morris (1977) provide a nice discussion as does Samworth (????). 
+An estimator that can be shown to dominate OLS is the so-called ``positive-part James-Stein estimator'' which is given by
 	$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\sigma^2}{\widehat{\beta}' \widehat{\beta}} \right]_+$$
-where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$. To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. We see that this estimator shrinks us \emph{away} from the least-squares fit and towards zero. 
-
+where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$.
+To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. 
+We see that this estimator shrinks us \emph{away} from the least-squares fit and towards zero. 
 Since James-Stein beats OLS, we know that shrinkage is a good idea. Now we'll consider some more general forms of shrinkage, starting with Ridge Regression.
 
 
