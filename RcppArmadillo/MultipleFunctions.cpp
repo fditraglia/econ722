@@ -4,15 +4,18 @@
 using namespace Rcpp;
 using namespace arma;
 
+mat f(mat A){
+  mat out = A.t() * A;
+  return(out);
+}
 
+mat g(mat B){
+  mat out = f(B) + f(B);
+  return(out);
+}
 
 // [[Rcpp::export]]
-mat cppVAR1(mat B, int n) {
-  int p = B.n_cols;
-  mat y(p, n, fill::zeros);
-   for (int i = 1; i < n; i++) { //zero-indexing!
-     colvec errors(rnorm(p));
-     y.col(i) = B * y.col(i - 1) + errors;
-   }
-   return y;
+double h(mat C){
+  double out = trace(g(C));
+  return(out);
 }

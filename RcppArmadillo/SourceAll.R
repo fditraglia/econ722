@@ -27,3 +27,12 @@ all.equal(rData, cppData)
 
 library(microbenchmark)
 microbenchmark(rVAR1(M, 100), cppVAR1(M, 100))
+
+
+# Example with multiple functions that call each other
+sourceCpp("MultipleFunctions.cpp")
+# notice that only the function h is available from R!
+X <- matrix(rnorm(500), 100, 5)
+foo <- h(X)
+bar <- sum(diag(t(X) %*% X + t(X) %*% X))
+foo - bar
