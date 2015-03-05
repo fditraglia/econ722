@@ -1,10 +1,15 @@
 %!TEX root = ../main.tex
 \chapter{``AIC-type'' Information Criteria}
-\section{Introduction}
-Akaike's Information Criterion (AIC) summarizes the quality of a model by trading fit, measured by the maximized log likelihood, against complexity, measured by the number of estimated parameters. But where does this complexity penalty come from? In these notes we'll take a closer look at the AIC along with two related information criteria: Takeuichi's Information Criterion (TIC), and the Corrected AIC (AIC$_c$) of Hurvich and Tsai (1989). All three are based on approximations to the \textbf{Kullback-Leibler Divergence}, a fundamental quantity from information theory that is inextricably linked to maximum likelihood information.
+You have probably know that Akaike's Information Criterion (AIC) summarizes the quality of a model by trading fit, measured by the maximized log likelihood, against complexity, measured by the number of estimated parameters.
+But where does this complexity penalty come from?
+In this chapter we'll take a closer look at the AIC and two closely criteria: Takeuichi's Information Criterion (TIC) and the ``corrected'' AIC (AIC$_c$) of Hurvich and Tsai (1989).
+All three attempt to approximate the \textbf{Kullback-Leibler Divergence}, a fundamental quantity from information theory.
+We'll set the stage by reviewing the main properties of the KL divergence and its connection to maximum likelihood estimation.
 
 
-\subsection{Kullback-Leibler Divergence}
+\section{The Kullback-Leibler Divergence}
+
+\subsection{Basic Properties}
 Suppose that $\mathbf{y}$ is a random vector drawn from a probability distribution $G$ with density $g(\mathbf{y})$. This is the \emph{true DGP} and is unknown to us. Since we don't know $g$, we attempt to approximate it using a parametric model $f(\mathbf{y}|\theta)$, where $\theta$ is a $p$-vector of parameters that we estimate via maximum likelihood.\footnote{I've written the model without covariates to keep the notation from getting out of control, but you could just as well write $f(\mathbf{y}|X,\theta)$. Similarly, I will sometimes write $f(\mathbf{y})$ for $f(\mathbf{y}|\theta)$ to simplify the notation below. } Since $f$ is not the true data density, a natural question is \emph{how well does $f$ approximate $g$}? It turns out that for maximum likelihood estimation there is a particularly convenient way to answer this question using the \textbf{Kullback Leibler Divergence}.
 
 
@@ -65,7 +70,7 @@ $$E_{\widehat{G}}\left[ \log{f(\mathbf{y},\hat{\theta})}\right]\geq E_{\widehat{
 In sample, the estimate $\hat{\theta}$ will show a higher maximized log-likelihood than the value of $\theta$ that maximizes the population log-likelihood. Thus, the sample analogue is \emph{overly optimistic}.
 
 \section{The AIC and TIC}
-In the previous section we explained that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an approximate expression for the bias so that we can correct it.
+In the previous section we saw that using the KL divergence to do model selection is equivalent to maximizing the expected log-likelihood across models. Unfortunately, using the maximized log-likelihood, based on the estimated parameters, is a biased estimator of this quantity: it is systematically too high. Both the AIC and the TIC address this problem by using asymptotic theory to get an approximate expression for the bias so that we can correct it.
 
 To keep notation simple, throughout this section we'll assume that we have an iid sample of scalar random variables $Y_1, \hdots, Y_T$ drawn from a true but unknown distribution with density $g(y)$. As above we'll consider maximum likelihood estimation based on an approximating parametric density $f(y|\theta)$.
 
@@ -103,7 +108,7 @@ Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0
 \end{eqnarray*}
 where
 $$\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T\left\{ \log f(Y_t|\theta_0) - E_G[\log f(Y|\theta_0)] \right\}$$
-\todo[inline]{You'll prove this on the problem set!}
+For a proof of this assertion, see Section \ref{sec:BiasExpansion}.
 
 Now, recall that the bias expression depends on $\widehat{\theta}$ which is a random variable since it depends on the sample data. To address this, we will attempt to approximate the \emph{expectation} of the bias term, where, again, the expectation is taken over the sampling distribution of $\widehat{\theta}$. Using our asymptotic expansion:
 $$E[Bias] \approx E[\bar{Z}_T] + E[(\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0)]$$
@@ -134,7 +139,7 @@ Although the TIC and AIC are similar, there are several subtleties:
 \item Typically, the matrices $K$ and $J$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements). In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
 \end{enumerate}
 
-\subsection{An Important Caveat}
+\subsection{A Caveat}
 To derive the TIC and AIC, we used the following expansion for the bias term
 $$Bias = \bar{Z}_T + (\widehat{\theta} - \theta_0)' J (\widehat{\theta} - \theta_0) + o_p(T^{-1})$$
 This holds under standard regularity conditions.
@@ -142,5 +147,198 @@ This holds under standard regularity conditions.
 $$E_G\left[\int g(y) \log f(y|\widehat{\theta})\; dy\right]$$
 does not exist in all cases. The bias correction remains reasonable in this case, as we see from the asymptotic expansion, but strictly speaking it doesn't make sense to talk about equating means.
 
+\subsection{Appendix: Deriving the Bias Expansion}
+\label{sec:BiasExpansion}
+\emph{Thanks to Lorenzo Braccini for working out this derivation and typing it up for me!}
+Consider a second order Taylor expansion around for $\log f(Y_t;\hat{\theta})$ around $\theta_0$:
+\begin{align*}
+\log f(Y_t;\hat{\theta}) &= \log f(Y_t;\theta_0)+\left.\frac{\partial\log f(Y_t;\theta)}{\partial\theta}\right|'_{\theta=\theta_0} (\widehat{\theta}-\theta_0) +  \\ 
+& \quad + \frac{1}{2}(\widehat{\theta}-\theta_0)' \left.\frac{\partial^2\log f(Y_t;\theta)}{\partial\theta\partial\theta'}\right|_{\theta=\theta_0} (\widehat{\theta}-\theta_0) +R(Y_t;\hat{\theta}-\theta_0)
+\end{align*}
+where $R(Y_t;\hat{\theta}-\theta_0)$, the remainder, is such that:
+\[
+\left|R(Y_t;\widehat{\theta}-\theta_0)\right|\leq \frac{M(Y_t)}{(2+1)!}\| \widehat{\theta}-\theta_0 \|^{2+1}
+\]
+provided that all the derivatives of $\log f(Y_t;\theta)$ employed in the approximation are bounded above by $M(Y_t)$. The remainder has then the following property:
+\[
+\lim_{\widehat{\theta} \rightarrow \theta_0} \frac{R(Y_t;\widehat{\theta}-\theta_0)}{\| \widehat{\theta}-\theta_0 \|^{2}}=0\Rightarrow R(Y_t;\widehat{\theta}-\theta_0)=o(\| \widehat{\theta}-\theta_0 \|^{2})=o(1)\| \widehat{\theta}-\theta_0 \|^{2}
+\]
+Further implying that:
+\[
+R(Y_t;\hat{\theta}-\theta_0)=o_p(1)\| \hat{\theta}-\theta_0 \|^{2}=o_p(1)(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0)
+\]
+Finally note that the $o_p(1)$ term may be a function of $Y_t$. Let's hence denote that term with $h(Y_t;\hat{\theta}-\theta_0)$ to take into account such possibility. Hence we can write:
+\begin{align*}
+\frac{\ell_{T}(\widehat{\theta})}{T}&= \frac{1}{T}\sum_{t=1}^{T}\left\{\log f(Y_t;\theta_0)+\left.\frac{\partial\log f(Y_t;\theta)}{\partial\theta}\right|'_{\theta=\theta_0}(\widehat{\theta}-\theta_0) + \right. \\ & \left. \quad +\frac{1}{2}(\widehat{\theta}-\theta_0)' \left.\frac{\partial^2\log f(Y_t;\theta)}{\partial\theta\partial\theta'}\right|_{\theta=\theta_0} (\widehat{\theta}-\theta_0) +h(Y_t;\hat{\theta}-\theta_0)(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0) \right\}\\
+& = \mathbb{E}_g \left[\log f(Y_t;\theta_0) \right]+\bar{Z}_T+\bar{U}'_T  (\widehat{\theta}-\theta_0)  - \frac{1}{2} (\widehat{\theta}-\theta_0)'  J_T  (\widehat{\theta}-\theta_0) \\
+&\quad + \bar{h}(Y_t;\hat{\theta}-\theta_0)(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0)
+\end{align*}
+with
+\[
+\bar{U}_T=\frac{1}{T}\sum_{t=1}^{T}\left.\frac{\partial\log f(Y_t;\theta)}{\partial\theta}\right|_{\theta=\theta_0}
+\]
+\[
+J_T=-\frac{1}{T}\sum_{t=1}^{T}\left.\frac{\partial^2\log f(Y_t;\theta)}{\partial\theta\theta'}\right|_{\theta=\theta_0}
+\] 
+\[
+\bar{h}(Y_t;\hat{\theta}-\theta_0)=\frac{1}{T}\sum_{t=1}^{T}h(Y_t;\hat{\theta}-\theta_0)
+\]
+Similarly we can write:
+\begin{align*}
+\int g(y)\log f(y;\widehat{\theta})dy & =  \int g(y)\left\{\log f(y;\theta_0)+\left.\frac{\partial\log f(y;\theta)}{\partial\theta}\right|'_{\theta=\theta_0}(\widehat{\theta}-\theta_0) + \right. \\ & \left. \quad +\frac{1}{2}(\widehat{\theta}-\theta_0)' \left.\frac{\partial^2\log f(y;\theta)}{\partial\theta\partial\theta'}\right|_{\theta=\theta_0} (\widehat{\theta}-\theta_0) + \right. \\
+&\left. \quad+h(Y_t;\hat{\theta}-\theta_0)(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0) \right\}dy \\
+& = \mathbb{E}_g \left[\log f(Y_t;\theta_0) \right] - \frac{1}{2} (\widehat{\theta}-\theta_0)'  J  (\widehat{\theta}-\theta_0) + \\
+& \quad + \mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] (\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0)
+\end{align*}
+where the first order term drops since, by construction:
+\[
+\mathbb{E}_g \left[\left.\frac{\partial\log f(Y_t;\theta)}{\partial\theta}\right|_{\theta=\theta_0}\right]=0
+\]
+Now note that, fixing $\widehat{\theta}-\theta_0$, we have:
+\[
+\bar{h}(Y_t;\hat{\theta}-\theta_0) \longrightarrow_p \mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] 
+\]
+and therefore:
+\[
+\bar{h}(Y_t;\hat{\theta}-\theta_0)=\mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] +o_p(1)
+\]
+which gives us:
+\begin{align*}
+\bar{h}(Y_t;\hat{\theta}-\theta_0)(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0)&= \mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] (\widehat{\theta}-\theta_0)'  (\widehat{\theta}-\theta_0) + \\
+& \quad +o_p\left(1\right)T^{-1}\sqrt{T} (\widehat{\theta}-\theta_0)' (\widehat{\theta}-\theta_0)\sqrt{T} \\
+&= \mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] (\widehat{\theta}-\theta_0)' (\widehat{\theta}-\theta_0) + \\
+&\quad+o_p\left(1\right)T^{-1}O_p\left(1\right)^2\\
+&= \mathbb{E}_g \left[ h(Y_t;\hat{\theta}-\theta_0) \right] (\widehat{\theta}-\theta_0)' (\widehat{\theta}-\theta_0) + \\
+&\quad+o_p\left(T^{-1}\right)
+\end{align*}
+Further noting that:
+\[
+\text{p}\lim_{T\rightarrow\infty} J_T=J \Leftrightarrow J_T=J+o_p(1)
+\]
+which implies:
+\begin{align*}
+ (\widehat{\theta}-\theta_0)'  J_T  (\widehat{\theta}-\theta_0) &=  (\widehat{\theta}-\theta_0)'  J (\widehat{\theta}-\theta_0) +o_p\left(1\right)T^{-1}\sqrt{T}(\widehat{\theta}-\theta_0)'(\widehat{\theta}-\theta_0)\sqrt{T} \\
+&= (\widehat{\theta}-\theta_0)'  J  (\widehat{\theta}-\theta_0) +o_p\left(1\right)T^{-1}O_p\left(1\right)^2\\
+&= (\widehat{\theta}-\theta_0)'  J  (\widehat{\theta}-\theta_0) +o_p\left(T^{-1}\right)
+\end{align*}
+and recalling that:
+\[
+\bar{U}_T=J (\widehat{\theta}-\theta_0 )+o_p\left(T^{-1/2}\right)
+\]
+which similarly gives:
+\begin{align*}
+\bar{U}'_T (\widehat{\theta}-\theta_0)&=  (\widehat{\theta}-\theta_0)'  J  (\widehat{\theta}-\theta_0) +o_p\left(T^{-1/2}\right)T^{-1/2}\sqrt{T}(\widehat{\theta}-\theta_0) \\
+&= (\widehat{\theta}-\theta_0)'  J (\widehat{\theta}-\theta_0) +o_p\left(T^{-1/2}\right)T^{-1/2}O_p\left(1\right)\\
+&= (\widehat{\theta}-\theta_0)'  J  (\widehat{\theta}-\theta_0) +o_p\left(T^{-1}\right)
+\end{align*}
+we can finally write:
+\begin{align*}
+\frac{\ell_{T}(\widehat{\theta})}{T}-\int g(y)\log f(y;\widehat{\theta})dy &= \bar{Z}_T+\left(\widehat{\theta}-\theta_0\right)'  J \left(\widehat{\theta}-\theta_0\right)  + o_p\left(T^{-1}\right)
+\end{align*}
 
+\section{The Corrected AIC}
+To derive the TIC and AIC we used asymptotic theory to construct an analytical bias correction. Such approximations tend to work as long as $T$ is fairly large relative to $p$ but when this is not the case, they can break down. 
+We'll now consider an alternative that makes stronger assumptions and relies on \emph{exact} small-sample theory rather than asymptotics: the ``Corrected'' AIC, or AIC$_c$, of Hurvich and Tsai (1989).
+Suppose that the true DGP is a linear regression model:
+$$\textbf{y} = X\beta_0 + \boldsymbol{\epsilon}$$
+where $\mathbf{\epsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)$. 
+Then $\mathbf{y}|X \sim N(X\beta_0, \sigma_0^2 \mathbf{I}_T)$ so the likelihood is
+$$g(\textbf{y}|X;\beta_0, \sigma^2_0) = \left(2\pi\sigma_0^2\right)^{-T/2} \exp\left\{ -\frac{1}{2\sigma^2}(y - X\beta_0)'(y - X\beta_0)\right\}$$
+and the log-likelihood is
+$$\log\left[g(\textbf{y}|X;\beta_0, \sigma_0^2)\right] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)$$
+Now suppose we evaluated the log-likelihood at some \emph{other} parameter values $\beta_1$ and $\sigma^2_1$. The vector $\beta_1$ might, for example, correspond to dropping some regressors from the model by setting their coefficients to zero, or perhaps adding in some additional regressors. 
+We have
+$$\log[f(\textbf{y}|X;\beta_1, \sigma_1^2)] = -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)$$
+Since we've specified the density from which the data were generated as well as the density of the approximating model, we can \emph{directly calculate} the KL divergence rather than trying to find a reasonable large sample approximation. It turns out that for this example 
+$$KL(g;f) = \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2}\right) - 1 \right] + \left(\frac{1}{2 \sigma_1^2}\right)\left(\beta_0 - \beta_1\right)'X'X\left(\beta_0 - \beta_1\right)$$ 
+as shown in Section \ref{sec:KLderivation}.
+We need to estimate this quantity for it to be of any use in model selection. If let $\widehat{\beta}$ and $\widehat{\sigma}^2$ be the maximum likelihood estimators of $\beta_1$ and $\sigma_1^2$ and substitute them into the expression for the KL divergence, we have
+\begin{eqnarray*}
+\widehat{KL}(g;f) &=& \frac{T}{2}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} - \log\left(\frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left(\frac{1}{2\widehat{\sigma}^2} \right)\left(\beta_0 - \widehat{\beta}\right)X'X\left(\beta_0 - \widehat{\beta}\right)
+\end{eqnarray*}
+We still have two problems. First, we haven't been entirely clear about what $\beta_1$ and $\sigma_1$ are. At the moment, they seem to be something like ``pseudo-true'' values. Second, and more importantly, we don't know $\beta_0$ and $\sigma_0^2$ so we can't use the preceding expression to compare models.
 
+Hurvich and Tsai (1989) address both of these problems with the assumption that all models under consideration are \emph{at least correctly specified}. That is, while they may include a regressor whose coefficient is in fact zero, they do not exclude any regressors with a non-zero coefficient. This is the same assumption that we used above to reduce TIC to AIC. Under this assumption, $\beta_1$ and $\sigma_1^2$ \emph{are precisely the same} as $\beta_0$ and $\sigma_0^2$. More importantly, we can use all of the standard results for the exact finite sample distribution of regression estimators to help us. The idea is to construct an \emph{unbiased} estimator of the KL divergence. Taking expecations and rearranging slightly, we have
+\begin{eqnarray*}
+E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{ E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1 \right\}\\
+&& \quad + \; \frac{1}{2}E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right]
+\end{eqnarray*}
+Now, under our assumptions $T\widehat{\sigma}^2/\sigma_0^2 \sim \chi^2_{T-k}$ where $k$ is the number of estimated coefficients in $\widehat{\beta}$. Further, if $Z \sim \chi^2_\nu$ then $E[1/Z] = 1/(\nu-2)$. It follows that
+$$E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] = E\left[\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right] = \frac{T}{T - k - 2}$$
+We can rewrite the final term similarly:
+$$E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right] = E\left[\left(\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right)\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \right]$$
+Under our assumptions the two terms in the product are independent, so we can break apart the expectation. First, we have
+$$E\left[\frac{T}{T\widehat{\sigma}^2/\sigma_0^2} \right] = \frac{T}{T - k - 2}$$
+as above. For the second part,
+$$\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \sim \chi^2_k$$
+and hence
+$$E\left[\frac{\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right)}{\sigma_0^2} \right] = k$$
+Putting all the pieces together,
+\begin{eqnarray*}
+E\left[\widehat{KL}(g;f) \right] &=&\frac{T}{2}\left\{ E\left[\frac{\sigma_0^2}{\widehat{\sigma}^2} \right] + \log(\sigma_0^2) - E\left[\log(\widehat{\sigma}^2)\right] -1 \right\}\\
+&& \quad + \; \frac{1}{2}E\left[\left(\frac{1}{\widehat{\sigma}^2} \right)\left(\widehat{\beta}-\beta_0 \right)X'X\left(\widehat{\beta}-\beta_0\right) \right]\\
+&=& \frac{T}{2} \left( \frac{T}{T-k-2} - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1\right) + \frac{T}{2}\left(\frac{k}{T - k -2}\right)\\
+&=& \frac{T}{2} \left(\frac{T + k}{T - k -2} - \log(\sigma_0^2) + E\left[\log(\widehat{\sigma}^2)\right] -1\right)
+\end{eqnarray*}
+Since $\log(\widehat{\sigma}^2)$ is an unbiased estimator of $E[\log(\widehat{\sigma}^2)]$, substituting this give us an unbiased estimator of $E\left[\widehat{KL}(g;f) \right]$ as desired.
+The only terms that vary across candidate models are the first and the third. Moreover, the multiplicative factor of $T/2$ does not affect model selection. Hence, the criterion is
+$$AIC_c = \log(\widehat{\sigma}^2) + \frac{T + k}{T - k -2}$$
+In its broad strokes, this makes perfect sense. The residual error variance $\widehat{\sigma}^2$ measures in-sample fit. But since in-sample fit is a mis-leading guide to out-of-sample fit, we add a complexity penalty. Note that the way this expression is written, \emph{smaller} values indicate a better model. 
+
+So how does this compare to the plain-vanilla AIC for normal linear regression? The maximum likelihood estimators for this problem are
+\begin{eqnarray*}
+\widehat{\beta} &=& (X'X)^{-1}X'\mathbf{y}\\
+\widehat{\sigma}^2 &=& \frac{(\mathbf{y} - X\widehat{\beta})'(\mathbf{y} - X\widehat{\beta})}{T}
+\end{eqnarray*}
+It follows that the maximized log-likehood is
+\begin{eqnarray*}
+\log\left[f(\mathbf{y}|X;\widehat{\beta})\right] &=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{1}{2\widehat{\sigma}^2}(y - X\widehat{\beta})'(y -X\widehat{\beta})\\
+&=& -\frac{T}{2} \log(\widehat{\sigma}^2) - \frac{T}{2}
+\end{eqnarray*}
+by substituting $T\widehat{\sigma}^2$ for the numerator of the second term. Hence, the AIC for this problem is
+$$AIC = 2\left(\ell(\widehat{\beta}) - k \right) = -T\log(\widehat{\sigma}^2) - T - 2k $$
+But this way of writing things uses the \emph{opposite} sign convention from AIC$_c$. It's important to keep track of this, since different authors use different sign conventions for information criteria. To make the AIC comparable with our scaling of the AIC$_c$, we multiply through by $-1/T$ yielding
+$$AIC = \log(\widehat{\sigma}^2) + \frac{T + 2k}{T}$$
+where \emph{smaller} values now indicate a better model.
+
+\subsection{Appendix: Deriving the KL Divergence}
+\label{sec:KLderivation}
+  $$KL(g;f)= \int \log[g(\mathbf{y})] g(\mathbf{y}) \; d \mathbf{y} - \int \log[f(\mathbf{y})]g(\mathbf{y}) \; d \mathbf{y} = A - B$$
+where
+\begin{eqnarray*}
+A &=&\int \left[-\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_0) - \frac{1}{2\sigma_0^2}\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right) \right] g(\mathbf{y})\; d\mathbf{y}\\
+&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2} E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)'\left(\textbf{y} -X\beta_0\right)\right]\\
+&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_0\right)\left(\textbf{y} -X\beta_0\right)'\right]\right\}\\
+&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\mbox{trace}\left\{ Var(\mathbf{y}|X)\right\}\\
+&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0)\right] - \frac{1}{2\sigma_0^2}\left(T \sigma_0^2\right)\\
+&=& -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) + 1 \right]
+\end{eqnarray*}
+and
+\begin{eqnarray*}
+B &=& \int \left[ -\frac{T}{2}\log(2\pi) -\frac{T}{2} \log(\sigma^2_1) - \frac{1}{2\sigma_1^2}\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right) \right] g(\mathbf{y})\; d \mathbf{y}\\
+&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right]- \frac{1}{2\sigma_1^2}E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
+&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right)C
+\end{eqnarray*}
+where we define $C$ as
+\begin{eqnarray*}
+C &=& E_{\mathbf{y}|X}\left[\left(\textbf{y} - X\beta_1\right)'\left(\textbf{y} -X\beta_1\right)\right]\\
+&=&E_{\mathbf{y}|X}\left[\left\{ \left(\mathbf{y} - X\beta_0\right) + X\left(\beta_0 - \beta_1\right)\right\}'\left\{ \left(\mathbf{y} - X\beta_0\right)+ X\left(\beta_0 - \beta_1\right)\right\} \right]\\
+&=& E_{\mathbf{y}|X}\left[\left(\mathbf{y} - X\beta_0\right)'\left(\mathbf{y} - X\beta_0\right)\right] +\; E_{\mathbf{y}|X}\left[\left(\mathbf{y} -X\beta_0\right)'X\left(\beta_0 - \beta_1\right)\right] \\
+&& \quad +\; E_{\mathbf{y}|X}\left\{\left[X\left(\beta_0 -\beta_1 \right) \right]'\left(\mathbf{y} - X\beta_0 \right)\right\} + \;E_{\mathbf{y}|X}\left[\left\{X\left(\beta_0 - \beta_1\right)\right\}'\left\{X\left(\beta_0 - \beta_1\right)\right\} \right]\\
+&=& Var(\mathbf{y}|X) + \; E_{\mathbf{y}|X}\left[\mathbf{y} - X\beta_0 \right]'X(\beta_0 -\beta_1) \\
+&& \quad + \;(\beta_0 -\beta_1)'X'E_{\mathbf{y}|X}\left[\mathbf{y} - X\beta_0 \right] + \; (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\\
+&=& T\sigma_0^2 + 0 + 0 + (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
+\end{eqnarray*}
+Hence,
+\begin{eqnarray*}
+B &=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) \right] - \left(\frac{1}{2\sigma_1^2}\right) \left[ T\sigma_0^2 + (\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\right]\\
+&=& -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
+\end{eqnarray*}
+and therefore,
+\begin{eqnarray*}
+KL(g;f) &=& A - B\\
+&=& \left\{ -\frac{T}{2}\left[ \log(2\pi) + \log(\sigma^2_0) + 1 \right]\right\}\\
+&& - \; \left\{ -\frac{T}{2}\left[\log(2\pi) + \log(\sigma^2_1) + \frac{\sigma_0^2}{\sigma_1^2}\right] - \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1) \right\}\\
+&=& -\frac{T}{2} \left[ \log(\sigma_0^2) + 1 - \log(\sigma_1^2) - \frac{\sigma_0^2}{\sigma_1^2}\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)\\
+&=& \frac{T}{2}\left[\frac{\sigma_0^2}{\sigma_1^2} - \log\left(\frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + \left(\frac{1}{2\sigma_1^2} \right)(\beta_0 - \beta_1)X'X(\beta_0 - \beta_1)
+\end{eqnarray*}
