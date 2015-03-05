@@ -134,8 +134,10 @@ The scaling is, of course, arbitrary but this particular choice is traditional. 
 $$AIC = 2 \left[\ell(\widehat{\theta}) - p \right]$$
 Although the TIC and AIC are similar, there are several subtleties:
 \begin{enumerate}
-\item The bias correction for the AIC is derived under the assumption that the approximating model is \emph{correctly specified}, while the TIC is not. In this sense the AIC is a special case of the TIC.
-\item It has been argued that for models where the Information Matrix is not satisfied, the AIC will still be close to the TIC. (The log-likelihood term should dominate the bias correction in such situations.)
+\item The bias correction for the AIC is derived under the assumption that the approximating model is \emph{correctly specified}, while the TIC is not.
+  In this sense the AIC is a special case of the TIC.
+\item It has been argued that for models where the Information Matrix Equality is not satisfied, the AIC will still be close to the TIC.
+  (The log-likelihood term should dominate the bias correction in such situations.)
 \item Typically, the matrices $K$ and $J$ are large, meaning that the estimates will have high variance (we need to estimate $p^2 + p$ elements). In contrast, the AIC a has much smaller variance because the bias correction \emph{does not depend on the data}. Thus, even if the model is mis-specified, it may be preferable to use AIC rather than TIC unless the sample size is large.
 \end{enumerate}
 
