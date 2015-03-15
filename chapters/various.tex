@@ -149,17 +149,46 @@ Using the fact that $P_MP_X = P_XP_M = P_M$,
 	\begin{eqnarray*}
 		E\left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} |X\right] &=& E\left[\mathbf{y}'P_X'(\mathbf{I} - P_M)P_{X}\mathbf{y} |X\right]\\
 			&=& E\left[\mathbf{y}'(P_X'P_X - P_X'P_MP_X)\mathbf{y} |X\right]\\
-			&=& E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]\\
-			&\vdots& \\
-			&&\boxed{\mbox{\textbf{You'll fill in the details on the problem set}}}\\  
-			&\vdots& \\
-			&=& \beta'X'(\mathbf{I}- P_M)X\beta +  \sigma^2 (K - k_M) 
+			&=& E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]
 	\end{eqnarray*}
-In other words, substituting the estimator $\widehat{\beta}$ from the full model in order to estaimate $\beta'X(\mathbf{I}- P_M)X\beta$ \emph{doesn't work}. The estimator $\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta}$ is \emph{biased upwards}. However, we have an explicit expression for the bias, namely $\sigma^2 (K - k_M)$. This means that if we can find an unbiased estimator of $\sigma^2$, we can \emph{correct} the bias in our estimator of $\beta'X(\mathbf{I}- P_M)X\beta$. Fortunately there is an obvious unbiased estimator of $\sigma^2$: we simply use the residuals from the full model:
+which we can expand as
+      \begin{eqnarray*}
+     E\left[\mathbf{y}'(P_X - P_M)\mathbf{y} |X\right]&=& E\left[(X\beta + \boldsymbol{\epsilon})'(P_X - P_M)(X\beta + \boldsymbol{\epsilon})\mathbf{y} |X\right]\\
+  		&=& E\left[\beta'X'(P_X - P_M)X\beta|X\right] + E[\boldsymbol{\epsilon}'(P_X - P_M)X\beta|X] \\
+				&& \quad  + \; E[\beta'X'(P_X - P_M)\boldsymbol{\epsilon}|X] + E[\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}|X]\\
+			&=& \beta'X'(P_X - P_M)X\beta +  E[\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}|X]
+    \end{eqnarray*}
+Now, we can re-write the first term as    
+    \begin{eqnarray*}
+    \beta'X'(P_X - P_M)X\beta  &=& \beta'X'P_X X\beta - \beta'X'P_MX\beta\\
+      &=& \beta'X'X(X'X)^{-1}X' X\beta - \beta'X'P_MX\beta\\
+      &=& \beta'X'X\beta - \beta'X'P_MX\beta\\
+      &=& \beta'X'(\textbf{I} - P_M)X\beta
+    \end{eqnarray*}
+and evaluating the second term, we find that
+    \begin{eqnarray*}
+			E[\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}|X]&=&E[\mbox{trace}\left\{\boldsymbol{\epsilon}'(P_X - P_M)\boldsymbol{\epsilon}\right\}|X]\\
+      &=&  \mbox{trace}\left\{E[\boldsymbol{\boldsymbol{\epsilon}\epsilon}'|X](P_X - P_M)\right\}\\
+			&=&\mbox{trace}\left\{\sigma^2(P_X - P_M)\right\}\\ 
+			&=& \sigma^2 \left(\mbox{trace}\left\{P_X\right\} - \mbox{trace}\left\{P_M\right\}\right)\\ 
+			&=& \sigma^2 (K - k_M) 
+      \end{eqnarray*}
+Hence, putting all the pieces together,
+\begin{equation*}
+E\left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} |X\right] = \beta'X'(\mathbf{I}- P_M)X\beta +  \sigma^2 (K - k_M) 
+\end{equation*}
+In other words, substituting the estimator $\widehat{\beta}$ from the full model in order to estimate $\beta'X(\mathbf{I}- P_M)X\beta$ \emph{doesn't work}. 
+The estimator $\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta}$ is \emph{biased upwards}.
+However, we have an explicit expression for the bias, namely $\sigma^2 (K - k_M)$.
+This means that if we can find an unbiased estimator of $\sigma^2$, we can \emph{correct} the bias in our estimator of $\beta'X(\mathbf{I}- P_M)X\beta$.
+Fortunately there is an obvious unbiased estimator of $\sigma^2$: we simply use the residuals from the full model:
 	$$\widehat{\sigma}^2 = \frac{\mathbf{y}'(\mathbf{I} - P_X)\mathbf{y}}{(T-K)}$$
 Thus, 
 	$$E[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) |X ] = \beta'X(\mathbf{I}- P_M)X\beta$$ 
-Now we've managed to construct an unbiased estimator of the \emph{second} term of the MSE. What about the first? This one is easy. We already have an unbiased estimator of $\widehat{\sigma}^2$ and $k_M$ is a known constant: it's simply the number of regressors in model $M$. Therefore, collecting terms
+Now we've managed to construct an unbiased estimator of the \emph{second} term of the MSE.
+What about the first? This one is easy.
+We already have an unbiased estimator of $\widehat{\sigma}^2$ and $k_M$ is a known constant: it's simply the number of regressors in model $M$.
+Therefore, collecting terms
 	\begin{eqnarray*}
 		\mbox{MC}_M &=& \widehat{\sigma}^2 k_M + \left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) \right]\\
 			&=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} + \widehat{\sigma}^2 (k_M - K)
@@ -168,15 +197,21 @@ is an unbiased estimator of $\mbox{MSE}(M|X)$. This criterion contains exactly t
 \begin{eqnarray*}
 	MC_M - 2\widehat{\sigma}^2k_M &=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - K\widehat{\sigma}^2\\
 	&=& \mathbf{y}'(P_X - P_M)\mathbf{y} -  K\widehat{\sigma}^2\\
-			&\vdots& \\
-			&&\boxed{\mbox{\textbf{You'll fill in the details on the problem set}}}\\  
-			&\vdots& \\
+   &=& \mathbf{y}'(P_X - P_M)\mathbf{y} - \left(\frac{K}{T-K}\right)\mathbf{y}'\left(\mathbf{I} - P_X\right)\mathbf{y}\\
+		&=& \left(\frac{T-K}{T-K}\right)(\mathbf{y}'P_X\mathbf{y} - \mathbf{y}'P_M\mathbf{y}) - \left(\frac{K}{T-K}\right)(\mathbf{y}'\mathbf{y}' - \mathbf{y}'P_X \mathbf{y})\\
+			&=&\left(\frac{T}{T-K}\right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}'P_M\mathbf{y} - \left(\frac{K}{T-K} \right)\mathbf{y}'\mathbf{y}  \\
+			&=& \left(\frac{T}{T-K}\right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}'P_M\mathbf{y} + \left(\frac{T - K - T}{T-K} \right)\mathbf{y}'\mathbf{y}  \\
+			&=&  \left(\frac{T}{T-K} \right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}' P_M \mathbf{y} + \left(1 - \frac{T}{T-K}\right)\mathbf{y}'\mathbf{y} \\
+			&=&  \left(\frac{T}{T-K} \right)\mathbf{y}'P_X \mathbf{y} - \mathbf{y}' P_M \mathbf{y} + \mathbf{y}'\mathbf{y} - \left(\frac{T}{T-K}\right)\mathbf{y}'\mathbf{y}  \\
+			&=& \mathbf{y}'\mathbf{y} - \mathbf{y}'P_M\mathbf{y} - \left(\frac{T}{T-K} \right)(\mathbf{y}'\mathbf{y} - \mathbf{y}'P_m\mathbf{y})\\
+			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - \left(\frac{T}{T-K}\right)\mathbf{y}'\left(\mathbf{I} - P_X\right)\mathbf{y}\\
 			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - T\widehat{\sigma}^2\\
-			&=& RSS(M) - T\widehat{\sigma^2}
-\end{eqnarray*}
+			&=& RSS(M) - T\widehat{\sigma}^2
+      \end{eqnarray*}
 Substituting this into the expression for $\mbox{MC}_M$ we see that 
 	$$\mbox{MC}_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
-which is much easier to interpret than the formula we have before. Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
+which is much easier to interpret than the formula we had before.
+Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
 	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
 This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
 
@@ -233,7 +268,7 @@ This expression tells us how we need to \emph{adjust} the residual sum of square
 
 
 \section{Bayesian Information Criterion}
-Since Frank2 talked about this in his part of the course, I won't discuss this derivation in class but I wanted to provide the details for completeness. As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
+As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
 
 \subsection{Overview of the BIC}
 Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-sample Frequentist \emph{approximation} to Bayesian model selection:
