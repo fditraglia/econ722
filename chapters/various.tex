@@ -116,12 +116,16 @@ Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
 This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
 
 \section{Bayesian Information Criterion}
-As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. The results still hold in the more general case, but this simplifies the notation. 
+As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. 
+The results still hold in the more general case, but this simplifies the notation. 
+Note that the Bayesian Information Criterion (BIC) is sometimes called the SIC, for ``Schwarz's Information Criterion.''
 
 \subsection{Overview of the BIC}
-Despite its name, the BIC is \emph{not} a Bayesian procedure. It is a large-sample Frequentist \emph{approximation} to Bayesian model selection:
+Despite its name, the BIC is \emph{not} a Bayesian procedure.
+It is a large-sample Frequentist \emph{approximation} to Bayesian model selection:
 	\begin{enumerate}
-		\item Begin with a uniform prior on the set of candidate models so that it suffices to maximize the Marginal Likelihood.
+		\item Begin with a uniform prior on the set of candidate models.
+      Then, choosing the model with the highest posterior probability is equivalent to maximizing the Marginal Likelihood.
 		\item The BIC is a large sample approximation to the Marginal Likelihood:
 		$$\int \pi(\beta_i)f_i(\mathbf{y}|\beta_i)d\beta_i$$
 		where $i$ indexes models $M_i$ in a set $\mathcal{M}$.
@@ -256,7 +260,7 @@ To construct the AIC and BIC, we multiply this quantity by 2 and subtract the ap
 	C_p &=&  \frac{\mbox{RSS}_p}{\widehat{\sigma}^2_{wide}} + 2p- T\\
 	\mbox{BIC} &=&\log\left(\widehat{\sigma}^2_p \right) + \frac{ \log(T)(p+1)}{T}
 \end{eqnarray*}
-In each case, we choose the model that \emph{minimizes} the criterion. Of these four criteria, only BIC is consistent. The other three criteria, however, are efficient under one-step-ahead squared prediction error loss in an environment in which the true DGP is an infinite-order autoregression. The BIC does not have this property.
+In each case, we choose the model that \emph{minimizes} the criterion. 
 
 
 \paragraph{Ng \& Perron (2005)} There are some subtle but important points that we glossed over in the preceding discussion and that are, indeed, rarely mentioned in textbooks or articles on model selection. First there is the question of whether we should use the maximum likelihood estimator $\widehat{\sigma}^2$ or the unbiased estimator that divides by $T-p$ rather than $T$. In time series applications $T$ may be small enough that it makes a difference. More troubling, however, is the problem of deciding what should count as the sample size, since different lag lengths use a different number of observations in the conditional maximum likelihood setting. Indeed, as they are usually written, expressions for AIC and BIC drop terms that are constant across models in \emph{cross-section regression}, where changing the number of regressors doesn't affect sample size. The situation is of course entirely different for AR models but practicioners \emph{still use the same formulas} in this case. There are numerous different ways to handle these complications. Ng \& Perron (2005) review the possibilities and illustrate how each performs in a number of simulation studies.
@@ -307,7 +311,7 @@ Re-scaling as we did for the AR model, we have
 \end{eqnarray*}
 The multivariate generalization of AIC$_c$ is
 $$\mbox{AIC}_c = \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}$$
-as explained in Chapter 5 of McQuarrie and Tsai (1998). For each of the preceding three expressions, we choose the model that \emph{minimizes} the given criterion. Of these criteria, both AIC and its corrected version are efficient while BIC is consistent. 
+as explained in Chapter 5 of McQuarrie and Tsai (1998). For each of the preceding three expressions, we choose the model that \emph{minimizes} the given criterion.
 
 \subsection{Corrected AIC for State Space Models}
 As the lag length $p$ grows, the number of parameters in a VAR$(p)$ model explodes, and can easily come close to the effective sample size. 

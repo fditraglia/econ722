@@ -92,7 +92,9 @@ As it turns out, leave-one-out cross-validation is intimately connected with the
 	\end{eqnarray*}
 so we simply need to show that
 	$$\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T}\mbox{trace}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)$$
-\textbf{\emph{Everything that follows amounts to proving this statement}}. 
+In the following section we will see why this assertion holds.
+
+\subsection{Influence Functions and LOO-CV}
 
 To understand the preceding assertion, we'll need to take a slight detour and talk about \emph{influence functions}, an idea from the robust estimation literature.\footnote{For a detailed overview, see ``Robust Statistics'' by Huber \& Ronchetti (2009).} 
 Let $\mathbb{T}=\mathbb{T}(G)$ be a functional and $G$ be some probability distribution. 
@@ -103,10 +105,16 @@ where $\delta_y$ is a \emph{point mass} at $y$, that is
 All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{See, for example, Chapter 5 of ``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} 
 Here we're going to be concerned with a particular functional that should look familiar from our lecture on AIC and friends:
 	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
-What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. Clearly the pseudo-true value depends on the DGP, namely $G$. Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. If we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
+What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. 
+In this case $\theta_0$ is simply the pseudo-true value: the probability limit of the maximum likelihood estimator of $\theta$ based on $f(y|\theta)$. 
+Clearly the pseudo-true value depends on the DGP, namely $G$. 
+Different distributions $G$ would yield different pseudo-true values for the \emph{same} likelihood $f$. 
+If we evaulate $\mathbb{T}$ at the \emph{empirical} distribution $\widehat{G}$ we get the maximum likelihood estimator $\widehat{\theta}$ rather than the pseudo-true value $\theta_0$.
 
 
-The influence function is in fact a \emph{functional derivative}. It allows us to evaulate, for example, how the pseudo-true value $\theta_0$  would change if we \emph{slightly} changed the distribution $G$ that generated the data by ``polluting'' it with a tiny mass point located at $y$. We could also consider how the maximum likelihood estimator, $\widehat{\theta}$, would change if we slightly changed the dataset, represented by empirical distribution function. 
+The influence function is in fact a \emph{functional derivative}. 
+It allows us to evaulate, for example, how the pseudo-true value $\theta_0$  would change if we \emph{slightly} changed the distribution $G$ that generated the data by ``polluting'' it with a tiny mass point located at $y$. 
+We could also consider how the maximum likelihood estimator, $\widehat{\theta}$, would change if we slightly changed the dataset, represented by empirical distribution function. 
 % Under appropriate regularity conditions, it can be shown that
 % 	$$T(\widehat{G}_T) = T(G) + \frac{1}{T}\sum_{t=1}^T \mbox{infl}(G,Y_t) + o_p(T^{-1/2})$$
 % so that
@@ -117,16 +125,18 @@ we can re-write it as
 $$\widehat{G} = (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T$$
 where $\widehat{G}_{(t)}$ is the empirical distribution with $y_t$ excluded from the dataset. Applying $\mathbb{T}$ to both sides, subtracting $\mathbb{T}(\widehat{G}_{(t)})$ and multiplying the right-hand-side by $T/T$, we have
 	$$\mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T}\left[\frac{\mathbb{T}\left((1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T \right) - \mathbb{T}(\widehat{G}_{(t)})}{1/T} \right]$$
-If we take $\epsilon = 1/T$, the term in square brackets is \emph{exactly} the expression whose limit is defined as the influence function. Hence, for $T$ large we have the approximation
+If we take $\epsilon = 1/T$, the term in square brackets is \emph{exactly} the expression whose limit is defined as the influence function. 
+Hence, for $T$ large we have the approximation
 $$\mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) = \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t \right) + o_p(1)$$
 Now, since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$ and $\mathbb{T}(\widehat{G}_{(t)}) =\widehat{\theta}_{(t)}$, we have the following expression for the leave-one-out estimator
 \begin{eqnarray*}
 	\widehat{\theta}_{(t)} &=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
 	&=& \widehat{\theta} - \frac{1}{T} \mbox{infl}\left(\widehat{G}, y_t\right) + o_p(1)
 \end{eqnarray*}
-The second expression indicates that dropping one observation is asymptotically negligible in its effect, through the empirical CDF, on the influence function. Now, it can be shown that the influence function for maximum likelihood estimation is
+The second expression indicates that dropping one observation is asymptotically negligible in its effect, through the empirical CDF, on the influence function.
+As it turns out, the influence function for maximum likelihood estimation is
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-where $\theta_0 = \mathbb{T}(G)$ is the pseudo-true value.\footnote{For details, see the Appendix to this section.} Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
+where $\theta_0 = \mathbb{T}(G)$ is the pseudo-true value.\footnote{For details, see the next section.} Hence, evaluating this expression at $\widehat{G}$ and $y_t$ and substituting into our expression for $\widehat{\theta}_{(t)}$
 	$$\widehat{\theta}_{(t)} = \widehat{\theta} - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
 since $\mathbb{T}(\widehat{G}) = \widehat{\theta}$. This gives us an asymptotic expansion for $\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right)$, namely 
 $$\left(\widehat{\theta}_{(t)} - \widehat{\theta}\right) =  - \frac{1}{T}\widehat{J}^{-1} \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) + o_p(1)$$
@@ -139,18 +149,10 @@ which is exactly what we need. Finally, substituting this back into the expressi
 \end{eqnarray*}
 
 
-
-Although we've used cross-validation to evaulate the KL divergence here, it's actually a very general idea and can be used with \emph{any} loss function. 
-For example, we could use a zero-one loss function for binary predictions, or a quadratic loss function for continuous predictions. 
-The idea is the same in any case: we creat a ``pseudo-out-of-sample observations'' by witholding one observation at a time, and use these to evaluate the loss. 
-While cross-validation can be computationally intensive, it turns out that there's a shortcut for models that can be expressed as linear smoothers. 
-You'll examine a simple case of this on the problem set. 
-It's also worth pointing out that there are varieties of cross-validation other than leave-one-out, but these have different properties. 
-
-\subsection{Appendix: Deriving the Influence Function for MLE}
+\subsection{The Influence Function for MLE}
 In the preceding argument I claimed that the influence function for MLE is 
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-  Here's a justification for this assertion, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Thanks fo Laura Liu for drafting the preliminary version upon which this following argument is based.} 
+  Here's a justification for this assertion, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Thanks fo Laura Liu for drafting the first version of this section.} 
 First, note that the functional $\mathbb{T}$ for MLE is defined as
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)=0$$
 where $\mathbb{T}\left(G\right)=\theta_{0}$. 
