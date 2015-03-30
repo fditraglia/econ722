@@ -207,10 +207,15 @@ A third issue concerns the nature of the analogy between the AIC and BIC and the
 
 
 \section{The Focused Moment Selection Criterion}
-This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.\footnote{If you're really interested in this, check back again after the semester is over. I'll be posting an updated version with R and C++ source code soon.}
+This section is based on my working paper ``Using Invalid Instruments on Purpose: Focused Moment Selection for GMM.'' For the current version, see my website: \url{http://www.ditraglia.com}.
 
 \subsection{Introduction}
-In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. The basic idea is that we might want to use a moment condition that is \emph{slightly mis-specified} provided that it is sufficiently informative about $\mu$: the decrease in variance could easily outweigh the increase in bias in a MSE-sense. This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
+In practical applications of GMM, we are rarely interested in determining which moment conditions are correct. 
+More commonly, our goal is to answer a \emph{research question}, typically involving a parameter of interest $\mu$ that depends on the underlying GMM parameter vector $\theta$. 
+Accordingly, it might make sense to try to get ``good'' estimates of $\mu$, \emph{regardless} of whether this involves using correct or incorrect moment conditions. 
+The basic idea is that we might want to use a moment condition that is \emph{slightly mis-specified} provided that it is sufficiently informative about $\mu$: the decrease in variance could easily outweigh the increase in bias in a MSE-sense. 
+This is very similar to the idea that underlies Mallow's $C_p$, Akaike's Final Prediction Error, and, you guessed it, the Focused Information Criterion of Hjort \& Claeskens (2003). 
+My approach is most similar to the FIC, so I've named it the Focused Moment Selection Criterion, or FMSC for short. 
 
 \subsection{Overview of FMSC Derivation}
 
