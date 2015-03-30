@@ -1,101 +1,103 @@
 %!TEX root = ../main.tex
 \chapter{Asymptotic Properties}
-
-% \section{Time Series Examples}
-% We won't go through all of the specifics here since they're almost identical to the material from above. Some more details can be found in
-% McQuarrie and Tsai (1998). The AR and VAR models are straightforward since, in the conditional formulation, they're just univariate and multivariate regression, respectively.
-
-% \subsection{Autoregressive Models}
-
-% \paragraph{Cross-Validation for AR}
-% The way we described it above, CV depended in independence. How can we adapt it for AR models? Roughly speaking, the idea is to use the fact that dependence dies out over time and treat observations that are ``far enough apart'' as \emph{approximately} independent. Specifically, we choose an integer value $h$ and assume that $y_t$ and $y_s$ can be treated as independent as long as $|s - t|>h$. This idea is called ``$h$-block cross-validation'' and was introduced by Burman, Chow \& Nolan (1994). As in the iid version of leave-one-out cross-validation, we still evaluate a loss function by predicting \emph{one} witheld observation at a time using a model estimated without it. The difference is that we also omit the $h$ neighboring observations \emph{on each side} when fitting the model. For example, if we choose to evaluate squared-error loss, the criterion is
-% 	$$CV_h(1) = \frac{1}{T-p}\sum_{t = p+1}^T \left(y_t - \hat{y}_{(t)}^h\right)^2$$
-% where 
-% $$\hat{y}^h_{(t)} = \hat{\phi}^h_{1(t)} y_{t-1} + \hdots + \hat{\phi}^h_{1(t)}y_{t-p}$$
-% and $\hat{\phi}^h_{j(t)}$ denotes the $j$th parameter estimate from the conditional least-squares estimator with observations $y_{t-h}, \hdots,  y_{t+h}$ removed. We still have the question of what $h$ to choose. Here there is a trade-off between making the assumption of independence more plausible and leaving enough observations to get precise model estimates. Intriguingly, the simulation evidence presented in McQuarrie and Tsai (1998) suggests that setting $h=0$, which yields plain-vanilla leave-one-out CV, works well even in settings with dependence.
-
-% The idea of $h$-block cross-validation can also be adapted to versions of cross-validation other than leave-one-out. For details, see Racine (1997, 2000).
-
-
-
-% \subsection{Vector Autoregression Models}
-% Write without an intercept for simplicity (just demean everything)
-% 	\begin{eqnarray*}
-% 		\underset{(q\times 1)}{\textbf{y}_t} &=& \underset{(q\times q)}{\Phi_1} \textbf{y}_{t-1} + \hdots + \Phi_{p}\textbf{y}_{t-p} + \epsilon_t\\
-% 		\boldsymbol{\epsilon}_t &\overset{iid}{\sim}& N_q(\mathbf{0}, \Sigma)
-% 	\end{eqnarray*}
-% Conditional least squares estimation, sample size, etc.	
-% \begin{eqnarray*}
-% 	FPE &=& \left| \widehat{\Sigma}_p \right| \left( \frac{T + qp}{T - qp}\right)^q\\ \\
-% 	AIC &=& \log \left| \widehat{\Sigma}_p\right| + \frac{2pq^2 + q(q+1)}{T}\\ \\ 
-% 	AIC_c &=& \log \left| \widehat{\Sigma}_p\right|  + \frac{(T + qp)q}{T - qp - q -1}\\ \\
-% 	BIC &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{\log(T)pq^2}{T}\\ \\ 
-% 	HQ &=& \log \left| \widehat{\Sigma}_p\right| +  \frac{2 \log\log(T)pq^2}{T}
-% \end{eqnarray*}
-
-% \paragraph{Problems with VAR model selection}
-% 	\begin{enumerate}
-% 		\item If we fit $p$ lags, we lose $p$ observations under the conditional least squares estimation procedure.
-% 		\item Adding a lag introduces $q^2$ additional parameters. 
-% 	\end{enumerate}
-
-% \paragraph{Cross-Validation for VARs} In principle we could use the same $h$-block idea here as we did for for the AR example above. However, given the large number of parameters we need to estimate, the sample sizes witholding $2h+1$ observations at a time may be too small for this to work well. 
-
-
-
-
-% \subsection{Corrected AIC for State Space Models}
-% Problem with VARs and state space more generally is that we can easily have sample size small relative to number of parameters. In this case AIC-type criteria don't work well. Suggestions for simulation-based selection.
-
-% \paragraph{Cavanaugh \& Shumway (1997)} 
-
-
+There's a large and somewhat technical literature on the asymptotic properties of different model selection procedures, and we won't have time to do it justice here.
+Leeb and P\"{o}tscher (2009a) give an overview.
+For more details, in line with the presentation given below, see Sin and White (1992, 1996), P\"{o}tscher (1991), and Leeb and P\"{o}tscher (2005).
+To learn more about the tradeoff between consistency and efficiency, see Yang (2005, 2007).
 
 \section{Introduction}
-Up until now we've made proceeded by setting forth desiderata for model selection, e.g. minimize the KL divergence or predictive mean-squared error, and then making enough assumptions until we could derive a criterion. And although the details of the derivations were all different, in each of the examples we've considered to far, the result amounted to adding a penalty to the maximized log-likelihood to account for model complexity, for example:
+Up until now we've made proceeded by setting forth desiderata for model selection, e.g. minimize the KL divergence or predictive mean-squared error, and then making enough assumptions until we could derive a criterion. 
+And although the details of the derivations were all different, in each of the examples we've considered to far, the result amounted to adding a penalty to the maximized log-likelihood to account for model complexity, for example:
 	\begin{eqnarray*}
 		% TIC &=& 2\ell_T(\widehat{\theta}) -\mbox{trace}\left\{\widehat{J}^{-1} \widehat{K} \right\}\\
 		AIC &=& 2\ell_T(\widehat{\theta}) - 2\; \mbox{length}(\theta)\\
 		BIC &=& 2\ell_T(\widehat{\theta}) - \log(T)\; \mbox{length}(\theta)
 	\end{eqnarray*}
-We're now going to take a completely different perspective. Instead of asking what assumptions we need to derive a particular criterion, we'll ask ``given the penalty term that this criterion applies to the log-likelihood, how will it perform in large samples?'' We'll concern ourselves in particular with two properties: \textbf{consistency} and \textbf{efficiency}. 
+We're now going to take a completely different perspective. 
+Instead of asking what assumptions we need to derive a particular criterion, we'll ask ``given the penalty term that this criterion applies to the log-likelihood, how will it perform in large samples?'' 
+We'll concern ourselves in particular with two properties: \textbf{consistency} and \textbf{efficiency}. 
 
-\paragraph{Consistency} Suppose that we have a set of candidate models, one of which is actually the true DGP. It seems clear that in this setting we'd like our model selection procedure to correctly identify the true DGP as the sample size grows. This is the idea behind consistency. We say that a model selection criterion is \textbf{consistent} if it selects the true DGP with probability approaching one as $T\rightarrow \infty$. 
+\paragraph{Consistency} 
+Suppose that we have a set of candidate models, one of which is actually the true DGP.
+It seems clear that in this setting we'd like our model selection procedure to correctly identify the true DGP as the sample size grows.
+This is the idea behind consistency.
+Traditionally, we say that a model selection criterion is \textbf{consistent} if it selects the true DGP with probability approaching one as $T\rightarrow \infty$.
+Since this notion only makes sense if the set of candidate models contains the true DGP, a fairly strong assumption, we can also consider slightly different notions of consistency as in Sin and White (1992, 1996).
+We will explore this below.
+The crucial point about consistent selection is that, in the limit, the probability that the ``best'' model is chosen approaches one.
+Which model this is, of course, depends on how we have defined best.
 
-\paragraph{Efficiency} It's somewhat rare that the goal of model selection is to determine which model is the ``truth'' or even which model is the KL minimizer. More commonly we estimate a model for \emph{some specific purpose}: perhaps we want to estimate a particular parameter or make a good forecast. From this perspective it is natural to look for a model selection criterion that with good risk properties. Intuitively, we'l like the criterion to perform ``almost as well'' as the risk-optimal model in our candidate set. This property, which we'll make more precise below, is called \textbf{efficiency}. 
 
-You may be thinking ``consistency and efficiency both sound like great properties so let's find a criterion that satisfies them both!'' Unfortunately, this turns out to be impossible: if a model selection criterion is consistent it cannot be efficient, and vice-versa. 
+\paragraph{Efficiency} 
+It's somewhat rare that the goal of model selection is to determine which model is the ``truth'' or even which model is the KL minimizer. 
+More commonly we estimate a model for \emph{some specific purpose}: perhaps we want to estimate a particular parameter or make a good forecast. 
+From this perspective it is natural to look for a model selection criterion that with good risk properties, e.g.\ low mean-squared error.
+Intuitively, we'l like the criterion to perform ``almost as well'' as the risk-optimal model in our candidate set. 
+This property, which we'll make more precise below, is called \textbf{efficiency}. 
+
+\paragraph{Efficiency or Consistency: Pick One}
+You may be thinking ``consistency and efficiency both sound great so let's find a criterion that satisfies them both!''
+Unfortunately, this turns out to be impossible: if a model selection criterion is consistent it cannot be efficient, and vice-versa. 
+For more on this point, see Yang (2005, 2007).
+Perhaps a more informative way of putting this is that there is an unavoidably price to be paid for consistent model selection in terms of poor risk properties.
+We will see an illustration of this below in a simple example based on estimating the mean of a normal population.
 
 
-In this lecture we'll consider the following basic setup. Let $g$ be the true, unknown data density and consider a collection of models $M_k$ indexed by $k = 1, 2, \hdots, K$ where $\theta_k$ is the parameter vector under model $M_k$ and $\widehat{\theta_k}$ is the corresponding maximum likelihood estimator. Let $f_{k,t}(y_t|\theta_k)$ be the density of observation $t$ under model $k$. For simplicity, suppose that we can express the likelihood of model $k$ as $\sum_{t=1}^T \log f_{k,t}(Y_t| \theta_k)$. This isn't actually necessary: if you want to see a more general way of writing things, consult Sin and White (1996). We do \emph{not} assume that the data are independent. Suppose we're interested in choosing a model to mininimze the KL divergence from $g$ to $f_k$.
+\section{Penalizing the Log-Likelihood}
+Suppose we want to choose the model that minimizes the KL-divergence, as described above in the chapter on AIC-type criteria.
+Will our model selection criteria give us the ``right answer'' in the limit as we obtain more and more data?
+To answer this question we will distinguish two properties, which Sin and White (1992, 1996) call ``weak consistency'' and ``consistency.''
+This terminology is a little confusing, since we usually encounter a distinction between weak and \emph{strong} consistency that corresponds to whether we have convergence in probability or convergence almost surely.
+That's \emph{not} the distinction that is being drawn here.
+Instead the point is to distinguish between what happens when two or more models ``tie'' for lowest KL-divergence in the population.
+The property of \emph{weak consistency} requires only that we never select a model that \emph{does not} minimize the KL-divergence as the sample size goes to infinity.
+In contrast \emph{consistency} requires that we select the model with the fewest parameters among all those that minimize the KL-divergence.
+A criterion that is not consistent but is weakly consistent is sometimes called \textbf{conservative}.
 
-
+\paragraph{Setup:}
+Let $g$ be the true, unknown data density. 
+Now consider a collection of models $M_k$ indexed by $k = 1, 2, \hdots, K$ where $\theta_k$ is the parameter vector under model $M_k$ and $\widehat{\theta_k}$ is the corresponding maximum likelihood estimator.
+Let $f_{k,t}(y_t|\theta_k)$ be the density of observation $t$ under model $k$ and suppose we're interested in choosing a model to mininimze the KL divergence from $g$ to $f_k$.
+For simplicity, suppose that we can express the likelihood of model $k$ as $\sum_{t=1}^T \log f_{k,t}(Y_t| \theta_k)$. 
+Note: we do \emph{not} assume the data are independent. 
 
 
 \paragraph{General Form of Information Criteria}
+We will consider model selection criteria for the following form:
 	$$IC(M_k) = 2 \sum_{t=1}^T \log f_{k,t}(Y_t| \widehat{\theta_k}) - c_{T,k}$$
-where $c_{T,k}$ is the penalty term for $M_k$. We'll now ask how different choices of $c_{T,k}$ give rise to criteria that behave in different ways. 
+where $c_{T,k}$ is the penalty term for $M_k$. 
+The question we will explore is how different choices of the penalty term $c_{T,k}$ give rise to criteria that behave in different ways. 
 
 
-\section{Weak Consistency}
-\paragraph{Weak Consistency} But what if the true DGP is not among the candidate models? This seems like a much more realistic assumption. If we are willing to assume that there is a unique candidate model with minimum KL divergence from the truth then it makes sense to ask that our model selection criterion identify \emph{this model} as the sample size grows. We say that a model selection criterion is \textbf{weakly consistent} if it selects the KL minimizing candidate model with probability approaching one as $T\rightarrow \infty$.
 
+\subsection{Weak Consistency}
+To begin, suppose that, among the candidate models, there is a \emph{unique} KL-minimizing model among the candidates.
+We say that a model selection criterion is \textbf{weakly consistent} if it selects this KL-minimizing candidate model with probability approaching one as $T\rightarrow \infty$.
 
 \paragraph{Sufficient Conditions for Weak Consistency}
-Suppose that exactly one of the candidates minimizes the KL distance: call it $M_{k_0}$. To state this precisely, suppose that
+Suppose that exactly one of the candidates minimizes the KL distance: call it $M_{k_0}$. 
+To state this precisely, suppose that
 	$$\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) > 0$$
-Then, if $c_{T,k}> 0$ and $c_{T,k} = o_p(T)$, $IC(M_k)$ is \emph{weakly consistent}: it selects $M_{k_0}$ with probability approaching one in the limit. Weak consistency continues to hold if the penalty term $c_{T,k}$ equals zero for one of the models, so long as it is strictly positive for all of the others.
+Then, if $c_{T,k}> 0$ and $c_{T,k} = o_p(T)$, $IC(M_k)$ is \emph{weakly consistent}: it selects $M_{k_0}$ with probability approaching one in the limit.
+Weak consistency continues to hold if the penalty term $c_{T,k}$ equals zero for one of the models, so long as it is strictly positive for all of the others.
 
-\paragraph{Both AIC and BIC are Weakly Consistent}
-We have
+\paragraph{AIC and BIC are Weakly Consistent}
+since both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 	\begin{eqnarray*}
 		\mbox{BIC Penalty:}&& c_{T,k} = \log(T) \times \mbox{length}(\theta_k)\\
 		\mbox{AIC Penalty:} && c_{T,k} = 2\times \mbox{length}(\theta_k)
 	\end{eqnarray*}
-and both of these penalties satisfy the condition $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 
-\section{Consistency}
-But what if \emph{two or more} models minimize the KL-divergence? We very often use information criteria to select among \emph{nested models} to decide, for example, whether to restrict certain elements of $\theta$ to be equal to zero. Suppose we want to choose the number of lags to include in an AR model. The usual way to do this is to specify a maximum lag-length, say 3 periods, and then evaulate each of the AR models up to this order: AR(1), AR(2), and AR(3). But in this example is is entirely possible that the KL minimizer will \emph{fail} to be unique. The AR(2) model is just a special case of the AR(3) with one coefficient set equal to zero. Similarly, the AR(1) model is just a special case of the AR(2). Stated mode generally, if an AR(k) model with all coefficients different from zero is the KL minimizer, then an AR(k+1) model also minimizes the KL divergence, as does an AR(k+2) and an AR(k+3) by setting certain coefficients to zero. In situations like this, where there is a tie in the KL divergence, it makes sense to choose the most ``parsimonious'' specification, in other words the one with the fewest parameters. This idea is often called \textbf{consistency}.
+\subsection{Consistency}
+But what if \emph{two or more} models minimize the KL-divergence? We very often use information criteria to select among \emph{nested models} to decide, for example, whether to restrict certain elements of $\theta$ to be equal to zero. 
+Suppose we want to choose the number of lags to include in an AR model. 
+The usual way to do this is to specify a maximum lag-length, say 3 periods, and then evaluate each of the AR models up to this order: AR(1), AR(2), and AR(3). 
+But in this example is is entirely possible that the KL minimizer will \emph{fail} to be unique. 
+The AR(2) model is just a special case of the AR(3) with one coefficient set equal to zero. 
+Similarly, the AR(1) model is just a special case of the AR(2). 
+Stated mode generally, if an AR(k) model with all coefficients different from zero is the KL minimizer, then an AR(k+1) model also minimizes the KL divergence, as does an AR(k+2) and an AR(k+3) by setting certain coefficients to zero. 
+In situations like this, where there is a tie in the KL divergence, it makes sense to choose the most ``parsimonious'' specification, in other words the one with the fewest parameters. 
+This idea is often called \textbf{consistency}.
 
 
 \paragraph{Sufficient Conditions for Consistency}
@@ -143,7 +145,9 @@ as the one-step-ahead mean-squared prediction error is
 Our ideal would be to estimate an $AR(k^*)$ model for forecasting where $k^*$ minimizes $MSPE(k)$. Since we don't know $k^*$ we use a model selection criterion to estimate it. Let $\widehat{k}$ be the lag-length that is selected by some model selection criterion. We say that this criterion is \emph{asymptotically efficient} if
 	$$\frac{MSPE(\widehat{k})}{MSPE(k^*)}\overset{p}{\rightarrow} 1 \quad \mbox{as} \quad T \rightarrow \infty$$
 Under appropriate assumptions, it can be shown for this example that the AIC and AIC$_c$ are asymptotically efficient while the BIC is not.
-
+To get this result to work, we need an asymptotic framework in which none of the candidate models provides ``too good'' of an approximation to the true DGP.
+The way to get this to work is to suppose that the true AR order is \emph{growing with sample size}.
+For more discussion, see Leeb and P\"{o}tscher (2009a).
 
 
 
