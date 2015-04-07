@@ -190,23 +190,19 @@ Since the first term is the MSE of the MLE we have shown that the James-Stein Es
 \end{equation*}
 
 \subsection{The James Stein Estimator More Generally}
-\todo[inline]{Try to give the intuition for what's going on here and be clear about why the $p\geq 3$ requirement is possibly a little strange for the typical estimation problem in economics but is very sensible for forecasting. Explain that James-Stein itself is inadmissible and explain about the positive-part version that avoids shrinking ``past'' zero. (Even that one isn't admissible though!) Explain how we could shrink towards any value we like, possibly something suggested by economic theory, and give the general version for regression. Give some references to Hansen stuff etc.} 
-
-
-
-
-
-
-\subsection{The James-Stein Estimator (OLD VERSION)}
-It turns out that OLS is inadmissible under squared error loss when $p\geq 3$.
-This result was so surprising when first discovered that it is sometimes called ``Stein's Paradox.''
-Efron and Morris (1977) provide a nice discussion as does Samworth (????). 
-An estimator that can be shown to dominate OLS is the so-called ``positive-part James-Stein estimator'' which is given by
-	$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\sigma^2}{\widehat{\beta}' \widehat{\beta}} \right]_+$$
-where $\widehat{\beta}$ is the OLS estimator and $(x)_+ = \max(x,0)$.
-To make this operational, we substitute an estimator of $\sigma^2$, for example one based on the OLS residuals. 
-We see that this estimator shrinks us \emph{away} from the least-squares fit and towards zero. 
-Since James-Stein beats OLS, we know that shrinkage is a good idea. Now we'll consider some more general forms of shrinkage, starting with Ridge Regression.
+The preceding example was quite specific, but the Stein phenomenon is quite general.
+Whenever you have at least three regressors, least squares is inadmissible under quadratic loss.
+As it happens, the James-Stein estimator is \emph{also} inadmissible!
+It turns out that another estimator, the so-called ``positive part'' James-Stein estimator, has strictly smaller risk even though it isn't admissible either.
+The positive part James-Stein estimator is defined as follows
+$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\widehat{\sigma^2}}{\widehat{\beta}'X'X \widehat{\beta}} \right]_+$$
+where $\widehat{\beta}$ is the OLS estimator, $(x)_+ = \max(x,0)$.
+and $\widehat{\sigma}^2$ is the usual OLS-based estimator of the error variance.
+The role of the ``positive part'' in the preceding expression is to prevent us from shrinking \emph{past} zero to get a negative estimate for an element of $\beta$ with a small OLS estimate.
+Although this estimator isn't altogether that widely used in economics, Bruce Hansen has a forthcoming paper in Econometric Reviews (Hansen, 2013) that explores its performance relative to OLS and LASSO, another shrinkage estimator that we will explore below.
+See also Hansen (2014a) for an Stein-like approach to shrinkage estimation in parametric models and  Hansen (2014b) for a an estimator that combines OLS and IV using similar principles.
+Efron and Morris (1977) give good intuitive overview of the so-called ``Stein Paradox.'' 
+We know that shrinkage is a good idea. Now we'll consider some more general forms of shrinkage, starting with Ridge Regression.
 
 
 
