@@ -4,7 +4,7 @@
 \addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
 {\setlength{\belowdisplayskip}{0pt}}
 
-
+\usepackage{lmodern}
 \usepackage{setspace}
 \linespread{1.2}
 \usepackage{amssymb, amsmath, amsthm} 
@@ -98,7 +98,7 @@ Comprehensive review of large-sample results for high-dimensional factor models 
 
 	\begin{figure}
 		\centering
-		\includegraphics[scale = 0.3]{stock_watson_dataset}
+		\includegraphics[scale = 0.3]{../img/stock_watson_dataset}
 	\end{figure}
 Monthly Macroeconomic Indicators: $N > 200, T >400$
 
@@ -295,7 +295,7 @@ If we use Likelihood-based or Bayesian estimation, we could try to resort to the
 If we use PC estimation, we can look a something called a ``scree plot'' to help us decide how many PCs to include:
 \begin{figure}
 	\centering
-	\includegraphics[scale =0.3]{scree}
+	\includegraphics[scale =0.3]{../img/scree}
 \end{figure}
 This figure depicts the eigenvalues for an $N=1148, T = 252$ dataset of excess stock returns
 \end{frame}
