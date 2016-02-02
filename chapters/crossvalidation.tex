@@ -102,7 +102,7 @@ Then the influence function of $\mathbb{T}$ at a point $y$ is defined as
 	$$\mbox{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left(\left(1-\epsilon\right)G + \epsilon \delta_y\right) - \mathbb{T}(G)}{\epsilon}$$
 where $\delta_y$ is a \emph{point mass} at $y$, that is
 		$$\delta_y(a)\left\{\begin{array}{c} 0, \; a<y \\ 1, \; a\geq y\end{array} \right.$$
-All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{See, for example, Chapter 5 of ``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} 
+All kinds of quantities that we know and love can be viewed as functionals of a distribution, for example the mean and variance.\footnote{``Information Criteria and Statistical Modeling'' by Konishi and Kitagawa (2008) provides a good overview.} 
 Here we're going to be concerned with a particular functional that should look familiar from our lecture on AIC and friends:
 	$$\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]$$
 What this says is that we can view $\theta_0$ as the result of applying an \emph{operator} $\mathbb{T}$ to the distribution $G$. 
@@ -152,7 +152,7 @@ which is exactly what we need. Finally, substituting this back into the expressi
 \subsection{The Influence Function for MLE}
 In the preceding argument I claimed that the influence function for MLE is 
 	$$\mbox{infl}(G,y) = J^{-1} \left(\frac{\partial \log f(y|\theta_0)}{\partial \theta}\right)$$
-  Here's a justification for this assertion, following Chapter 5 of Konishi \& Kitagawa (2008).\footnote{Thanks fo Laura Liu for drafting the first version of this section.} 
+  Here's a justification for this assertion, following Chapter 5 of Konishi \& Kitagawa (2008).
 First, note that the functional $\mathbb{T}$ for MLE is defined as
 $$\int\left.\frac{\partial\log f\left(z|\theta\right)}{\partial\theta}\right|_{\theta=\mathbb{T}\left(G\right)}dG\left(z\right)=0$$
 where $\mathbb{T}\left(G\right)=\theta_{0}$. 

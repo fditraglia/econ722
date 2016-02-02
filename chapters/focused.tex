@@ -3,19 +3,22 @@
 \section{Local Mis-specification}
 
 \subsection{Introduction}
-In this lecture we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. 
+In this chapter we'll be using a kind of asymptotic thought experiment that may be unfamiliar to you, so I'd like to spend a bit of time motivating it before proceeding. 
 Roughly speaking, the idea is to consider a parameter whose value \emph{changes with sample size}. 
 This basic idea is widely used in econometrics and statistics and is known by several different names. 
 Among them are ``local alternatives,'' ``Pitman Drift,'' and ``local mis-specification.'' 
 Although it may seem strange at first, ``drifting parameters'' are actually the natural asymptotic setting for certain problems, as I hope to convince you with the following two simple examples.
 
 \subsection{What's Wrong with Asymptotic Power?}
-Consider the following simple testing problem. Suppose we observe $n$ observations from the following DGP
+
+\todo[inline]{In this section $n$ denotes sample size and $T$ is a test statistic!}
+
+\noindent Consider the following simple testing problem. Suppose we observe $n$ observations from the following DGP
 $$X_1, X_2, \hdots, X_{n} \overset{iid}{\sim}N(\mu, 1)$$
 and want to test $H_0\colon \mu = 0$ against the one-sided alternative $H_1\colon \mu >0$. 
 In this admittedly very simple example, the obvious test statistic is
-$$T_{n} = \sqrt{n} \bar{X}_{n} \sim N\left(\mu \sqrt{N}, 1\right)$$
-where $\bar{X}_{N}$ is the sample mean. We reject when $\sqrt{N} \bar{X}_{N}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. 
+$$T_{n} = \sqrt{n} \bar{X}_{n} \sim N\left(\mu \sqrt{n}, 1\right)$$
+where $\bar{X}_{n}$ is the sample mean. We reject when $\sqrt{n} \bar{X}_{n}>z_{1-\alpha}$ where $z_{1-\alpha}$ is the $1-\alpha$ quantile of a standard normal distribution. 
 We can calculate the power of this test as follows:
 \begin{eqnarray*}
 \mbox{Power}(T_{n}) &=& P\left(\sqrt{n} \bar{X}_{n}>z_{1-\alpha}\right) = P\left(Z + \mu\sqrt{n} >z_{1-\alpha}\right)\\
@@ -53,8 +56,8 @@ One way around this problem would be to only compare the finite-sample propertie
 But we almost \emph{never} know the exact sampling distribution of our test statistics.
 
 This is where \emph{local alternatives} come in.
-Rather than evaluating our tests against a \emph{fixed} alternative $\mu$, suppose we were to evaulate it against a \emph{sequence} of \emph{local} alternatives that \emph{drift towards the null} at rate $n^{-1/2}$. 
-In other words, our alternative becomes $H_{1,n} \colon \mu = \delta / \sqrt{N}$ where, for this one-sided test, $\delta > 0$. 
+Rather than evaluating our tests against a \emph{fixed} alternative $\mu$, suppose we were to evaluate it against a \emph{sequence} of \emph{local} alternatives that \emph{drift towards the null} at rate $n^{-1/2}$. 
+In other words, our alternative becomes $H_{1,n} \colon \mu = \delta / \sqrt{n}$ where, for this one-sided test, $\delta > 0$. 
 If we substitute $\delta/\sqrt{n}$ for $\mu$ and take the limit as $N\rightarrow \infty$, we find
 \begin{eqnarray*}
 \lim_{n\rightarrow \infty} \mbox{Power}(T_{n}) &=& \lim_{n\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{n}}\sqrt{n}\right) \right]\\
@@ -175,9 +178,9 @@ Then $\sum_{i=1}^{k_n} \left(Y_{n,i}-E\left[ Y_{n,i} \right]\right) \overset{d}{
 
 \section{Focused Evaluation}
 The idea behind focused model selection is to choose the model that is best for a \emph{particular purpose} rather than seeking ``one-size-fits all'' best model. 
-In general, ``best'' means minimum risk relative to some loss function: it is \emph{not} a matter of searching for the ``true.'' 
+In general, ``best'' means minimum risk relative to some loss function: it is \emph{not} a matter of searching for the ``true'' model. 
 There are two main ideas here. 
-First, even if we knew what the true DGP model was, up to some unknown parameters that we need to estimate, it's not clear that we should use it. 
+First, even if we knew what the true model was, up to some unknown parameters that we need to estimate, it's not clear that we should use it. 
 In most interesting settings there is a bias-variance trade-off. 
 If the true model is somewhat complicated, we may be better off fitting a simpler model. Although this introduces a bias, it could lead to a large reduction in variance, depending on sample size.
 Second, different modeling goals may call for different models \emph{of the same data}.

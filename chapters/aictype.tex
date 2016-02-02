@@ -79,7 +79,7 @@ Under standard regularity conditions, see for example Newey and McFadden (1994),
 $$\widehat{\theta} = \theta_0 + J^{-1} \bar{U}_T + o_p(T^{-1/2})$$
 where $\theta_0$ is value of $\theta$ that minimizes $KL$ divergence from $g$ to the parametric family of distributions $f(y|\theta)$ and
 \begin{eqnarray*}
-J &=& -E_G \left[ \frac{\partial^2 \log f(Y|\theta)}{\partial \theta \partial \theta'}\right]\\
+J &=& -E_G \left[ \frac{\partial^2 \log f(Y|\theta_0)}{\partial \theta \partial \theta'}\right]\\
 \bar{U}_T &=& \frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t|\theta_0)}{\partial\theta}
 \end{eqnarray*}
 Now, by the CLT, $\sqrt{T}\; \bar{U}_T \overset{d}{\rightarrow} U$ where $U\sim N_p(0, K)$ and
@@ -128,7 +128,7 @@ E[U'J^{-1}U] &=& E\left[\mbox{trace} \left\{ U'J^{-1}U\right\} \right] = E\left[
 \end{eqnarray*}
 Thus, we approximate the expected bias by $T^{-1}\mbox{trace}\left\{ J^{-1} K\right\}$. Finally, we correct the bias of the maximized log-likelihood and approximate the expected log likelihood by
 $$E_G[\log f(Y|\theta_0)]\approx \frac{\ell(\widehat{\theta})}{T} - \frac{\mbox{trace}\left\{ J^{-1} K\right\}}{T}$$
-multiplying through by $2/T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
+multiplying through by $2T$ and substituting consistent estimators of the matrices $J$ and $K$ yields \textbf{Takeuchi's Information Criterion} (TIC)
 $$TIC = 2\left[\ell(\widehat{\theta}) - \mbox{trace}\left\{ \widehat{J}^{-1} \widehat{K}\right\} \right]$$
 The scaling is, of course, arbitrary but this particular choice is traditional. If there is a $\theta \in \Theta$ such that $g(y) = f(y|\theta)$ then the information matrix equality holds and $J^{-1} = K$. In this case $\mbox{trace}\left\{ J^{-1} K\right\} = \mbox{trace}\{\mathbf{I}_p\} = p$. Using this quantity as the bias correction yields \textbf{Akaike's Information Criterion}
 $$AIC = 2 \left[\ell(\widehat{\theta}) - p \right]$$
@@ -151,7 +151,6 @@ does not exist in all cases. The bias correction remains reasonable in this case
 
 \subsection{Appendix: Deriving the Bias Expansion}
 \label{sec:BiasExpansion}
-\emph{Thanks to Lorenzo Braccini for working out this derivation and typing it up for me!}
 Consider a second order Taylor expansion around for $\log f(Y_t;\hat{\theta})$ around $\theta_0$:
 \begin{align*}
 \log f(Y_t;\hat{\theta}) &= \log f(Y_t;\theta_0)+\left.\frac{\partial\log f(Y_t;\theta)}{\partial\theta}\right|'_{\theta=\theta_0} (\widehat{\theta}-\theta_0) +  \\ 

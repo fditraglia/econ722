@@ -44,7 +44,7 @@ since $P_M$ and $(\mathbf{I} - P_M)$ are both symmetric and idempotent and their
 where $k_M$ denotes the number of regressors included in $X_M$ and we have used the fact that the trace of a projection matrix equals its dimension. 
 
 So far, so good: we have derived an expression of the predictive mean-squared error of each model $M$. The problem is that it's infeasible: it depends on the unknown quantities $\sigma^2$ and $\beta$. To get around this, Mallow's $C_p$ constructs an \emph{unbiased} estimator of MSE. We proceed as follows. First, let $\widehat{\beta}$ be the estimator based on the full set of regressors, i.e.\ $\widehat{\beta} = (X'X)^{-1}X'\mathbf{y}$ and let $P_{X}$ be the corresponding projection matrix so that we have 
-		$$X \widehat{\theta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
+		$$X \widehat{\beta} = X(X'X)^{-1}X'\mathbf{y} = P_{X}\mathbf{y}$$
 Using the fact that $P_MP_X = P_XP_M = P_M$, 
 	\begin{eqnarray*}
 		E\left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} |X\right] &=& E\left[\mathbf{y}'P_X'(\mathbf{I} - P_M)P_{X}\mathbf{y} |X\right]\\
@@ -86,14 +86,27 @@ Fortunately there is an obvious unbiased estimator of $\sigma^2$: we simply use 
 Thus, 
 	$$E[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) |X ] = \beta'X(\mathbf{I}- P_M)X\beta$$ 
 Now we've managed to construct an unbiased estimator of the \emph{second} term of the MSE.
-What about the first? This one is easy.
-We already have an unbiased estimator of $\widehat{\sigma}^2$ and $k_M$ is a known constant: it's simply the number of regressors in model $M$.
+The first term is easy since we already have an unbiased estimator of $\widehat{\sigma}^2$ and $k_M$ is a known constant: the number of regressors in model $M$.
 Therefore, collecting terms
 	\begin{eqnarray*}
 		\mbox{MC}_M &=& \widehat{\sigma}^2 k_M + \left[\widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - \widehat{\sigma}^2(K- k_M) \right]\\
-			&=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} + \widehat{\sigma}^2 (k_M - K)
+			&=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} + 2\widehat{\sigma}^2 (k_M - K)
 	\end{eqnarray*}
-is an unbiased estimator of $\mbox{MSE}(M|X)$. This criterion contains exactly the same information as Mallow's $C_p$ but expressed in a slightly different way. To get the formula from the textbooks, we need to do some more algebra. First, 
+is an unbiased estimator of $\mbox{MSE}(M|X)$. 
+It turns out, however, that we can re-write this expression in a simpler form.
+As shown in the appendix to this section,
+$$MC_M - 2 \widehat{\sigma}^2 k_m = RSS(M) - T\widehat{\sigma}^2$$
+where $RSS(M) = \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y})$ is the residual sum of squares for model $M$.
+
+
+Substituting this into the expression for $\mbox{MC}_M$ we see that 
+	$$\mbox{MC}_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
+which is much easier to interpret than the formula we had before.
+Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
+	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
+This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
+
+\subsection{Appendix for Mallow's $C_p$: Tedious Algebra} 
 \begin{eqnarray*}
 	MC_M - 2\widehat{\sigma}^2k_M &=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - K\widehat{\sigma}^2\\
 	&=& \mathbf{y}'(P_X - P_M)\mathbf{y} -  K\widehat{\sigma}^2\\
@@ -108,12 +121,6 @@ is an unbiased estimator of $\mbox{MSE}(M|X)$. This criterion contains exactly t
 			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - T\widehat{\sigma}^2\\
 			&=& RSS(M) - T\widehat{\sigma}^2
       \end{eqnarray*}
-Substituting this into the expression for $\mbox{MC}_M$ we see that 
-	$$\mbox{MC}_M = RSS(M) + \widehat{\sigma}^2(2 k_M - T)$$
-which is much easier to interpret than the formula we had before.
-Finally, dividing through by $\widehat{\sigma}^2$ gives Mallow's $C_p$
-	$$C_p(M) = \frac{RSS(M)}{\widehat{\sigma}^2} + 2k_M - T$$
-This expression tells us how we need to \emph{adjust} the residual sum of squares to account for the fact that in-sample fit is a misleading guide to out-of-sample predictive performance.
 
 \section{Bayesian Information Criterion}
 As in our derivation of TIC and AIC, we'll consider a setting with an iid sample of scalar random variables $Y_1, \hdots, Y_T$. 
