@@ -21,7 +21,7 @@ shinyServer(function(input, output) {
   
   output$RiskPlot <- renderPlot({
     
-    mu <- seq(from = -2, to = 2, by = 0.01)
+    mu <- seq(from = -1, to = 1, by = 0.01)
     risk.mu <- cbind(risk(n(), mu, d.AIC), 
                      risk(n(), mu, d.BIC))
     
