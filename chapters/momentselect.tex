@@ -171,7 +171,7 @@ Among some other possibility, Andrews (1999) considers the following criteria wh
 \begin{eqnarray*}
 	\mbox{GMM-BIC}(c) &=& J_T(c) - \left(|c| - p\right)\log(T)\\
 	\mbox{GMM-HQ}(c) &=& J_T(c) - 2.01\left(|c| - p\right)\log(\log(T))\\
-	\mbox{GMM-AIC}(c) &=& J_T(c) - 2\left(|c| - p\right)\log(T)
+	\mbox{GMM-AIC}(c) &=& J_T(c) - 2\left(|c| - p\right)
 \end{eqnarray*}
 We see immediately that GMM-AIC does \emph{not} satisfy the necessary conditions for consistency, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$. In constrast, both the GMM-BIC and GMM-HQ diverge as $T\rightarrow \infty$, so we simply need to check the requirement that $\kappa_T = o(T)$. For GMM-BIC we have 
 	$$\lim_{T \rightarrow \infty} \frac{\log T}{T} = \lim_{T \rightarrow \infty} \frac{1}{T} = 0$$
