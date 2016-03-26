@@ -1,18 +1,37 @@
 %!TEX root = ../main.tex
 \chapter{High-Dimensional Linear Regression}
 \section{Introduction}
-So far we've looked at model selection. For example, we considered the problem of choosing the ``best'' set of regressors for a forecasting problem. Here, the idea was to consider dropping regressors with small coefficients to get a favorable bias-variance tradeoff. There are several problems with this approach. First, variable selection can be unstable because of the discrete nature of the problem: small changes in the underlying data could lead to large changes in the selected set of regressors. Second, it is only computationally infeasible to consider all possible subsets of regressors when $p < 30$. Our colleague Andy Postelwaite actually has a microeconomic theory paper about this called ``Fact Free Learning.'' You should check it out: it's very interesting!
+So far we've looked at model selection. 
+For example, we considered the problem of choosing the ``best'' set of regressors for a forecasting problem. 
+Here, the idea was to consider dropping regressors with small coefficients to get a favorable bias-variance tradeoff. 
+There are several problems with this approach. 
+First, variable selection can be unstable because of the discrete nature of the problem: small changes in the underlying data could lead to large changes in the selected set of regressors. 
+Second, it is only computationally infeasible to consider all possible subsets of regressors when $p < 30$. 
+Our colleague Andy Postelwaite actually has a microeconomic theory paper about this called ``Fact Free Learning.'' 
+You should check it out: it's very interesting!
 
-In this lecture we'll consider an alternative to model selection called ``shrinkage.'' The idea is roughly as follows: rather than making a discrete choice of which variables are ``in'' and which are ``out,'' it might make more sense to leave everything in the model but ``regularize'' or ``shrink'' the estimated coefficients away from the maximum likelihood estimator, much as a Bayesian prior does. Rather than attempting to incorporate prior beliefs, however, here the idea is merely to find a clever way of adding bias that buys us a large decrease in variance. There will still be a model selection component here, but it will involve a single, continuous ``tuning'' or ``smoothing'' parameter.
+In this lecture we'll consider an alternative to model selection called ``shrinkage.'' 
+The idea is roughly as follows: rather than making a discrete choice of which variables are ``in'' and which are ``out,'' it might make more sense to leave everything in the model but ``regularize'' or ``shrink'' the estimated coefficients away from the maximum likelihood estimator, much as a Bayesian prior does. 
+Rather than attempting to incorporate prior beliefs, however, here the idea is merely to find a clever way of adding bias that buys us a large decrease in variance. 
+There will still be a model selection component here, but it will involve a single, continuous ``tuning'' or ``smoothing'' parameter.
 
-\section{References}
-Some good references for the material discussed here are Hastie, Tibshirani \& Friedman (2008; Chapter 3), and Murphy (2012; Chapters 7 \& 13). I'll also refer to some specifid papers which I'll post on Canvas.
-
+%\section{References}
+%Some good references for the material discussed here are Hastie, Tibshirani \& Friedman (2008; Chapter 3), and Murphy (2012; Chapters 7 \& 13). 
+%I'll also refer to some papers which I've posted in the shared Dropbox folder for the course.
+%
 \section{Review of Matrix Decompositions}
 \subsection{The QR Decomposition}
-Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. The columns of $A$ are \emph{orthogonalized} in $Q$ via the Gram-Schmidt process. Since $Q$ has orthogonal columns, we have $Q'Q = I_k$. It is \emph{not} in general true that $QQ' = I$, however. In the special case where $A$ is square, $Q^{-1} = Q'$.
+Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. 
+The columns of $A$ are \emph{orthogonalized} in $Q$ via the Gram-Schmidt process. 
+Since $Q$ has orthogonal columns, we have $Q'Q = I_k$. 
+It is \emph{not} in general true that $QQ' = I$, however. 
+In the special case where $A$ is square, $Q^{-1} = Q'$.
 
-\paragraph{Note:} The way we have defined things here is here is sometimes called the ``thin'' or ``economical'' form of the QR decomposition, e.g.\ \texttt{qr\_econ} in Armadillo. In our ``thin'' version, $Q$ is an $n\times k$ matrix with orthogonal columns. In the ``thick'' version, $Q$ is an $n\times n$ \emph{orthogonal} matrix. Let $A = QR$ be the ``thick'' version and $A = Q_1 R_1$ be the ``thin'' version. The connection between the two is as follows:
+\paragraph{Note:} The way we have defined things here is here is sometimes called the ``thin'' or ``economical'' form of the QR decomposition, e.g.\ \texttt{qr\_econ} in Armadillo. 
+In our ``thin'' version, $Q$ is an $n\times k$ matrix with orthogonal columns. 
+In the ``thick'' version, $Q$ is an $n\times n$ \emph{orthogonal} matrix.
+Let $A = QR$ be the ``thick'' version and $A = Q_1 R_1$ be the ``thin'' version. 
+The connection between the two is as follows:
   $$A = QR = Q \left[\begin{array}
     {c} R_1 \\ 0 
   \end{array} \right] = \left[  \begin{array}
@@ -27,7 +46,10 @@ Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, 
     &=&\left[ R' Q' Q R\right]^{-1} R'Q' y = (R'R)^{-1} R'Q y\\
     &=& R^{-1} (R')^{-1} R' Q'y = R^{-1} Q'y
 \end{eqnarray*}
-In other words, $\widehat{\beta}$ is the solution to $R\beta = Q'y$. While it may not be immediately apparent, this is a much easier system to solve that the normal equations $(X'X) \beta = X'y$. Because $R$ is \emph{upper triangular} we can solve $R\beta = Q'y$ extremely quickly. The product $Q'y$ is a vector, call it $v$, so the system is simply
+In other words, $\widehat{\beta}$ is the solution to $R\beta = Q'y$.
+While it may not be immediately apparent, this is a much easier system to solve that the normal equations $(X'X) \beta = X'y$.
+Because $R$ is \emph{upper triangular} we can solve $R\beta = Q'y$ extremely quickly.
+The product $Q'y$ is a vector, call it $v$, so the system is simply
   $$\left[
     \begin{array}
       {cccccc}
@@ -46,15 +68,23 @@ In other words, $\widehat{\beta}$ is the solution to $R\beta = Q'y$. While it ma
     v_1  \\ v_2  \\ v_3 \\  \vdots \\ v_{k-1} \\ v_{k}
   \end{array}\right]
   $$
-Hence, $\beta_k = v_k / r_k$ which we can substitute into $\beta_{k-1} r_{k-1,k-1} + \beta_k r_{k-1,k} = v_{k-1}$ to solve for $\beta_{k-1}$, and so on. This is called \textbf{back substitution}. We can use the same idea when a matrix is \emph{lower triangular} only in reverse: this is called \textbf{forward substitution}.
+Hence, $\beta_k = v_k / r_k$ which we can substitute into $\beta_{k-1} r_{k-1,k-1} + \beta_k r_{k-1,k} = v_{k-1}$ to solve for $\beta_{k-1}$, and so on.
+This is called \textbf{back substitution}.
+We can use the same idea when a matrix is \emph{lower triangular} only in reverse: this is called \textbf{forward substitution}.
 
-To calculate the variance matrix $\sigma^2 (X'X)^{-1}$ for the least-squares estimator, simply note from the derivation above that $(X'X)^{-1} = R^{-1} (R^{-1})'$ . Inverting $R$, however, is easy: we simply apply back-substitution \emph{repeatedly}. Let $A$ be the inverse of $R$, $\mathbf{a}_j$ be the $j$th column of $A$, and $\mathbf{e}_j$ be the $j$th element of the $k\times k$ identity matrix, i.e.\ the $j$th standard basis vector. Inverting $R$ is equivalent to solving $R \mathbf{a}_1 = \mathbf{e}_1$, followed by $R \mathbf{a}_2 = \mathbf{e}_2$, and so on all the way up to $R \mathbf{a}_k = \mathbf{e}_k$. In Armadillo, if you enclose a matrix in \texttt{trimatu()} or \texttt{trimatl()}, and then request the inverse, the library will carry out backward or forward substitution, respectively.
+To calculate the variance matrix $\sigma^2 (X'X)^{-1}$ for the least-squares estimator, simply note from the derivation above that $(X'X)^{-1} = R^{-1} (R^{-1})'$ .
+Inverting $R$, however, is easy: we simply apply back-substitution \emph{repeatedly}.
+Let $A$ be the inverse of $R$, $\mathbf{a}_j$ be the $j$th column of $A$, and $\mathbf{e}_j$ be the $j$th element of the $k\times k$ identity matrix, i.e.\ the $j$th standard basis vector.
+Inverting $R$ is equivalent to solving $R \mathbf{a}_1 = \mathbf{e}_1$, followed by $R \mathbf{a}_2 = \mathbf{e}_2$, and so on all the way up to $R \mathbf{a}_k = \mathbf{e}_k$.
+In Armadillo, if you enclose a matrix in \texttt{trimatu()} or \texttt{trimatl()}, and then request the inverse, the library will carry out backward or forward substitution, respectively.
 
-\paragraph{Othogonal Projection Matrices and the QR Decomposition}
+\paragraph{QR Decomposition and Orthogonal Projections}
+When working with \textbf{orthogonal projections}, as we do in linear regression, the QR decomposition is particularly helpful.
 Consider a projection matrix $P_X = X (X'X)^{-1}X'$. Provided that $X$ has full column rank, we have
 begin
   $$P_X  = QR(R'R)^{-1}R'Q' = QRR^{-1} (R')^{-1}R'Q' = QQ'$$
-Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q = I$ because we're using the \emph{economical} QR decomposition in which $Q$ has orthonormal columns but may not be a square matrix. Just to make this completely transparent, consider a very simple example:
+Recall that, in general, it is \emph{not} true that $QQ' = I$ even though $Q'Q = I$ because we're using the \emph{economical} QR decomposition in which $Q$ has orthonormal columns but may not be a square matrix.
+Just to make this completely transparent, consider a very simple example:
 	$$X = \left[ \begin{array}
 		{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0
 	\end{array}\right]$$
@@ -77,9 +107,9 @@ but
 It's important to keep the fact that $UU' \neq I$ in mind when using the QR decomposition for more complicated matrix calculations.
 
 \subsection{The Singular Value Decomposition}
-The Singular Value Decomposition (SVD) is probably the most elegant result in linear algebra. It's also an invaluable computational and theoretical tool in statistics and econometrics. I can only give a brief overview here, but I'd encourage you to learn more when you have time. Some excellent references are Strang (1993) and Kalman (2002).
-
-\paragraph{The SVD} Any $m \times n$ matrix $A$ of arbitrary rank $r$ can be decomposed according to 
+The Singular Value Decomposition (SVD) is probably the most elegant result in linear algebra.
+It's also an invaluable computational and theoretical tool in statistics and econometrics.\footnote{Some excellent references on the SVD include Strang (1993) and Kalman (2002).}
+The SVD allows us to express \emph{any} $m \times n$ matrix $A$ of arbitrary rank $r$ according to 
 	$$X = UDV' = (\mbox{orthogonal})(\mbox{diagonal})(\mbox{orthogonal})$$
 	\begin{itemize}
 	 	\item $U$ is an $m\times m$ orthogonal matrix whose columns contain the eigenvectors of $AA'$
@@ -88,40 +118,64 @@ The Singular Value Decomposition (SVD) is probably the most elegant result in li
 	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
 	 \end{itemize} 
 
-\paragraph{The Four Fundamental Subspaces} It turns out that the SVD provides orthonormal bases for each of the so-called ``fundamental subspaces'' of a matrix $A$. In particular:
+It turns out that the SVD provides orthonormal bases for each of the so-called ``fundamental subspaces'' of a matrix $A$.
+In particular:
 	\begin{enumerate}
 		\item \textbf{column space}: first $r$ columns of $U$
 		\item \textbf{row space}: first $r$ columns of $V$
 		\item \textbf{null space}: last $n - r$ columns of $V$
 		\item \textbf{left null space}: last $m - r$ columns of $U$
 	\end{enumerate}
+For this reason is it a very important result linear algebra.
 
-\paragraph{SVD for Symmetric Matrices} If $A$ is symmetric then, by the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors. In this case, $U = V = Q$ and $D$ is simply the absolute value of $\Lambda$ (i.e.\ negative eigenvalues become positive singular values).
 
-\paragraph{SVD for Positive Definite Matrices} If $A$ is not only symmetric but \emph{positive definite}, then $A = Q\Lambda Q'$ is the \emph{same decomposition} as $A = UDV'$: $U=V=Q$ and $\Lambda = D$.
+  \paragraph{SVD for Symmetric Matrices} If $A$ is \textbf{symmetric} then the SVD takes a very special form.
+  By the spectral theorem, we can write $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the eigenvalues of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding eigenvectors.
+  Accordingly we have
+  \[
+    AA' = (Q\Lambda Q')(Q\Lambda Q')' = Q \Lambda Q' Q \Lambda Q' = Q \Lambda^2 Q'
+  \]
+  and similarly
+  \[
+    A'A = (Q\Lambda Q')'(Q\Lambda Q') = Q \Lambda Q' Q \Lambda Q' = Q \Lambda^2 Q'
+  \]
+  using the fact that $Q$ is orthogonal and $\Lambda$ diagonal.
+  Thus, when $A$ is symmetric the SVD reduces to $U = V = Q$ and $D =  \Lambda^2$ so that \emph{negative} eigenvalues become \emph{positive} singular values.
 
 \paragraph{The ``Economical'' SVD}
-The number of singular values equals $r$, the rank of $A$, which is at most $\max\{m,n\}$. This means that some of the columns of $U$ or $V$ will be \emph{irrelevant} since they will be multiplied by zeros in $D$. Accordingly, most linear algebra libraries provide an ``economical'' SVD that only calculate the columns of $U$ and $V$ that are multiplied by non-zero values in $D$. In Armadillo, for example, the command is \texttt{svd\_econ}. 
-
+The number of singular values equals $r$, the rank of $A$, which is at most $\max\{m,n\}$.
+This means that some of the columns of $U$ or $V$ will be \emph{irrelevant} since they will be multiplied by zeros in $D$.
+Accordingly, most linear algebra libraries provide an ``economical'' SVD that only calculate the columns of $U$ and $V$ that are multiplied by non-zero values in $D$.
+In Armadillo, for example, the command is \texttt{svd\_econ}. 
 We can write the economical SVD in summation form as 
 	$$A = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
-where $r = \mbox{rank}(A)$ and the singular values $d_i$ are arranged in order from largest to smallest. In matrix form, this is given by:
+where $r = \mbox{rank}(A)$ and the singular values $d_i$ are arranged in order from largest to smallest.
+In matrix form, this is given by:
 	$$\underset{(n\times p)}{A} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$$
 In the economical SVD, $U$ and $V$ may no longer be square, so they are not orthogonal matrices but their \emph{columns} are still orthonormal.
+
 
 \paragraph{Approximation Property of SVD} The Frobenius norm of a matrix $A$ is given by
 	$$||A||_F = \sqrt{\sum_{i=1}^m \sum_{i=1}^n a_{ij}^2} = \sqrt{\mbox{trace}(A'A)}$$
 Using this norm as a measure of ``approximation error'', it can be shown that the SVD provides the \emph{best low rank approximation} to a matrix $X$. 
 Using the ``economical'' form of the SVD, we can write
 	$$X = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$$
-where the index is $i$ is defined such that the \emph{largest} singular value comes first, followed by the second largest, and so on. This expression gives the rank-$r$ matrix $X$ as a \emph{sum} of $r$ rank-1 matrices. Now suppose that the rank of $X$ is large and we wanted to \emph{approximate} $X$ using a matrix $\widehat{X}_L$ with rank $L<k$. If we measure the reconstruction error using the Frobenius norm, it can be shown that the \emph{truncated SVD}
+where the index is $i$ is defined such that the \emph{largest} singular value comes first, followed by the second largest, and so on.
+This expression gives the rank-$r$ matrix $X$ as a \emph{sum} of $r$ rank-1 matrices.
+Now suppose that the rank of $X$ is large and we wanted to \emph{approximate} $X$ using a matrix $\widehat{X}_L$ with rank $L<k$.
+If we measure the reconstruction error using the Frobenius norm, it can be shown that the \emph{truncated SVD}
 	$$\widehat{X}_L = \sum_{i=1}^{L} d_i \textbf{u}_i \textbf{v}_i'$$ 	
-provides the best rank $L$ approximation to $X$. In other words, $\widehat{X}_L$ is the $\arg \min$  over all rank $L$ matrices of the quantity $||X - \widehat{X}_L||_F$. It is also possible to provide bounds on the quality of the approximation, and thus choose an appropriate truncation. 
+provides the best rank $L$ approximation to $X$.
+In other words, $\widehat{X}_L$ is the $\arg \min$  over all rank $L$ matrices of the quantity $||X - \widehat{X}_L||_F$.
+It is also possible to provide bounds on the quality of the approximation, and thus choose an appropriate truncation. 
 
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
 	$$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$$
-In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$. When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS. All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff. So what happens if we allow ourselves to consider biased estimators? 
+In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$.
+When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS.
+All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff.
+So what happens if we allow ourselves to consider biased estimators? 
 
 
 
@@ -136,6 +190,7 @@ To prove that an estimator is \textbf{inadmissible} it suffices to find an estim
 \subsection{A Very Simple Example}
 Suppose we observe a random $p$-vector $X \sim N\left( \theta, I \right)$ and our task is to estimate the $p$-vector of unknown parameters $\theta$.
 The maximum likelihood estimate for this problem is the sample mean which, since we have only one observation, is $\hat{\theta} = X$.
+
 To calculate the MSE of this estimator, first note that
 \begin{equation*}
   \left( \hat{\theta} - \theta \right)' \left( \hat{\theta}- \theta \right) = \left( X - \theta \right)'\left( X-\theta \right)= \sum_{i = 1}^{p} \left( X_{i} - \theta_i \right)^2 \sim \chi^2_p 
@@ -165,7 +220,7 @@ While this is in no way obvious at first glance it turns out that
 \begin{equation*}
   E\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right] = E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right]
 \end{equation*}
-for $i = 1, \hdots, p$.\footnote{See Section \ref{sec:JamesSteinIntegral} for a proof.}
+for $i = 1, \hdots, p$.\footnote{Write out the expectation as a $p$-fold integral and use integration by parts.}
 Using this fact, we have
 \begin{eqnarray*}
   E\left[ \frac{X'(X-\theta)}{X'X} \right] &=&  \sum_{i=1}^{p} E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right] = p E\left[ \frac{1}{X'X} \right] - 2 E\left[ \frac{\sum_{i=1}^{p} X_i^2}{(X'X)^2} \right]\\
@@ -174,20 +229,13 @@ Using this fact, we have
 and substituting this into our expression for the MSE of the James-Stein estimator, we find that
 \begin{eqnarray*}
   MSE\left( \hat{\theta}^{JS} \right) &=& p - 2(p-2)\left\{ \left( p-2 \right) E\left[ \frac{1}{X'X} \right] \right\} + \left( p-2 \right)^{2}E\left[ \frac{1}{X'X} \right]\\
-  &=& p - \left( p-2 \right) E\left[ \frac{1}{X'X} \right]
+  &=& p - \left( p-2 \right)^2 E\left[ \frac{1}{X'X} \right]
 \end{eqnarray*}
-Since $E\left[ 1/(X'X) \right] > 0$, the sign of the second term is determined by the sign of $\left( p-2 \right)$.
-When $p\geq 3$, the second term is negative.
-Since the first term is the MSE of the MLE we have shown that the James-Stein Estimator strictly dominates whenever $p\geq 3$.
+Since $X'X \sim \chi^2(p)$, $E[1/(X'X)]$ exists and is positive whenever $p \geq 3$.
+And since $(p-2)^2$ is always positive, the second term in the MSE expression is \emph{negative}
+Because the first term is the MSE of the MLE, the James-Stein Estimator strictly dominates whenever $p\geq 3$.
 
 
-
-\subsection{Appendix to ``A Very Simple Example''}
-\label{sec:JamesSteinIntegral}
-\todo[inline]{Write out the expectation as a $p$-fold integral and use integration by parts to show the following:} 
-\begin{equation*}
-  E\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right] = E\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right]
-\end{equation*}
 
 \subsection{The James Stein Estimator More Generally}
 The preceding example was quite specific, but the Stein phenomenon is quite general.
@@ -242,7 +290,7 @@ Recall the following facts about matrix differentiation\footnote{See, for exampl
 		\frac{\partial( \mathbf{x}'A \mathbf{x})}{\partial \mathbf{x}} &=& (A + A')\mathbf{x}
 	\end{eqnarray*}
 Thus, we have 
-$$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\bf{y} + 2(X'X + \lambda I_p)\beta$$
+$$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\mathbf{y} + 2(X'X + \lambda I_p)\beta$$
 since $(X'X + \lambda I_p)$ is symmetric. Thus, the first order condition is 
 	$$X'\textbf{y} = (X'X + \lambda I_p)\beta$$
 Hence,
@@ -250,7 +298,7 @@ Hence,
 So is $(X'X + \lambda I_p)$ guaranteed to be invertible? We need this to be the case for the solution of the Ridge Regression problem to be unique. In the following section, we'll provide an alternative way of analyzing the problem by turning it into something we're more familiar with: OLS.
 
 \subsection{Ridge Regression via OLS}
-From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augemented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
+From the first half of the semester, you may recall that Bayesian linear regression can be thought of as ``plain-vanilla'' OLS using a design matrix that has been \emph{augmented} with ``fake'' observations that represent the prior. This turns out to be a very helpful way of looking at Ridge Regression. Define
 
 $$\widetilde{\textbf{y}} = \left[ \begin{array}
 	{c} \textbf{y} \\ \textbf{0}_p
@@ -369,12 +417,35 @@ where the parameter $\mu$ is the mean, as well as median and mode, while the var
 
 
 \subsection{Why Use an $L_1$ Penalty?}
-The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage procedure for high-dimensional linear regression that combined the best features of Ridge and subset selection, while avoiding their drawbacks. Subset selection provides interpretable results -- each regressor is either ``in'' or ``out'' -- and estimates the coefficients on selected regressors without bias. Unfortunately, it suffers from a very high variance due to the discrete nature of the problem and is computationally infeasible when $p$ is greater than 30 or so. Ridge has a low variance, but this comes at the cost of biased estimates. Moreover, since Ridge includes all regressors in the model, the results can be hard to interpret. The idea behind Lasso is to both \emph{shrink and select}: all coefficient estimates are regularized away from MLE but some are regularized all the way to zero and hence discarded from the model. At the same time, we want to make sure keep the computational complexity under control. The Lasso solution is \emph{always sparse} provided that $\lambda$ is sufficiently large. For this reason, there has been quite a lot of interest in Lasso as a \emph{variable selection technique} in recent years. Since we are mainly interested in efficient forecasting, we won't go into detail on this. Some good recent references that approach this issue from a theoretical perspective include Belloni, Chernozhukov \& Hansen (2010) and the book \emph{Statistics for High-Dimensional Data} by B\"{u}hlmann and van de Geer (2011). See also Chernozhukov \& Hansen's 2013 slides for the NBER Summer Institute. 
+The original idea behind Lasso (Tibshirani, 1996) was to design a shrinkage procedure for high-dimensional linear regression that combined the best features of Ridge and subset selection, while avoiding their drawbacks.
+Subset selection provides interpretable results -- each regressor is either ``in'' or ``out'' -- and estimates the coefficients on selected regressors without bias.
+Unfortunately, it suffers from a very high variance due to the discrete nature of the problem and is computationally infeasible when $p$ is greater than 30 or so.
+Ridge has a low variance, but this comes at the cost of biased estimates.
+Moreover, since Ridge includes all regressors in the model, the results can be hard to interpret.
+The idea behind Lasso is to both \emph{shrink and select}: all coefficient estimates are regularized away from MLE but some are regularized all the way to zero and hence discarded from the model.
+At the same time, we want to make sure keep the computational complexity under control.
+The Lasso solution is \emph{always sparse} provided that $\lambda$ is sufficiently large.
+For this reason, there has been quite a lot of interest in Lasso as a \emph{variable selection technique} in recent years. 
 
-One of the most important features of Lasso is that it is a \emph{convex} optimization problem. More generally, consider a penalty term of the form $\sum_{j=1}^p |\beta_j|^q$. When $q=1$ we have Lasso, and when $q = 2$ we have Ridge.  There is an important tradeoff here: a desire for sparse solutions and low bias pushes us towards \emph{non-convex} penalties and suggests that we make $q$ very small. On the other hand, a desire for computational feasibility and low variance pushes suggests that we use \emph{larger} values of $q$. Lasso uses the \emph{smallest value of $q$ that keeps the problem convex}, effectively trying to take the best of both worlds. For recent a treatment of \emph{non-convex} penalty functions, see Taddy (2013).
+One of the most important features of Lasso is that it is a \emph{convex} optimization problem.
+More generally, consider a penalty term of the form $\sum_{j=1}^p |\beta_j|^q$.
+When $q=1$ we have Lasso, and when $q = 2$ we have Ridge.
+There is an important tradeoff here: a desire for sparse solutions and low bias pushes us towards \emph{non-convex} penalties and suggests that we make $q$ very small.
+On the other hand, a desire for computational feasibility and low variance pushes suggests that we use \emph{larger} values of $q$.
+Lasso uses the \emph{smallest value of $q$ that keeps the problem convex}, effectively trying to take the best of both worlds.
+For recent a treatment of \emph{non-convex} penalty functions, see Taddy (2013).
 
 \subsection{Editorial: Don't be Fooled by Sparsity}
-Many researchers favor Lasso because they consider sparse solutions interpretable. But just because your solution is sparse, that doesn't make it meaningful. When two predictors are highly correlated, Ridge assigns them very similar coefficients. In contrast, Lasso more or less arbitrarily gives one a zero coefficient and the other a nonzero coefficient. Extremely small changes to the dataset can easily flip the identities of the zero and nonzero coefficients. This suggests that we sould be cautious about trying to use Lasso for variable selection. Indeed, the theoretical results that justify its use in this fashion lean heavily on the assumption that the DGP \emph{is in fact sparse}. This is a very strong assumption, particularly in social science. There are many situations in which Lasso works well, but at the end of the day it's simply an algorithm. And algorithms can't do our thinking for us.
+Many researchers favor Lasso because they consider sparse solutions interpretable.
+But just because your solution is sparse, that doesn't make it meaningful.
+When two predictors are highly correlated, Ridge assigns them very similar coefficients.
+In contrast, Lasso more or less arbitrarily gives one a zero coefficient and the other a nonzero coefficient.
+Extremely small changes to the dataset can easily flip the identities of the zero and nonzero coefficients.
+This suggests that we should be cautious about trying to use Lasso for variable selection.
+Indeed, the theoretical results that justify its use in this fashion lean heavily on the assumption that the DGP \emph{is in fact sparse}.
+This is a very strong assumption, particularly in social science.
+There are many situations in which Lasso works well, but at the end of the day it's simply an algorithm.
+And algorithms can't do our thinking for us.
 
 
 \subsection{Comparing Lasso to Ridge}
