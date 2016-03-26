@@ -172,7 +172,7 @@ It is also possible to provide bounds on the quality of the approximation, and t
 \section{Gauss-Markov, meet James-Stein}
 Consider the linear regression model
 	$$\mathbf{y} = X\beta + \boldsymbol{\epsilon}$$
-In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\mathbf{\epsilon}|X) = \sigma^2 I$.
+In Econ 705 you learned that ordinary least squares (OLS) is the minimum variance unbiased linear estimator of $\beta$ under the assumptions $E[\boldsymbol{\epsilon}|X] = \mathbf{0}$ and $Var(\epsilon|X) = \sigma^2 I$.
 When the second assumption fails, you learned that generalized least squares (GLS) provides a lower variance estimator than OLS.
 All of this is fine, as far as it goes, but there's an obvious objection: why are we restricting ourselves to unbiased estimators? Generically, we know that there is a bias-variance tradeoff.
 So what happens if we allow ourselves to consider biased estimators? 
@@ -231,8 +231,7 @@ and substituting this into our expression for the MSE of the James-Stein estimat
   MSE\left( \hat{\theta}^{JS} \right) &=& p - 2(p-2)\left\{ \left( p-2 \right) E\left[ \frac{1}{X'X} \right] \right\} + \left( p-2 \right)^{2}E\left[ \frac{1}{X'X} \right]\\
   &=& p - \left( p-2 \right)^2 E\left[ \frac{1}{X'X} \right]
 \end{eqnarray*}
-Since $X'X \sim \chi^2(p)$, $E[1/(X'X)]$ exists and is positive whenever $p \geq 3$.
-And since $(p-2)^2$ is always positive, the second term in the MSE expression is \emph{negative}
+Since $E[1/(X'X)]$ exists and is positive whenever $p \geq 3$, and since $(p-2)^2$ is always positive, the second term in the MSE expression is \emph{negative}
 Because the first term is the MSE of the MLE, the James-Stein Estimator strictly dominates whenever $p\geq 3$.
 
 
