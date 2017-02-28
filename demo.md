@@ -68,5 +68,29 @@
         return(t(out))
       }
 
-12. What about adding *data* to our package? Every paper needs an empirical example, right? You can easily store a dataset inside your package so it's easily accessible to you as you work. If your data needs to be cleaned or pre-processed, you can document all of these steps and include them in the package. Do the following: `devtools::use_data_raw()`. What happened?
+12. What about adding *data* to our package? Every paper needs an empirical example, right? You can easily store a dataset inside your package so it's easily accessible to you as you work. If your data needs to be cleaned or pre-processed, you can document all of these steps and include them in the package. Do the following: `devtools::use_data_raw()`. Now there's a new directory for your raw data and any files used to process it. These will *not* be run every time that you build your package, which is a good thing!
+13. Let's get some data and put it in our package. Create a new R script in the `data-raw` directory called `download_and_clean_data.R` or something like that. Then type the following:
 
+        data_url <- "http://ditraglia.com/econ103/survey_clean.csv"
+        survey <- read.csv(data_url, header = TRUE, row.names = NULL,
+                           stringsAsFactors = FALSE)
+        height_handspan <- survey[,c('height', 'handspan')]
+        devtools::use_data(height_handspan)
+
+Then save, source the script, and re-build the package. Now the height-handspan regression data is available in your package. Notice that there's now a `data` directory and if you type `height_handspan` at the console after loading your package, you'll see the data. 
+14. We should document our data. Here's how: create a file called `data.R` in the R directory containing something like this:
+
+      #' Height and hanspan for Econ 103 Students
+      #'
+      #' A dataset containing the height and handspan of Econ 103 Students
+      #'
+      #' @format A data frame with 69 rows and 2 variables:
+      #' \describe{
+      #'   \item{height}{height, in inches}
+      #'   \item{handspan}{handspan, in centimeters}
+      #' }
+      #' @source \url{http://ditraglia.com/econ103/survey_clean.csv/}
+      "height_handspan"
+
+Then do `devtools::document()` and then clean and re-build the package. You can also set your build options so RStudio uses `roxygen` automatically. Click `More` in the `Build` menu.
+15. Now let's share our package on github. Click on the `git` tab and then commit the changes. Ordinarily we'd make many commits, each of which is a small change but this is just a simple example. Now we need to get this on github. 
