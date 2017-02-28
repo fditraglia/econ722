@@ -14,9 +14,10 @@
 ## Resources for Learning More
 - Karl Bromans' Reading List for Reproducible Research: http://kbroman.org/Tools4RR/pages/resources.html 
 - R Style Guide (Hadley/Google): http://adv-r.had.co.nz/Style.html
-- Hadley's R Packages Book: http://r-pkgs.had.co.nz)
+- Matlab/R Bilingual Dictionary: http://www.math.umaine.edu/~hiebeler/comp/matlabR.pdf
+- Hadley's R Packages Book: http://r-pkgs.had.co.nz
 - Hadley's Advanced R Book: http://adv-r.had.co.nz
-- Rcpp Gallery: gallery.rcpp.org
+- Rcpp Gallery: http://gallery.rcpp.org
 - Armadillo C++ Linear Algebra Library: http://arma.sourceforge.net/docs.html
 - Norm Matloff's Parallel Programming Book: heather.cs.ucdavis.edu/~matloff/158/PLN/ParProcBook.pdf  
 - Norm Matloff's Parallel R Book: https://www.amazon.com/Parallel-Computing-Data-Science-Examples/dp/1466587016/
@@ -93,4 +94,9 @@ Then save, source the script, and re-build the package. Now the height-handspan 
         "height_handspan"
 
 Then do `devtools::document()` and then clean and re-build the package. You can also set your build options so RStudio uses `roxygen` automatically. Click `More` in the `Build` menu.
-15. Now let's share our package on github. Click on the `git` tab and then commit the changes. Ordinarily we'd make many commits, each of which is a small change but this is just a simple example. Now we need to get this on github. 
+15. Now let's share our package on github. Click on the `git` tab and then commit the changes. Ordinarily we'd make many commits, each of which is a small change but this is just a simple example. Now we need to get this on github. You'll need a github account. Sign up: it's free. Click `Create New Repository` and then give it the same name as our local package: `test_pkg`. Don't initialize with a README. Then follow the instructions under `push an existing repository from the command line.` You can access the git command line in R under Git > More > Shell.
+16. Now let's check to see that the package is on github. Since this is a public repository, you can easily install it on your own computer by using the following command `devtools::install_github("fditraglia/testpkg")`
+
+## Part II Building Packages with Rcpp/RcppArmadillo
+
+## Part III A Very Brief Overview of Parallel Computing
