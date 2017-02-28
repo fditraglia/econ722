@@ -88,9 +88,7 @@
         height_handspan <- survey[,c('height', 'handspan')]
         devtools::use_data(height_handspan)
         
-Then save, source the script, and re-build the package. Now the height-handspan regression data is available in your package. Notice that there's now a `data` directory and if you type `height_handspan` at the console after loading your package, you'll see the data. 
-
-14. We should document our data. Here's how: create a file called `data.R` in the R directory containing something like this:
+14. Now save, source the script, and re-build the package. Now the height-handspan regression data is available in your package. Notice that there's now a `data` directory and if you type `height_handspan` at the console after loading your package, you'll see the data. We should document our data. Here's how: create a file called `data.R` in the R directory containing something like this:
 
         #' Height and hanspan for Econ 103 Students
         #'
@@ -104,11 +102,11 @@ Then save, source the script, and re-build the package. Now the height-handspan 
         #' @source \url{http://ditraglia.com/econ103/survey_clean.csv/}
         "height_handspan"
 
-Then do `devtools::document()` and then clean and re-build the package. You can also set your build options so RStudio uses `roxygen` automatically. Click `More` in the `Build` menu.
+15. Now do `devtools::document()` and then clean and re-build the package. You can also set your build options so RStudio uses `roxygen` automatically. Click `More` in the `Build` menu.
 
-15. Now let's share our package on github. Click on the `git` tab and then commit the changes. Ordinarily we'd make many commits, each of which is a small change but this is just a simple example. Now we need to get this on github. You'll need a github account. Sign up: it's free. Click `Create New Repository` and then give it the same name as our local package: `test_pkg`. Don't initialize with a README. Then follow the instructions under `push an existing repository from the command line.` You can access the git command line in R under Git > More > Shell.
+16. Now let's share our package on github. Click on the `git` tab and then commit the changes. Ordinarily we'd make many commits, each of which is a small change but this is just a simple example. Now we need to get this on github. You'll need a github account. Sign up: it's free. Click `Create New Repository` and then give it the same name as our local package: `test_pkg`. Don't initialize with a README. Then follow the instructions under `push an existing repository from the command line.` You can access the git command line in R under Git > More > Shell.
 
-16. Now let's check to see that the package is on github. Since this is a public repository, you can easily install it on your own computer by using the following command `devtools::install_github("fditraglia/testpkg")`
+17. Now let's check to see that the package is on github. Since this is a public repository, you can easily install it on your own computer by using the following command `devtools::install_github("fditraglia/testpkg")`
 
 ## Part II Building Packages with Rcpp/RcppArmadillo
 
