@@ -1,0 +1,118 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Kullback-Leibler (KL) Divergence}
+
+  \begin{block}{Motivation}
+    How well does a given density $f(y)$ approximate an unknown true density $g(y)$? Use this to select between parametric models.
+  \end{block}
+
+  \pause
+
+  \begin{alertblock}{Definition}
+    \vspace{-3em}
+  \[
+    \text{KL}(g;f) = \underbrace{\mathbb{E}_G \left[ \log\left\{ \frac{g(Y)}{f(Y)} \right\}\right]}_{\text{True density on top}} 
+    = \underbrace{\mathbb{E}_G\left[ \log g(Y) \right]}_{\substack{\text{Depends only on truth} \\ \text{Fixed across models}}} - \underbrace{\mathbb{E}_G \left[ \log f(Y) \right]}_{\substack{\text{Expected} \\ \text{log-likelihood}}}
+  \]
+\end{alertblock}
+
+\vspace{-2.5em}
+
+\pause
+
+\begin{block}{Properties}
+  \begin{itemize}
+    \item \emph{Not} symmetric: $\text{KL}(g;f) \neq \text{KL}(f;g)$
+    \item By Jensen's Inequality: $\text{KL}(g;f) \geq 0$ (strict iff $g=f$ a.e.)
+    \item Minimize KL $\iff$ Maximize Expected log-likelihood
+  \end{itemize}
+
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{KL Divergence and Mis-specified MLE}
+
+  \begin{block}{Pseudo-true Parameter Value $\theta_0$}
+    \vspace{-1em}
+  \[
+    \widehat{\theta}_{MLE} \overset{p}{\rightarrow} \theta_0 \equiv \underset{\theta \in \Theta}{\arg \min} \; \text{KL}(g;f_\theta) = \underset{\theta \in \Theta}{\arg \max} \; \mathbb{E}_G[\log f(Y|\theta)] 
+  \]
+\end{block}
+
+
+\pause
+
+\begin{block}{What if $f_\theta$ is correctly specified?}
+  If $g = f_\theta$ for some $\theta$ then $\text{KL}(g;f_\theta)$ is minimized at zero.
+\end{block}
+
+\pause
+
+\begin{alertblock}{Goal: Compare Mis-specified Models}
+  \vspace{-2.5em}
+  \begin{align*}
+    \mathbb{E}_G \left[ \log f(Y|\theta_0) \right] && \mbox{versus} && 
+    \mathbb{E}_G \left[ \log h(Y|\gamma_0) \right]
+  \end{align*}
+  \vspace{-2em}
+
+ where $\theta_0$ is the pseudo-true parameter value for $f_\theta$ and $\gamma_0$ is the pseudo-true parameter value for $h_\gamma$.
+  
+\end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{How to Estimate Expected Log Likelihood?}
+  \framesubtitle{For simplicity: $Y_1, \dots, Y_n \sim \mbox{ iid } g(y)$}
+
+
+  \begin{block}{Unbiased but Infeasible}
+    \[
+      \mathbb{E}_G \left[\frac{1}{T}\ell(\theta_0)\right] = \mathbb{E}_G\left[ \frac{1}{T} \sum_{t=1}^T f(Y|\theta_0)\right] = \mathbb{E}_G\left[ f(Y|\theta_0) \right]
+    \]
+    
+  \end{block}
+   
+  \pause
+
+  \vspace{-1em}
+
+  \begin{block}{Biased but Feasible}
+    $T^{-1}\ell(\widehat{\theta}_{MLE})$ is a \alert{biased} estimator of $\mathbb{E}_G[\log f(Y|\theta_0)]$. 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Intuition for the Bias}
+    $T^{-1}\ell(\widehat{\theta}_{MLE}) > T^{-1}\ell(\theta_0)$ unless $\widehat{\theta}_{MLE} = \theta_0$. 
+    Maximized sample log-like.\ is an \alert{overly optimistic} estimator of expected log-like.
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{What to do about this bias?}
+
+  \begin{enumerate}
+    \item General-purpose asymptotic approximation of ``degree of over-optimism'' of maximized sample log-likelihood.
+      \begin{itemize}
+        \item Akaike's Information Criterion (AIC)
+        \item Takeuchi's Information Criterion (TIC)
+      \end{itemize}
+    \item Problem-specific finite sample approach, assuming $g \in f_\theta$.
+      \begin{itemize}
+        \item Corrected AIC (AIC$_c$) of Hurvich and Tsai (1989)
+      \end{itemize}
+  \end{enumerate}
+
+  \begin{alertblock}{Tradeoffs}
+   TIC is most general and makes weakest assumptions, but requires very large $T$ to work well. 
+   AIC is a good approximation to TIC that requires less data.
+   Both AIC and TIC perform poorly when $T$ is small relative to the number of parameters, hence AIC$_c$.
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,42 @@
+\usepackage{setspace}
+\linespread{1.3}
+\usepackage{amssymb, amsmath, amsthm} 
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{synttree}
+\usepackage{verbatim}
+\usepackage{fancybox}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usetikzlibrary{shapes,backgrounds,trees}
+
+\title[Econ 722, Part II]{Econ 722 -- Advanced Econometrics IV, Part II} 
+\author[F. DiTraglia]{Francis J.\ DiTraglia}
+\institute{University of Pennsylvania}
+
+% Cover page for individual lecture and reset counter
+\AtBeginLecture{
+\setcounter{framenumber}{0}
+  \frame{\frametitle{ \insertlecture}\tableofcontents}
+}
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{
+   \begin{beamercolorbox}[ht=4ex,leftskip=0.3cm,rightskip=0.3cm]{author in head/foot}
+    \usebeamercolor{UniBlue}
+    \vspace{0.1cm}
+    \insertshorttitle \hfill \insertshortpart \hspace{0cm} -- Slide \insertframenumber %/ %\inserttotalframenumber
+   \end{beamercolorbox}
+   \vspace*{0.1cm}
+} 
+
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+{\setlength{\belowdisplayskip}{0pt}}
+
+
+\include{knitr_preamble}
+
