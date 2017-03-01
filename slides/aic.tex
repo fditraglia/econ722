@@ -71,7 +71,7 @@
 
   \begin{block}{Unbiased but Infeasible}
     \[
-      \mathbb{E}_G \left[\frac{1}{T}\ell(\theta_0)\right] = \mathbb{E}_G\left[ \frac{1}{T} \sum_{t=1}^T f(Y|\theta_0)\right] = \mathbb{E}_G\left[ f(Y|\theta_0) \right]
+      \mathbb{E}_G \left[\frac{1}{T}\ell(\theta_0)\right] = \mathbb{E}_G\left[ \frac{1}{T} \sum_{t=1}^T f(Y_t|\theta_0)\right] = \mathbb{E}_G\left[ f(Y|\theta_0) \right]
     \]
     
   \end{block}
@@ -99,20 +99,81 @@
   \begin{enumerate}
     \item General-purpose asymptotic approximation of ``degree of over-optimism'' of maximized sample log-likelihood.
       \begin{itemize}
-        \item Akaike's Information Criterion (AIC)
         \item Takeuchi's Information Criterion (TIC)
+        \item Akaike's Information Criterion (AIC)
       \end{itemize}
+      \pause
     \item Problem-specific finite sample approach, assuming $g \in f_\theta$.
       \begin{itemize}
         \item Corrected AIC (AIC$_c$) of Hurvich and Tsai (1989)
       \end{itemize}
   \end{enumerate}
 
+  \pause
   \begin{alertblock}{Tradeoffs}
    TIC is most general and makes weakest assumptions, but requires very large $T$ to work well. 
    AIC is a good approximation to TIC that requires less data.
    Both AIC and TIC perform poorly when $T$ is small relative to the number of parameters, hence AIC$_c$.
   \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Recall: Asymptotics for Mis-specified ML Estimation}
+  \framesubtitle{Model $f(y|\theta)$, pseudo-true parameter $\theta_0$. For simplicity $Y_1, \dots, Y_T \sim \mbox{ iid } g(y)$.}
+
+  \pause
+
+  \begin{block}{Fundamental Expansion}
+    \vspace{-1.5em}
+  \[
+    \alert{\sqrt{T} ( \widehat{\theta} - \theta_0)   = J^{-1}\left(\sqrt{T} \bar{U}_T\right) + o_p(1)}
+  \]
+  \footnotesize
+\[
+      J = -\mathbb{E}_G \left[ \frac{\partial \log f(Y|\theta_0)}{\partial \theta \partial \theta'} \right], \quad
+      \bar{U}_T =\frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t)}{\partial \theta}
+\] 
+\end{block}
+
+\normalsize
+
+\vspace{-1em}
+
+\pause
+
+\begin{block}{Central Limit Theorem}
+  \vspace{-1em}
+  \footnotesize
+  \[
+    \sqrt{T} \bar{U}_T \rightarrow_d U \sim N_p(0, K), \quad
+    K = \text{Var}_G\left[\frac{\partial \log f(Y|\theta_0)}{\partial \theta}\right]
+  \] 
+  \normalsize
+
+  \vspace{-1em}
+
+  \[
+    \alert{\sqrt{T}(\widehat{\theta} - \theta_0) \rightarrow_d J^{-1}U \sim N_p(0, J^{-1}KJ^{-1})}
+  \]
+\end{block}
+
+\vspace{-1em}
+
+\pause
+
+\begin{block}{Information Matrix Equality}
+  If $g = f_\theta$ for some $\theta \in \Theta$ then $K = J \implies \text{AVAR} = J^{-1}$
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Bias Relative to Infeasible Plug-in Estimator}
+
+  \[
+    \text{B} = \frac{1}{T} \ell(\widehat{\theta}) - \underbrace{\int g(y) \log f(y|\widehat{\theta})\; dy}_{\text{uses data only once}}  
+  \]
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
