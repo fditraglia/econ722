@@ -171,9 +171,42 @@
 \begin{frame}
   \frametitle{Bias Relative to Infeasible Plug-in Estimator}
 
-  \[
-    \text{B} = \frac{1}{T} \ell(\widehat{\theta}) - \underbrace{\int g(y) \log f(y|\widehat{\theta})\; dy}_{\text{uses data only once}}  
-  \]
 
+  \begin{block}{Definition of Bias Term $B$}
+  \[
+    B = \underbrace{\frac{1}{T} \ell(\widehat{\theta})}_{\substack{ \text{feasible}\\ \text{overly-optimistic}}} - \underbrace{\int g(y) \log f(y|\widehat{\theta})\; dy}_{\substack{\text{uses data only once} \\ \text{infeas.\ not overly-optimistic}}}
+  \]
+\end{block}
+
+\pause
+
+\begin{alertblock}{Question to Answer}
+  On average, over the sampling distribution of $\widehat{\theta}$, how large is $B$? AIC and TIC construct an asymptotic approximation of $\mathbb{E}[B]$.
+\end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Derivation of AIC/TIC}
+  \begin{block}{Step 1: Taylor Expansion}
+    \vspace{-1em}
+    \[B = \bar{Z}_T + (\widehat{\theta} - \theta_0) + (\widehat{\theta} - \theta_0)' J  (\widehat{\theta} - \theta_0) + o_p(T^{-1})\]
+    \footnotesize
+    \[\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T \left\{ \log f(Y_t|\theta_0) - \mathbb{E}_G[\log f(Y|\theta_0) \right\}\]
+  \end{block}
+
+  \vspace{-1em}
+
+  \pause
+
+  \begin{block}{Step 2: $\mathbb{E}[\bar{Z}_T] = 0$}
+    \vspace{-1.5em}
+    \[\mathbb{E}[B] \approx \mathbb{E}\left[ (\widehat{\theta} - \theta_0)'J(\widehat{\theta} - \theta_0) \right]\]
+  \end{block}
+
+  \pause
+
+  \begin{block}{Step 3: $\sqrt{T}(\widehat{\theta} - \theta_0) \rightarrow_d J^{-1}U$}
+  \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
