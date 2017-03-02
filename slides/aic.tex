@@ -198,7 +198,7 @@
   \frametitle{Derivation of AIC/TIC}
   \begin{block}{Step 1: Taylor Expansion}
     \vspace{-1em}
-    \[B = \bar{Z}_T + (\widehat{\theta} - \theta_0) + (\widehat{\theta} - \theta_0)' J  (\widehat{\theta} - \theta_0) + o_p(T^{-1})\]
+    \[B = \bar{Z}_T +  (\widehat{\theta} - \theta_0)' J  (\widehat{\theta} - \theta_0) + o_p(T^{-1})\]
     \footnotesize
     \[\bar{Z}_T = \frac{1}{T} \sum_{t=1}^T \left\{ \log f(Y_t|\theta_0) - \mathbb{E}_G[\log f(Y|\theta_0) \right\}\]
   \end{block}
@@ -288,7 +288,7 @@
   \begin{block}{Assumption: True DGP}
     \vspace{-1.5em}
     \[
-      \mathbf{y} = \mathbf{X}\boldsymbol{\beta}_0 + \boldsymbol{\varepsilon}, \quad \boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)
+      \mathbf{y} = \mathbf{X}\boldsymbol{\beta}_0 + \boldsymbol{\varepsilon}, \quad \boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T), \quad k \text{ Regressors}
     \]
 
     \pause
@@ -369,3 +369,34 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{AIC for Normal Linear Regression}
+%  \begin{itemize}
+%    \item Number of \alert{regressors} $ = k$ 
+%      \pause
+%    \item Number of \alert{parameters} $ = k+1$
+%      \pause
+%    \item $2 \log(\text{Likelihood}) = -T \log(2\pi) - T \log (\widehat{\sigma}^2) - T$
+%      \pause
+%    \item $\text{AIC} = -T \log(2\pi) - T \log(\widehat{\sigma}^2) - T - 2(k+1)$
+%      \pause
+%    \item Maximum Likelihood = Minimum KL so multiply by $-1$ 
+%      \pause
+%    \item Remove irrelevant constants, divide by $T$
+%      \pause
+%  \end{itemize}
+%
+%  \[\widetilde{\text{AIC}} = \log (\widehat{\sigma}^2) + \frac{2(k+1)}{T}\]
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Comparing AIC and AIC$_c$ for Normal Linear Regression}
+%
+%  \begin{align*}
+%    \widetilde{\text{AIC}}(k) &= \log(\widehat{\sigma}^2_k) + \frac{2(k+1)}{T}\\ \\ 
+%    \text{AIC}_c(k) &= \log(\widehat{\sigma}^2_k) + \frac{T + k}{T - k - 2}
+%  \end{align*}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
