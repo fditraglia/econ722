@@ -1,4 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kullback-Leibler Divergence}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Kullback-Leibler (KL) Divergence}
 
@@ -64,6 +66,8 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bias of Maximized Sample Log-Likelihood} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{How to Estimate Expected Log Likelihood?}
   \framesubtitle{For simplicity: $Y_1, \dots, Y_n \sim \mbox{ iid } g(y)$}
@@ -118,6 +122,8 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Review of Asymptotics for Mis-specified MLE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Recall: Asymptotics for Mis-specified ML Estimation}
   \framesubtitle{Model $f(y|\theta)$, pseudo-true parameter $\theta_0$. For simplicity $Y_1, \dots, Y_T \sim \mbox{ iid } g(y)$.}
@@ -167,6 +173,8 @@
 \end{block}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Deriving AIC and TIC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Bias Relative to Infeasible Plug-in Estimator}
@@ -263,6 +271,87 @@
     Technically, AIC requires that all models under consideration are at least correctly specified while TIC doesn't. 
     But $J^{-1}K$ is hard to estimate, and if a model is badly mis-specified, $\ell(\widehat{\theta})$ dominates.
   \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Corrected AIC (AIC$_c$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Corrected AIC (AIC$_c$) -- Hurvich \& Tsai (1989)}
+
+  \begin{block}{Idea Behind AIC$_c$}
+    Asymptotic approximation used for AIC/TIC works poorly if $p$ is too large relative to $T$. \alert{Try exact, finite-sample approach instead.} 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Assumption: True DGP}
+    \vspace{-1.5em}
+    \[
+      \mathbf{y} = \mathbf{X}\boldsymbol{\beta}_0 + \boldsymbol{\varepsilon}, \quad \boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma_0^2 \mathbf{I}_T)
+    \]
+
+    \pause
+
+    \begin{block}{Can Show That}
+      \vspace{-1em}
+      \[
+        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
+      \]
+
+      \vspace{1em}
+    
+      Where $f$ is a normal regression model with parameters $(\boldsymbol{\beta}_1, \sigma_1^2)$ that \alert{might not be the true parameters.} 
+    \end{block}
+    
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{But how can we use this?}
+  \vspace{-1em}
+      \[
+        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
+      \]
+      \vspace{-1em}
+      \begin{enumerate}
+        \item Would need to know $(\beta_1, \sigma_1^2)$ for \alert{candidate model}.
+          \begin{itemize}
+            \item Easy: just use MLE $(\widehat{\boldsymbol{\beta}}_1, \widehat{\sigma}_1^2)$
+          \end{itemize}
+        \item Would need to know $(\boldsymbol{\beta}_0, \sigma_0^2)$ for \alert{true model}.
+          \begin{itemize}
+            \item Very hard! The whole problem is that we don't know these!
+          \end{itemize}
+      \end{enumerate}
+
+      \pause
+
+      \begin{block}{Hurvich \& Tsai (1989) Assume:}
+        \vspace{-0.5em}
+        \begin{itemize}
+          \item Every candidate model is \alert{at least correctly specified}
+          \item Implies any candidate estimator $(\widehat{\boldsymbol{\beta}}, \widehat{\sigma}^2)$ is consistent for truth.
+        \end{itemize}
+
+      \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Deriving the Corrected AIC} 
+  Since $(\widehat{\boldsymbol{\beta}}, \widehat{\sigma}^2)$ are random, look at \alert{expectation of estimated KL}:
+  \small
+      \[
+        \mathbb{E}[\widehat{KL}] = \frac{T}{2}\left\{ \mathbb{E}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2}\right] - \mathbb{E}\left[\log \left( \frac{\sigma_0^2}{\sigma_1^2} \right)\right] - 1\right\} + \mathbb{E}\left[ (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)' \mathbf{X}'\mathbf{X} (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)\right]
+      \]
+
+      \normalsize
+      \vspace{1em}
+  Finite-sample theory for correctly spec.\ normal regression model:
+
+  \[
+    \mathbb{E}\left[ \widehat{KL} \right] = \frac{T}{2}\left\{ \frac{T + k}{T-k-2} - \log(\sigma_0^2) \right\}
+  \]
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
