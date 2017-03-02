@@ -163,7 +163,7 @@
 \pause
 
 \begin{block}{Information Matrix Equality}
-  If $g = f_\theta$ for some $\theta \in \Theta$ then $K = J \implies \text{AVAR} = J^{-1}$
+  If $g = f_\theta$ for some $\theta \in \Theta$ then $K = J \implies \text{AVAR}(\widehat{\theta}) = J^{-1}$
 \end{block}
 
 \end{frame}
@@ -206,7 +206,63 @@
 
   \pause
 
+  \vspace{-1em}
+
   \begin{block}{Step 3: $\sqrt{T}(\widehat{\theta} - \theta_0) \rightarrow_d J^{-1}U$}
+    \vspace{-1.5em}
+    \[
+      T(\widehat{\theta} - \theta_0)'J(\widehat{\theta} - \theta_0) \rightarrow_d U'J^{-1}U
+    \]
   \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Derivation of AIC/TIC Continued\dots}
+  \begin{block}{Step 3: $\sqrt{T}(\widehat{\theta} - \theta_0) \rightarrow_d J^{-1}U$}
+    \vspace{-1.5em}
+    \[
+      T(\widehat{\theta} - \theta_0)'J(\widehat{\theta} - \theta_0) \rightarrow_d U'J^{-1}U
+    \]
+  \end{block}
+
+  \pause
+  
+  \begin{block}{Step 4: $U \sim N_p(0, K)$}
+    \vspace{-1.5em}
+   \[
+     \mathbb{E}[B] \approx \frac{1}{T} \mathbb{E}[U'J^{-1}U] = \text{tr}\left\{ J^{-1}K \right\}
+   \]
+  \end{block}
+
+  \pause
+
+  \vspace{-1em}
+
+  \begin{block}{Final Result:}
+    $T^{-1}\text{tr}\left\{ J^{-1}K \right\}$ is an asymp.\ unbiased estimator of the over-optimism of $T^{-1}\ell(\widehat{\theta})$ relative to $\int g(y)\log f(y|\widehat{\theta})\; dy$.
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{TIC and AIC}
+  \begin{block}{Takeuchi's Information Criterion}
+    Multiply by $2T$, estimate $J,K \Rightarrow \alert{\text{TIC} = 2\left[ \ell(\widehat{\theta}) - \text{tr}\left\{ \widehat{J}^{-1}\widehat{K} \right\} \right]}$
+  \end{block}
+
+  \pause
+
+  \begin{block}{Akaike's Information Criterion}
+    If $g = f_\theta$ then $J^{-1} = K \Rightarrow \text{tr}\left\{ J^{-1  }K \right\} = p \Rightarrow \alert{\text{AIC} = 2\left[ \ell(\widehat{\theta}) - p \right]}$ 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Contrasting AIC and TIC} 
+    Technically, AIC requires that all models under consideration are at least correctly specified while TIC doesn't. 
+    But $J^{-1}K$ is hard to estimate, and if a model is badly mis-specified, $\ell(\widehat{\theta})$ dominates.
+  \end{block}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
