@@ -345,13 +345,27 @@
         \mathbb{E}[\widehat{KL}] = \frac{T}{2}\left\{ \mathbb{E}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2}\right] - \mathbb{E}\left[\log \left( \frac{\sigma_0^2}{\sigma_1^2} \right)\right] - 1\right\} + \mathbb{E}\left[ (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)' \mathbf{X}'\mathbf{X} (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)\right]
       \]
 
+      \pause
+
       \normalsize
       \vspace{1em}
   Finite-sample theory for correctly spec.\ normal regression model:
 
   \[
-    \mathbb{E}\left[ \widehat{KL} \right] = \frac{T}{2}\left\{ \frac{T + k}{T-k-2} - \log(\sigma_0^2) \right\}
+    \mathbb{E}\left[ \widehat{KL} \right] = \frac{T}{2}\left\{ \frac{T + k}{T-k-2} - \log(\sigma_0^2) + \mathbb{E}[\log \widehat{\sigma}^2 ] - 1\right\}
   \]
+   
+  \pause
+
+  \vspace{1em}
+  Eliminate constants and scaling, unbiased estimator of $\mathbb{E}[\log \widehat{\sigma}^2]$:
+  \vspace{-0.5em}
+ \[
+   \alert{\text{AIC}_c = \log \widehat{\sigma}^2 + \frac{T+k}{T-k-2}}
+ \]
+
+  \vspace{-0.5em}
+  a finite-sample unbiased estimator of KL for model comparison
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
