@@ -75,7 +75,7 @@
 
   \begin{block}{Unbiased but Infeasible}
     \[
-      \mathbb{E}_G \left[\frac{1}{T}\ell(\theta_0)\right] = \mathbb{E}_G\left[ \frac{1}{T} \sum_{t=1}^T f(Y_t|\theta_0)\right] = \mathbb{E}_G\left[ f(Y|\theta_0) \right]
+      \mathbb{E}_G \left[\frac{1}{T}\ell(\theta_0)\right] = \mathbb{E}_G\left[ \frac{1}{T} \sum_{t=1}^T \log f(Y_t|\theta_0)\right] = \mathbb{E}_G\left[ \log f(Y|\theta_0) \right]
     \]
     
   \end{block}
@@ -138,7 +138,7 @@
   \footnotesize
 \[
       J = -\mathbb{E}_G \left[ \frac{\partial \log f(Y|\theta_0)}{\partial \theta \partial \theta'} \right], \quad
-      \bar{U}_T =\frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t)}{\partial \theta}
+      \bar{U}_T =\frac{1}{T} \sum_{t=1}^T \frac{\partial \log f(Y_t|\theta_0)}{\partial \theta}
 \] 
 \end{block}
 
@@ -239,7 +239,7 @@
   \begin{block}{Step 4: $U \sim N_p(0, K)$}
     \vspace{-1.5em}
    \[
-     \mathbb{E}[B] \approx \frac{1}{T} \mathbb{E}[U'J^{-1}U] = \text{tr}\left\{ J^{-1}K \right\}
+     \mathbb{E}[B] \approx \frac{1}{T} \mathbb{E}[U'J^{-1}U] = \frac{1}{T} \text{tr}\left\{ J^{-1}K \right\}
    \]
   \end{block}
 
@@ -262,7 +262,7 @@
   \pause
 
   \begin{block}{Akaike's Information Criterion}
-    If $g = f_\theta$ then $J^{-1} = K \Rightarrow \text{tr}\left\{ J^{-1  }K \right\} = p \Rightarrow \alert{\text{AIC} = 2\left[ \ell(\widehat{\theta}) - p \right]}$ 
+    If $g = f_\theta$ then $J = K \Rightarrow \text{tr}\left\{ J^{-1  }K \right\} = p \Rightarrow \alert{\text{AIC} = 2\left[ \ell(\widehat{\theta}) - p \right]}$ 
   \end{block}
 
   \pause
