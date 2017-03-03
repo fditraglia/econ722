@@ -295,12 +295,12 @@
 
     \begin{block}{Can Show That}
       \vspace{-1em}
+      \small
       \[
-        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
+        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + \left(\frac{1}{2\sigma_1^2}\right)(\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
       \]
+      \normalsize
 
-      \vspace{1em}
-    
       Where $f$ is a normal regression model with parameters $(\boldsymbol{\beta}_1, \sigma_1^2)$ that \alert{might not be the true parameters.} 
     \end{block}
     
@@ -310,9 +310,12 @@
 \begin{frame}
   \frametitle{But how can we use this?}
   \vspace{-1em}
+  \small
       \[
-        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
+        KL(g,f) = \frac{T}{2}\left[ \frac{\sigma_0^2}{\sigma_1^2} - \log \left( \frac{\sigma_0^2}{\sigma_1^2} \right) - 1\right] + \left(\frac{1}{2\sigma_1^2}\right)(\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)' \mathbf{X}'\mathbf{X} (\boldsymbol{\beta}_0 - \boldsymbol{\beta}_1)
       \]
+      \normalsize
+
       \vspace{-1em}
       \begin{enumerate}
         \item Would need to know $(\beta_1, \sigma_1^2)$ for \alert{candidate model}.
@@ -339,16 +342,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Deriving the Corrected AIC} 
-  Since $(\widehat{\boldsymbol{\beta}}, \widehat{\sigma}^2)$ are random, look at \alert{expectation of estimated KL}:
+  Since $(\widehat{\boldsymbol{\beta}}, \widehat{\sigma}^2)$ are random, look at $\mathbb{E}[\widehat{KL}]$, where
   \small
       \[
-        \mathbb{E}[\widehat{KL}] = \frac{T}{2}\left\{ \mathbb{E}\left[\frac{\sigma_0^2}{\widehat{\sigma}^2}\right] - \mathbb{E}\left[\log \left( \frac{\sigma_0^2}{\sigma_1^2} \right)\right] - 1\right\} + \mathbb{E}\left[ (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)' \mathbf{X}'\mathbf{X} (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)\right]
+        \widehat{KL} = \frac{T}{2}\left[ \frac{\sigma_0^2}{\widehat{\sigma}^2} - \log \left( \frac{\sigma_0^2}{\widehat{\sigma}^2} \right) - 1\right] + \left( \frac{1}{2 \widehat{\sigma}^2} \right)(\widehat{\boldsymbol{\beta}} -  \boldsymbol{\beta}_0)' \mathbf{X}'\mathbf{X} (\widehat{\boldsymbol{\beta}} - \boldsymbol{\beta}_0)
       \]
 
       \pause
 
       \normalsize
-      \vspace{1em}
   Finite-sample theory for correctly spec.\ normal regression model:
 
   \[
