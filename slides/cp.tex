@@ -121,19 +121,22 @@
   \end{itemize}
 \end{block}
 
+\vspace{-1em}
+
 \pause
 \begin{alertblock}{Mallow's $C_p$}
   \begin{itemize}
     \item Problem: MSE formula is infeasible since it involves $\boldsymbol{\beta}$ and $\sigma^2$.\pause
     \item Solution: Mallow's $C_p$ constructs an unbiased estimator.
+    \item First step: what about plugging in $\widehat{\boldsymbol{\beta}}$ to estimate second term?
   \end{itemize}
 \end{alertblock}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Now some algebra that I will skip\dots}
-  \framesubtitle{See the lecture notes for details.}
+  \frametitle{What if we plug in $\widehat{\boldsymbol{\beta}}$ to estimate the second term?}
+  \framesubtitle{For the missing algebra in Step 4, see the lecture notes.}
   \begin{block}{Notation}
     Let $\widehat{\boldsymbol{\beta}}$ denote the full model estimator and $\mathbf{P}$ be the corresponding projection matrix: $\mathbf{X}\widehat{\beta} = \mathbf{P}\mathbf{y}$.
   \end{block}
@@ -146,10 +149,10 @@
 
   \pause
 
-  \begin{block}{Step 4: Algebra using this crucial fact}
+  \begin{block}{Step 4: Algebra using the preceding fact }
     \vspace{-1em}
    \[
-     \mathbf{E}\left[ \widehat{\boldsymbol{\beta}}\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \dots = \boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta} + \mathbb{E}\left[ \boldsymbol{\epsilon}'(\mathbf{P} - \mathbf{P}_m)\boldsymbol{\epsilon} | \mathbf{X}\right]
+     \mathbb{E}\left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \dots = \boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta} + \mathbb{E}\left[ \boldsymbol{\epsilon}'(\mathbf{P} - \mathbf{P}_m)\boldsymbol{\epsilon} | \mathbf{X}\right]
    \]
   \end{block}
 \end{frame}
@@ -157,9 +160,41 @@
 \begin{frame}
 \frametitle{Substituting $\widehat{\boldsymbol{\beta}}$ doesn't work\dots}
 
-\begin{block}{Step 5: Use ``Trace Trick'' on Step 4}
-  
+\begin{block}{Step 5: Use ``Trace Trick'' on second term from Step 4}
+  \vspace{-1.5em} 
+    \begin{eqnarray*}
+      \mathbb{E}[\boldsymbol{\epsilon}'(\mathbf{P} - \mathbf{P}_m)\boldsymbol{\epsilon}|\mathbf{X}]&=&\mathbb{E}[\mbox{tr}\left\{\boldsymbol{\epsilon}'(\mathbf{P} - \mathbf{P}_m)\boldsymbol{\epsilon}\right\}|\mathbf{X}]\\ \pause
+      &=&  \mbox{tr}\left\{\mathbb{E}[\boldsymbol{\boldsymbol{\epsilon}\epsilon}'|\mathbf{X}](\mathbf{P} - \mathbf{P}_m)\right\}\\ \pause
+      &=&\mbox{tr}\left\{\sigma^2(\mathbf{P} - \mathbf{P}_m)\right\}\\ \pause
+      &=& \sigma^2 \left(\mbox{trace}\left\{\mathbf{P}\right\} - \mbox{trace}\left\{\mathbf{P}_m\right\}\right)\\  \pause
+			&=& \sigma^2 (K - k_m) 
+      \end{eqnarray*}
+      where $K$ is the total number of regressors in $\mathbf{X}$
 \end{block}
 
+\pause
+
+\begin{block}{Bias of Plug-in Estimator}
+  \vspace{-1.5em}
+  \[
+    \mathbb{E}\left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \underbrace{\boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta}}_{\text{Truth}} +
+    \alert{\underbrace{\sigma^2(K - k_m)}_{\text{Bias}}}
+   \]
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Putting Everything Together: Mallow's $C_p$}
+  \framesubtitle{For algebra to yield ``textbook'' formula, see the lecture notes.}
+  \[\text{MSE}(m|\mathbf{X}) = \sigma^2 k_m + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\]
+
+  \[
+    \mathbb{E}\left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta} + \sigma^2(K - k_m)
+   \]
+
+   \[
+     \widehat{\sigma}^2 = \frac{\mathbf{y}'(\mathbf{I} - \mathbf{P}) \mathbf{y}}{T - K}
+   \]
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
