@@ -1,0 +1,94 @@
+\section{Mallow's $C_p$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Motivation: Predict $\mathbf{y}$ from $\mathbf{x}$ via Linear Regression}
+
+  \[\underset{\small(T\times1)}{\textbf{y}} = \underset{(T\times K)}{\mathbf{X} }\underset{(K\times 1)}{\boldsymbol{\beta}} + \boldsymbol{\epsilon}\]
+\small
+\[E[\boldsymbol{\epsilon}|\mathbf{X}] = 0 ,\quad
+Var(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
+\normalsize
+
+\pause
+
+\begin{itemize}
+  \item If $\boldsymbol{\beta}$ were known, could never achieve lower MSE than by using all regressors to predict.\pause
+  \item But $\boldsymbol{\beta}$ is unknown so we have to estimate it from data $\Rightarrow$ bias-variance tradeoff.\pause
+  \item Could make sense to exclude regressors with small coefficients: add small bias but reduce variance.
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Operationalizing the Bias-Variance Tradeoff Idea}
+
+  \begin{alertblock}{Mallow's $C_p$}
+    Approximate the predictive MSE of each model relative to the infeasible optimum in which $\boldsymbol{\beta}$ is known. 
+  \end{alertblock}
+
+  \pause
+
+  \begin{block}{Notation}
+    \begin{itemize}
+      \item Model index $m$ and regressor matrix $\mathbf{X}_m$
+      \item Corresponding OLS estimator $\boldsymbol{\widehat{\beta}}$ padded out with zeros
+      \item $\mathbf{X} \widehat{\boldsymbol{\beta}}_m = \mathbf{X}_{(-m)}\mathbf{0} + \mathbf{X}_m\left[ (\mathbf{X}_m'\mathbf{X}_m)^{-1}\mathbf{X}_m' \mathbf{y} \right] = \mathbf{P}_m \mathbf{y}$
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{In-sample versus Out-of-sample Prediction Error}
+
+  \begin{block}{Why not compare $\mbox{RSS}(m)$?}
+    In-sample prediction error: $\text{RSS}(m) = (\mathbf{y} - \mathbf{X}\widehat{\boldsymbol{\beta}}_m)' (\mathbf{y} - \mathbf{X}\widehat{\boldsymbol{\beta}}_m)$
+  \end{block}
+
+  \pause
+
+  \begin{block}{From your Problem Set}
+    RSS cannot decrease even if we add irrelevant regressors. 
+    Thus in-sample prediction error is an \alert{overly optimistic} estimate of out-of-sample prediction error.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Bias-Variance Tradeoff}
+   Out-of-sample performance of full model (using all regressors) could be very poor if there is a lot of estimation uncertainty associated with regressors that aren't very predictive. 
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Predictive MSE of $\mathbf{X}\widehat{\boldsymbol{\beta}}_m$ relative to infeasible optimum $\boldsymbol{X}\beta$}
+
+    % Note that we can't use align with beamer pauses so we have to use eqnarray!
+
+  \begin{block}{Step 1}
+    \vspace{-2em}
+    \small
+    \begin{eqnarray*}
+      \mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta} &=& \mathbf{P}_m \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \pause =  \mathbf{P}_m(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}) - (\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \\ \pause
+  &=& \mathbf{P}_m \boldsymbol{\epsilon} - (\mathbf{I}- \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}
+    \end{eqnarray*}
+  \end{block}
+
+  \pause
+  \vspace{-2em}
+
+  \begin{block}{Step 2}
+    \small
+    Using fact that $\mathbf{P}_m$ and $(\mathbf{I} - \mathbf{P}_m)$ are idempotent and orthogonal: 
+
+    \vspace{-2em}
+\begin{eqnarray*}
+  \left|\left|\mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta}\right|\right|^2 &=&\left\{ \mathbf{P}_m \boldsymbol{\epsilon} - (\mathbf{I}- \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\right\}'\left\{ \mathbf{P}_m \boldsymbol{\epsilon} + (\mathbf{I}- \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \right\}\\ \pause
+  &=&\boldsymbol{\epsilon}'\mathbf{P}_m'\mathbf{P}_m \boldsymbol{\epsilon} - \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I}-\mathbf{P}_m)'\mathbf{P}_m\boldsymbol{\epsilon} - \boldsymbol{\epsilon}'\mathbf{P}_m'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\\
+  &&\quad \quad + \; \boldsymbol{\beta}'\mathbf{X}' (\mathbf{I} - \mathbf{P}_m)(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\\ \pause
+  &=& \boldsymbol{\epsilon}'\mathbf{P}_m \boldsymbol{\epsilon} + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}
+\end{eqnarray*}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Laplace Approximation}
+\section{Schwarz's Bayesian Information Criterion (BIC)}
