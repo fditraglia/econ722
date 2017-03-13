@@ -5,8 +5,8 @@
 
   \[\underset{\small(T\times1)}{\textbf{y}} = \underset{(T\times K)}{\mathbf{X} }\underset{(K\times 1)}{\boldsymbol{\beta}} + \boldsymbol{\epsilon}\]
 \small
-\[E[\boldsymbol{\epsilon}|\mathbf{X}] = 0 ,\quad
-Var(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
+\[\mathbb{E}[\boldsymbol{\epsilon}|\mathbf{X}] = 0 ,\quad
+\text{Var}(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
 \normalsize
 
 \pause
@@ -63,8 +63,8 @@ Var(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
 
     % Note that we can't use align with beamer pauses so we have to use eqnarray!
 
-  \begin{block}{Step 1}
-    \vspace{-2em}
+  \begin{block}{\small Step 1: Algebra}
+    \vspace{-1em}
     \small
     \begin{eqnarray*}
       \mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta} &=& \mathbf{P}_m \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \pause =  \mathbf{P}_m(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}) - (\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \\ \pause
@@ -73,13 +73,12 @@ Var(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
   \end{block}
 
   \pause
-  \vspace{-2em}
+  \vspace{-1em}
 
-  \begin{block}{Step 2}
+  \begin{block}{\small Step 2: $\mathbf{P}_m$ and $(\mathbf{I} - \mathbf{P}_m)$ are symmetric, idempotent, and orthogonal} 
     \small
-    Using fact that $\mathbf{P}_m$ and $(\mathbf{I} - \mathbf{P}_m)$ are idempotent and orthogonal: 
 
-    \vspace{-2em}
+    \vspace{-1em}
 \begin{eqnarray*}
   \left|\left|\mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta}\right|\right|^2 &=&\left\{ \mathbf{P}_m \boldsymbol{\epsilon} - (\mathbf{I}- \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\right\}'\left\{ \mathbf{P}_m \boldsymbol{\epsilon} + (\mathbf{I}- \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \right\}\\ \pause
   &=&\boldsymbol{\epsilon}'\mathbf{P}_m'\mathbf{P}_m \boldsymbol{\epsilon} - \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I}-\mathbf{P}_m)'\mathbf{P}_m\boldsymbol{\epsilon} - \boldsymbol{\epsilon}'\mathbf{P}_m'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\\
@@ -90,5 +89,77 @@ Var(\boldsymbol{\epsilon}|\mathbf{X}) = \sigma^2 \mathbf{I}\]
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Laplace Approximation}
-\section{Schwarz's Bayesian Information Criterion (BIC)}
+\begin{frame}
+  \frametitle{Predictive MSE of $\mathbf{X}\widehat{\boldsymbol{\beta}}_m$ relative to infeasible optimum $\boldsymbol{X}\boldsymbol{\beta}$}
+  \begin{block}{Step 3: Expectation of Step 2 conditional on $\mathbf{X}$}
+	\begin{eqnarray*}
+    \mbox{MSE}(m|\mathbf{X}) &=& \mathbb{E}\left[(\mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta})'(\mathbf{X}\widehat{\boldsymbol{\beta}}_m - \mathbf{X}\boldsymbol{\beta})|\mathbf{X} \right]\\
+    &=& \mathbb{E}\left[\boldsymbol{\epsilon}'\mathbf{P}_m \boldsymbol{\epsilon}|\mathbf{X}\right] + \mathbb{E}\left[\boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} |\mathbf{X}\right]\\ \pause
+    &=&\mathbb{E}\left[\mbox{tr}\left\{\boldsymbol{\epsilon}'\mathbf{P}_m \boldsymbol{\epsilon}\right\}|\mathbf{X}\right] + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \\ \pause
+    &=&\mbox{tr}\left\{\mathbb{E}[\boldsymbol{\epsilon} \boldsymbol{\epsilon}'|\mathbf{X}]\mathbf{P}_m\right\} + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \\ \pause
+    &=&\mbox{tr}\left\{\sigma^2 \mathbf{P}_m\right\} + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta} \\ \pause
+    &=& \sigma^2 k_m + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}
+	\end{eqnarray*}
+
+  \vspace{1em}
+  \small
+  \alert{where $k_m$ denotes the number of regressors in $\mathbf{X}_m$ and $\text{tr}(\mathbf{P}_m) = \text{tr}\left\{ \mathbf{X}_m\left( \mathbf{X}_m'\mathbf{X}_m \right)^{-1}\mathbf{X}_m' \right\} = \text{tr}\left\{ \mathbf{X}'_m \mathbf{X}_m \left( \mathbf{X}_m' \mathbf{X}_m \right)^{-1} \right\} = \text{tr}(\mathbf{I}_m)$}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Now we know the MSE of a given model\dots}
+  
+  \[\text{MSE}(m|\mathbf{X}) = \sigma^2 k_m + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\]
+
+\begin{block}{Bias-Variance Tradeoff}
+  \pause
+  \begin{itemize}
+    \item Smaller Model $\Rightarrow \sigma^2 k_m$ smaller: less estimation uncertainty. \pause
+    \item Bigger Model $\Rightarrow \mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X} = \left|\left|(\mathbf{I} - \mathbf{P}_m)\mathbf{X} \right|\right|^2$ is in general smaller: less (squared) bias.
+  \end{itemize}
+\end{block}
+
+\pause
+\begin{alertblock}{Mallow's $C_p$}
+  \begin{itemize}
+    \item Problem: MSE formula is infeasible since it involves $\boldsymbol{\beta}$ and $\sigma^2$.\pause
+    \item Solution: Mallow's $C_p$ constructs an unbiased estimator.
+  \end{itemize}
+\end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Now some algebra that I will skip\dots}
+  \framesubtitle{See the lecture notes for details.}
+  \begin{block}{Notation}
+    Let $\widehat{\boldsymbol{\beta}}$ denote the full model estimator and $\mathbf{P}$ be the corresponding projection matrix: $\mathbf{X}\widehat{\beta} = \mathbf{P}\mathbf{y}$.
+  \end{block}
+
+  \pause
+
+  \begin{alertblock}{Crucial Fact}
+    $\text{span}(\mathbf{X}_m)$ is a subspace of $\text{span}(\mathbf{X})$, so $\mathbf{P}_m \mathbf{P} = \mathbf{P} \mathbf{P}_m = \mathbf{P}_m$.
+  \end{alertblock}
+
+  \pause
+
+  \begin{block}{Step 4: Algebra using this crucial fact}
+    \vspace{-1em}
+   \[
+     \mathbf{E}\left[ \widehat{\boldsymbol{\beta}}\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \dots = \boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta} + \mathbb{E}\left[ \boldsymbol{\epsilon}'(\mathbf{P} - \mathbf{P}_m)\boldsymbol{\epsilon} | \mathbf{X}\right]
+   \]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Substituting $\widehat{\boldsymbol{\beta}}$ doesn't work\dots}
+
+\begin{block}{Step 5: Use ``Trace Trick'' on Step 4}
+  
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
