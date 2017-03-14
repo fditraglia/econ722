@@ -127,8 +127,8 @@
 \begin{alertblock}{Mallow's $C_p$}
   \begin{itemize}
     \item Problem: MSE formula is infeasible since it involves $\boldsymbol{\beta}$ and $\sigma^2$.\pause
-    \item Solution: Mallow's $C_p$ constructs an unbiased estimator.
-    \item First step: what about plugging in $\widehat{\boldsymbol{\beta}}$ to estimate second term?
+    \item Solution: Mallow's $C_p$ constructs an unbiased estimator.\pause
+    \item Idea: what about plugging in $\widehat{\boldsymbol{\beta}}$ to estimate second term?
   \end{itemize}
 \end{alertblock}
 
@@ -205,10 +205,10 @@
  \begin{alertblock}{End Result:}
    \vspace{-2.5em}
    \begin{eqnarray*}
-     \text{MC}(m) &=& \widehat{\sigma}^2 k_m  + \left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\widehat{\boldsymbol{\beta}} +  \widehat{\sigma}^2 (2k_m - K) \right]\\
+     \text{MC}(m) &=& \widehat{\sigma}^2 k_m  + \left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\widehat{\boldsymbol{\beta}} - \widehat{\sigma}^2 (K - k_m) \right]\\
      &=& \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\widehat{\boldsymbol{\beta}} + \widehat{\sigma}^2(2 k_m - K) 
    \end{eqnarray*}
-   where $\widehat{\sigma}^2 = \mathbf{y}'(\mathbf{I} - \mathbf{P})\mathbf{y}/(T-K)$ is an unbiased estimator of MSE. 
+   is an \alert{unbiased estimator of MSE}, with $\widehat{\sigma}^2 = \mathbf{y}'(\mathbf{I} - \mathbf{P})\mathbf{y}/(T-K)$
  \end{alertblock}
 
 \end{frame}
