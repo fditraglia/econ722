@@ -186,15 +186,76 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Putting Everything Together: Mallow's $C_p$}
-  \framesubtitle{For algebra to yield ``textbook'' formula, see the lecture notes.}
-  \[\text{MSE}(m|\mathbf{X}) = \sigma^2 k_m + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\]
 
+  \begin{block}{Want An Unbiased Estimator of This:}
+    \vspace{-1em}
+  \[\text{MSE}(m|\mathbf{X}) = \sigma^2 k_m + \boldsymbol{\beta}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\boldsymbol{\beta}\]
+\end{block}
+
+\vspace{-1em}
+\begin{block}{Previous Slide:}
+  \vspace{-1em}
   \[
     \mathbb{E}\left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m) \mathbf{X}\widehat{\boldsymbol{\beta}}|\mathbf{X}\right] = \boldsymbol{\beta}' \mathbf{X}' (\mathbf{I} - \mathbf{P}_m)\mathbf{X} \boldsymbol{\beta} + \sigma^2(K - k_m)
    \]
+ \end{block}
 
+ \pause
+
+ \begin{alertblock}{End Result:}
+   \vspace{-2.5em}
+   \begin{eqnarray*}
+     \text{MC}(m) &=& \widehat{\sigma}^2 k_m  + \left[ \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\widehat{\boldsymbol{\beta}} +  \widehat{\sigma}^2 (2k_m - K) \right]\\
+     &=& \widehat{\boldsymbol{\beta}}'\mathbf{X}'(\mathbf{I} - \mathbf{P}_m)\mathbf{X}\widehat{\boldsymbol{\beta}} + \widehat{\sigma}^2(2 k_m - K) 
+   \end{eqnarray*}
+   where $\widehat{\sigma}^2 = \mathbf{y}'(\mathbf{I} - \mathbf{P})\mathbf{y}/(T-K)$ is an unbiased estimator of MSE. 
+ \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Why is this different from the textbook formula?}
+
+  \vspace{-1em}
+
+  \begin{block}{Just algebra, but tedious\dots}
+
+    \vspace{-2em}
+
+   \small 
+\begin{eqnarray*}
+  \vspace{-1em}
+  \text{MC}(m) - 2\widehat{\sigma}^2 k_m &=& \widehat{\beta}'X'(\mathbf{I} - P_M)X\widehat{\beta} - K\widehat{\sigma}^2\\
+			&\vdots& \\
+			&=& \mathbf{y}'(\mathbf{I} - P_M)\mathbf{y} - T\widehat{\sigma}^2\\
+      &=& \text{RSS}(m) - T\widehat{\sigma}^2
+      \end{eqnarray*}
+  \end{block}
+
+  \vspace{-2em}
+
+  \pause
+
+  \begin{block}{Therefore:}
+    \vspace{-1.5em}
+    \small
    \[
-     \widehat{\sigma}^2 = \frac{\mathbf{y}'(\mathbf{I} - \mathbf{P}) \mathbf{y}}{T - K}
+     \text{MC}(m) = \text{RSS}(m) + \widehat{\sigma}^2(2 k_m - T)
    \]
+  \end{block}
+
+
+  \vspace{-1em}
+
+  \pause
+
+  \begin{block}{Divide Through by $\widehat{\sigma}^2$:}
+    \vspace{-1em}
+    \small
+  \[
+    C_p(m) = \frac{\text{RSS}(m)}{\widehat{\sigma}^2} + 2k_m - T
+  \]
+  Tells us how to adjust RSS for number of regressors\dots
+  \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
