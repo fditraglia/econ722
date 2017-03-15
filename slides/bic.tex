@@ -1,0 +1,72 @@
+\section{Bayesian Model Comparison}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Bayesian Model Comparison}
+  Marginal likelihood etc. Then Laplace approximation and finally BIC which isn't really Bayesian at all!
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Laplace Approximation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Laplace Approximation: Single-Variable Case}
+
+  \small
+
+
+  \begin{block}{Unnormalized pdf $P^*(x)$ with mode $x_0$}
+    \vspace{-1em}
+   \[
+Z_P \equiv \int P^*(x) \;\text{d}x \neq 1
+   \]
+  \end{block}
+  \pause
+
+  \vspace{-1em}
+
+  \begin{block}{Taylor Expansion in Logs Around $x_0$}
+    \vspace{-1em}
+  \[
+    \log P^*(x) \approx \log P^*(x_0) - \frac{c}{2}(x - x_0)^2, \quad c = -\frac{d^2}{dx^2} \log P^*(x_0)
+  \]
+  \end{block}
+  \pause
+
+  \vspace{-1em}
+
+  \begin{block}{RHS is the Kernel of a Normal Distribution}
+    \vspace{-1em}
+    \[
+      Q^*(x) \equiv P^*(x_0) \exp \left[ -\frac{c}{2}(x - x_0)^2 \right]
+    \]
+  \end{block}
+
+  \vspace{-1em}
+
+  \pause
+
+  \begin{block}{Approximate $Z_P$ by Normalizing Constant for $Q^*(x)$}
+    \vspace{-1em}
+    \[
+      Z_P \approx Z_Q = P^*(x_0) \sqrt{\frac{2\pi}{c}}
+    \]
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Laplace Approximation: $K$-Variable Case}
+
+  \framesubtitle{Same basic idea but using a multivariate normal.}
+
+\begin{align*}
+   \log P^*(\mathbf{x}) &\approx \log P^*(\mathbf{x}_0) - \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)' \mathbf{A} (\mathbf{x} - \mathbf{x}_0)\\
+   A_{ij} &= -\frac{\partial^2}{\partial x_i \partial x_j} \log P^*(\mathbf{x}_0)\\
+   Z_P &\approx Z_Q = P^*(\mathbf{x}_0) \sqrt{\frac{(2\pi)^K}{\text{det}\mathbf{A}}}
+ \end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Laplace Approximation for a Marginal Likelihood}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
