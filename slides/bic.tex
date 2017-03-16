@@ -1,72 +1,185 @@
 \section{Bayesian Model Comparison}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Bayesian Model Comparison}
-  Marginal likelihood etc. Then Laplace approximation and finally BIC which isn't really Bayesian at all!
+  \frametitle{Bayesian Model Comparison: Marginal Likelihoods}
+
+
+
+  \begin{block}{Bayes' Rule for Model $m\in\mathcal{M}$}
+    \footnotesize
+    \vspace{-1em}
+  \[
+    \underbrace{\pi(\boldsymbol{\theta}|\mathbf{y},m)}_{\text{Posterior}} \propto \underbrace{\pi(\boldsymbol{\theta}|m)}_{\text{Prior}}\underbrace{ f(\mathbf{y}|\boldsymbol{\theta},m)}_{\text{Likelihood}}
+  \]
+
+  \[
+   \underbrace{f(\mathbf{y}|m)}_{\text{Marginal Likelihood}} = \int_\Theta \pi(\boldsymbol{\theta}|m)f(\mathbf{y}|\boldsymbol{\theta},m)\; \text{d}\boldsymbol{\theta}
+  \]
+  \end{block}
+
+  \pause
+
+  \begin{block}{Posterior Model Probability for $m \in \mathcal{M}$}
+    \footnotesize
+    \vspace{-1em}
+   \[
+     P(m|\mathbf{y}) = \frac{P(m)f(\mathbf{y}|m)}{f(\mathbf{y})} = \pause \frac{\int_\Theta P(m) f(\mathbf{y},\boldsymbol{\theta}|m)\;  \text{d}\boldsymbol{\theta}}{f(\mathbf{y})} = \pause \frac{P(m)}{f(\mathbf{y})} \int_\Theta \pi(\boldsymbol{\theta}|m)f(\mathbf{y}|\boldsymbol{\theta},m)\; \text{d}\boldsymbol{\theta} 
+   \]
+
+   where $P(m)$ is the \alert{prior model probability} and $f(\mathbf{y})$ is constant across models.
+  \end{block}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Laplace Approximation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Laplace Approximation: Single-Variable Case}
+%
+%  \small
+%
+%
+%  \begin{block}{Unnormalized pdf $P^*(x)$ with mode $x_0$}
+%    \vspace{-1em}
+%   \[
+%Z_P \equiv \int P^*(x) \;\text{d}x \neq 1
+%   \]
+%  \end{block}
+%  \pause
+%
+%  \vspace{-1em}
+%
+%  \begin{block}{Taylor Expansion in Logs Around $x_0$}
+%    \vspace{-1em}
+%  \[
+%    \log P^*(x) \approx \log P^*(x_0) - \frac{c}{2}(x - x_0)^2, \quad c = -\frac{d^2}{dx^2} \log P^*(x_0)
+%  \]
+%  \end{block}
+%  \pause
+%
+%  \vspace{-1em}
+%
+%  \begin{block}{RHS is the Kernel of a Normal Distribution}
+%    \vspace{-1em}
+%    \[
+%      Q^*(x) \equiv P^*(x_0) \exp \left[ -\frac{c}{2}(x - x_0)^2 \right]
+%    \]
+%  \end{block}
+%
+%  \vspace{-1em}
+%
+%  \pause
+%
+%  \begin{block}{Approximate $Z_P$ by Normalizing Constant for $Q^*(x)$}
+%    \vspace{-1em}
+%    \[
+%      Z_P \approx Z_Q = P^*(x_0) \sqrt{\frac{2\pi}{c}}
+%    \]
+%  \end{block}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Laplace Approximation: $K$-Variable Case}
+%
+%  \framesubtitle{Same basic idea but using a multivariate normal.}
+%
+%\begin{align*}
+%   \log P^*(\mathbf{x}) &\approx \log P^*(\mathbf{x}_0) - \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)' \mathbf{A} (\mathbf{x} - \mathbf{x}_0)\\
+%   A_{ij} &= -\frac{\partial^2}{\partial x_i \partial x_j} \log P^*(\mathbf{x}_0)\\
+%   Z_P &\approx Z_Q = P^*(\mathbf{x}_0) \sqrt{\frac{(2\pi)^K}{\text{det}\mathbf{A}}}
+% \end{align*}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Laplace Approximation: Single-Variable Case}
+  \frametitle{Laplace (aka Saddlepoint) Approximation}
+  \framesubtitle{Suppress model index $m$ for simplicity.}
 
+  \footnotesize
+
+  \begin{block}{General Case: for $T$ large\dots}
   \small
-
-
-  \begin{block}{Unnormalized pdf $P^*(x)$ with mode $x_0$}
-    \vspace{-1em}
-   \[
-Z_P \equiv \int P^*(x) \;\text{d}x \neq 1
-   \]
-  \end{block}
-  \pause
-
-  \vspace{-1em}
-
-  \begin{block}{Taylor Expansion in Logs Around $x_0$}
-    \vspace{-1em}
+  \vspace{-1.5em}
   \[
-    \log P^*(x) \approx \log P^*(x_0) - \frac{c}{2}(x - x_0)^2, \quad c = -\frac{d^2}{dx^2} \log P^*(x_0)
+    \int_\Theta g(\boldsymbol{\theta})\exp\{T \cdot h(\boldsymbol{\theta})\}\;\text{d}\boldsymbol{\theta} \approx \left( \frac{2\pi}{T} \right)^{p/2}\exp\{ T\cdot h(\boldsymbol{\theta}_0) \} g(\boldsymbol{\theta}_0)  \left|H(\boldsymbol{\theta}_0)\right|^{-1/2} \
   \]
-  \end{block}
-  \pause
+  \[
+    p = \text{dim}(\boldsymbol{\theta}), \; \; \boldsymbol{\theta}_0 = \text{arg max}_{\boldsymbol{\theta}\in \Theta} h(\boldsymbol{\theta}), \; \;
+    H(\theta_0) = \left.-\frac{\partial^2 h(\boldsymbol{\theta})}{\partial \boldsymbol{\theta} \partial \boldsymbol{\theta}'} \right|_{\boldsymbol{\theta} = \boldsymbol{\theta}_0}
+  \]
+\end{block}
 
+\pause
+
+\begin{block}{Use to Approximate Marginal Likelihood}
   \vspace{-1em}
+  \scriptsize
+  \[
+    h(\theta) = \frac{\ell(\boldsymbol{\theta})}{T} = \frac{1}{T}\sum_{t=1}^T \log f(Y_i|\boldsymbol{\theta}), \; \;
+    H(\boldsymbol{\theta}) = J_T(\boldsymbol{\theta}) = -\frac{1}{T}\sum_{t=1}^T \frac{\partial^2 \log f(Y_i|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}\partial\boldsymbol{\theta}'}, \; \; g(\boldsymbol{\theta}) = \pi(\boldsymbol{\theta})
+  \]
 
-  \begin{block}{RHS is the Kernel of a Normal Distribution}
-    \vspace{-1em}
-    \[
-      Q^*(x) \equiv P^*(x_0) \exp \left[ -\frac{c}{2}(x - x_0)^2 \right]
-    \]
-  \end{block}
-
-  \vspace{-1em}
-
-  \pause
-
-  \begin{block}{Approximate $Z_P$ by Normalizing Constant for $Q^*(x)$}
-    \vspace{-1em}
-    \[
-      Z_P \approx Z_Q = P^*(x_0) \sqrt{\frac{2\pi}{c}}
-    \]
-  \end{block}
+  \normalsize
+  \vspace{1em}
+  \alert{and substitute $\widehat{\boldsymbol{\theta}}_{MLE}$ for $\boldsymbol{\theta}_0$}
+\end{block}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Laplace Approximation: $K$-Variable Case}
+  \frametitle{Laplace Approximation to Marginal Likelihood}
+  \framesubtitle{Suppress model index $m$ for simplicity.}
 
-  \framesubtitle{Same basic idea but using a multivariate normal.}
+\small
+  \[
+    \int_\Theta \pi(\boldsymbol{\theta})f(\mathbf{y}|\boldsymbol{\theta})\;\text{d}\boldsymbol{\theta} \approx \left( \frac{2\pi}{T} \right)^{p/2}\exp\left\{ \ell(\widehat{\boldsymbol{\theta}}_{MLE})\right\} \pi(\widehat{\boldsymbol{\theta}}_{MLE})  \left|J_T(\widehat{\boldsymbol{\theta}}_{MLE})\right|^{-1/2}
+  \]
 
-\begin{align*}
-   \log P^*(\mathbf{x}) &\approx \log P^*(\mathbf{x}_0) - \frac{1}{2} (\mathbf{x} - \mathbf{x}_0)' \mathbf{A} (\mathbf{x} - \mathbf{x}_0)\\
-   A_{ij} &= -\frac{\partial^2}{\partial x_i \partial x_j} \log P^*(\mathbf{x}_0)\\
-   Z_P &\approx Z_Q = P^*(\mathbf{x}_0) \sqrt{\frac{(2\pi)^K}{\text{det}\mathbf{A}}}
- \end{align*}
+  \footnotesize
+  \[
+  \ell(\boldsymbol{\theta}) = \sum_{t=1}^T \log f(Y_i|\boldsymbol{\theta}), \quad
+    H(\boldsymbol{\theta}) = J_T(\boldsymbol{\theta}) = -\frac{1}{T}\sum_{t=1}^T \frac{\partial^2 \log f(Y_i|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}\partial\boldsymbol{\theta}'}
+  \]
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bayesian Information Criterion (BIC)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Laplace Approximation for a Marginal Likelihood}
+  \frametitle{Bayesian Information Criterion}
+
+  \vspace{-2em}
+
+\small
+  \[
+    \int_\Theta \pi(\boldsymbol{\theta})f(\mathbf{y}|\boldsymbol{\theta})\;\text{d}\boldsymbol{\theta} \approx \left( \frac{2\pi}{T} \right)^{p/2}\exp\left\{ \ell(\widehat{\boldsymbol{\theta}}_{MLE})\right\} \pi(\widehat{\boldsymbol{\theta}}_{MLE})  \left|J_T(\widehat{\boldsymbol{\theta}}_{MLE})\right|^{-1/2}
+  \]
+
+  \vspace{1em}
+
+  \pause
+
+  \begin{block}{Take Logs and Multiply by 2}
+
+    \vspace{-2em}
+    \small
+    \[2 \log f(\mathbf{y}|\boldsymbol{\theta}) \approx \underbrace{2 \ell(\widehat{\boldsymbol{\theta}}_{MLE})}_{O_p(T)} - \underbrace{p \log(T)}_{O(\log T)} + \underbrace{p \log (2\pi) + \log \pi(\widehat{\theta}) - \log |J_T(\widehat{\boldsymbol{\theta}})|}_{O_p(1)}\]
+  \end{block}
+
+  \pause
+
+  \vspace{-2em}
+
+  \begin{block}{The BIC}
+    \normalsize
+    Assume uniform prior over \alert{models} and ignore lower order terms: 
+
+    \[
+      \text{BIC}(m) = 2 \log f(\mathbf{y}|\widehat{\boldsymbol{\theta}},m) - p_m \log(T)
+    \]
+
+    large-sample Frequentist approx.\ to Bayesian marginal likelihood
+  \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
