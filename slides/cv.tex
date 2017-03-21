@@ -93,6 +93,8 @@
     Repeat Step 2 for each $k = 1, \dots, K$. 
   \end{block}
 
+  \pause
+
   \begin{block}{Step 4}
     For each $t$ calculate the prediction $\widehat{y}_t^{-k(t)}$ of $y_t$ based on $\widehat{\theta}(-k(t))$, the estimator that excluded observation $t$. 
   \end{block}
@@ -118,7 +120,7 @@
     Repeat for each model \& choose $m$ to minimize $\text{CV}_K(m)$.
   \end{block}
 
-  \alert{CV uses each obs.\ for est.\ and evaluation but never at the same time!}
+  \alert{CV uses each observation for parameter estimation and model evaluation but never at the same time!}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +134,7 @@
     \begin{itemize}
       \item For regression squared error loss makes sense \pause
       \item For classification (discrete prediction) could use zero-one loss. \pause
-      \item Can also use log-likelihood/KL-divergence as a loss function\dots \pause
+      \item Can also use log-likelihood/KL-divergence as a loss function\dots 
     \end{itemize}
   \end{block}
 
@@ -215,7 +217,7 @@ From expansion on previous slide, we simply need to show that:
 \begin{frame}
   \frametitle{Overview of Proof}
 
-But by the definition of $\widehat{K}$ and the trace trick:
+By the definition of $\widehat{K}$ and the properties of the trace operator:
 \footnotesize
 \begin{eqnarray*}
 		-\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1} \widehat{K} \right\}
