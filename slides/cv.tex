@@ -206,7 +206,8 @@ From expansion on previous slide, we simply need to show that:
 
 \small
 \begin{align*}
-  \widehat{K}&= \frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)'
+  \widehat{K}&= \frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)' \\
+  \widehat{J} &= -\frac{1}{T}\sum_{t=1}^T \frac{\partial\log f(y_t|\widehat{\theta})}{\partial\theta \partial \theta'}
 \end{align*}
 \end{frame}
 
@@ -215,7 +216,7 @@ From expansion on previous slide, we simply need to show that:
   \frametitle{Overview of Proof}
 
 But by the definition of $\widehat{K}$ and the trace trick:
-\scriptsize
+\footnotesize
 \begin{eqnarray*}
 		-\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1} \widehat{K} \right\}
 		&=& -\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\ \pause
@@ -223,14 +224,75 @@ But by the definition of $\widehat{K}$ and the trace trick:
     &=& \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'} \left(-\frac{1}{T}\widehat{J}^{-1}\right)\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta} 
 \end{eqnarray*}
 
+\pause
 \normalsize
 So it suffices to show that
+\vspace{-1em}
 
 \[
-  \left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1}
+  \alert{\left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1} \left[\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right] + o_p(1)}
 \]
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Influence Functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Digression: Functionals and Influence Functions}
+
+  \begin{block}{(Statistical) Functional}
+    $\mathbb{T}=\mathbb{T}(G)$ maps a CDF $G$ to $\mathbb{R}^p$.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Example: ML Estimation}
+    \vspace{-2em}
+    \[\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]\]
+  \end{block}
+
+  \pause
+
+  \begin{block}{Influence Function}
+    Let $\delta_y$ be a \alert{point mass} at $y$: $\delta_y(y) = 1$, $\delta_y(y')=0$ for $y'\neq y$.
+    Influence function = functional derivative: how does a small change in $G$ affect $\mathbb{T}$?
+
+    \[\text{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left[\left(1-\epsilon\right)G + \epsilon \delta_y\right] - \mathbb{T}(G)}{\epsilon}\]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Back to the Proof\dots}
+ 
+
+  \begin{block}{Step 1}
+    The influence function for ML estimation turns out to be $\text{infl}(G,y) = J^{-1} \frac{\partial}{\partial \theta}\log f(y|\theta_0)$.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Step 2}
+    Let $\widehat{G}$ denote the empirical CDF based on $y_1, \dots, y_T$. Then:
+    \vspace{-1em}
+
+   \[
+     \left( \widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T} \text{infl}(\widehat{G}, y_t) + o_p(1)
+   \]
+  \end{block}
+
+  \pause
+
+  \vspace{-2em}
+
+  \begin{block}{Step 3}
+    Evaluating Step 1 at $\widehat{G}$ and substituting into Step 2
+
+    \vspace{-1em}
+
+\[
+  \alert{\left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1} \left[\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right] + o_p(1)}
+\]
+  \end{block}
+
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
