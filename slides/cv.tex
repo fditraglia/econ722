@@ -1,4 +1,4 @@
-\section{Cross-Validation}
+\section{Model selection via a Hold-out Sample}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Model Selection using a Hold-out Sample}
@@ -79,6 +79,8 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{K-fold Cross-validation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{$K$-fold Cross-Validation: ``Pseudo-out-of-sample''}
 
@@ -153,4 +155,82 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Asymptotic Equivalence Between LOO-CV and TIC}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Relationship between LOO-CV and TIC}
+  \begin{block}{Theorem}
+  LOO-CV using KL-divergence as the loss function is asymptotically equivalent to TIC but doesn't require us to estimate the Hessian and variance of the score. 
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Large-sample Equivalence of LOO-CV and TIC}
+  
+  \begin{block}{Notation and Assumptions}
+    For simplicity let $Y_1, \dots, Y_T \sim \text{iid}$.
+    Let $\widehat{\theta}_{(t)}$ be the maximum likelihood estimator based on all observations \alert{except $t$} and $\widehat{\theta}$ be the full-sample estimator.
+  \end{block}
+
+  \pause
+
+  \begin{block}{Log-likelihood as ``Loss''}
+    $\text{CV}_1 = \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})$ but since min.\ KL = max.\ log-like.\ we choose the model with \alert{highest} $\text{CV}_1(m)$.
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Overview of the Proof}
+    
+    First-Order Taylor Expansion of $\widehat{\theta}_{(t)}$ around $\widehat{\theta}$:
+
+    \vspace{-2em}
+
+	\begin{eqnarray*}
+		CV_1 &=& \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})\\ \pause
+			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\ \pause
+			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
+	\end{eqnarray*}
+
+  \alert{Crucial point: the first-order term is not zero in this case. (Why?)} 
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame} 
+  \frametitle{Overview of Proof}
+  
+From expansion on previous slide, we simply need to show that:
+\vspace{-1em}
+
+\[\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T}\mbox{tr}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)\]
+
+\small
+\begin{align*}
+  \widehat{K}&= \frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right)'
+\end{align*}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Overview of Proof}
+
+But by the definition of $\widehat{K}$ and the trace trick:
+\scriptsize
+\begin{eqnarray*}
+		-\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1} \widehat{K} \right\}
+		&=& -\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\ \pause
+    &=& \left[\frac{1}{T}\sum_{t=1}^T \mbox{tr}\left\{\frac{-\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right\}\right]\\ \pause
+    &=& \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'} \left(-\frac{1}{T}\widehat{J}^{-1}\right)\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta} 
+\end{eqnarray*}
+
+\normalsize
+So it suffices to show that
+
+\[
+  \left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1}
+\]
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Influence Functions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
