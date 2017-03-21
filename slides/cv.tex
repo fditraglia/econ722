@@ -1,0 +1,156 @@
+\section{Cross-Validation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Model Selection using a Hold-out Sample}
+
+  \begin{itemize}
+    \item The real problem is \alert{double} use of the data: first for estimation, then for model comparison. \pause
+      \begin{itemize}
+        \item Maximized sample log-likelihood is an overly optimistic estimate of expected log-likelihood and hence KL-divergence \pause
+        \item In-sample squared prediction error is an overly optimistic estimator of out-of-sample squared prediction error \pause
+      \end{itemize}
+  \item AIC/TIC, AIC$_c$, BIC, $C_p$ \alert{penalize} sample log-likelihood or RSS to compensate. \pause
+  \item Another idea: \alert{don't re-use the same data!}
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some tikz macros
+\tikzstyle{myline} = [draw, ->,  thick, shorten <=4pt, shorten >=4pt]
+\tikzstyle{myyellow} = [rectangle,rounded corners,draw=black, top color=white, bottom color=yellow!50,very thick, inner sep=1em, minimum size=3em, text centered, text width = 6em]
+\tikzstyle{myyellowsmall} = [rectangle,rounded corners,draw=black, top color=white, bottom color=yellow!50,very thick, inner sep=1em, minimum size=2em, text centered, text width = 3em]
+\tikzstyle{myblue} = [rectangle,rounded corners, draw=black, top color=white, bottom color=blue!18,very thick, inner sep=0.5em, minimum size=3em, text centered, text width = 7em, minimum height = 4.5em]
+\tikzstyle{mygreen} = [rectangle,rounded corners,draw=black, top color=white, bottom color=green!30,very thick, inner sep=1em, minimum size=3em, text centered, text width = 8em]
+\tikzstyle{myred} = [rectangle,rounded corners,draw=black, top color=white, bottom color=red!30,very thick, inner sep=1em, minimum size=3em, text centered, text width = 6em]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Hold-out Sample: Partition the Full Dataset}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[node distance=1cm]
+\node[myred] (full) {Full Dataset};
+\node[myyellow, below left =of full] (train) {Training Set};
+\node[myyellow, below right =of full] (test) {Test Set};
+\node[myblue, below =of train] (est) {Estimate models: $\widehat{\theta}_1, \dots, \widehat{\theta}_M$};
+\node[myblue, below =of test] (eval) {Evaluate fit of $\widehat{\theta}_1, \dots, \widehat{\theta}_M$ against Test Set};
+
+\path [myline] (full) -- (train);
+\path [myline] (full) -- (test);
+\path [myline] (train) -- (est);
+\path [myline] (est) -- (eval);
+\path [myline] (test) -- (eval);
+
+\end{tikzpicture}
+\end{figure}
+\alert{Unfortunately this is extremely wasteful of data\dots}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$K$-fold Cross-Validation: ``Pseudo-out-of-sample''}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.85, transform shape, node distance=1cm]
+\node[myred] (full) {Full Dataset};
+\node[myyellowsmall, below =of full] (fold2) {Fold 2};
+\node[myyellowsmall, left =of fold2] (fold1) {Fold 1};
+\node[myyellowsmall, right =of fold2] (foldK) {Fold $K$};
+
+\path [myline] (full) -- (fold1);
+\path [myline] (full) -- (fold2);
+\path [myline] (full) -- (foldK);
+\path (fold2) -- (foldK) node[pos=.5] (dots) {$\dots$};
+\end{tikzpicture}
+\end{figure}
+
+\vspace{-2em}
+
+  \begin{block}{Step 1}
+    Randomly partition full dataset into $K$ \alert{folds} of approx.\ equal size. 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Step 2}
+    Treat $k$\textsuperscript{th} fold as a hold-out sample and estimate model using all observations \alert{except} those in fold $k$: yielding estimator $\widehat{\theta}(-k)$.
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$K$-fold Cross-Validation: ``Pseudo-out-of-sample''}
+
+  \begin{block}{Step 2}
+    Treat $k$\textsuperscript{th} fold as a hold-out sample and estimate model using all observations \alert{except} those in fold $k$: yielding estimator $\widehat{\theta}(-k)$.
+  \end{block}
+
+  \pause
+  \begin{block}{Step 3}
+    Repeat Step 2 for each $k = 1, \dots, K$. 
+  \end{block}
+
+  \begin{block}{Step 4}
+    For each $t$ calculate the prediction $\widehat{y}_t^{-k(t)}$ of $y_t$ based on $\widehat{\theta}(-k(t))$, the estimator that excluded observation $t$. 
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$K$-fold Cross-Validation: ``Pseudo-out-of-sample''}
+
+  \begin{block}{Step 4}
+    For each $t$ calculate the prediction $\widehat{y}_t^{-k(t)}$ of $y_t$ based on $\widehat{\theta}(-k(t))$, the estimator that excluded observation $t$. 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Step 5}
+    Define $\text{CV}_K = \frac{1}{T}\sum_{t=1}^T L\left(y_t, \widehat{y}_t^{-k(t)}\right)$ where $L$ is a loss function. 
+  \end{block}
+
+  \pause
+
+  \begin{block}{Step 5}
+    Repeat for each model \& choose $m$ to minimize $\text{CV}_K(m)$.
+  \end{block}
+
+  \alert{CV uses each obs.\ for est.\ and evaluation but never at the same time!}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Cross-Validation (CV): Some Details}
+
+
+  \begin{block}{Which Loss Function?}
+  \small
+    \vspace{-1em}
+    \begin{itemize}
+      \item For regression squared error loss makes sense \pause
+      \item For classification (discrete prediction) could use zero-one loss. \pause
+      \item Can also use log-likelihood/KL-divergence as a loss function\dots \pause
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+    \vspace{-1em}
+
+  \begin{block}{How Many Folds?}
+    \small
+    \vspace{-1em}
+    \begin{itemize}
+      \item One extreme: $K=2$. Closest to Training/Test idea. \pause
+      \item Other extreme: $K=T$ \alert{Leave-one-out} CV (LOO-CV). \pause
+      \item Computationally expensive model $\Rightarrow$ may prefer fewer folds. \pause
+      \item If your model is a linear smoother there's a computational trick that makes LOO-CV extremely fast. (Problem Set) \pause
+      \item Asymptotic properties are related to $K$\dots
+    \end{itemize}
+    
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
