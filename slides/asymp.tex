@@ -1,0 +1,120 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{AIC versus BIC in a Simple Example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Consistency versus Efficiency in a Simple Example}
+
+  \begin{block}{Information Criteria}
+    Consider criteria of the form $\text{IC}_m = 2\ell(\theta) - d_T \times \text{length}(\theta)$.
+  \end{block}
+  
+  
+  \begin{block}{True DGP}
+  $Y_{1}, \dots, Y_T \sim \mbox{iid N}(\mu, 1)$
+  \end{block}
+
+  \pause
+
+  \begin{block}{Candidate Models}
+    $\text{M}_0$ assumes $\mu = 0$, $\text{M}_1$ does not restrict $\mu$. Only one parameter:
+
+    \vspace{-1em}
+  \begin{align*}
+    \text{IC}_0 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_0 \right\} \\ 
+    \text{IC}_1 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_1 \right\} - d_T
+  \end{align*}
+  \end{block}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function}
+
+  Since $\; \alert{\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2}$,
+
+\begin{eqnarray*}
+	\ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{2\pi} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\
+  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{1}{2} \sum_{t=1}^{T} (Y_t - \mu)^2\\
+  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{T}{2} \widehat{\sigma}^2 - \frac{T}{2}(\bar{Y} - \mu)^2\\
+  &=& \text{Constant} - \frac{T}{2}(\bar{Y} - \mu)^2
+\end{eqnarray*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Side Calculation: \normalsize $\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2$}
+
+\scriptsize
+\begin{eqnarray*}
+  T\widehat{\sigma}^2 &=& \sum_{t=1}^T \left(Y_t - \bar{Y}\right)^2 = \sum_{t=1}^T \left(Y_t - \mu + \mu - \bar{Y}\right)^2 = \sum_{t=1}^T \left[(Y_t -\mu) - (\bar{Y} - \mu)\right]^2\\
+		&=&\sum_{t=1}^T (Y_t -\mu)^2 - \sum_{t=1}^T 2(Y_t -\mu)(\bar{Y} - \mu) + \sum_{t=1}^T (\bar{Y} - \mu)^2\\
+				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu) \left( \sum_{t=1}^T Y_t- \sum_{t=1}^T \mu \right)+T(\bar{Y} - \mu)^2\\
+				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu)(T\bar{Y}-T\mu)+T(\bar{Y} - \mu)^2\\
+				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2T(\bar{Y} - \mu)^2+T(\bar{Y} - \mu)^2\\
+				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - T(\bar{Y} - \mu)^2
+\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Selected Model $\widehat{\text{M}}$}
+
+  \begin{block}{Information Criteria}
+  M$_0$ sets $\mu=0$ while M$_1$ uses the MLE $\bar{Y}$, so we have
+  \vspace{1em}
+  \begin{align*}
+    \text{IC}_0 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_0 \right\} = 2 \times \text{Constant} - T\bar{Y}^2\\ 
+    \text{IC}_1 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_1 \right\} = 2 \times \text{Constant} - d_T\\ 
+  \end{align*}
+\end{block}
+
+\vspace{-2em}
+
+  \begin{block}{Difference of Criteria}
+    \vspace{-1em}
+  \[
+    \text{IC}_1 - \text{IC}_0 = T \bar{Y}^2 - d_T
+  \]
+\end{block}
+
+\vspace{-1em}
+
+  \begin{block}{Selected Model}
+    \vspace{-1em}
+   \[
+     \widehat{\text{M}} = \left\{
+       \begin{array}{cc}
+         \text{M}_1, & |\sqrt{T} \bar{Y}| \geq \sqrt{d_T}\\
+         \text{M}_0, & |\sqrt{T} \bar{Y}| \leq \sqrt{d_T}
+       \end{array}
+       \right.
+   \]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Case I: $\mu \neq 0$}
+  \framesubtitle{Apply theory from earlier in lecture\dots}
+
+  \begin{block}{KL-Divergence of $\text{M}_1$}
+    $\text{M}_1$ is the true DGP with minimized KL-divergence equal to zero.
+  \end{block}
+
+  \begin{block}{KL-Divergence of $\text{M}_0$}
+    \begin{itemize}
+      \item Truth: $g(y) = (2\pi)^{-1/2}\exp\left\{ -(y-\mu)^2/2 \right\}$ 
+      \item $\text{M}_0$: $f(y) = (2\pi)^{-1/2}\exp\left\{ -y^2/2\right\}$ 
+      \item Hence: $\log g(y) - \log f(y) = -\frac{1}{2}(y-\mu)^2 + \frac{1}{2}y^2
+          = \mu \left(y - \frac{\mu}{2}\right)$
+    \end{itemize}
+
+    \vspace{-1em}
+          \begin{align*}
+          \text{KL}(g;\text{M}_0) &= \int_{\mathbb{R}}\mu(y - \mu/2) (2\pi)^{-1/2}\exp\left\{ (y-\mu)^2/2 \right\}\; \text{d}y \\
+          &= \mu(\mu - \mu/2) = \mu^2 /2
+        \end{align*}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
