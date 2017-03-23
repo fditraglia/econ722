@@ -159,3 +159,72 @@
   \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Finite-Sample Selection Probabilities: AIC}
+  \begin{block}{AIC Sets $d_T = 2$}
+
+
+	$$\widehat{M}_{AIC} = \left\{\begin{array}
+		{cc} M_1, &|\sqrt{T}\bar{Y}| \geq \sqrt{2} \\
+		M_0, & |\sqrt{T} \bar{Y}| < \sqrt{2}
+	\end{array} \right.$$
+  \end{block}
+
+  \vspace{-2em}
+
+    \footnotesize
+	\begin{eqnarray*}
+		P\left(\widehat{M}_{AIC} = M_1\right) &=& P\left(\left|\sqrt{T}\bar{Y} \right| \geq \sqrt{2}  \right)\\
+		&=& P\left(\left|\sqrt{T}\mu + Z\right| \geq \sqrt{2}  \right)\\
+		&=& P\left(\sqrt{T}\mu + Z \leq -\sqrt{2}\right) + \left[1 - P\left(\sqrt{T} \mu +Z \leq \sqrt{2}\right) \right]\\
+			&=& \Phi\left(-\sqrt{2} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{2} - \sqrt{T} \mu \right)\right]
+	\end{eqnarray*}
+
+  \normalsize
+where $Z \sim N(0,1)$ since $\bar{Y} \sim N(\mu, 1/T)$ because $Var(Y_t)=1$.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Finite-Sample Selection Probabilities: BIC}
+
+  \begin{block}{BIC sets $d_T = \log(T)$}
+	$$\widehat{M}_{BIC} = \left\{\begin{array}
+		{cc} M_1, & |\sqrt{T}\bar{Y} | \geq \sqrt{\log(T)} \\
+		M_0, & |\sqrt{T} \bar{Y}| < \sqrt{\log(T)}
+	\end{array} \right.$$
+  \end{block}
+Same steps as for the AIC except with $\sqrt{\log(T)}$ in the place of $\sqrt{2}$:
+\footnotesize
+	\begin{eqnarray*}
+		P\left(\widehat{M}_{BIC} = M_1\right) &=& P\left(\left|\sqrt{T}\bar{Y} \right| \geq \sqrt{\log(T)}  \right)\\
+			&=& \Phi\left(-\sqrt{\log(T)} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{\log(T)} - \sqrt{T} \mu \right)\right]
+	\end{eqnarray*}
+
+  \begin{block}{Interactive Demo: AIC vs BIC}
+
+\url{https://fditraglia.shinyapps.io/CH\_Figure\_4\_1/}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Probability of Over-fitting}
+
+  \small
+
+  \begin{itemize}
+    \item If $\mu = 0$ both models are true but $M_0$ is more parsimonious. 
+    \item Probability of over-fitting ($Z$ denotes standard normal): 
+\begin{eqnarray*}
+	P\left(\widehat{M} = M_1\right) &=& P\left(|\sqrt{T}\bar{Y}|\geq \sqrt{d_T}\right) = P(|Z|\geq \sqrt{d_T})\\
+	 &=& P(Z^2 \geq d_T) = P(\chi^2_1 \geq d_T)
+\end{eqnarray*}
+\item AIC: $d_T = 2$ and $P(\chi^2_1 \geq 2)\approx 0.157$.  
+\item BIC: $d_T = \log(T)$ and $P(\chi^2_1 \geq \log T) \rightarrow 0$ as $T\rightarrow 0$.
+  \end{itemize}
+
+  \alert{AIC has $\approx$ 16\% prob.\ of over-fitting; BIC does not over-fit in the limit.}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
