@@ -56,7 +56,7 @@
 \begin{frame}
   \frametitle{Both AIC and BIC are Weakly Consistent}
   
-AIC and BIC are Weakly Consistent: both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
+Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 	\begin{eqnarray*}
 		\mbox{BIC Penalty:}&& c_{T,k} = \log(T) \times \mbox{length}(\theta_k)\\
 		\mbox{AIC Penalty:} && c_{T,k} = 2\times \mbox{length}(\theta_k)
@@ -66,22 +66,84 @@ AIC and BIC are Weakly Consistent: both satisfy $T^{-1}c_{T,k} \overset{p}{\righ
 \section{Consistency}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Consistency}
+  \frametitle{Consistency: No Unique KL-minimizer}
+
+  \begin{block}{Example}
+    If the truth is an AR(5) model then AR(6), AR(7), AR(8), etc.\  models \alert{all have zero KL-divergence}. 
+  \end{block}
+
+  \begin{block}{Principle of Parsimony}
+    Among the KL-minimizers, choose the \alert{simplest model}, i.e.\ the one with the fewest parameters.
+  \end{block}
+
+  \begin{block}{Notation}
+  $\mathcal{J} = $ be the set of all models that attain minimum KL-divergence\\
+  $\mathcal{J}_0= $ subset with the minimum number of parameters. 
+  \end{block}
+ 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Sufficient Conditions for Consistency -- (A)}
+%
+%  \begin{block}{Consistency: Select Model from $\mathcal{J}_0$ wpa 1}
+%    $$\lim_{T\rightarrow \infty}\mathbb{P}\left\{ \underset{\ell \in \mathcal{J}\backslash \mathcal{J}_0}{\min} \left[ IC(M_{j_0}) - IC(M_\ell)\right] > 0 \right\} = 1$$
+%  \end{block}
+% 
+%  \begin{block}{Sufficient Conditions (A)}
+%			\begin{enumerate}[(i)]
+%				\item For all $k \neq \ell \in \mathcal{J}$ 
+%					$$\underset{T\rightarrow \infty}{\lim\sup} \frac{1}{\sqrt{T}} \sum_{t=1}^T\left\{ KL(g; f_{k,t}) - KL(g;f_{\ell,t}) \right\}<\infty$$
+%				\item For all $j_0 \in \mathcal{J}_0$ and $\ell \in (\mathcal J \backslash \mathcal{J}_0)$
+%					$$P\left\{\left(c_{T,\ell} - c_{T,j_0} \right)/\sqrt{T} \rightarrow \infty \right\}= 1$$
+%			\end{enumerate}
+%\end{block}
+%  
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Sufficient Conditions for Consistency}
+
+  \begin{block}{Consistency: Select Model from $\mathcal{J}_0$ wpa 1}
+    $$\lim_{T\rightarrow \infty}\mathbb{P}\left\{ \underset{\ell \in \mathcal{J}\backslash \mathcal{J}_0}{\min} \left[ IC(M_{j_0}) - IC(M_\ell)\right] > 0 \right\} = 1$$
+  \end{block}
+ 
+  \begin{block}{Sufficient Conditions}
+			\begin{enumerate}[(i)]
+				\item For all $k \neq \ell \in \mathcal{J}$ 
+					$$\sum_{t=1}^T \left[\log f_{k,t}(Y_t|\theta^*_k) - \log f_{\ell,t}(Y_t|\theta^*_\ell) \right] = O_p(1)$$
+				where $\theta^*_k$ and $\theta^*_\ell$ are the KL minimizing parameter values.
+				\item For all $j_0 \in \mathcal{J}_0$ and $\ell \in (\mathcal J \backslash \mathcal{J}_0)$
+					$$P\left(c_{T,\ell} - c_{T,j_0} \rightarrow \infty \right) = 1$$
+			\end{enumerate}
+\end{block}
   
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{BIC is Consistent; AIC and TIC Are Not}
+
+  \begin{itemize}
+    \item AIC and TIC \emph{cannot} satisfy (ii) since $(c_{T,\ell} - c_{T,j_0})$ \emph{does not depend on sample size}.
+    \item  It turns out that AIC and TIC are \emph{not} consistent. 
+    \item BIC is consistent:
+	$$c_{T,\ell} - c_{T,j_0} = \log(T) \left\{\mbox{length}(\theta_\ell) - \mbox{length}(\theta_{j_0}) \right\}$$
+  \item Term in braces is \emph{positive} since $\ell \in\mathcal{J}\backslash \mathcal{J}_0$, i.e.\ $\ell$ is not as parsimonious as $j_0$
+  \item $\log(T) \rightarrow \infty$, so BIC always selects a model in $\mathcal{J}_0$ in the limit.
+  \end{itemize}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frametitle{Efficiency}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Efficiency}
-  
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
+  \begin{itemize}
+    \item Roughly speaking, a model selection criterion is called efficient if it performs ``nearly as well'' as the theoretical optimum relative to some loss function. 
+    \item More broadly, an efficient/conservative criterion is one that has ``good risk properties.''
+    \item We don't have time to go into detail, so we'll look at a particular example\dots
+  \end{itemize}
+
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
