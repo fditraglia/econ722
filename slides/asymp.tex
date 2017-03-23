@@ -226,7 +226,7 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
   \vspace{1em}
   \begin{align*}
     \text{IC}_0 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_0 \right\} = 2 \times \text{Constant} - T\bar{Y}^2\\ 
-    \text{IC}_1 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_1 \right\} = 2 \times \text{Constant} - d_T\\ 
+    \text{IC}_1 &= 2 \max_\mu \left\{ \ell(\mu) \colon \text{M}_1 \right\} - d_T = 2 \times \text{Constant} - d_T\\ 
   \end{align*}
 \end{block}
 
@@ -251,7 +251,7 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
      \widehat{\text{M}} = \left\{
        \begin{array}{cc}
          \text{M}_1, & |\sqrt{T} \bar{Y}| \geq \sqrt{d_T}\\
-         \text{M}_0, & |\sqrt{T} \bar{Y}| \leq \sqrt{d_T}
+         \text{M}_0, & |\sqrt{T} \bar{Y}| < \sqrt{d_T}
        \end{array}
        \right.
    \]
@@ -396,7 +396,7 @@ Same steps as for the AIC except with $\sqrt{\log(T)}$ in the place of $\sqrt{2}
 	 &=& P(Z^2 \geq d_T) = P(\chi^2_1 \geq d_T)
 \end{eqnarray*}\pause
 \item AIC: $d_T = 2$ and $P(\chi^2_1 \geq 2)\approx 0.157$.  \pause
-\item BIC: $d_T = \log(T)$ and $P(\chi^2_1 \geq \log T) \rightarrow 0$ as $T\rightarrow 0$.
+\item BIC: $d_T = \log(T)$ and $P(\chi^2_1 \geq \log T) \rightarrow 0$ as $T\rightarrow \infty$.
   \end{itemize}
 
   \alert{AIC has $\approx$ 16\% prob.\ of over-fitting; BIC does not over-fit in the limit.}
