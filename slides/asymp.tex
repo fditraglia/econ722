@@ -36,8 +36,31 @@
 \section{Weak Consistency}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Weak Consistency}
+  \frametitle{Weak Consistency: Suppose $\text{M}_{k_0}$ Uniquely Minimizes KL}
   
+  \begin{block}{Assumption}
+
+    \vspace{-1em}
+	$$\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) > 0$$
+  \end{block}
+
+  \begin{block}{Consequences}
+    \begin{itemize}
+      \item Any criterion with $c_{T,k}> 0$ and $c_{T,k} = o_p(T)$ is weakly consistent: \alert{selects $\text{M}_{k_0}$ wpa 1 in the limit}.
+      \item Weak consistency still holds if $c_{T,k}$ is zero for one of the models, so long as it is strictly positive for all the others.
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Both AIC and BIC are Weakly Consistent}
+  
+AIC and BIC are Weakly Consistent: both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
+	\begin{eqnarray*}
+		\mbox{BIC Penalty:}&& c_{T,k} = \log(T) \times \mbox{length}(\theta_k)\\
+		\mbox{AIC Penalty:} && c_{T,k} = 2\times \mbox{length}(\theta_k)
+	\end{eqnarray*}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Consistency}
