@@ -224,7 +224,47 @@ Same steps as for the AIC except with $\sqrt{\log(T)}$ in the place of $\sqrt{2}
 
   \alert{AIC has $\approx$ 16\% prob.\ of over-fitting; BIC does not over-fit in the limit.}
 
-
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Risk of the Post-Selection Estimator}
+  \begin{block}{The Post-Selection Estimator}
+	$$\widehat{\mu}=\left\{\begin{array}
+		{cc} \bar{Y}, & |\sqrt{T}\bar{Y} | \geq \sqrt{d_T} \\
+		0, & |\sqrt{T}\bar{Y} | < \sqrt{d_T}
+		\end{array}\right.$$
+  \end{block}
+
+  \vspace{-2em}
+
+  \begin{block}{Recall from above}
+Recall from above that $\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$
+  \end{block}
+  \begin{block}{Risk Function}
+MSE risk times $T$ since Var.\ of well-behaved estimator $ = O(1/T)$
+
+\[
+  R_T(\mu) = T \cdot \mathbb{E}\left[\left( \widehat{\mu} - \mu\right)^2\right] = \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] 
+\]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simplifying the MSE Risk Function}
+  \framesubtitle{$\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$}
+
+  \footnotesize
+
+  Let $X = \mathbf{1}\left\{ A \right\}$ where $A = \left\{|\sqrt{T}\mu + Z|\geq \sqrt{d_T}  \right\}$
+  \begin{eqnarray*}
+  R_T(\mu) &=& \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] \\
+  &=& \mathbb{E}\left\{ \left[ \left( \sqrt{T}\mu + Z \right)X - \sqrt{T}\mu \right]^2 \right\}\\
+  &=& \mathbb{P}(A)\; \mathbb{E}\left\{ \left.\left[ \left(\sqrt{T}\mu + Z\right) - \sqrt{T}\mu\right]^2\right| X = 1 \right\} + \left[ 1 - \mathbb{P}(A) \right]\left( \sqrt{T}\mu \right)^2\\
+  &=& \mathbb{P}(A)\; \mathbb{E}
+  \left[ Z^2 |X = 1 \right] + \left[ 1 - \mathbb{P}(A) \right]T\mu^2
+\end{eqnarray*}
+
+\alert{So we need to calculate $\mathbb{E}[Z^2|X=1]$ and $\mathbb{P}(A)$.}
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
