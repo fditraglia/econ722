@@ -265,6 +265,79 @@ MSE risk times $T$ since Var.\ of well-behaved estimator $ = O(1/T)$
   \left[ Z^2 |X = 1 \right] + \left[ 1 - \mathbb{P}(A) \right]T\mu^2
 \end{eqnarray*}
 
-\alert{So we need to calculate $\mathbb{E}[Z^2|X=1]$ and $\mathbb{P}(A)$.}
+\alert{So we need to calculate $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ and $\mathbb{P}(A)$.}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating $\mathbb{P}(A)$}
+  Define $a = (-\sqrt{d_T} - \sqrt{T}\mu)$ and $b = (\sqrt{d_T} - \sqrt{T}\mu)$ 
+
+  \begin{eqnarray*}
+    \mathbb{P}(A) &=& \mathbb{P}\left( |\sqrt{T}\mu + Z| \geq \sqrt{d_T} \right) \\
+    &=& \mathbb{P}\left( \sqrt{T}\mu + Z \geq \sqrt{d_T} \right) + \mathbb{P}\left( \sqrt{T}\mu + Z \leq -\sqrt{d_T} \right) \\
+    &=& \mathbb{P}(Z\geq b) + \mathbb{P}(Z \leq a)\\
+    &=& 1 - \Phi(b) + \Phi(a)
+  \end{eqnarray*}
+
+  And hence:
+  \[
+    1 - \mathbb{P}(A) = \Phi(b) - \Phi(a)
+  \]
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 1}
+  \begin{block}{Conditional Density of $Z|X=1$}
+    \vspace{-1em}
+    \[f(z|x=1) = \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \quad \text{where } \varphi \text{ is the } N(0,1) \text{ density} \]
+  \end{block}
+
+  \begin{block}{Therefore:}
+    \begin{eqnarray*}
+      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=& \mathbb{P}(A) \int_{\mathbb{R}} z^2 \left[ \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \right]\; \text{d}z\\ 
+       &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\ 
+    \end{eqnarray*}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ -- Step 2}
+  \begin{block}{Unconditional Expectation: $\mathbb{E}[Z^2]$}
+    \[
+      1 = \mathbb{E}[Z^2]  = 
+      \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z +
+      \int_{a}^b z^2 \varphi(z)\; \text{d}z +
+      \int_{b}^\infty z^2 \varphi(z)\; \text{d}z
+    \]
+  \end{block}
+
+  \begin{block}{Therefore:}
+    \begin{eqnarray*}
+      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\ 
+       &=& 1 - \int_a^b z^2 \varphi(z)\; \text{d}z
+    \end{eqnarray*}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 3}
+
+  \vspace{1em}
+
+  \begin{block}{Integration By Parts (or Stein's Lemma)}
+  \small 
+Take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
+
+	$$\frac{d}{dz} \left(\exp\left\{-z^2/2\right\}\right) = -z\exp\left\{-z^2/2\right\}$$
+
+  \vspace{0.5em}
+
+Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and 
+\begin{eqnarray*}
+  \int_a^b z^2 \phi(z) \; dz &=& \left( 2\pi \right)^{-1/2} \int_a^b z^2 \exp\left\{-z^2/2 \; \right\} \;\text{d}z\\
+  &=& \left( 2\pi \right)^{-1/2}\left[-z \exp\left\{ \left.-z^2/2\right\}\right|_a^b+ \int_a^b \exp\left\{-\frac{z^2}{2}\right\}  \; dz \right]\\
+		&=& a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a)
+\end{eqnarray*}
+  \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
