@@ -324,7 +324,7 @@ MSE risk times $T$ since Var.\ of well-behaved estimator $ = O(1/T)$
 
   \vspace{1em}
 
-  \begin{block}{Integration By Parts (or Stein's Lemma)}
+  \begin{block}{Integration By Parts}
   \small 
 Take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
 
@@ -339,5 +339,32 @@ Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and
 		&=& a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a)
 \end{eqnarray*}
   \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Simplifed MSE Risk Function}
+	\begin{eqnarray*}
+		R_T(\mu) &=& 1 - \left[a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a) \right] + T\mu^2 \left[\Phi(b) - \Phi(a) \right]\\
+		&=&1 + \left[b\phi(b) - a\phi(a)\right]  + (T\mu^2 - 1) \left[\Phi(b) - \Phi(a) \right] 
+	\end{eqnarray*}
+where
+	\begin{eqnarray*}
+		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
+		b &=& \sqrt{d_T} - \sqrt{T}\mu
+	\end{eqnarray*}
+
+\url{https://fditraglia.shinyapps.io/CH\_Figure\_4\_2/}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Punchline: Risk of the Post-Selection Estimator}
+
+  \begin{itemize}
+    \item AIC: bounded worst-case risk
+    \item BIC: low risk in a neighborhood of $\mu=0$ in exhange for \alert{unbounded} worst-case risk as sample size grows
+    \item General phenomenon: consistency and efficiency are mutually exclusive: consistent criteria have unbounded worst-case risk.
+    \item For more details, see Yang (2007, ET)
+  \end{itemize}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
