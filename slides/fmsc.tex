@@ -1,0 +1,704 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some tikz macros
+\tikzstyle{myline} = [draw, ->,  thick, shorten <=4pt, shorten >=4pt]
+\tikzstyle{input} = [rectangle,rounded corners,draw=black, top color=white, bottom color=yellow!50,very thick, inner sep=1em, minimum size=3em, text centered, text width = 6em]
+\tikzstyle{process} = [rectangle,rounded corners, draw=black, top color=white, bottom color=blue!18,very thick, inner sep=0.5em, minimum size=3em, text centered, text width = 7em, minimum height = 4.5em]
+\tikzstyle{output} = [rectangle,rounded corners,draw=black, top color=white, bottom color=green!30,very thick, inner sep=1em, minimum size=3em, text centered, text width = 8em]
+\tikzstyle{danger} = [rectangle,rounded corners,draw=black, top color=white, bottom color=red!30,very thick, inner sep=1em, minimum size=3em, text centered, text width = 6em]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{DiTraglia (2016, JoE)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]
+\frametitle{Focused Moment Selection Criterion (FMSC)}
+%FMSC -- Focused Moment Selection for GMM. 
+%Econometric Model: tool for answering research question - data plus assumptions.
+%Research question encapsulated in target/focus parameter mu
+%Assume you have some additional assumptions that you're considering. You think they may be plausible and the question is whether to use them.
+
+%Typically many assumptions we could make. Some are more plausible than others. 
+%Which to use in estimation?
+
+\vspace{-1em}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[node distance=1cm]
+\node[danger] (additional) {Additional Assumptions?};
+\node[input, left=of additional] (baseline) {Baseline Assumptions};
+\node[input, right=of additional] (data) {Data};
+\node[output, below=of additional](target) {Estimation \& Inference for $\mu$};
+
+\path [myline] (baseline) -- (target);
+\path [myline] (data) -- (target);
+\path [myline] (additional) -- (target);
+
+\end{tikzpicture}
+\end{figure}
+
+\begin{enumerate}
+	\item Choose False Assumptions on Purpose
+			%$MSE(\widehat{\mu})$ -- not correct specification
+			%Trade Bias Against Variance
+	\item Focused Choice of Assumptions
+			%Depends on Choice of $\mu$ which is a USER SPECIFIED parameter
+			%Different mu gives different criterion
+	\item Local mis-specification
+		%Keep AMSE tradeoff in limit
+		%NOT Doing consistent selection! 
+	\item Averaging, Inference post-selection
+		%This is the reason to work with local mis-specification: get a richer, more accurate limiting theory
+\end{enumerate}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+
+\frametitle{GMM Framework}
+
+\footnotesize
+\begin{tikzpicture}[node distance=1cm]
+
+\node[input] (baseline) {Baseline Assumptions};
+\node[process, right=of baseline] (MCs) {$E[g(Z,\theta)]=0$};
+\node[process, right=of MCs] (GMM) {$\widehat{\theta}$};
+\node[input, above=of GMM] (data) {Data};
+\node[output, below=of GMM] (target) {Estimation \& Inference for $\mu = \mu(\theta)$};
+
+\path [myline] (baseline) -- (MCs);
+\path [myline] (MCs) -- (GMM);
+\path [myline] (data) -- (GMM);
+\path [myline] (GMM) -- (target);
+
+\end{tikzpicture}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[fragile]
+%Emphasize that this results in a new estimator
+
+%Lower variance, but adds bias if incorrect.
+
+\frametitle{Adding Moment Conditions}
+
+\footnotesize
+\begin{tikzpicture}[node distance=1cm]
+
+\node[input] (baseline) {Baseline Assumptions};
+\node[process, right=of baseline] (MCs) {$E[g(Z,\theta)]=0$ $\alert{E[h(Z,\theta)]=0}$};
+\node[process, right=of MCs] (GMM) {$\alert{\widetilde{\theta}}$};
+\node[danger, below=of baseline] (moreMCs) {Additional Assumption};
+\node[input, above=of GMM] (data) {Data};
+\node[output, below=of GMM] (target) {Estimation \& Inference for $\mu = \mu(\theta)$};
+
+\path [myline] (baseline) -- (MCs);
+\path [myline] (MCs) -- (GMM);
+\path [myline] (data) -- (GMM);
+\path [myline] (GMM) -- (target);
+\path [myline] (moreMCs) -- (MCs);
+\end{tikzpicture}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Ordinary versus Two-Stage Least Squares}
+
+%Here it's a choice of either or with the MCs
+
+	\begin{eqnarray*}
+	y_{i} &=& \beta x_{i}  + \epsilon_{i}\\
+	x_{i} &=& \mathbf{z}_{i}' \boldsymbol{\pi} + v_{i}
+	\end{eqnarray*}
+
+	\begin{eqnarray*}
+	E[\mathbf{z}_i \epsilon_i] &=& 0\\
+	\alert{E[x_i \epsilon_i]} &\alert{=}& \alert{\mbox{?}}
+	\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+%Here the question is whether to *add* moment conditions
+	\frametitle{Choosing Instrumental Variables}
+
+		\begin{eqnarray*}
+    		y_i &=& \beta x_i +  \epsilon_i\\
+    		x_i &=&  \Pi_1' \mathbf{z}_{i}^{(1)} + \Pi_2'\mathbf{z}_{i}^{(2)} + v_i
+		\end{eqnarray*}
+
+		\begin{eqnarray*}
+			E[\mathbf{z}_{i}^{(1)}\epsilon_i] &=& 0\\
+			\alert{E[\mathbf{z}_{i}^{(2)}\epsilon_i]} &\alert{=}& \alert{\mbox{?}}
+		\end{eqnarray*}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{FMSC Asymptotics -- Local Mis-Specification}
+%Want to allow for possibility that the additional moment conditions are correct without assuming it.
+%Want to get a bias-variance tradeoff in the limit distributions
+%Want a richer and more accurate asymptotic theory for dealing with issue of model selection
+
+%Convert the additional moment assumption into local version.
+%Triangular array asymptotics
+%Unless tau is zero, bias in finite samples, but disappears in the limit.
+\footnotesize
+\begin{tikzpicture}[node distance=1cm]
+	
+\node[input] (baseline) {Baseline Assumptions};
+\node[process, right=of baseline] (MCs) {$E[g(\alert{Z_{ni}},\theta)] = 0$\\ $E[h(\alert{Z_{ni}},\theta)] = \alert{\tau_n}$};
+\node[process, right=of MCs] (GMM) {Choice of MCs};
+\node[input, above=of GMM] (data) {Data};
+\node[input, below=of baseline] (moreMCs) {$\tau_n = \displaystyle \frac{\tau}{\sqrt{n}}$};
+\node[output, below=of GMM] (target) {AMSE for Estimator of $\mu = \mu(\theta)$};
+
+\path [myline] (baseline) -- (MCs);
+\path [myline] (MCs) -- (GMM);
+\path [myline] (data) -- (GMM);
+\path [myline] (GMM) -- (target);
+\path [myline] (moreMCs) -- (MCs);
+
+\end{tikzpicture}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+	\frametitle{Local Mis-Specification for OLS versus TSLS}
+
+%Here it's a choice of either or with the MCs
+
+	\begin{eqnarray*}
+	y_{i} &=& \beta x_{i}  + \epsilon_{i}\\
+	x_{i} &=& \mathbf{z}_{i}' \boldsymbol{\pi} + v_{i}
+	\end{eqnarray*}
+
+	\begin{eqnarray*}
+	E[\mathbf{z}_i \epsilon_i] &=& 0\\
+	\alert{E[x_i \epsilon_i]} &\alert{=}& \alert{\tau/\sqrt{n}}
+	\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+%Here the question is whether to *add* moment conditions
+	\frametitle{Local Mis-Specification for Choosing IVs}
+
+		\begin{eqnarray*}
+    		y_i &=& \beta x_i +  \epsilon_i\\
+    		x_i &=&  \Pi_1' \mathbf{z}_{i}^{(1)} + \Pi_2'\mathbf{z}_{i}^{(2)} + v_i
+		\end{eqnarray*}
+
+		\begin{eqnarray*}
+			E[\mathbf{z}_{i}^{(1)}\epsilon_i] &=& 0\\
+			\alert{E[\mathbf{z}_{i}^{(1)}\epsilon_i]} &\alert{=}& \alert{\tau/\sqrt{n}}
+		\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Local Mis-Specification}
+Triangular Array $\{Z_{ni}\colon 1\leq i \leq n, n =1, 2, \hdots\}$  with
+	\begin{enumerate}[(a)]
+		\item $E[g(Z_{ni},\theta_0)] = 0$
+		\item $E[h(Z_{ni},\theta_0)] = n^{-1/2}\tau$
+		\item $\{f(Z_{ni},\theta_0)\colon 1\leq i \leq n, n = 1, 2, \hdots\}$ uniformly integrable
+		\item $Z_{ni} \rightarrow_d Z_i$, where the $Z_i$ are identically distributed.
+	\end{enumerate}
+
+	\alert{Shorthand: Write $Z$ for $Z_i$}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Candidate GMM Estimator}
+
+	\alert{\[\widehat{\theta}_S = \underset{\theta \in \Theta}{\mbox{arg min}}\; \left[\Xi_S f_n(\theta)\right]' \widetilde{W}_S \; \left[ \Xi_S f_n(\theta)\right]\]}
+
+\begin{eqnarray*}
+	\Xi_S &=& \mbox{Selection Matrix (ones and zeros)}\\
+	\widetilde{W}_S &=& \mbox{Weight Matrix (p.s.d.)}\\
+	f_n(\theta) &=& \left[\begin{array}{c} g_n(\theta)\\ h_n(\theta) \end{array} \right]=\left[\begin{array}{c}n^{-1}\sum_{i=1}^n g(Z_{ni},\theta) \\ n^{-1}\sum_{i=1}^n h(Z_{ni},\theta) \end{array}\right]
+\end{eqnarray*}		
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Notation: Limit Quantities}
+
+	\[G = E\left[\nabla_{\theta} \; g(Z,\theta_0)\right], \quad H = E\left[\nabla_{\theta} \; h(Z,\theta_0)\right], \quad F = \left[ \begin{array}{c} G \\ H \end{array} \right]  \]
+
+	\[\Omega = Var\left[ f(Z,\theta_0) \right] = \left[\begin{array} {cc} \Omega_{gg} & \Omega_{gh}\\ \Omega_{hg}&\Omega_{hh}\end{array} \right]  \]
+
+	\[
+	\widetilde{W}_S \rightarrow_p W_S \; \mbox{(p.d.)}
+	\]
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Local Mis-Specification + Standard Regularity Conditions}
+
+\alert{Every candidate estimator} is consistent for $\theta_0$ and
+
+$$\sqrt{n}(\widehat{\theta}_S - \theta_0 ) \rightarrow_d -K_S \Xi_S  \left(\left[\begin{array}
+	{c} M_g \\ M_h
+\end{array} \right]  + \left[\begin{array}
+	{c} 0 \\ \tau
+\end{array} \right]\right)$$
+
+\begin{eqnarray*}
+	K_S &=&[F_S'W_SF_S]^{-1} F_S'W_S\\
+	M&=&(M_g', M_h')'\\
+	M&\sim&N(0,\Omega)
+\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Scalar Target Parameter $\mu$}
+\begin{eqnarray*}
+	\mu &=& \mu(\theta) \quad \mbox{ \alert{Z-a.s.\ continuous function}}\\
+	\mu_0 &=& \mu(\theta_0) \quad \mbox{\alert{true value}}\\
+	\widehat{\mu} &=& \mu(\widehat{\theta}_S) \quad \mbox{\alert{estimator}}
+\end{eqnarray*}
+
+\begin{block}
+	{Delta Method}
+$$\sqrt{n}\left(\widehat{\mu}_S - \mu_0\right)\rightarrow_d-\nabla_\theta\mu(\theta_0)'K_S \Xi_S \left(M +  \left[\begin{array}
+	{c} 0 \\ \tau
+\end{array} \right]\right)$$ 
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{FMSC: Estimate $\mbox{AMSE}(\widehat{\mu}_S)$ and minimize over $S$}
+
+	$$\mbox{AMSE}\left(\widehat{\mu}_S\right) = \nabla_\theta\mu(\theta_0)'K_S \Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\tau\tau'\end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)$$
+	
+	\begin{block}{Estimating the unknowns}
+	No consistent estimator of $\tau$ exists! (But everything else is easy)
+	\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+\frametitle{A Plug-in Estimator of $\tau$}
+
+
+\footnotesize
+\begin{tikzpicture}[node distance=1cm]
+
+\node[input] (baseline) {Baseline Assumptions};
+\node[process, right=of baseline] (MCs) {$E[g(Z_{ni},\theta)]=0$};
+\node[process, right=of MCs] (GMM) {$\alert{\widehat{\theta}_{Valid} }$};
+\node[input, above=of GMM] (data) {Data};
+\node[output, below=of GMM] (tau) {$h_n(\alert{\widehat{\theta}_{Valid}}) \approx \displaystyle \frac{\tau}{\sqrt{n}} $};
+\node[input, text width = 8em, left=of tau] (Local) {$E[h(Z_{ni}, \theta)]= \displaystyle \frac{\tau}{\sqrt{n}}$};
+\path [myline] (Local) -- (tau);
+\path [myline] (baseline) -- (MCs);
+\path [myline] (MCs) -- (GMM);
+\path [myline] (data) -- (GMM);
+\path [myline] (GMM) -- (tau);
+
+\end{tikzpicture}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{An Asymptotically Unbiased Estimator of $\tau \tau'$}	
+$$\sqrt{n} h_n(\widehat{\theta}_v)=\widehat{\tau}\rightarrow_d (\Psi M + \tau) \sim N_q(\tau, \Psi \Omega \Psi')$$
+$$\Psi = \left[\begin{array}{cc} -HK_v & \mathbf{I}_q \end{array}\right]$$
+\alert{$ \widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}$ is an asymptotically unbiased estimator of $\tau\tau'$.}
+ \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{FMSC: Asymptotically Unbiased Estimator of AMSE}
+
+$$\mbox{FMSC}_n(S) = \nabla_\theta\mu(\widehat{\theta})'\widehat{K}_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0&\widehat{B}\end{array}\right] + \widehat{\Omega}\right\}\Xi_S'\widehat{K}_S' \nabla_\theta\mu(\widehat{\theta})$$
+$$\widehat{B}=\widehat{\tau}\widehat{\tau}' - \widehat{\Psi}\widehat{\Omega}\widehat{\Psi}'$$
+
+\alert{Choose $S$ to minimize $\mbox{FMSC}_n(S)$ over the set of candidates $\mathscr{S}$.}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{A (Very) Special Case of the FMSC}
+
+	Under homoskedasticity, FMSC selection in the OLS versus TSLS example is \emph{identical} to a Durbin-Hausman-Wu test with $\alpha \approx 0.16$
+
+$$\widehat{\tau} =  n^{-1/2} \mathbf{x}'(\mathbf{y} - \mathbf{x}\widetilde{\beta}_{TSLS})$$
+
+	\vspace{1em} 
+	\alert{OLS gets benefit of the doubt, but not as much as $\alpha = 0.05,\; 0.1$}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Limit Distribution of FMSC}
+	$FMSC_n(S) \rightarrow_d FMSC_S$, where
+	\begin{eqnarray*}
+		\mbox{FMSC}_S &=& \nabla_\theta\mu(\theta_0)'K_S\Xi_S \left\{\left[\begin{array}{cc}0&0\\0& B \end{array}\right] + \Omega\right\}\Xi_S'K_S'\nabla_\theta\mu(\theta_0)\\
+		B &=& (\Psi M + \tau)(\Psi M + \tau)' - \Psi \Omega \Psi'
+	\end{eqnarray*}
+	\alert{\emph{Conservative} criterion: random even in the limit.}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+
+	\frametitle{Moment Average Estimators}
+	
+		$$\widehat{\mu}=\sum_{S \in \mathscr{S}} \widehat{\omega}_S \widehat{\mu}_S$$
+		\begin{block}{Additional Notation}
+		\begin{description}
+			\item[$\widehat{\mu}$] Moment-average Estimator
+			\item[$\widehat{\mu}_S$] Estimator of target parameter under moment set $S$
+			\item[$\widehat{\omega}_S$] Data-dependent weight function
+			\item[$\mathscr{S}$] Collection of moment sets under consideration
+		\end{description}
+		\end{block}
+		
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+	\frametitle{Examples of Moment-Averaging Weights}
+
+	\begin{block}{Post-Moment Selection Weights}
+		$\widehat{\omega}_S = \mathbf{1}\left\{\mbox{MSC}_n(S) = \min_{S'\in \mathscr{S}} \mbox{MSC}_n(S')\right\}$
+	\end{block}
+	\begin{block}
+		{Exponential Weights}
+		\[		\widehat{\omega}_S = \left.\exp\left\{-\frac{\kappa}{2} \mbox{MSC}(S)\right\}\right/\sum_{S' \in \mathscr{S}}\exp\left\{-\frac{\kappa}{2} \mbox{MSC}(S')\right\}\]
+	\end{block}
+	\begin{block}
+		{Minimum-AMSE Weights...}
+	\end{block}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Minimum AMSE-Averaging Estimator: OLS vs.\ TSLS}
+
+\[\widetilde{\beta}(\omega) = \omega \widehat{\beta}_{OLS} + (1 - \omega) \widetilde{\beta}_{TSLS}\]
+
+Under homoskedasticity:
+\[\omega^* = \left[1 + \frac{\mbox{ABIAS(OLS)}^2}{\mbox{AVAR(TSLS)}-\mbox{AVAR(OLS)}} \right]^{-1}\]
+Estimate by:
+\[\widehat{\omega }^* = \left[1 + \frac{\max \left\{0, \; \left(\widehat{\tau}^2 - \widehat{\sigma}_\epsilon^2\widehat{\sigma}_x^2  \left(\widehat{\sigma}_x^2/\widehat{\gamma}^2 - 1 \right) \right)/\;\widehat{\sigma}_x^4 \right\}}{\widehat{\sigma}_\epsilon^2 (1/\widehat{\gamma}^2 - 1/\widehat{\sigma}_x^2)}\right]^{-1}\]
+
+Where $\widehat{\gamma}^2 = n^{-1}\mathbf{x}'Z(Z'Z)^{-1}Z'\mathbf{x}$
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	\frametitle{Limit Distribution of Moment-Average Estimators}
+	$$\widehat{\mu}=\sum_{S \in \mathscr{S}} \widehat{\omega}_S \widehat{\mu}_S$$
+\begin{enumerate}[(i)]
+	\item $\sum_{S \in \mathscr{S}} \widehat{\omega}_S = 1$ a.s. 
+	\item $\widehat{\omega}(S) \rightarrow_d \varphi_S(\tau,M)$ a.s.-continuous function of $\tau$, $M$ and consistently-estimable constants only
+\end{enumerate}
+
+$$\alert{\sqrt{n}\left(\widehat{\mu} -  \mu_0\right) \rightarrow_d\Lambda(\tau)}$$
+
+$$\Lambda(\tau) =  -\nabla_\theta\mu(\theta_0)'\left[\sum_{S \in \mathscr{S}} \varphi_S(\tau,M) K_S \Xi_S\right] \left(M +  \left[\begin{array}
+	{c} 0 \\ \tau
+\end{array} \right]\right)$$ 
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+	\frametitle{Simulating from the Limit Experiment}
+	
+\begin{block}{Suppose $\tau$ Known, Consistent Estimators of Everything Else}
+	\begin{enumerate}
+	\item \texttt{for}  $j \in \{1, 2, \hdots, J\}$
+		\begin{enumerate}[(i)]
+			\item $\alert{M_j} \overset{iid}{\sim} N_{p+q}\left( 0, \widehat{\Omega}  \right)$
+			\item $\Lambda_j(\tau) = -\nabla_\theta\mu(\widehat{\theta})'\left[\sum_{S \in \mathscr{S}} \widehat{\varphi}_S(\alert{M_j +\tau}) \widehat{K}_S \Xi_S\right](\alert{M_j +\tau})$	
+		\end{enumerate}
+				\item Using $\{\Lambda_j(\tau)\}_{j=1}^J$ calculate $\widehat{a}(\tau)$, $\widehat{b}(\tau)$ such that
+	$$P\left[ \widehat{a}(\tau) \leq\Lambda(\tau)\leq \widehat{b}(\tau) \right] = 1 - \alpha$$
+	\item $P\left[ \widehat{\mu} - \widehat{b}(\tau)/\sqrt{n}\leq  \mu_0 \leq \widehat{\mu} - \widehat{a}(\tau)/\sqrt{n}\right] \approx 1-\alpha$
+	\end{enumerate}
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+	\frametitle{Two-step Procedure for Conservative Intervals}
+
+	\begin{enumerate}
+		\item Construct $1-\delta$ confidence region $\mathscr{T}(\widehat{\tau}, \delta)$ for $\tau$ 
+		\item For each $\tau^* \in \mathscr{T}(\widehat{\tau},\delta)$ calculate $1-\alpha$ confidence interval $\left[\widehat{a}(\tau^*),\widehat{b}(\tau^*)\right]$ for $\Lambda(\tau^*)$ as descibed on previous slide.
+		\item Take the lower and upper bound over the resulting intervals:
+			$\widehat{a}_{min}(\widehat{\tau})= \min_{\tau^* \in \mathscr{T}} \widehat{a}(\tau^*), \;\;\; 				\widehat{b}_{max}(\widehat{\tau^*})= \max_{\tau^* \in \mathscr{T}} \widehat{b}(\tau)$
+		\item The interval
+				$$\mbox{CI}_{sim}=\left[ \widehat{\mu} - \frac{\widehat{b}_{max}(\widehat{\tau})}{\sqrt{n}}, \;\;\; \widehat{\mu} - \frac{\widehat{a}_{min}(\widehat{\tau})}{\sqrt{n}} \right]$$
+		\alert{has asymptotic coverage of at least $1-(\alpha + \delta)$}
+	\end{enumerate}
+
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{OLS versus TSLS Simulation}
+
+\vspace{-2em}
+
+	\begin{eqnarray*}
+	y_i &=& 0.5 x_i + \epsilon_i\\
+	x_i &=& \pi(z_{1i} + z_{2i} + z_{3i}) + v_i
+\end{eqnarray*}
+
+$(\epsilon_i, v_i, z_{1i}, z_{2i}, z_{3i}) \sim \mbox{ iid } N(0, \mathcal{S})$
+$$	\mathcal{S} = \left[ \begin{array}
+		{ccccc} 
+		1 & \rho & 0 & 0 & 0\\
+		\rho & 1 - \pi^2 & 0 & 0 & 0\\
+		0 & 0 & 1/3 & 0 & 0\\
+		0 & 0 & 0 & 1/3 & 0 \\
+		0 & 0 & 0 & 0 & 1/3
+	\end{array}\right]$$
+	\alert{$$Var(x) = 1, \quad \quad \rho = Cor(x,\epsilon), \quad\quad \pi^2 = \mbox{First-Stage }  R^2$$}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{figure}
+	\centering
+	\input{./fig/RMSE_coarse_pi_baseline.tex}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{figure}
+	\centering
+	\input{./fig/RMSE_coarse_pi_relative_all.tex}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+	\frametitle{Choosing Instrumental Variables Simulation}
+
+  \vspace{-3em}
+
+\small
+\begin{eqnarray*}
+		y_i &=& 0.5 x_i + \epsilon_i\\ 
+		x_i &=& (z_{1i} + z_{2i} + z_{3i}) /3 + \gamma w_i + v_i 
+	\end{eqnarray*}
+ $(\epsilon_i, v_i, w_i, z_{i1}, z_{2i}, z_{3i})' \sim \mbox{ iid  } N(0,\mathcal{V})$ 
+ 
+			$$\mathcal{V} = \left[  
+				\begin{array}{cccccc}
+				1 & (0.5 - \gamma \rho) & \rho & 0 & 0 & 0\\
+				(0.5 - \gamma \rho) & (8/9 - \gamma^2) & 0 & 0 & 0 & 0 \\
+				\rho & 0 & 1 & 0 & 0 & 0\\
+				0 & 0 & 0 & 1/3 & 0 & 0\\
+				0 & 0 & 0 & 0 & 1/3 & 0\\
+				0 & 0 & 0 & 0 & 0 & 1/3\\
+				\end{array}
+		\right]$$
+
+		\vspace{0.5em}
+\begin{center}
+\alert{$\gamma = Cor(x,w),\quad \rho = Cor(w, \epsilon), \quad
+ \mbox{First-Stage } R^2=1/9 + \gamma^2$}
+	$Var(x)=1, \quad Cor(x, \epsilon)=0.5$
+\end{center}
+ 
+	
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{figure}
+	\centering
+	\input{./fig/RMSE_coarse_gamma_baseline.tex}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+	\frametitle{Alternative Moment Selection Procedures}
+
+	\begin{block}{Downward $J$-test}
+	Use Full instrument set unless $J$-test rejects.
+	\end{block}
+
+	\begin{block}{Andrews (1999) -- GMM Moment Selection Criteria}
+		$\mbox{GMM-MSC}(S)=J_{n}(S) - \mbox{Bonus}$		
+	\end{block}
+	
+	\begin{block}{Hall \& Peixe (2003) -- Canonical Correlations Info.\ Criterion}
+	$\mbox{CCIC}(S) = n \log\left[1 - R_n^2(S) \right] + Penalty$
+	\end{block}
+	
+	\begin{block}{Penalty/Bonus Terms}
+		Analogies to AIC, BIC, and Hannan-Quinn
+	\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{figure}
+	\centering
+	\input{./fig/RMSE_coarse_gamma_rel_J.tex}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{figure}
+	\centering
+	\input{./fig/RMSE_coarse_gamma_rel_MSC.tex}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+	
+	\frametitle{Empirical Example: Geography or Institutions?}
+	
+	\begin{block}{Institutions Rule}
+	Acemoglu et al.\ (2001), Rodrik et al.\ (2004), Easterly \& Levine (2003) -- zero or negligible effects of ``tropics, germs, and crops''  in income per capita, controlling for institutions.
+	\end{block}
+	
+	\begin{block}{Institutions \emph{Don't} Rule}
+	Sachs (2003) -- Large negative direct effect of malaria transmission on income.
+	\end{block}
+	
+	\begin{alertblock}{Carstensen \& Gundlach (2006)}
+	How robust is Sachs's result? 
+	\end{alertblock}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+
+	\frametitle{Carstensen \& Gundlach (2006)}
+
+	\begin{block}{Both Regressors Endogenous}
+		$\mbox{ln\emph{GDPC}}_i = \beta_1 + \beta_2 \cdot \mbox{\emph{INSTITUTIONS}}_i + \alert{\beta_3} \cdot \mbox{\alert{\emph{MALARIA}}}_i + \epsilon_i$
+	
+	\end{block}
+
+	\begin{block}{Robustness}
+		\begin{itemize}
+			\item Various measures of \emph{INSTITUTIONS}, \emph{MALARIA}
+			\item Various instrument sets
+			\item \alert{$\beta_3$ remains large, negative and significant.}
+		\end{itemize}
+	\end{block}
+
+		\begin{block}{2SLS for All Results That Follow}
+	\end{block}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+
+	\frametitle{Expand on Instrument Selection Exercise}
+
+	\begin{block}{FMSC and Corrected Confidence Intervals}
+	
+		\begin{enumerate}
+			\item FMSC -- which instruments to estimate effect of malaria?
+			\item Correct CIs for Instrument Selection -- effect of malaria still negative and significant?
+		\end{enumerate}
+	\end{block}
+	
+	\begin{block}{Measures of \emph{INSTITUTIONS} and \emph{MALARIA}}
+		\begin{itemize}
+			\item \alert{\emph{rule}} -- Average governance indicator (Kaufmann, Kray and Mastruzzi; 2004)
+			\item \alert{\emph{malfal}} -- Proportion of population at risk of malaria transmission in 1994 (Sachs, 2001)
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+
+	\frametitle{Instrument Sets}
+
+	\begin{block}{Baseline Instruments -- Assumed Valid}
+		\begin{itemize}
+			\item \alert{ln\emph{mort}} -- Log settler mortality (per 1000), early 19th century
+			\item \alert{\emph{maleco}} --  Index of stability of malaria transmission
+		\end{itemize}
+	\end{block}
+
+	\begin{block}{Further Instrument Blocks}
+		
+		\begin{description}
+			\item[Climate] \emph{frost}, \emph{humid}, \emph{latitude}
+			\item[Europe] \emph{eurfrac}, \emph{engfrac}
+			\item[Openness] \emph{coast}, \emph{trade}
+		\end{description}
+		
+	\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\footnotesize
+\begin{table}
+\centering
+	\begin{tabular}{lcccccc}
+\hline\hline
+ & \multicolumn{3}{c}{$\mu = malfal$}& \multicolumn{3}{c}{$\mu = rule$}\\ 
+ & FMSC & posFMSC & $\widehat{\mu}$ & FMSC & posFMSC & $\widehat{\mu}$ \\ 
+ \hline
+ (1) Valid & $ 3.0$ & $ 3.0$ & $-1.0$ & $1.3$ & $1.3$ & $0.9$\\ 
+(2) Climate & $ 3.1$ & $ 3.1$ & $-0.9$ & $1.0$ & $1.0$ & $1.0$\\ 
+(3) Open & $ 2.3$ & $ 2.4$ & $-1.1$ & $1.2$ & $1.2$ & $0.8$\\ 
+(4) Eur & $ 1.8$ & $ 2.2$ & $-1.1$ & $0.5$ & $0.7$ & $0.9$\\ 
+(5) Climate, Eur & $ 0.9$ & $ 2.0$ & $-1.0$ & $\alert{0.3}$ & $\alert{0.6}$ & $\alert{0.9}$\\ 
+(6) Climate, Open & $ 1.9$ & $ 2.3$ & $-1.0$ & $0.5$ & $0.8$ & $0.9$\\ 
+(7) Open, Eur & $ 1.6$ & $ 1.8$ & $-1.2$ & $0.8$ & $0.8$ & $0.8$\\ 
+(8) Full & $\alert{0.5}$ & $\alert{1.7}$ & $\alert{-1.1}$ & $\alert{0.2}$ & $\alert{0.6}$ & $\alert{0.8}$ \\ 
+ \hline
+ $>90\%$ CI FMSC & \multicolumn{3}{c}{$(-1.6, -0.6)$} & \multicolumn{3}{c}{$(0.5, 1.2)$}\\ 
+  $>90\%$ CI posFMSC &   \multicolumn{3}{c}{$(-1.6, -0.6)$} & \multicolumn{3}{c}{$(0.6, 1.3)$}\\ 
+  \hline
+ \end{tabular}
+ \end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
