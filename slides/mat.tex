@@ -1,0 +1,119 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{QR Decomposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{QR Decomposition}
+
+\begin{block}{Result}
+Any $n\times k$ matrix $A$ with full column rank can be decomposed as $A = QR$, where $R$ is an $k\times k$ upper triangular matrix and $Q$ is an $n\times k$ matrix with orthonormal columns. 
+\end{block}
+
+\begin{block}{Notes}
+  \begin{itemize}  
+  \item Columns of $A$ are \emph{orthogonalized} in $Q$ via Gram-Schmidt. 
+ \item Since $Q$ has orthogonal columns, $Q'Q = I_k$. 
+ \item It is \emph{not} in general true that $QQ' = I$.
+ \item If $A$ is square, then $Q^{-1} = Q'$.
+\end{itemize}
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Different Conventions for the QR Decomposition}
+  
+
+  \begin{block}{Thin aka Economical QR}
+    $Q$ is an $n\times k$ with orthonormal columns ( \texttt{qr\_econ} in Armadillo).
+  \end{block}
+
+  \begin{block}{Thick QR}
+    $Q$ is an $n\times n$ \emph{orthogonal} matrix.
+  \end{block}
+
+  \begin{block}{Relationship between Thick and Thin}
+    
+Let $A = QR$ be the ``thick'' QR and $A = Q_1 R_1$ be the ``thin'' QR: 
+  $$A = QR = Q \left[\begin{array}
+    {c} R_1 \\ 0 
+  \end{array} \right] = \left[  \begin{array}
+    {cc} Q_1 & Q_2
+  \end{array}\right]\left[\begin{array}
+    {c} R_1 \\ 0 
+  \end{array} \right] = Q_1 R_1$$
+  \end{block}
+
+  \alert{My preferred convention is the thin QR\dots}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Least Squares via QR Decomposition}
+  \begin{block}{Let $X = QR$}
+\begin{eqnarray*}
+  \widehat{\beta} &=& (X'X)^{-1} X'y = \left[(QR)' (QR) \right]^{-1} (QR)' y\\
+    &=&\left[ R' Q' Q R\right]^{-1} R'Q' y = (R'R)^{-1} R'Q y\\
+    &=& R^{-1} (R')^{-1} R' Q'y = R^{-1} Q'y
+\end{eqnarray*}
+
+In other words, $\widehat{\beta}$ solves $R\beta = Q'y$.
+\end{block}
+
+\begin{block}{Why Bother?}
+  Much easier and faster to solve $R\beta = Q'y$ than the normal equations $(X'X)\beta = X'y$ since $R$ is \alert{upper triangular}.
+\end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Back-Substitution to Solve $R\beta = Q'y$}
+
+The product $Q'y$ is a vector, call it $v$, so the system is simply
+  $$\left[
+    \begin{array}
+      {cccccc}
+      r_{11} & r_{12}  & r_{13}& \cdots & r_{1,n-1} & r_{1k} \\
+      0 & r_{22} & r_{23}&\cdots & r_{2,n-1} & r_{2k}\\
+      0&  0 &  r_{33}& \cdots & r_{3,n-1} & r_{3k}\\  
+      \vdots & \vdots & \ddots& \ddots & \vdots & \vdots\\
+      0 & 0 & \cdots &0  & r_{k-1, k-1} & r_{k-1, k} \\
+      0 & 0 & \cdots & 0 & 0 & r_{k}
+    \end{array}
+  \right] \left[ \begin{array}
+    {ccc}
+    \beta_1 \\ \beta_2 \\ \beta_3 \\ \vdots \\ \beta_{k-1} \\ \beta_k
+  \end{array}\right] = \left[ \begin{array}
+    {c}
+    v_1  \\ v_2  \\ v_3 \\  \vdots \\ v_{k-1} \\ v_{k}
+  \end{array}\right]
+  $$
+$\beta_k = v_k / r_k \Rightarrow$ substitute this into $\beta_{k-1} r_{k-1,k-1} + \beta_k r_{k-1,k} = v_{k-1}$ to solve for $\beta_{k-1}$, and so on.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating the Least Squares Variance Matrix $\sigma^2 (X'X)^{-1}$}
+  \begin{itemize}
+    \item Since $X = QR$, $(X'X)^{-1} = R^{-1} (R^{-1})'$
+    \item Easy to invert $R$: just apply \alert{repeated} back-substitution:
+      \begin{itemize}
+        \item Let $A = R^{-1}$ and $\mathbf{a}_j$ be the $j$th column of $A$.
+        \item Let $\mathbf{e}_j$ be the $j$th standard basis vector.
+        \item Inverting $R$ is equivalent to solving $R \mathbf{a}_1 = \mathbf{e}_1$, followed by $R \mathbf{a}_2 = \mathbf{e}_2$, \dots, $R \mathbf{a}_k = \mathbf{e}_k$.
+      \end{itemize}
+    \item If you enclose a matrix in \texttt{trimatu()} or \texttt{trimatl()}, and request the inverse $\Rightarrow$ Armadillo will carry out backward or forward substitution, respectively.
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{QR Decomposition for Orthogonal Projections}
+
+Let $X$ have full column rank and define $P_X = X (X'X)^{-1}X'$
+  $$P_X  = QR(R'R)^{-1}R'Q' = QRR^{-1} (R')^{-1}R'Q' = QQ'$$
+
+  It is \emph{not} in general true that $QQ' = I$ even though $Q'Q = I$ since $Q$ need not be square in the economical QR decomposition. 
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
