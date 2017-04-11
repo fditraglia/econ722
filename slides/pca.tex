@@ -49,7 +49,72 @@
   \frametitle{Subsequent Principal Components}
 
   \begin{block}{Additional Constraint}
-    Construct subsequent PCs by solving the same problem as before with the additional 
+    Construct 2nd PC by solving the same problem as before with the additional constraint that $\boldsymbol{\alpha}_2'\mathbf{x}$ is uncorrelated with $\boldsymbol{\alpha}_1' \mathbf{x}$.
+  \end{block}
+
+  \begin{alertblock}{$j$th Principal Component}
+    The linear combination $\boldsymbol{\alpha}_j' \mathbf{x}$ where $\boldsymbol{\alpha}_j$ is the e-vector corresponding to the $j$th largest e-value of $\Sigma$.  
+  \end{alertblock}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Sample PCA}
+
+  \begin{block}{Notation}
+    $X = (n\times p)$ \alert{centered} data matrix -- columns are mean zero.
+  \end{block}
+
+  \begin{block}{SVD}
+   $X = UDV'$, thus $X'X = VDU'UDV' = VD^2V'$
+  \end{block}
+
+  \begin{block}{Sample Variance Matrix}
+    $S = n^{-1}X'X$ has same e-vectors as $X'X$ --  the columns of $V$! 
+  \end{block}
+
+  \begin{block}{Sample PCA}
+    Let $\mathbf{v}_j$ be the jth column of $V$. Then,
+    \begin{eqnarray*}
+      \mathbf{v}_j &=& \text{PC loadings for jth PC of } S\\
+      \mathbf{v}_j' \mathbf{x}_i &=& \text{PC score for individual/time period } i \\
+    \end{eqnarray*}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Getting the PC Scores for Free from the SVD}
+
+  \begin{block}{PC scores for $j$th PC}
+    \[
+      \mathbf{z}_j = 
+      \left[
+        \begin{array}{c}
+          z_{j1}\\ \vdots \\ z_{jn}
+      \end{array}
+    \right] =
+      \left[
+        \begin{array}{c}
+          \mathbf{v}_j'\mathbf{x}_1\\
+          \vdots\\
+          \mathbf{v}_j'\mathbf{x}_n
+      \end{array}
+    \right] = 
+      \left[
+        \begin{array}{c}
+          \mathbf{x}_1'\mathbf{v}_j\\
+          \vdots\\
+          \mathbf{x}_n'\mathbf{v}_j
+      \end{array}
+    \right] = 
+      \left[
+        \begin{array}{c}
+          \mathbf{x}_1'\\
+          \vdots\\
+          \mathbf{x}_n'
+      \end{array}
+    \right]\mathbf{v}_j = X\mathbf{v}_j
+    \]
   \end{block}
   
 \end{frame}
