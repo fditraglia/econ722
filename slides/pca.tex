@@ -83,9 +83,11 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Getting the PC Scores for Free from the SVD}
+  \frametitle{Sample PCA}
+  \small
 
   \begin{block}{PC scores for $j$th PC}
+    \vspace{-0.5em}
     \[
       \mathbf{z}_j = 
       \left[
@@ -116,6 +118,59 @@
     \right]\mathbf{v}_j = X\mathbf{v}_j
     \]
   \end{block}
+
+  \begin{block}{Getting PC Scores from SVD}
+   Since $X = UDV'$ and $V'V = I$, $XV = UD$, i.e.\
+
+   \[
+     \left[
+     \begin{array}{c}
+       \mathbf{x}_1'\\
+       \vdots\\
+       \mathbf{x}_n'
+     \end{array}
+   \right]
+   \left[
+   \begin{array}{ccc}
+     \mathbf{v}_i & \cdots & \mathbf{v}_p
+   \end{array}
+ \right] = 
+ \left[
+ \begin{array}{ccc}
+   \mathbf{u}_1 & \cdots & \mathbf{u}_r
+ \end{array}
+ \right]
+ \left[
+ \begin{array}{ccc}
+   d_1 & \cdots & 0\\
+   & \ddots  & \\
+   0 & \cdots & d_r
+ \end{array}
+ \right]
+   \]
+
+   \vspace{0.5em}
+
+   \alert{Hence we see that $\mathbf{z}_j = d_j \mathbf{u}_j$}
+
+  \end{block}
+
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Properties of PC Scores $\mathbf{z}_j$}
+
+  Since $X$ has been de-meaned:
+  \[
+    \bar{z}_j = \frac{1}{n}\sum_{i=1}^n \mathbf{v}_j'\mathbf{x}_i = \mathbf{v}_j' \left( \frac{1}{n}\sum_{i=1}^n \mathbf{x}_i \right) = \mathbf{v}_j' \mathbf{0} = 0
+  \]
+
+  Hence, since $X'X = VD^2V'$
+  \[
+    \frac{1}{n}\sum_{i=1}^n (z_{ji} - \bar{z}_j)^2 = \frac{1}{n} \sum_{i=1}^n z_{ji}^2 = \frac{1}{n} \mathbf{z}_j'\mathbf{z}_j = \frac{1}{n}\left( X\mathbf{v}_j \right)'\left( X\mathbf{v}_j \right) = \mathbf{v}_j' S\mathbf{v}_j = d_i^2/n
+  \]
+
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
