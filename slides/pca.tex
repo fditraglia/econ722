@@ -1,0 +1,56 @@
+\section{Review of Principal Component Analysis (PCA)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Principal Component Analysis (PCA)}
+  
+  \begin{block}{Notation}
+  Let $\mathbf{x}$ be a $p\times 1$ random vector with variance-covariance matrix $\Sigma$.
+  \end{block}
+
+  \begin{block}{Optimization Problem}
+    \vspace{-1em}
+    \[\boldsymbol{\alpha}_1 = \underset{\boldsymbol{\alpha}}{\arg \max} \; \;\mbox{Var}(\boldsymbol{\alpha}' \mathbf{x}) \quad \text{ subject to } \quad \boldsymbol{\alpha}'\boldsymbol{\alpha} = 1\]
+  \end{block}
+
+  \begin{block}{First Principal Component}
+    The linear combination $\boldsymbol{\alpha}_1' \mathbf{x}$ is the \alert{first principal component} of $\mathbf{x}$.
+    It is the direction along with $\mathbf{x}$ has \alert{maximal variation}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Solving for $\boldsymbol{\alpha}_1$}
+
+  \begin{block}{Lagrangian}
+  $\mathcal{L}(\boldsymbol{\alpha}_1, \lambda) = \boldsymbol{\alpha}' \Sigma \boldsymbol{\alpha} - \lambda(\boldsymbol{\alpha}' \boldsymbol{\alpha} - 1)$
+  \end{block}
+
+  \begin{block}{First Order Condition}
+    $2 (\Sigma\boldsymbol{\alpha}_1 - \lambda \boldsymbol{\alpha}_1) = 0 \iff (\Sigma - \lambda I_p)\boldsymbol{\alpha}_1 = 0 \iff \Sigma \boldsymbol{\alpha}_1 = \lambda \boldsymbol{\alpha}_1$
+  \end{block}
+
+  \begin{block}{Variance of 1st PC}
+    $\boldsymbol{\alpha}_1$ is an e-vector of $\Sigma$ but which one? 
+    Substituting, 
+    \[
+      \mbox{Var}(\boldsymbol{\alpha}_1' \mathbf{x}) = \boldsymbol{\alpha}_1'(\Sigma \boldsymbol{\alpha}_1) = \lambda \boldsymbol{\alpha}_1' \boldsymbol{\alpha}_1 = \lambda
+    \]
+  \end{block}
+  \vspace{-1em}
+
+  \begin{alertblock}{Solution}
+    Var.\ of 1st PC equals $\lambda$ and this is what we want to \alert{maximize}, so $\boldsymbol{\alpha}_1$ is the e-vector corresponding to the largest e-value.
+  \end{alertblock}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Subsequent Principal Components}
+
+  \begin{block}{Additional Constraint}
+    Construct subsequent PCs by solving the same problem as before with the additional 
+  \end{block}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

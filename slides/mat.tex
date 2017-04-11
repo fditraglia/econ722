@@ -113,7 +113,53 @@ Let $X$ have full column rank and define $P_X = X (X'X)^{-1}X'$
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Singular Value Decomposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Singular Value Decomposition (SVD)}
+  
+Any $m \times n$ matrix $A$ of arbitrary rank $r$ can be written 
+	$$X = UDV' = (\mbox{orthogonal})(\mbox{diagonal})(\mbox{orthogonal})$$
+  \vspace{-2em}
+	\begin{itemize}
+	 	\item $U$ = $m\times m$ orthog.\ matrix whose cols contain e-vectors of $AA'$
+	 	\item $V$ = $n\times n$ orthog.\ matrix whose cols contain e-vectors of $A'A$
+	 	\item $D$ = $m\times n$ matrix whose first $r$ main diagonal elements are the  \emph{singular values} $d_1, \hdots, d_r$. All other elements are zero.
+	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
+    \item (E-values of $A'A$ and $AA'$ could be zero but not negative)
+	 \end{itemize} 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{SVD for Symmetric Matrices}
+  
+If $A$ is \textbf{symmetric} then $A = Q\Lambda Q'$ where $\Lambda$ is a diagonal matrix containing the e-values of $A$ and $Q$ is an orthonormal matrix whose columns are the corresponding e-vectors. Accordingly:
 
+  \[
+    AA' = (Q\Lambda Q')(Q\Lambda Q')' = Q \Lambda Q' Q \Lambda Q' = Q \Lambda^2 Q'
+  \]
+  and similarly
+  \[
+    A'A = (Q\Lambda Q')'(Q\Lambda Q') = Q \Lambda Q' Q \Lambda Q' = Q \Lambda^2 Q'
+  \]
+  using the fact that $Q$ is orthogonal and $\Lambda$ diagonal.
+  Thus, when $A$ is symmetric the SVD reduces to $U = V = Q$ and $D =  \Lambda^2$ so that \emph{negative} eigenvalues become \emph{positive} singular values.
+\end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Economical SVD}
+\begin{itemize}
+  \item Number of singular values is $r = \mbox{Rank}(A) \leq \max\{m, n\}$
+  \item Some cols of $U$ or $V$ multiplied by zeros in $D$
+  \item Economical SVD: only keep columns in $U$ and $V$ that are multiplied by non-zeros in $D$
+  (Armadillo: \texttt{svd\_econ})
+  \item Summation form: $\displaystyle A = \sum_{i=1}^r d_i \textbf{u}_i \textbf{v}_i'$ where $d_1 \leq d_2 \leq \dots \leq d_r$
+\item Matrix form: $\displaystyle\underset{(n\times p)}{A} = \underset{(n\times r)}{U} \underset{(r\times r)}{D} \underset{(r\times p)}{V'}$
+\end{itemize}
 
+\vspace{1em}
+\alert{In the economical SVD, $U$ and $V$ may no longer be square, so they are not orthogonal matrices but their \emph{columns} are still orthonormal.}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
