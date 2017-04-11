@@ -1,0 +1,164 @@
+\section{The James-Stein Estimator}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Recall: Gauss-Markov Theorem}
+  \begin{block}{Linear Regression Model}
+    
+    $$\mathbf{y} = X\beta + \boldsymbol{\epsilon}, \quad \mathbb{E}[\boldsymbol{\epsilon}|X] = \mathbf{0}$$
+  \end{block}
+
+
+  \begin{block}{Best Linear Unbiased Estimator}
+    
+    \begin{itemize}
+      \item $\mbox{Var}(\epsilon|X) = \sigma^2 I \Rightarrow$ then OLS has lowest variance among linear, unbiased estimators of $\beta$.
+      \item  $\mbox{Var}(\varepsilon|X)\neq \sigma^2 I \Rightarrow$ then GLS gives a lower variance estimator.  
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{What if we consider biased estimators?}
+    
+  \end{alertblock}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Dominance and Admissibility}
+  \begin{block}{Notation}
+    Let $R$ be a risk function, e.g.\ MSE, and $\widehat{\theta}$ and $\widetilde{\theta}$ be estimators of $\theta$.
+  \end{block}
+
+  \begin{block}{Dominance}
+We say that $\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\widehat{\theta},\theta) \leq R(\widetilde{\theta},\theta)$ for all $\theta \in \Theta$ and the inequality is strict for at least one value of  $\theta$. 
+  \end{block}
+
+  \begin{block}{Admissibility}
+We say that $\widehat{\theta}$ is \textbf{admissible} if no other estimator dominates it.
+  \end{block}
+
+  \begin{alertblock}{Inadmissiblility}
+    To prove that an estimator $\widetilde{\theta}$ is \textbf{inadmissible} it suffices to find an estimator $\widehat{\theta}$ that dominates it.
+  \end{alertblock}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{A Very Simple Example: $X \sim N(\theta, I)$}
+
+  \begin{block}{Goal}
+   Estimate the $p$-vector of unknown parameters $\theta$ using $X$.
+  \end{block}
+
+  \begin{block}{Maximum Likelihood Estimator $\widehat{\theta}$}
+MLE = sample mean, but only one observation: $\hat{\theta} = X$.
+  \end{block}
+
+  \begin{block}{MSE of $\widehat{\theta}$}
+    
+    \vspace{-1em}
+\begin{equation*}
+  \left( \hat{\theta} - \theta \right)' \left( \hat{\theta}- \theta \right) = \left( X - \theta \right)'\left( X-\theta \right)= \sum_{i = 1}^{p} \left( X_{i} - \theta_i \right)^2 \sim \chi^2_p 
+\end{equation*}
+Since $\mathbb{E}[\chi^2_p]=p$, we have $MSE(\hat{\theta})=p$.
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{A Very Simple Example: $X \sim N(\theta, I)$}
+
+  \begin{block}{James-Stein Estimator}
+\begin{equation*}
+  \hat{\theta}^{JS} = \hat{\theta}\left( 1 - \frac{p-2}{\hat{\theta}'\hat{\theta}} \right) = X - \frac{\left( p-2 \right)X}{X'X}
+\end{equation*}
+\begin{itemize}
+  \item Shrinks components of sample mean vector towards zero
+  \item More elements in $\theta \Rightarrow$ more shrinkage 
+  \item MLE close to zero ($\widehat{\theta}'\widehat{\theta}$ small)    gives more shrinkage
+\end{itemize}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{MSE of James-Stein Estimator}
+  \small
+\begin{eqnarray*}
+  MSE\left( \hat{\theta}^{JS} \right) &=& \mathbb{E}\left[ \left( \hat{\theta}^{JS} - \theta \right)'\left( \hat{\theta}^{JS} - \theta \right) \right]\\
+  &=& \mathbb{E}\left[ \left\{ \left( X - \theta \right) - \frac{(p-2)X}{X'X} \right\}' \left\{ \left( X - \theta \right) - \frac{(p-2)X}{X'X} \right\} \right]  \\
+  &=&\mathbb{E}\left[ \left( X - \theta \right)'\left( X - \theta \right) \right] - 2 (p-2)\mathbb{E}\left[ \frac{X'(X-\theta)}{X'X} \right]\\
+  &\quad& +\left( p-2 \right)^{2} \mathbb{E}\left[ \frac{1}{X'X} \right] \\
+  &=& p - 2 (p-2)\mathbb{E}\left[ \frac{X'(X-\theta)}{X'X} \right] + \left( p-2 \right)^{2} \mathbb{E}\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+
+Using fact that $MSE(\widehat{\theta})=p$ 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simplifying the Second Term}
+
+  \footnotesize
+  \begin{block}{Writing Numerator as a Sum}
+    \vspace{-0.5em}
+\begin{equation*}
+  \mathbb{E}\left[ \frac{X'(X-\theta)}{X'X} \right] = \mathbb{E}\left[ \frac{\sum_{i=1}^{p} X_i\left( X_i - \theta_i \right)}{X'X} \right] = \sum_{i=1}^{p} \mathbb{E}\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right]
+\end{equation*}
+  \end{block}
+
+  \begin{block}{For $i = 1, \dots, p$}
+    \vspace{-0.5em}
+    \begin{equation*}    
+      \mathbb{E}\left[ \frac{X_i(X_i - \theta_i)}{X'X} \right] = \mathbb{E}\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right]
+\end{equation*}
+Not obvious: integration by parts, expectation as a $p$-fold integral, $X\sim N(\theta, I)$ 
+  \end{block}
+
+  \begin{block}{Combining}
+    \vspace{-0.5em}
+\begin{eqnarray*}
+  \mathbb{E}\left[ \frac{X'(X-\theta)}{X'X} \right] &=&  \sum_{i=1}^{p} \mathbb{E}\left[ \frac{X'X - 2 X_i^2}{\left( X'X \right)^2} \right] = p \mathbb{E}\left[ \frac{1}{X'X} \right] - 2 \mathbb{E}\left[ \frac{\sum_{i=1}^{p} X_i^2}{(X'X)^2} \right]\\
+  &=& p \mathbb{E}\left[ \frac{1}{X'X} \right] - 2 \mathbb{E}\left[ \frac{X'X}{(X'X)^2} \right] = \left( p-2 \right)\mathbb{E}\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+    
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The MLE is Inadmissible when $p\geq 3$}
+  \small
+\begin{eqnarray*}
+  MSE\left( \hat{\theta}^{JS} \right) &=& p - 2(p-2)\left\{ \left( p-2 \right) \mathbb{E}\left[ \frac{1}{X'X} \right] \right\} + \left( p-2 \right)^{2}\mathbb{E}\left[ \frac{1}{X'X} \right]\\
+  &=& p - \left( p-2 \right)^2 \mathbb{E}\left[ \frac{1}{X'X} \right]
+\end{eqnarray*}
+
+\vspace{-1em}
+\begin{itemize}
+  \item $\mathbb{E}[1/(X'X)]$ exists and is positive whenever $p \geq 3$
+  \item $(p-2)^2$ is always positive
+  \item Hence, second term in the MSE expression is \emph{negative}
+  \item First term is MSE of the MLE 
+\end{itemize}
+
+
+\alert{Therefore James-Stein strictly dominates MLE whenever $p\geq 3$!}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{James-Stein More Generally}
+  \begin{itemize}
+    \item Our example was specific, but the result is general:
+      \begin{itemize}
+        \item MLE is inadmissible under quadratic loss in regression model with at least three regressors.
+        \item Note, however, that this is MSE for the \emph{full parameter vector}
+      \end{itemize}
+    \item James-Stein estimator is also inadmissible!
+      \begin{itemize}
+        \item Dominated by ``positive-part'' James-Stein estimator:
+$$\widehat{\beta}^{JS} = \widehat{\beta}\left[1 -\frac{(p-2)\widehat{\sigma}^2}{\widehat{\beta}'X'X \widehat{\beta}} \right]_+$$
+\item $\widehat{\beta} = $ OLS, $(x)_+ = \max(x,0)$, $\widehat{\sigma}^2 =$ usual OLS-based estimator
+\item Stops us us from shrinking \emph{past} zero to get a negative estimate for an element of $\beta$ with a small OLS estimate.
+\item Positive-part James-Stein isn't admissible either!
+      \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
