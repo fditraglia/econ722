@@ -1,6 +1,82 @@
 \section{Ridge Regression}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Ridge Regression}
+  \frametitle{Ridge Regression -- OLS with an $L_2$ Penalty}
+
+
+	$$\widehat{\beta}_{Ridge} =\underset{\beta}{\arg \min}\;(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta$$
+  \begin{itemize}
+    \item Add a penalty for large coefficients
+    \item $\lambda = $ non-negative constant we choose: strength of penalty
+    \item $X$ and $\mathbf{y}$ assumed to be \alert{de-meaned} (don't penalize intercept)
+    \item Unlike OLS, Ridge Regression is \alert{not scale invariant}
+      \begin{itemize}
+        \item In OLS if we replace $\mathbf{x}_1$ with $c\mathbf{x}_1$ then $\beta_1$ becomes $\beta_1/c$.
+        \item The same is not true for ridge regression!
+        \item Typical to \alert{standardize} $X$ before carrying out ridge regression 
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Alternative Formulation of Ridge Regression Problem}
+$$\widehat{\beta}_{Ridge} = \underset{\beta}{\arg \min}\;(\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) \quad \mbox{subject to} \quad \beta'\beta \leq t$$
+
+
+\begin{itemize}
+  \item Ridge Regression is like least squares ``on a budget.'' 
+  \item Make one coefficient larger $\Rightarrow$ must make another one smaller.
+  \item One-to-one mapping from $t$ to $\lambda$ (data-dependend)
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Ridge as Bayesian Linear Regression}
+
+If we ignore the intercept, which is unpenalized), Ridge Regression gives the \alert{posterior mode} from the Bayesian regression model:
+	\begin{eqnarray*}
+		y|X, \beta, \sigma^2 &\sim& N(X\beta,\sigma^2 I_n) \\
+		\beta &\sim& N(\mathbf{0}, \tau^2 I_p)
+	\end{eqnarray*}
+where $\sigma^2$ is assumed known and $\lambda = \sigma^2/\tau^2$. 
+(In this example, the posterior is normal so the mode equals the mean)
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Explicit Solution to the Ridge Regression Problem}
+
+  \small
+Objective Function:
+\begin{eqnarray*}
+	Q(\beta)&=& (\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta\\
+	&=&\mathbf{y}'\mathbf{y} - \beta'X \mathbf{y} - \mathbf{y}'X\beta + \beta'X'X \beta + \lambda \beta' I_p \beta\\
+	&=& \mathbf{y}'\mathbf{y} - 2 \mathbf{y}'X\beta + \beta'(X'X + \lambda I_p)\beta
+\end{eqnarray*}
+Recall the following facts about matrix differentiation
+		\[\partial (\mathbf{a}' \mathbf{x})/\partial \mathbf{x}  = \mathbf{a}, \quad
+		\partial( \mathbf{x}'A \mathbf{x})/\partial \mathbf{x} = (A + A')\mathbf{x}
+  \]
+Thus, since $(X'X + \lambda I_p)$ is symmetric,
+$$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\mathbf{y} + 2(X'X + \lambda I_p)\beta$$
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \small
+  \frametitle{Explicit Solution to the Ridge Regression Problem}
+
+  Previous Slide:
+$$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\mathbf{y} + 2(X'X + \lambda I_p)\beta$$
+
+First order condition:
+	$$X'\textbf{y} = (X'X + \lambda I_p)\beta$$
+Hence,
+	$$\widehat{\beta}_{Ridge} = (X'X + \lambda I_p)^{-1} X'\textbf{y}$$
+
+  \vspace{1em}
+
+  \alert{But is $(X'X + \lambda I_p)$ guaranteed to be invertible?} 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
