@@ -64,7 +64,6 @@ $$\frac{\partial}{\partial \beta} Q(\beta) = -2X'\mathbf{y} + 2(X'X + \lambda I_
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \small
   \frametitle{Explicit Solution to the Ridge Regression Problem}
 
   Previous Slide:
@@ -78,5 +77,120 @@ Hence,
   \vspace{1em}
 
   \alert{But is $(X'X + \lambda I_p)$ guaranteed to be invertible?} 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Ridge Regresion via OLS with ``Dummy Observations''}
+
+  Ridge regression solution is identical to 
+	$$\underset{\beta}{\arg \min} \left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)'\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)$$
+  where
+$$\widetilde{\textbf{y}} = \left[ \begin{array}
+	{c} \textbf{y} \\ \textbf{0}_p
+\end{array}\right], \quad \quad \widetilde{X} = \left[ \begin{array}
+	{c} X \\ \sqrt{\lambda} I_p
+\end{array}\right]$$
+since:
+\begin{eqnarray*}
+	\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)'\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right) &=& \left[\begin{array}
+		{cc} (\mathbf{y} - X\beta)' & (-\sqrt{\lambda}\beta)'
+	\end{array} \right] \left[\begin{array}
+		{c} (\mathbf{y} - X\beta) \\ -\sqrt{\lambda} \beta
+	\end{array} \right]\\
+		&=& (\mathbf{y} - X\beta)' (\mathbf{y} - X\beta) + \lambda \beta'\beta\\
+\end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Ridge Regression Solution is Always Unique}
+
+  Ridge solution is \alert{always unique}, even if there are more regressors than observations!
+  This follows from the preceding slide:
+
+
+$$ \widehat{\beta}_{Ridge} = \underset{\beta}{\arg \min} \left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)'\left(\widetilde{\mathbf{y}} - \widetilde{X}\beta\right)$$
+$$ \widetilde{\textbf{y}} = \left[ \begin{array}
+	{c} \textbf{y} \\ \textbf{0}_p
+\end{array}\right], \;  \widetilde{X} = \left[ \begin{array}
+	{c} X \\ \sqrt{\lambda} I_p
+\end{array}\right]$$
+
+Columns of $\sqrt{\lambda}I_p$ are linearly independent, so columns of $\widetilde{X}$ are also linearly independent, \alert{regardless} of whether the same holds for the columns of $X$.
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Efficient Calculations for Ridge Regression}
+  
+
+  \begin{block}{QR Decomposition}
+    
+  Write Ridge as OLS with ``dummy observations'' with $\widetilde{X} = QR$ so 
+	$$\widehat{\beta}_{Ridge} = (\widetilde{X}' \widetilde{X})^{-1} \widetilde{X}'\,\widetilde{\textbf{y}} = R^{-1} Q' \,\widetilde{\textbf{y}}$$
+which we can obtain by back-solving the system $R\widehat{\beta}_{Ridge} = Q'\, \widetilde{\mathbf{y}}$. 
+  \end{block}
+
+  \begin{block}{Singular Value Decomposition}
+If $p \gg n$, it's much faster to use the SVD rather than the QR decomposition because the rank of $X$ will be $n$.
+For implementation details, see Murphy (2012; Section 7.5.2).
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing Ridge and OLS}
+
+  \begin{block}{Assumption}
+   Data matrix $\underset{(n\times p)}{X}$ with rank $p$ so OLS estimator is unique.
+  \end{block}
+
+  \begin{block}{Economical SVD}
+    \begin{itemize}
+      \item 
+    $\underset{(n\times p)}{X} = \underset{(n\times p)}{U}\underset{(p\times p)}{D}\underset{(p\times p)}{V'}$ with $U'U = V'V = I_p$, $D$ diagonal 
+  \item Hence: $X'X = (UDV')'(UDV')=VDU'UDV' = VD^2V'$
+  \item Since $V$ is square it is an orthogonal matrix: $VV' = I_p$
+    \end{itemize}
+  \end{block}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Effective Degrees of Freedom For Ridge Regression}
+
+  \begin{block}{OLS Case}
+   Number of free parameters equals number of parameters $p$. 
+  \end{block}
+
+  \begin{block}{Ridge is more complicated}
+    Even though there are $p$ parameters they are \alert{constrained}! 
+  \end{block}
+
+  \begin{block}{Idea: look at ``Hat Matrix''}
+    $\mbox{df}(\lambda) = \mbox{tr}\left\{ H(\lambda) \right\} = \mbox{tr}\left\{ X(X'X + \lambda I_p)^{-1}X' \right\}$
+  \end{block}
+
+  \begin{block}{OLS: $\lambda = 0$}
+    $\mbox{df}(0) = \mbox{tr}\left\{ H(0) \right\} = \mbox{tr}\left\{ X(X'X)^{-1}X' \right\} = p$
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Effective Degrees of Freedom for Ridge Regression}
+  
+  Economical SVD $X = UDV'$ and suppose $\mbox{rank}(X) = p$ so $V$ is $(p\times p)$ and hence $V'V = V'V = I_p$. 
+  Thus, we have
+	\begin{eqnarray*}
+		\mbox{df}(\lambda) &=&  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}\\
+		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda I_p)^{-1}VDU' \right\}\\
+		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda VV')^{-1}VDU' \right\}\\
+		&=& \mbox{trace}\left\{UDV' \left[V(D^2 + \lambda I_p)V' \right]^{-1}VDU' \right\}\\
+		&=&\mbox{trace}\left\{UD(D^2 + \lambda I_p)^{-1}DU'\right\}\\
+		&=& \mbox{trace}\left\{D^2(D^2 + \lambda I_p)^{-1}\right\}\\
+		&=& \sum_{i=1}^p \frac{d_i^2}{d_i^2 + \lambda}
+	\end{eqnarray*}
+We see that the effective degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which simply gives OLS. 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
