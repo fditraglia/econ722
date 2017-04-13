@@ -55,11 +55,73 @@ Data-dependent, one-to-one mapping between $\lambda$ and $t$.
   
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.4]{../img/ISLR_ch6_fig7}
+	\includegraphics[scale=0.43]{../img/ISLR_ch6_fig7}
 	\caption{$\widehat{\beta}$ denotes the MLE and the ellipses are the contours of the likelihood. 
 LASSO, at left, and Ridge, at right, both shrink $\beta$ away from the MLE towards zero.
 Because of its diamond-shaped constraint set, however, LASSO favors a \alert{sparse solution} while Ridge does not}
 	\label{fig:ridge_lasso_constraint}
 \end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  {No Closed-Form for LASSO!}
+
+  \small
+
+  \begin{block}{Simple Special Case}
+  Suppose that $X'X = I_p$
+\end{block}
+\begin{block}{Maximum Likelihood}
+    $\widehat{\boldsymbol{\beta}}_{MLE} = (X'X)^{-1}X'\mathbf{y} = X'\mathbf{y}, \quad \widehat{\beta}_j^{MLE} = \sum_{i=1}^n x_{ij}y_i$ 
+  \end{block}
+
+  \begin{block}{Ridge Regression}
+    $\widehat{\boldsymbol{\beta}}_{Ridge} = (X'X + \lambda I_p)^{-1}X'\mathbf{y} = \left[ (1 + \lambda) I_p \right]^{-1} \widehat{\boldsymbol{\beta}}_{MLE},\quad \widehat{\beta}^{Ridge}_j = \displaystyle \frac{\widehat{\beta}^{MLE}_j}{1 + \lambda}$
+  \end{block}
+
+  \begin{alertblock}{So what about LASSO?}
+  \end{alertblock}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{LASSO when $X'X= I_p$}
+	$$\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
+Now using $X'X = I$ along with $\widehat{\beta}_{MLE} = X'\textbf{y}$, we can expand the first term as
+	\begin{eqnarray*}
+		 (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) &=& \mathbf{y}'\mathbf{y} - 2\beta' X' \mathbf{y} + \beta' X'X \beta \\
+		 	&=& (\mbox{constant}) - 2\beta' \widehat{\beta}_{MLE} + \beta'\beta
+	\end{eqnarray*}
+Thus, for the case of orthonormal regressors we have:
+\begin{eqnarray*}
+	\widehat{\beta}_{Lasso} &=& \underset{\beta}{\arg \min} (\beta'\beta - 2\beta' \widehat{\beta}_{MLE})  +  \lambda \left| \left| \beta\right| \right|_1\\
+		&=& \underset{\beta}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
+\end{eqnarray*}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating LASSO -- The Shooting Algorithm}
+  \framesubtitle{Cyclic Coordinate Descent}
+
+  \begin{algorithm}[H]
+    \KwData{$\mathbf{y}$, $X$, $\lambda\geq 0$, $\varepsilon > 0$} 
+  \KwResult{LASSO Solution}
+
+  $\boldsymbol{\beta} \leftarrow \mbox{ridge}(X, \mathbf{y}, \lambda)$
+ 
+
+  \Repeat{$\sum_{j=1}^p |\beta_j^{prev} - \beta_j|< \varepsilon$}{
+    $\boldsymbol{\beta}^{prev} \leftarrow \boldsymbol{\beta}$
+
+   \For{$j = 1, \dots, p$}{
+     $a_j \leftarrow 2 \sum_{i=1}^n x_{ij}^2$
+
+     $c_j \leftarrow 2\sum_{i=1}^n x_{ij}(y_i - \mathbf{x}_i' \mathbf{\beta} + \beta_j x_{ij})$
+
+     $\beta_j \leftarrow \mbox{sign}(c_j/a_j) \max \left\{0, |c_j/a_j| - \lambda/a_j \right\}$ 
+
+   }}
+\end{algorithm}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
