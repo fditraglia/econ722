@@ -156,7 +156,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 \begin{frame}
   \frametitle{Comparing Ridge and OLS -- The ``Hat Matrix''}
 
-    Using $X =UDV'$ and the fact that $V$ and $U$ are square orthogonal, 
+    Using $X =UDV'$ and the fact that $V$ is orthogonal, 
     \begin{eqnarray*}
       H(\lambda) &=&  X\left( X'X + \lambda I_p \right)^{-1}X' = UDV'\left( VD^2V + \lambda VV' \right)^{-1}VDU'\\
       &=& UDV'\left( VD^2V' + \lambda VV' \right)^{-1}VDU'\\
@@ -204,7 +204,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
   \end{eqnarray*}
 
   \begin{itemize}
-    \item $\mbox{df}(\lambda) \rightarrow 0$ as $\lambda \rightarrow 0$
+    \item $\mbox{df}(\lambda) \rightarrow 0$ as $\lambda \rightarrow \infty$
     \item $\mbox{df}(\lambda) = p$ when $\lambda = 0$
     \item $\mbox{df}(\lambda) < p$ when $\lambda > 0$
   \end{itemize}
@@ -214,8 +214,8 @@ For implementation details, see Murphy (2012; Section 7.5.2).
   \frametitle{Comparing OLS and Ridge Predictions}
 
   \begin{eqnarray*}
-  \widehat{y}(\lambda) &=&  X\widehat{\beta}(\lambda) = X\left( X'X + \lambda I_p \right)^{-1}X' \\
-  &=& H(\lambda) =  \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
+    \widehat{y}(\lambda) &=&  X\widehat{\beta}(\lambda) = X\left( X'X + \lambda I_p \right)^{-1}X'\mathbf{y} \\
+    &=& H(\lambda) \mathbf{y}=  \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
   &=& \left[ \sum_{j=1}^p \mathbf{u}_j  \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\right]\mathbf{y} =  \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
   \end{eqnarray*}
 
@@ -254,7 +254,7 @@ Instead of ``smooth weights'' as in Ridge, truncate the PCs:
 	\begin{enumerate}
     \item Calculate SVD $X=UDV'$ of \alert{centered} data matrix $X$
 		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
-		\item Throw away all but first $M$ principal components, where $M <p$.
+		\item Throw away all but first $k$ principal components, where $k <p$.
 		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$. 
 	\end{enumerate}
 
