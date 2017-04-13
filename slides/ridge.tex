@@ -140,7 +140,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
   \frametitle{Comparing Ridge and OLS}
 
   \begin{block}{Assumption}
-   Data matrix $\underset{(n\times p)}{X}$ with rank $p$ so OLS estimator is unique.
+   Centered data matrix $\underset{(n\times p)}{X}$ with rank $p$ so OLS estimator is unique.
   \end{block}
 
   \begin{block}{Economical SVD}
@@ -152,12 +152,26 @@ For implementation details, see Murphy (2012; Section 7.5.2).
     \end{itemize}
   \end{block}
 
+\end{frame}
+\begin{frame}
+  \frametitle{Comparing Ridge and OLS -- The ``Hat Matrix''}
+
+    Using $X =UDV'$ and the fact that $V$ and $U$ are square orthogonal, 
+    \begin{eqnarray*}
+      H(\lambda) &=&  X\left( X'X + \lambda I_p \right)^{-1}X' = UDV'\left( VD^2V + \lambda VV' \right)^{-1}VDU'\\
+      &=& UDV'\left( VD^2V' + \lambda VV' \right)^{-1}VDU'\\
+      &=& UDV'\left[ V(D^2 + \lambda I_p)V' \right]^{-1}VDU'\\
+      &=& UDV'\left( V' \right)^{-1}\left( D^2 + \lambda I_p \right)^{-1}\left( V \right)^{-1}VDU'\\
+      &=& UDV'V\left( D^2 + \lambda I_p \right)^{-1}V'VDU'\\
+      &=& UD\left( D^2 + \lambda I_p \right)^{-1}DU'
+    \end{eqnarray*}
+
 
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Effective Degrees of Freedom For Ridge Regression}
+  \frametitle{Model Complexity of Ridge Versus OLS}
 
   \begin{block}{OLS Case}
    Number of free parameters equals number of parameters $p$. 
@@ -167,11 +181,11 @@ For implementation details, see Murphy (2012; Section 7.5.2).
     Even though there are $p$ parameters they are \alert{constrained}! 
   \end{block}
 
-  \begin{block}{Idea: look at ``Hat Matrix''}
+  \begin{block}{Idea: use trace of $H(\lambda)$}
     $\mbox{df}(\lambda) = \mbox{tr}\left\{ H(\lambda) \right\} = \mbox{tr}\left\{ X(X'X + \lambda I_p)^{-1}X' \right\}$
   \end{block}
 
-  \begin{block}{OLS: $\lambda = 0$}
+  \begin{block}{Why? Works for OLS: $\lambda = 0$}
     $\mbox{df}(0) = \mbox{tr}\left\{ H(0) \right\} = \mbox{tr}\left\{ X(X'X)^{-1}X' \right\} = p$
   \end{block}
 
@@ -179,18 +193,78 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Effective Degrees of Freedom for Ridge Regression}
-  
-  Economical SVD $X = UDV'$ and suppose $\mbox{rank}(X) = p$ so $V$ is $(p\times p)$ and hence $V'V = V'V = I_p$. 
-  Thus, we have
-	\begin{eqnarray*}
-		\mbox{df}(\lambda) &=&  \mbox{trace}\left\{ X(X'X + \lambda I_p)^{-1} X'\right\}\\
-		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda I_p)^{-1}VDU' \right\}\\
-		&=& \mbox{trace}\left\{UDV' (VD^2V' + \lambda VV')^{-1}VDU' \right\}\\
-		&=& \mbox{trace}\left\{UDV' \left[V(D^2 + \lambda I_p)V' \right]^{-1}VDU' \right\}\\
-		&=&\mbox{trace}\left\{UD(D^2 + \lambda I_p)^{-1}DU'\right\}\\
-		&=& \mbox{trace}\left\{D^2(D^2 + \lambda I_p)^{-1}\right\}\\
-		&=& \sum_{i=1}^p \frac{d_i^2}{d_i^2 + \lambda}
-	\end{eqnarray*}
-We see that the effective degrees of freedom tend to zero as $\lambda \rightarrow \infty$, and equal $p$ if $\lambda = 0$, which simply gives OLS. 
+ 
+  Using cyclic permutation property of trace:
+  \begin{eqnarray*}
+    \mbox{df}(\lambda) &=&  \mbox{tr}\left\{ H(\lambda) \right\} = \mbox{tr}\left\{ X(X'X + \lambda I_p)^{-1}X' \right\}\\
+ &=& \mbox{tr}\left\{UD\left( D^2 + \lambda I_p \right)^{-1}DU'\right\}\\
+ &=& \mbox{tr}\left\{DU'UD\left( D^2 + \lambda I_p \right)^{-1}\right\}\\
+ &=& \mbox{tr}\left\{D^2\left( D^2 + \lambda I_p \right)^{-1}\right\}\\
+ &=& \sum_{j=1}^p\frac{d_j^2}{d_j^2 + \lambda}
+  \end{eqnarray*}
+
+  \begin{itemize}
+    \item $\mbox{df}(\lambda) \rightarrow 0$ as $\lambda \rightarrow 0$
+    \item $\mbox{df}(\lambda) = p$ when $\lambda = 0$
+    \item $\mbox{df}(\lambda) < p$ when $\lambda > 0$
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS and Ridge Predictions}
+
+  \begin{eqnarray*}
+  \widehat{y}(\lambda) &=&  X\widehat{\beta}(\lambda) = X\left( X'X + \lambda I_p \right)^{-1}X' \\
+  &=& H(\lambda) =  \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
+  &=& \left[ \sum_{j=1}^p \mathbf{u}_j  \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\right]\mathbf{y} =  \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
+  \end{eqnarray*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS and Ridge Predictions}
+  \small
+
+  \begin{eqnarray*}
+  \widehat{y}(\lambda) &=&
+   \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
+  \end{eqnarray*}
+
+  \begin{itemize}
+    \item Since $X$ is centered, $\mathbf{z}_j = d_j\mathbf{u}_j$ is the $j$th sample PC
+    \item $d_j^2$ is proportional to the \alert{variance} of the $j$th sample PC
+    \item Prediction from regression of $\mathbf{y}$ on $\mathbf{z}_j$ is: 
+      \[ \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = 
+        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} = \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  
+      \]
+    \item Ridge equivalent to regressing $y$ on sample PCs of $X$ but shrinking predictions to zero: higher variance PCs are shrunk less.
+    \item OLS doesn't shrink.
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Principal Components Regression (PCR)}
+
+  \small
+
+Instead of ``smooth weights'' as in Ridge, truncate the PCs:
+	\begin{enumerate}
+		\item Calculate SVD $X=UDV'$
+		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
+		\item Throw away all but first $M$ principal components, where $M <p$.
+		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$. 
+	\end{enumerate}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{PCR versus Ridge}
+  \begin{itemize}
+    \item PCR is a much less smooth version of Ridge
+    \item Conventional wisdom is that PCR will perform worse since it shrinks low variance directions too much and doesn't shrink high variance directions at all.
+  \item However, Dhillon et al.\ (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression while there are situations in which Ridge can be arbitrarily worse than PCR in terms of MSE. 
+    \item In practice, which is better depends on the DGP
+  \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
