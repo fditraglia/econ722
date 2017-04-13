@@ -168,11 +168,17 @@ Interior solution:
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{LASSO versus Ridge when $X'X = I_p$}
+  \frametitle{Ridge versus LASSO when $X'X = I_p$}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{../img/ISLR_ch6_fig10}
+	\caption{Horizontal axis in each plot is MLE}
+\end{figure}
 
+\vspace{-3em}
 	\begin{eqnarray*}
 		\widehat{\beta}^{Ridge}_j &=&  \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j\\
-		\widehat{\beta}^{Lasso}_j &=&\mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\left(\left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right)_+
+    \widehat{\beta}^{Lasso}_j &=&\mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\max\left\{0, \left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right\}
 	\end{eqnarray*}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
