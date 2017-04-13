@@ -84,19 +84,96 @@ Because of its diamond-shaped constraint set, however, LASSO favors a \alert{spa
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{LASSO when $X'X= I_p$}
-	$$\underset{\beta}{\arg \min} (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) + \lambda \left| \left| \beta\right| \right|_1$$
-Now using $X'X = I$ along with $\widehat{\beta}_{MLE} = X'\textbf{y}$, we can expand the first term as
+  \frametitle{LASSO when $X'X= I_p$ so $\widehat{\beta}_{MLE} = X'\mathbf{y}$}
+
+  \begin{block}{Want to Solve}
+    \vspace{-1.5em}
+    $$\widehat{\boldsymbol{\beta}}_{LASSO} = \underset{\boldsymbol{\beta}}{\arg \min}\; (\mathbf{y}  - X\boldsymbol{\beta})' (\mathbf{y} - X\boldsymbol{\beta}) + \lambda \left| \left| \boldsymbol{\beta}\right| \right|_1$$
+  \end{block}
+
+  \begin{block}{Expand First Term}
+    \vspace{-1.5em}
 	\begin{eqnarray*}
-		 (\mathbf{y}  - X\beta)' (\mathbf{y} - X\beta) &=& \mathbf{y}'\mathbf{y} - 2\beta' X' \mathbf{y} + \beta' X'X \beta \\
-		 	&=& (\mbox{constant}) - 2\beta' \widehat{\beta}_{MLE} + \beta'\beta
+    (\mathbf{y}  - X\boldsymbol{\beta})' (\mathbf{y} - X\boldsymbol{\beta}) &=& \mathbf{y}'\mathbf{y} - 2\boldsymbol{\beta}' X' \mathbf{y} + \boldsymbol{\beta}' X'X \boldsymbol{\beta} \\
+    &=& (\mbox{constant}) - 2\boldsymbol{\beta}' \widehat{\boldsymbol{\beta}}_{MLE} + \boldsymbol{\beta}'\boldsymbol{\beta}
 	\end{eqnarray*}
-Thus, for the case of orthonormal regressors we have:
+  \end{block}
+
+  \begin{block}{Hence}
+    \vspace{-1.5em}
 \begin{eqnarray*}
-	\widehat{\beta}_{Lasso} &=& \underset{\beta}{\arg \min} (\beta'\beta - 2\beta' \widehat{\beta}_{MLE})  +  \lambda \left| \left| \beta\right| \right|_1\\
-		&=& \underset{\beta}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
+  \widehat{\boldsymbol{\beta}}_{LASSO} &=& \underset{\boldsymbol{\beta}}{\arg \min}\; (\boldsymbol{\beta}'\boldsymbol{\beta} - 2\boldsymbol{\beta}' \widehat{\boldsymbol{\beta}}_{MLE})  +  \lambda \left| \left| \boldsymbol{\beta}\right| \right|_1\\
+  &=& \underset{\boldsymbol{\beta}}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
 \end{eqnarray*}
+    
+  \end{block}
   
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{LASSO when $X'X = I_p$}
+  \begin{block}{Preceding Slide}
+    \vspace{-1.5em}
+\begin{eqnarray*}
+  \widehat{\boldsymbol{\beta}}_{LASSO} 
+  &=& \underset{\boldsymbol{\beta}}{\arg \min}  \sum_{j=1}^p \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
+\end{eqnarray*}
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{alertblock}{Key Simplification}
+  Equivalent to solving $j$ independent optimization problems:
+  \vspace{-0.5em}
+  \[
+	\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \left(\beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\left|\beta_j \right|\right)
+  \]
+  \vspace{-2em}
+  \begin{itemize}
+    \item Sign of $\beta_j^2$ and $\lambda |\beta_j|$ unaffected by $\mbox{sign}(\beta_j)$
+    \item $\widehat{\beta}_j^{MLE}$ is a function of data only -- outside our control
+    \item Minimization requires \alert{matching} $\mbox{sign}(\beta_j)$ to $\mbox{sign}(\widehat{\beta}^{MLE}_j)$
+  \end{itemize}
+  \end{alertblock}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{LASSO when $X'X = I_p$}
+
+  \begin{block}{Case I: $\widehat{\beta}^{MLE}>0 \implies \beta_j > 0 \implies |\beta_j| = \beta_j$}
+    
+Optimization problem becomes
+\[\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \; \beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\beta_j\]
+Interior solution:
+\[\widehat{\beta}_j = \widehat{\beta}^{MLE}_j - \frac{\lambda}{2}\]
+  Can't have $\beta_j<0$: corner solution sets $\beta_j = 0$
+\[\widehat{\beta}^{Lasso}_j = \max\left\{0,\widehat{\beta}^{MLE}_j - \frac{\lambda}{2}\right\}\] 
+  \end{block}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{LASSO when $X'X = I_p$}
+
+  \begin{block}{Case II: $\widehat{\beta}^{MLE}\leq0 \implies \beta_j \leq 0 \implies |\beta_j| = -\beta_j$}
+    
+Optimization problem becomes
+\[\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \; \beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j - \lambda\beta_j\]
+Interior solution:
+\[\widehat{\beta}_j = \widehat{\beta}^{MLE}_j + \frac{\lambda}{2}\]
+  Can't have $\beta_j>0$: corner solution sets $\beta_j = 0$
+\[\widehat{\beta}^{Lasso}_j = \min\left\{0,\widehat{\beta}^{MLE}_j + \frac{\lambda}{2}\right\}\] 
+  \end{block}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{LASSO versus Ridge when $X'X = I_p$}
+
+	\begin{eqnarray*}
+		\widehat{\beta}^{Ridge}_j &=&  \left(\frac{1}{1+\lambda}\right)\widehat{\beta}^{MLE}_j\\
+		\widehat{\beta}^{Lasso}_j &=&\mbox{sign}\left(\widehat{\beta}^{MLE}_j \right)\left(\left| \widehat{\beta}^{MLE}_j\right| - \frac{\lambda}{2} \right)_+
+	\end{eqnarray*}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
