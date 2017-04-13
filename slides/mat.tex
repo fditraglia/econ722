@@ -125,7 +125,7 @@ Any $m \times n$ matrix $A$ of arbitrary rank $r$ can be written
 	 	\item $U$ = $m\times m$ orthog.\ matrix whose cols contain e-vectors of $AA'$
 	 	\item $V$ = $n\times n$ orthog.\ matrix whose cols contain e-vectors of $A'A$
 	 	\item $D$ = $m\times n$ matrix whose first $r$ main diagonal elements are the  \emph{singular values} $d_1, \hdots, d_r$. All other elements are zero.
-	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
+    \item The singular values $d_1, \hdots, d_r$ are the square roots of the non-zero eigenvalues of $A'A$ \alert{and} $AA'$.
     \item (E-values of $A'A$ and $AA'$ could be zero but not negative)
 	 \end{itemize} 
 \end{frame}
@@ -143,7 +143,7 @@ If $A$ is \textbf{symmetric} then $A = Q\Lambda Q'$ where $\Lambda$ is a diagona
     A'A = (Q\Lambda Q')'(Q\Lambda Q') = Q \Lambda Q' Q \Lambda Q' = Q \Lambda^2 Q'
   \]
   using the fact that $Q$ is orthogonal and $\Lambda$ diagonal.
-  Thus, when $A$ is symmetric the SVD reduces to $U = V = Q$ and $D =  \Lambda^2$ so that \emph{negative} eigenvalues become \emph{positive} singular values.
+  Thus, when $A$ is symmetric the SVD reduces to $U = V = Q$ and $D = \sqrt{\Lambda^2}$ so that \emph{negative} eigenvalues become \emph{positive} singular values.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -250,7 +250,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 
 Instead of ``smooth weights'' as in Ridge, truncate the PCs:
 	\begin{enumerate}
-		\item Calculate SVD $X=UDV'$
+    \item Calculate SVD $X=UDV'$ of \alert{centered} data matrix $X$
 		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
 		\item Throw away all but first $M$ principal components, where $M <p$.
 		\item Regress \textbf{y} on $\mathbf{z_1}, \hdots, \mathbf{z}_k$. 
