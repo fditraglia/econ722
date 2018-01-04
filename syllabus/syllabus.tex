@@ -1,0 +1,159 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage{geometry}
+\geometry{margin=1in} 
+\usepackage{setspace}
+\linespread{1}
+\usepackage{hyperref}
+\usepackage{totcount}
+\usepackage{termcal}
+\usepackage{enumerate}
+\usepackage{fancybox}
+\usepackage{amsmath, amssymb}
+
+%%%%%%%%%%%%% A Command to create an automatically numbered Quiz Icon in the course calendar.
+\newtotcounter{quizcounter}
+\newcommand{\quiz}{\addtocounter{quizcounter}{1}\fbox{\textbf{Quiz \#\arabic{quizcounter}}}}
+
+
+% Some useful commands (our classes always meet either on Monday and Wednesday 
+% or on Tuesday and Thursday)
+\newcommand{\MWClass}{%
+\calday[Monday]{\classday} % Monday
+\skipday % Tuesday (no class)
+\calday[Wednesday]{\classday} % Wednesday
+\skipday % Thursday (no class)
+\skipday % Friday 
+\skipday\skipday % weekend (no class)
+}
+
+\newcommand{\TRClass}{%
+\skipday % Monday (no class)
+\calday[Tuesday]{\classday} % Tuesday
+\skipday % Wednesday (no class)
+\calday[Thursday]{\classday} % Thursday
+\skipday % Friday 
+\skipday\skipday % weekend (no class)
+}
+
+\newcommand{\Holiday}[2]{%
+\options{#1}{\noclassday}
+\caltext{#1}{#2}
+}
+
+\begin{document}
+
+
+\thispagestyle{plain}
+
+\begin{center}
+\Large
+\sc
+Econometrics IV\\
+\large
+Econ 722\\
+\large
+Spring 2018
+\end{center}
+
+
+
+\normalsize
+
+\noindent \textbf{Course Instructor:} Francis DiTraglia \\
+Office: MCNB 535\\
+Office Hours: M 2--4pm 
+
+\medskip
+
+ 
+\noindent \textbf{Lecture Time and Location:} 
+TR 1:30--3PM MCNB 169 
+
+\medskip
+ 
+\noindent \textbf{Course Website:} \url{http://ditraglia.com/econ722} 
+
+\medskip
+
+
+
+\noindent \textbf{Course Description:} 
+Talk about how this is a little different from the regular Econ 722 since it's only a half course.
+Still relevant for macroeconometrics and time series but will also consider some cross-section applications.
+Broaden appeal.
+Applied microeconomics students who are interested in understanding some of the techniques related to ``big data'' will find the course helpful.
+
+
+
+\medskip
+
+\noindent \textbf{Prerequisites:} 
+The prerequisites for this course are Econ 705 and 706 or equivalent graduate level econometrics. 
+
+
+
+\medskip
+
+\noindent \textbf{Recommended Text:} 
+Mostly articles and other references that I will post online.
+Comprehensive reference for much of the machine learning material is
+Murphy, Kevin (2012): {\em Machine Learning: A Probabilistic Perspective}
+
+\medskip
+
+
+\section*{Assignments and Grading}
+
+Grades for this course will be determined based on\dots 
+	\begin{equation*}
+	\begin{split}
+		\mbox{Overall Score} = (30\% \times \mbox{Quizzes})  + (20\% \times \mbox{Midterm 1}) + (20\% \times \mbox{Midterm 2}) + (30\% \times \mbox{Final}).
+	\end{split}
+	\end{equation*}
+You can earn extra credit worth up to 5\% of your course grade: see ``Extra Credit'' for details.
+
+\medskip 
+
+
+\noindent \textbf{Econometrics Workshop:} 
+
+
+
+
+%NOTE: don't use leading zeros in dates! In other words, use 1/1/2014 rather than 01/01/2014
+ 
+\newpage
+
+\begin{center}
+\small
+\begin{calendar}{3/12/2018}{7} %Date of Monday in first week of classes, NOT the date of the first class!
+\setlength{\calboxdepth}{.25in}
+\TRClass
+% schedule
+\caltexton{1}{Computing for Econometrics: Creating R Packages, Rcpp, Parallel R}
+\caltextnext{Model Selection I: AIC, TIC, Corrected AIC}
+\caltextnext{Model Selection II: Mallow's $C_p$, Cross-validation, Examples} 
+\caltextnext{Model Selection III: Focused Info.\ Criterion, Asymptotic Properties}
+\caltextnext{Moment Selection I: Consistent Moment Selection, Andrews (1999) etc.}
+\caltextnext{Moment Selection II: Focused Moment Selection and Averaging, Inference} 
+\caltextnext{High-Dimensional Regression I: James-Stein, Ridge Regression, PCR}
+\caltextnext{High-Dimensional Regression II: LASSO}
+\caltextnext{Factor Models I: Factor Analysis vs.\ PCA, High-dimensional Factor Models} 
+\caltextnext{Factor Models II: Diffusion Index Forecasting, Factor Choice, Factors as IVs}
+\caltextnext{Additional Topics I (Time Permitting)}
+\caltextnext{Additional Topics II (Time Permitting)}
+\caltextnext{Additional Topics III (Time Permitting)}
+% ... and so on
+
+% Holidays
+%\Holiday{1/9/2018}{\textbf{Winter Break -- No Lecture}}
+
+%\options{2/13/2018}{\noclassday} % first midterm exam
+%\caltext{2/13/2018}{\shadowbox{\textbf{Midterm I} -- Material through Feb.\ 8th}}
+\options{4/26/2018}{\noclassday} % finals
+\caltext{4/26/2018}{\textbf{Reading Day -- No Lecture}}
+\end{calendar}
+\end{center}
+
+
+\end{document}
