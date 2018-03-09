@@ -316,9 +316,103 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  Some benefits and drawbacks of max versus Bayes risk. 
-  Example where max risk is crazy. 
-  Motivate regret and minimax regret.
+  \frametitle{Problems with the Minimax Principle}
+  \begin{columns}
+    \column{0.48\textwidth}
+    \begin{figure}
+      \centering
+      \footnotesize
+      \begin{tikzpicture}
+        \draw [-] (0,2.2) -- (0,0) -- (3,0);
+        \node [above] at (0,2.2) {Risk};
+        \node [below] at (1.5,-0.5) {$\theta$};
+        \node [below] at (0,-0.1) {$0$};
+        \foreach \x in {1,1.5,2}{
+          \draw[xshift=\x cm] (0pt,-3pt) -- (0pt,3pt);
+          \node[below] at (\x,-0.1) {\x}; 
+        }
+        \foreach \y in {1,2}{
+          \draw[yshift=\y cm] (-3pt,0pt) -- (3pt,0pt);
+          \node[left] at (-0.1,\y) {\y}; 
+        }
+        \draw [thick, color = red] (0,0.2) -- (1.3,0.2) -- (1.3,1.1) -- (1.7,1.1) -- (1.7,0.2) -- (3,0.2);
+        \node [right, color = red] at (3,0.2) {$R(\theta, \widetilde{\theta})$};
+        \draw [thick, color = blue] (0,2) -- (1,2) -- (1, 1) -- (2, 1) -- (2,2) -- (3,2);
+        \node [right, color = blue] at (3,2) {$R(\theta, \widehat{\theta})$};
+      \end{tikzpicture}
+    \end{figure}
+
+    \column{0.48\textwidth}
+    \begin{figure}
+      \footnotesize
+      \centering
+      \begin{tikzpicture}
+        \draw [-] (0,2.2) -- (0,0) -- (3,0);
+        \node [above] at (0,2.2) {Risk};
+        \node [below] at (1.5,-0.5) {$\theta$};
+        \node [below] at (0,-0.1) {$0$};
+        \foreach \x in {1,1.5,2}{
+          \draw[xshift=\x cm] (0pt,-3pt) -- (0pt,3pt);
+          \node[below] at (\x,-0.1) {\x}; 
+        }
+        \foreach \y in {1,2}{
+          \draw[yshift=\y cm] (-3pt,0pt) -- (3pt,0pt);
+          \node[left] at (-0.1,\y) {\y}; 
+        }
+        \draw [thick, color = red] (0,0.2) --(1,0.2) -- (1,1.1) -- (1.3,1.1) -- (1.3,2.1) -- (1.7,2.1) -- (1.7,1.1) -- (2,1.1) -- (2,0.2) -- (3,0.2);
+        \node [right, color = red] at (3,0.2) {$R(\theta, \widetilde{\theta})$};
+        \draw [thick, color = blue] (0,2) -- (3,2);
+        \node [right, color = blue] at (3,2) {$R(\theta, \widehat{\theta})$};
+      \end{tikzpicture}
+    \end{figure}
+
+  \end{columns}
+
+  \vspace{2em}
+
+  \small
+
+  In the left panel, $\widetilde{\theta}$ is preferred by the minimax principle; in the right panel $\widehat{\theta}$ is preferred.
+  But the only difference between them is that the right panel adds an additional \emph{fixed} loss of 1 for $1 \leq \theta \leq 2$.
+
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Problems with the Minimax Principle}
+  \small
+
+  Suppose that $\Theta = \left\{ \theta_1, \theta_2 \right\}$, $\mathcal{A} = \left\{ a_1, a_2 \right\}$ and the loss function is:
+  \begin{table}
+    \centering
+    \begin{tabular}{lrr}
+      & $a_1$ & $a_2$ \\
+      \cline{2-3}
+      $\theta_1$ & \multicolumn{1}{|r|}{10} & \multicolumn{1}{r|}{10.01} \\
+      \cline{2-3}
+      $\theta_2$ & \multicolumn{1}{|r|}{8} & \multicolumn{1}{r|}{-8}\\
+      \cline{2-3}
+    \end{tabular}
+  \end{table}
+  
+  \vspace{1em}
+
+  \begin{itemize}
+    \item Minimax principle: choose $a_1$
+    \item Bayes: Choose $a_2$ unless $\pi(\theta_1) > 0.9994$
+  \end{itemize}
+
+
+  \vspace{1em}
+
+  \alert{Minimax ignores the fact that under $\theta_1$ we can never do better than a loss of 10, and tries to prevent us from incurring a tiny additional loss of 0.01}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+  Regret and minimax regret.
+  And maybe Gamma-minimax, and gamma-minimax regret.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
