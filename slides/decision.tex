@@ -260,7 +260,7 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Minimax Estimators and Least Favorable Priors}
+  \frametitle{The Bayes Rule for a Least Favorable Prior is Minimax}
 
 
   \begin{block}{Theorem}
@@ -269,7 +269,7 @@
     %\[
     %  \boxed{R(\theta,\widehat{\theta}) \leq r(\pi, \widehat{\theta})}
     %\]
-    Then $\widehat{\theta}$ is a minimax estimator, and $\pi$ is called a \textbf{least favorable prior}.
+    Then $\widehat{\theta}$ is a \textbf{minimax estimator}, and $\pi$ is called a \textbf{least favorable prior}.
   \end{block}
 
   \begin{block}{Proof}
@@ -298,7 +298,7 @@
   \end{block}
 
   \begin{block}{Theorem}
-    If $\widehat{\theta}$ is an equalizer rule and is Bayes with respect to $\pi$, then $\widehat{\theta}$ is minimax and $\pi$ is least favorable.
+    If $\widehat{\theta}$ is an equalizer rule and is Bayes with respect to $\pi$, then $\widehat{\theta}$ is \textbf{minimax} and $\pi$ is \textbf{least favorable}.
   \end{block}
   
   \begin{block}{Proof}
@@ -306,13 +306,27 @@
     \[
       r(\pi, \widehat{\theta}) = \int R(\theta, \widehat{\theta})\pi(\theta)\, d\theta = \int C \pi(\theta) \, d\theta = C 
     \]
-    Hence, $R(\theta, \widehat{\theta}) \leq r(\pi, \widehat{\theta})$ for all $\theta$ so we can apply the preceding theorem. \alert{Maybe take this out and assign it as homework?}
+    Hence, $R(\theta, \widehat{\theta}) \leq r(\pi, \widehat{\theta})$ for all $\theta$ so we can apply the preceding theorem. 
   \end{block}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  Add an example. Possibly talk about generalized Bayes and sequences of priors.
+  \frametitle{Example: $X_1, \dots, X_n \sim \mbox{ iid Bernoulli}(p)$}
+
+  Under a Beta$(\alpha, \beta)$ prior with  $\alpha = \beta = \sqrt{n}/2$, 
+  \[
+    \widehat{p}(\mathbf{x}) = \frac{n\bar{X} + \sqrt{n}/2}{n + \sqrt{n}}
+  \]
+  is the Bayesian posterior mean, hence the Bayes rule under squared error loss.
+  The risk function of $\widehat{p}$ is,
+  \[
+    R(p, \widehat{p}) = \frac{n}{4(n + \sqrt{n})^2}
+  \]
+  which is constant in $p$.
+  Hence, $\widehat{p}$ is an equalizer rule, and by the preceding theorem is minimax.
+
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -409,17 +423,17 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-
-  Regret and minimax regret.
-  And maybe Gamma-minimax, and gamma-minimax regret.
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%
+%  Regret and minimax regret.
+%  And maybe Gamma-minimax, and gamma-minimax regret.
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Dominance and Admissibility}
 
   \begin{block}{Dominance}
-$\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\theta,\widehat{\theta}) \leq R(theta,\widetilde{\theta})$ for all $\theta \in \Theta$ and the inequality is strict for at least one value of  $\theta$. 
+$\widehat{\theta}$ \textbf{dominates} $\widetilde{\theta}$ with respect to $R$ if $R(\theta,\widehat{\theta}) \leq R(\theta,\widetilde{\theta})$ for all $\theta \in \Theta$ and the inequality is strict for at least one value of  $\theta$. 
   \end{block}
 
   \begin{block}{Admissibility}
@@ -430,18 +444,27 @@ $\widehat{\theta}$ is \textbf{admissible} if no other estimator dominates it.
     $\widehat{\theta}$ is \textbf{inadmissible} if there is an estimator that dominates it. 
   \end{alertblock}
 
-  \begin{block}{Strong Inadmissibility}
-    We say that $\widehat{\theta}$ is \textbf{strongly inadmissible} if there exists an estimator $\widetilde{\theta}$ and an $\varepsilon > 0$ such that $R(\theta, \widetilde{\theta}) < R(\theta, \widehat{\theta}) - \varepsilon$ for all $\theta$.
-  \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Example of Admissible Estimator}
+  \frametitle{Example of an Admissible Estimator}
 
 
-  \begin{block}{Example}
-    If $X\sim N(\theta, 1)$ then $\widehat{\theta}(X) = 3$ is admissible under squared error loss. \alert{FILL IN DETAILS}
-  \end{block}
+    Say we want to estimate $\theta$ from $X\sim N(\theta, 1)$ under squared error loss. 
+    Is the estimator $\widehat{\theta}(X) = 3$ admissible?
+
+    \vspace{2em}
+    If not, then there is a $\widetilde{\theta}$ with $R(\theta,\widetilde{\theta}) \leq R(\theta,\widehat{\theta})$ for all $\theta$. 
+    Hence:
+    \[
+      R(3, \widetilde{\theta}) \leq R(3, \widehat{\theta}) = \left\{\mathbb{E}\left[\widehat{\theta} - 3  \right] \right\}^2 + \mbox{Var}(\widehat{\theta}) = 0
+    \]
+    Since $R$ cannot be negative for squared error loss, 
+    \[
+      0 = R(3,\widetilde{\theta}) = \left\{ \mathbb{E}\left[ \widetilde{\theta} - 3 \right] \right\}^2 + \mbox{Var}(\widetilde{\theta})
+    \]
+    Therefore $\widehat{\theta} = \widetilde{\theta}$, so $\widehat{\theta}$ is admissible, although very silly!
+
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,28 +488,67 @@ $\widehat{\theta}$ is \textbf{admissible} if no other estimator dominates it.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-Add proof of one of the preceding theorems and assign the others for homework.
+  If there's time, add a proof of one of these. 
+  Assign the others for homework.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Admissibility and Minimaxity}
+  \frametitle{Admissible Equalizer Rules are Minimax}
 
   \begin{block}{Theorem}
-    If $\widehat{\theta}$ has constant risk and is admissible, then it is minimax.
+    Let $\widehat{\theta}$ be an equalizer rule. 
+    Then if $\widehat{\theta}$ is admissible, it is minimax.
+  \end{block}
+  \begin{block}{Proof}
+    Since $\widehat{\theta}$ is an equalizer rule, $R(\theta, \widehat{\theta}) = C$.
+    Suppose that $\widehat{\theta}$ is not minimax.
+    Then there is a $\widetilde{\theta}$ such that
+
+    \[
+      \sup_{\theta \in \Theta} R(\theta,\widetilde{\theta}) < \sup_{\theta \in \Theta} R(\theta, \widehat{\theta}) = C
+    \]
+
+    But for any $\theta$, $R(\theta, \widetilde{\theta}) \leq \sup_{\theta \in \Theta} R(\theta, \widetilde{\theta})$.
+    Thus we have shown that $\widetilde{\theta}$ dominates $\widehat{\theta}$, so that $\widehat{\theta}$ cannot be admissible.
+  \end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Minimax Implies ``Nearly'' Admissible}
+
+
+
+  \begin{block}{Strong Inadmissibility}
+    We say that $\widehat{\theta}$ is \textbf{strongly inadmissible} if there exists an estimator $\widetilde{\theta}$ and an $\varepsilon > 0$ such that $R(\theta, \widetilde{\theta}) < R(\theta, \widehat{\theta}) - \varepsilon$ for all $\theta$.
   \end{block}
 
   \begin{block}{Theorem}
     If $\widehat{\theta}$ is minimax, then it is \textbf{not} strongly inadmissible.
   \end{block}
 
-
-  \begin{block}{Example}
-    \alert{Sample mean unbounded parameter space is admissible (hard to prove this, but it's basically a limit of a Bayes rule) and constant risk (easy to see this), hence minimax}
-  \end{block}
-
-  \alert{Possibly assign these for homework. I have a proof for the first, and the second seems straightforward.}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Example: Sample Mean, Unbounded Parameter Space}
+
+  \begin{block}{Theorem}
+    Suppose that $X_1, \dots, X_n \sim N(\theta, 1)$ with $\Theta = \mathbb{R}$.
+    Under squared error loss, one can show that $\widehat{\theta} = \bar{X}$ is admissible.
+  \end{block}
+
+  \begin{block}{Intuition}
+    The proof is complicated, but effectively we view this estimator as a \textbf{limit} of a of Bayes estimator with prior $N(a, b^2)$, as $b^2 \rightarrow \infty$.
+  \end{block}
+
+  \begin{block}{Minimaxity}
+    Since $R(\theta, \bar{X}) = \mbox{Var}(\bar{X}) = 1/n$, we see that $\bar{X}$ is an equalizer rule.
+    Since it is admissible, it is therefore minimax.
+  \end{block}
+
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{The James-Stein Estimator}
@@ -514,7 +576,7 @@ Add proof of one of the preceding theorems and assign the others for homework.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{A Very Simple Example: $X \sim N(\theta, I)$}
+  \frametitle{Multiple Normal Means: $X \sim N(\theta, I)$}
 
   \begin{block}{Goal}
     Estimate the $p$-vector $\theta$ using $X$ with $L(\theta, \widehat{\theta}) = \lvert\lvert \widehat{\theta} - \theta\rvert\rvert^2$.
@@ -536,7 +598,7 @@ Since $\mathbb{E}[\chi^2_p]=p$, we have $R(\theta, \hat{\theta})=p$.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{A Very Simple Example: $X \sim N(\theta, I)$}
+  \frametitle{Multiple Normal Means: $X \sim N(\theta, I)$}
 
   \begin{block}{James-Stein Estimator}
 \begin{equation*}
