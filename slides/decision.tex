@@ -288,7 +288,27 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  Try to use the preceding result to show that for the problem $X\sim N(\theta, 1)$ with squared error loss and $\Theta = [-m, m]$ for $0< m < 1$ then the unique minimax estimator is $m \tanh(mX)$ and the least favorable prior puts 1/2 probability on $m$ and the rest on $-m$.
+  \frametitle{Example of Least Favorable Prior}
+
+  \begin{block}{Bounded Normal Mean}
+  \begin{itemize}
+    \item $X \sim N(\theta,1)$
+    \item Squared error loss
+    \item $\Theta = [-m,m]$ for $0 < m < 1$
+  \end{itemize}
+\end{block}
+
+\begin{block}{Least Favorable Prior}
+  $\pi(\theta) = 1/2$ for $\theta \in\{-m,m\}$, zero otherwise. 
+\end{block}
+
+\begin{block}{Resulting Bayes Rule is Minimax}
+  \vspace{-1em}
+\[
+  \widehat{\theta}(X) = m \tanh(mX) = m\left[ \frac{\exp\left\{ mX \right\} - \exp\left\{ -mX \right\}}{\exp\left\{ mX \right\} + \exp\left\{ -mX \right\}}\right]
+\]
+\end{block}
+
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
@@ -485,11 +505,6 @@ $\widehat{\theta}$ is \textbf{admissible} if no other estimator dominates it.
     Then if $\widehat{\theta}$ is a Bayes rule with respect to $\pi$, it is admissible.
   \end{block}
 
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  If there's time, add a proof of one of these. 
-  Assign the others for homework.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
