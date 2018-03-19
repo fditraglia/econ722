@@ -4,12 +4,12 @@
   \frametitle{Model Selection using a Hold-out Sample}
 
   \begin{itemize}
-    \item The real problem is \alert{double} use of the data: first for estimation, then for model comparison. \pause
+    \item The real problem is \alert{double} use of the data: first for estimation, then for model comparison. 
       \begin{itemize}
-        \item Maximized sample log-likelihood is an overly optimistic estimate of expected log-likelihood and hence KL-divergence \pause
-        \item In-sample squared prediction error is an overly optimistic estimator of out-of-sample squared prediction error \pause
+        \item Maximized sample log-likelihood is an overly optimistic estimate of expected log-likelihood and hence KL-divergence 
+        \item In-sample squared prediction error is an overly optimistic estimator of out-of-sample squared prediction error 
       \end{itemize}
-  \item AIC/TIC, AIC$_c$, BIC, $C_p$ \alert{penalize} sample log-likelihood or RSS to compensate. \pause
+  \item AIC/TIC, AIC$_c$, BIC, $C_p$ \alert{penalize} sample log-likelihood or RSS to compensate. 
   \item Another idea: \alert{don't re-use the same data!}
   \end{itemize}
 
@@ -71,7 +71,7 @@
     Randomly partition full dataset into $K$ \alert{folds} of approx.\ equal size. 
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Step 2}
     Treat $k$\textsuperscript{th} fold as a hold-out sample and estimate model using all observations \alert{except} those in fold $k$: yielding estimator $\widehat{\theta}(-k)$.
@@ -88,12 +88,12 @@
     Treat $k$\textsuperscript{th} fold as a hold-out sample and estimate model using all observations \alert{except} those in fold $k$: yielding estimator $\widehat{\theta}(-k)$.
   \end{block}
 
-  \pause
+  
   \begin{block}{Step 3}
     Repeat Step 2 for each $k = 1, \dots, K$. 
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Step 4}
     For each $t$ calculate the prediction $\widehat{y}_t^{-k(t)}$ of $y_t$ based on $\widehat{\theta}(-k(t))$, the estimator that excluded observation $t$. 
@@ -108,13 +108,13 @@
     For each $t$ calculate the prediction $\widehat{y}_t^{-k(t)}$ of $y_t$ based on $\widehat{\theta}(-k(t))$, the estimator that excluded observation $t$. 
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Step 5}
     Define $\text{CV}_K = \frac{1}{T}\sum_{t=1}^T L\left(y_t, \widehat{y}_t^{-k(t)}\right)$ where $L$ is a loss function. 
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Step 5}
     Repeat for each model \& choose $m$ to minimize $\text{CV}_K(m)$.
@@ -132,13 +132,13 @@
   \small
     \vspace{-1em}
     \begin{itemize}
-      \item For regression squared error loss makes sense \pause
-      \item For classification (discrete prediction) could use zero-one loss. \pause
+      \item For regression squared error loss makes sense 
+      \item For classification (discrete prediction) could use zero-one loss. 
       \item Can also use log-likelihood/KL-divergence as a loss function\dots 
     \end{itemize}
   \end{block}
 
-  \pause
+  
 
     \vspace{-1em}
 
@@ -146,10 +146,10 @@
     \small
     \vspace{-1em}
     \begin{itemize}
-      \item One extreme: $K=2$. Closest to Training/Test idea. \pause
-      \item Other extreme: $K=T$ \alert{Leave-one-out} CV (LOO-CV). \pause
-      \item Computationally expensive model $\Rightarrow$ may prefer fewer folds. \pause
-      \item If your model is a linear smoother there's a computational trick that makes LOO-CV extremely fast. (Problem Set) \pause
+      \item One extreme: $K=2$. Closest to Training/Test idea. 
+      \item Other extreme: $K=T$ \alert{Leave-one-out} CV (LOO-CV). 
+      \item Computationally expensive model $\Rightarrow$ may prefer fewer folds. 
+      \item If your model is a linear smoother there's a computational trick that makes LOO-CV extremely fast. (Problem Set) 
       \item Asymptotic properties are related to $K$\dots
     \end{itemize}
     
@@ -173,7 +173,7 @@
     Let $\widehat{\theta}_{(t)}$ be the maximum likelihood estimator based on all observations \alert{except $t$} and $\widehat{\theta}$ be the full-sample estimator.
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Log-likelihood as ``Loss''}
     $\text{CV}_1 = \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})$ but since min.\ KL = max.\ log-like.\ we choose the model with \alert{highest} $\text{CV}_1(m)$.
@@ -188,8 +188,8 @@
     \vspace{-2em}
 
 	\begin{eqnarray*}
-		CV_1 &=& \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})\\ \pause
-			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\ \pause
+		CV_1 &=& \frac{1}{T} \sum_{t=1}^T \log f(y_t|\widehat{\theta}_{(t)})\\ 
+			&=&\frac{1}{T} \sum_{t=1}^T \left[\log f(y_t|\widehat{\theta}) + \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) \right] + o_p(1)\\ 
 			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
 	\end{eqnarray*}
 
@@ -221,12 +221,12 @@ By the definition of $\widehat{K}$ and the properties of the trace operator:
 \footnotesize
 \begin{eqnarray*}
 		-\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1} \widehat{K} \right\}
-		&=& -\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\ \pause
-    &=& \left[\frac{1}{T}\sum_{t=1}^T \mbox{tr}\left\{\frac{-\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right\}\right]\\ \pause
+		&=& -\frac{1}{T}\mbox{tr}\left\{\widehat{J}^{-1}\left[\frac{1}{T}\sum_{t=1}^T \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right]\right\}\\ 
+    &=& \left[\frac{1}{T}\sum_{t=1}^T \mbox{tr}\left\{\frac{-\widehat{J}^{-1}}{T}\left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) \left(\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right) '\right\}\right]\\ 
     &=& \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'} \left(-\frac{1}{T}\widehat{J}^{-1}\right)\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta} 
 \end{eqnarray*}
 
-\pause
+
 \normalsize
 So it suffices to show that
 \vspace{-1em}
@@ -246,14 +246,14 @@ So it suffices to show that
     $\mathbb{T}=\mathbb{T}(G)$ maps a CDF $G$ to $\mathbb{R}^p$.
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Example: ML Estimation}
     \vspace{-2em}
     \[\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]\]
   \end{block}
 
-  \pause
+  
 
   \begin{block}{Influence Function}
     Let $\delta_y$ be a \alert{point mass} at $y$: $\delta_y(y) = 1$, $\delta_y(y')=0$ for $y'\neq y$.
@@ -264,16 +264,14 @@ So it suffices to show that
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
+Add derivation of influence function for ML estimation.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
   \frametitle{Back to the Proof\dots}
  
 
   \begin{block}{Step 1}
-    The influence function for ML estimation turns out to be $\text{infl}(G,y) = J^{-1} \frac{\partial}{\partial \theta}\log f(y|\theta_0)$.
-  \end{block}
-
-  \pause
-
-  \begin{block}{Step 2}
     Let $\widehat{G}$ denote the empirical CDF based on $y_1, \dots, y_T$. Then:
     \vspace{-1em}
 
@@ -282,12 +280,16 @@ So it suffices to show that
    \]
   \end{block}
 
-  \pause
+  \vspace{-1em}
 
-  \vspace{-2em}
+  \begin{block}{Step 2}
+    For ML estimation: $\text{infl}(G,y) = J^{-1} \frac{\partial}{\partial \theta}\log f(y|\theta_0)$.
+  \end{block}
+
+
 
   \begin{block}{Step 3}
-    Evaluating Step 1 at $\widehat{G}$ and substituting into Step 2
+    Evaluating Step 2 at $\widehat{G}$ and substituting into Step 2
 
     \vspace{-1em}
 
