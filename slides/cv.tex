@@ -1,4 +1,5 @@
-\section{Model selection via a Hold-out Sample}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{K-fold Cross-validation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Model Selection using a Hold-out Sample}
@@ -78,8 +79,6 @@
   \end{block}
 
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{K-fold Cross-validation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{$K$-fold Cross-Validation: ``Pseudo-out-of-sample''}
@@ -183,7 +182,7 @@
 \begin{frame}
   \frametitle{Overview of the Proof}
     
-    First-Order Taylor Expansion of $\widehat{\theta}_{(t)}$ around $\widehat{\theta}$:
+  First-Order Taylor Expansion of $\log f(y_t|\widehat{\theta}_(t))$ around $\widehat{\theta}$:
 
     \vspace{-2em}
 
@@ -193,15 +192,35 @@
 			&=& \frac{\ell(\widehat{\theta})}{T} + \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) + o_p(1)
 	\end{eqnarray*}
 
-  \alert{Crucial point: the first-order term is not zero in this case. (Why?)} 
+  \alert{Why isn't the first-order term zero in this case?}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Important Side Point}
+
+  \begin{block}{Definition of ML Estimator}
+    \[
+      \frac{\partial \ell(\widehat{\theta})}{\partial \theta'} = \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta)}}{\partial \theta} = 0
+    \]
+  \end{block}
+
+  \begin{alertblock}{In Contrast}
+    \footnotesize
+    \begin{align*}
+      \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) &= 
+      \left[\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'} \widehat{\theta}_{(t)}\right] - \widehat{\theta}\left[\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\right]\\
+      &= \frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'} \widehat{\theta}_{(t)} \neq 0
+    \end{align*}
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame} 
   \frametitle{Overview of Proof}
   
-From expansion on previous slide, we simply need to show that:
+From expansion two slides back, we simply need to show that:
 \vspace{-1em}
 
 \[\frac{1}{T}\sum_{t=1}^T \frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta'}\left(\widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T}\mbox{tr}\left(\widehat{J}^{-1} \widehat{K} \right) + o_p(1)\]
@@ -237,38 +256,8 @@ So it suffices to show that
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Influence Functions}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Digression: Functionals and Influence Functions}
-
-  \begin{block}{(Statistical) Functional}
-    $\mathbb{T}=\mathbb{T}(G)$ maps a CDF $G$ to $\mathbb{R}^p$.
-  \end{block}
-
-  
-
-  \begin{block}{Example: ML Estimation}
-    \vspace{-2em}
-    \[\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]\]
-  \end{block}
-
-  
-
-  \begin{block}{Influence Function}
-    Let $\delta_y$ be a \alert{point mass} at $y$: $\delta_y(y) = 1$, $\delta_y(y')=0$ for $y'\neq y$.
-    Influence function = functional derivative: how does a small change in $G$ affect $\mathbb{T}$?
-
-    \[\text{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left[\left(1-\epsilon\right)G + \epsilon \delta_y\right] - \mathbb{T}(G)}{\epsilon}\]
-  \end{block}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-Add derivation of influence function for ML estimation.
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Back to the Proof\dots}
+  \frametitle{Remaining Steps in the Proof}
  
 
   \begin{block}{Step 1}
@@ -298,5 +287,75 @@ Add derivation of influence function for ML estimation.
 \]
   \end{block}
 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{What is an Influence Function?}
+
+  \begin{block}{Statistical Functional}
+    $\mathbb{T}=\mathbb{T}(G)$ maps a CDF $G$ to $\mathbb{R}^p$.
+  \end{block}
+
+  
+
+  \begin{block}{Example: ML Estimation}
+    \vspace{-2em}
+    \[\theta_0 = \mathbb{T}(G) = \underset{\theta \in \Theta}{\arg \min} \;E_G\left[\log\left\{\frac{g(Y)}{f(Y|\theta)} \right\} \right]\]
+  \end{block}
+
+  
+
+  \begin{block}{Influence Function}
+    Let $\delta_y$ be a \alert{point mass} at $y$: $\delta_y(y) = 1$, $\delta_y(y')=0$ for $y'\neq y$.
+    Influence function = functional derivative: how does a small change in $G$ affect $\mathbb{T}$?
+
+    \[\text{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left[\left(1-\epsilon\right)G + \epsilon \delta_y\right] - \mathbb{T}(G)}{\epsilon}\]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Intuition for Step 1}
+
+  \begin{block}{Empirical CDF $\widehat{G}$}
+    \vspace{-1em}
+    \[\widehat{G}(a) = \displaystyle\frac{1}{T}\sum_{t=1}^T \mathbf{1}\left\{ y_t \leq a \right\} = \displaystyle\frac{1}{T} \sum_{t=1}^T \delta_{y_t}(a)\]
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{block}{Relation to ``LOO'' Empirical CDF $\widehat{G}_{(t)}$}
+    \vspace{-1em}
+  \[\displaystyle \widehat{G} = \left( 1 - \frac{1}{T} \right) \widehat{G}_{(t)} + \frac{\delta_{y_t}}{T}\]
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{block}{Applying $\mathbb{T}$ to both sides\dots}
+    \vspace{-1em}
+   \[ 
+      \mathbb{T}(\widehat{G}) = \mathbb{T}\left( (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T\right)
+    \]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Intuition for Step 1 Continued\dots}
+  Some algebra, followed by taking $\varepsilon = 1/T$ to zero gives:
+  \begin{align*}
+      \mathbb{T}(\widehat{G}) &= \mathbb{T}\left( (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T\right)\\
+      \mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) &= \mathbb{T}\left( (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T\right) - \mathbb{T}(\widehat{G}_{(t)})\\
+      \mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) &= \frac{1}{T}\left[ \frac{\mathbb{T}\left( (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T\right) - \mathbb{T}(\widehat{G}_{(t)})}{1/T}\right]\\
+      \mathbb{T}(\widehat{G}) - \mathbb{T}(\widehat{G}_{(t)}) &= \frac{1}{T} \mbox{infl}\left(\widehat{G}_{(t)}, y_t\right) + o_p(1)\\
+      \widehat{\theta} - \widehat{\theta}_{(t)} &= \frac{1}{T} \mbox{infl}\left( \widehat{G},y_t \right) + o_p(1)
+    \end{align*}
+
+    \alert{Last step: difference between having $\widehat{G}$ vs.\ $\widehat{G}_{(t)}$ in $\mbox{infl}$ is negligible}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Derivation of Influence Function for MLE}
+
+  \alert{I'll do this on the blackboard if we have time\dots}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
