@@ -205,12 +205,17 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 \begin{frame}
   \frametitle{The Strengths of AIC and BIC Cannot be Shared}
 
+  \begin{alertblock}{Theorem}
+      No model post-model selection estimator can be both pointwise-risk adaptive and minimax-rate adaptive.
+  \end{alertblock}
+
+  \begin{block}{AIC vs.\ BIC}
   \begin{itemize}
     \item BIC is pointwise-risk adaptive but AIC is not. (This is effectively identical to consistency.)
     \item AIC is minimax-rate adaptive, but BIC is not.
-    \item \textbf{Theorem}: no model selection criterion can be both pointwise-risk adaptive and minimax-rate adaptive at the same time.
     \item Further Reading: Yang (2005), Yang (2007)
   \end{itemize}
+\end{block}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -479,23 +484,23 @@ Recall from above that $\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$
   \pause
 
   \begin{block}{Risk Function}
-MSE risk times $T$ since Var.\ of well-behaved estimator $ = O(1/T)$
+MSE risk times $T$ to get risk relative to minimax rate: $1/T$.
 
 \[
-  R_T(\mu) = T \cdot \mathbb{E}\left[\left( \widehat{\mu} - \mu\right)^2\right] = \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] 
+  R(\mu, \widehat{\mu}) = T \cdot \mathbb{E}\left[\left( \widehat{\mu} - \mu\right)^2\right] = \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] 
 \]
   \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Simplifying the MSE Risk Function}
+  \frametitle{Simplifying the Risk Function}
   \framesubtitle{$\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$}
 
   \footnotesize
 
   Let $X = \mathbf{1}\left\{ A \right\}$ where $A = \left\{|\sqrt{T}\mu + Z|\geq \sqrt{d_T}  \right\}$ \pause
   \begin{eqnarray*}
-  R_T(\mu) &=& \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] \\ \pause
+    R(\mu, \widehat{\mu}) &=& \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] \\ \pause
   &=& \mathbb{E}\left\{ \left[ \left( \sqrt{T}\mu + Z \right)X - \sqrt{T}\mu \right]^2 \right\}\\ \pause
   &=& \mathbb{P}(A)\; \mathbb{E}\left\{ \left.\left[ \left(\sqrt{T}\mu + Z\right) - \sqrt{T}\mu\right]^2\right| X = 1 \right\} + \left[ 1 - \mathbb{P}(A) \right]\left( \sqrt{T}\mu \right)^2\\ \pause
   &=& \mathbb{P}(A)\; \mathbb{E}
@@ -590,7 +595,7 @@ Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and
 \begin{frame}
   \frametitle{The Simplifed MSE Risk Function}
 	\begin{eqnarray*}
-		R_T(\mu) &=& 1 - \left[a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a) \right] + T\mu^2 \left[\Phi(b) - \Phi(a) \right]\\
+    R(\mu,\widehat{\mu}) &=& 1 - \left[a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a) \right] + T\mu^2 \left[\Phi(b) - \Phi(a) \right]\\
 		&=&1 + \left[b\phi(b) - a\phi(a)\right]  + (T\mu^2 - 1) \left[\Phi(b) - \Phi(a) \right] 
 	\end{eqnarray*}
 where
@@ -605,12 +610,11 @@ where
 \begin{frame}
   \frametitle{Punchline: Risk of the Post-Selection Estimator}
 
-  \begin{itemize}
-    \item AIC: bounded worst-case risk
-    \item BIC: low risk in a neighborhood of $\mu=0$ in exhange for \alert{unbounded} worst-case risk as sample size grows
-    \item General phenomenon: consistency and efficiency are mutually exclusive: consistent criteria have unbounded worst-case risk.
-    \item For more details, see Yang (2007, ET)
-  \end{itemize}
+Need to add explanation of the pointwise adaptivity and the minimax adaptivity vis-a-vis the preceding example.
+Easy for the minimax, since we can just read it off of the interactive figure.
+Harder for the pointwise, although it's easy for AIC since we know that it can't consistently select $M_0$ when $\mu$ is indeed zero, so it can't acheive the pointwise risk lower bound here.
+Need to explain about BIC.
+Also explain about consistency and unbounded minimax risk.
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
