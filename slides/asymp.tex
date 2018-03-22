@@ -253,31 +253,58 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 \begin{frame}
   \frametitle{Log-Likelihood Function}
 
-  Since $\; \alert{\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2}$,
+  \begin{block}{Simple Algebra}
+    \vspace{-1.5em}
+\[ 
+    \ell_T(\mu)=  \mbox{Constant} - \frac{1}{2} \sum_{t=1}^{T} (Y_t - \mu)^2
+\]
+\end{block}
 
-\begin{eqnarray*}
-	\ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{2\pi} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\ \pause
-  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{1}{2} \sum_{t=1}^{T} (Y_t - \mu)^2\\ \pause
-  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{T}{2} \widehat{\sigma}^2 - \frac{T}{2}(\bar{Y} - \mu)^2\\ \pause
-  &=& \text{Constant} - \frac{T}{2}(\bar{Y} - \mu)^2
-\end{eqnarray*}
+\begin{block}{Tedious Algebra}
+    \vspace{-1.5em}
+\[
+\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2
+\]
+\end{block}
+
+\begin{alertblock}{Combining These}
+    \vspace{-1.5em}
+    \[
+      \ell_T(\mu) = \mbox{Constant} - \frac{T}{2}\left( \bar{Y} - \mu \right)^2
+    \]
+
+\end{alertblock}
 
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Side Calculation: \normalsize $\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2$}
-
-\scriptsize
-\begin{eqnarray*}
-  T\widehat{\sigma}^2 &=& \sum_{t=1}^T \left(Y_t - \bar{Y}\right)^2 = \sum_{t=1}^T \left(Y_t - \mu + \mu - \bar{Y}\right)^2 = \sum_{t=1}^T \left[(Y_t -\mu) - (\bar{Y} - \mu)\right]^2\\
-		&=&\sum_{t=1}^T (Y_t -\mu)^2 - \sum_{t=1}^T 2(Y_t -\mu)(\bar{Y} - \mu) + \sum_{t=1}^T (\bar{Y} - \mu)^2\\
-				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu) \left( \sum_{t=1}^T Y_t- \sum_{t=1}^T \mu \right)+T(\bar{Y} - \mu)^2\\
-				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu)(T\bar{Y}-T\mu)+T(\bar{Y} - \mu)^2\\
-				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2T(\bar{Y} - \mu)^2+T(\bar{Y} - \mu)^2\\
-				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - T(\bar{Y} - \mu)^2
-\end{eqnarray*}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Log-Likelihood Function}
+%
+%  Since $\; \alert{\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2}$,
+%
+%\begin{eqnarray*}
+%  \ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{\sqrt{2\pi}} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\ \pause
+%  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{1}{2} \sum_{t=1}^{T} (Y_t - \mu)^2\\ \pause
+%  &=& -\frac{T}{2} \log\left( 2\pi \right) - \frac{T}{2} \widehat{\sigma}^2 - \frac{T}{2}(\bar{Y} - \mu)^2\\ \pause
+%  &=& \text{Constant} - \frac{T}{2}(\bar{Y} - \mu)^2
+%\end{eqnarray*}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Side Calculation: \normalsize $\sum_{t=1}^T (Y_t -\mu)^2 = T(\bar{Y} - \mu)^2 + T \widehat{\sigma}^2$}
+%
+%\scriptsize
+%\begin{eqnarray*}
+%  T\widehat{\sigma}^2 &=& \sum_{t=1}^T \left(Y_t - \bar{Y}\right)^2 = \sum_{t=1}^T \left(Y_t - \mu + \mu - \bar{Y}\right)^2 = \sum_{t=1}^T \left[(Y_t -\mu) - (\bar{Y} - \mu)\right]^2\\
+%		&=&\sum_{t=1}^T (Y_t -\mu)^2 - \sum_{t=1}^T 2(Y_t -\mu)(\bar{Y} - \mu) + \sum_{t=1}^T (\bar{Y} - \mu)^2\\
+%				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu) \left( \sum_{t=1}^T Y_t- \sum_{t=1}^T \mu \right)+T(\bar{Y} - \mu)^2\\
+%				&=& \left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2(\bar{Y} - \mu)(T\bar{Y}-T\mu)+T(\bar{Y} - \mu)^2\\
+%				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - 2T(\bar{Y} - \mu)^2+T(\bar{Y} - \mu)^2\\
+%				&=&\left[  \sum_{t=1}^T \left(Y_t - \mu\right)^2\right]   - T(\bar{Y} - \mu)^2
+%\end{eqnarray*}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{The Selected Model $\widehat{\text{M}}$}
 
@@ -318,35 +345,39 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
   \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Case I: $\mu \neq 0$}
-  \framesubtitle{Apply theory from earlier in lecture\dots}
-
-  \begin{block}{KL-Divergence of $\text{M}_1$}
-    $\text{M}_1$ is the true DGP with minimized KL-divergence equal to zero.
-  \end{block}
-
-  \pause
-
-  \begin{block}{KL-Divergence of $\text{M}_0$}
-    \begin{itemize}
-      \item Truth: $g(y) = (2\pi)^{-1/2}\exp\left\{ -(y-\mu)^2/2 \right\}$  \pause
-      \item $\text{M}_0$: $f(y) = (2\pi)^{-1/2}\exp\left\{ -y^2/2\right\}$ \pause
-      \item Hence: $\log g(y) - \log f(y) = -\frac{1}{2}(y-\mu)^2 + \frac{1}{2}y^2 
-          = \mu \left(y - \frac{\mu}{2}\right)$ \pause
-    \end{itemize}
-
-    \vspace{-1em}
-          \begin{align*}
-          \text{KL}(g;\text{M}_0) &= \int_{\mathbb{R}}\mu(y - \mu/2) (2\pi)^{-1/2}\exp\left\{ (y-\mu)^2/2 \right\}\; \text{d}y \\
-          &= \mu(\mu - \mu/2) = \mu^2 /2
-        \end{align*}
-  \end{block}
-
-\end{frame}
+%\begin{frame}
+%  \frametitle{Case I: $\mu \neq 0$}
+%  \framesubtitle{Apply theory from earlier in lecture\dots}
+%
+%  \begin{block}{KL-Divergence of $\text{M}_1$}
+%    $\text{M}_1$ is the true DGP with minimized KL-divergence equal to zero.
+%  \end{block}
+%
+%  \pause
+%
+%  \begin{block}{KL-Divergence of $\text{M}_0$}
+%    \begin{itemize}
+%      \item Truth: $g(y) = (2\pi)^{-1/2}\exp\left\{ -(y-\mu)^2/2 \right\}$  \pause
+%      \item $\text{M}_0$: $f(y) = (2\pi)^{-1/2}\exp\left\{ -y^2/2\right\}$ \pause
+%      \item Hence: $\log g(y) - \log f(y) = -\frac{1}{2}(y-\mu)^2 + \frac{1}{2}y^2 
+%          = \mu \left(y - \frac{\mu}{2}\right)$ \pause
+%    \end{itemize}
+%
+%    \vspace{-1em}
+%          \begin{align*}
+%          \text{KL}(g;\text{M}_0) &= \int_{\mathbb{R}}\mu(y - \mu/2) (2\pi)^{-1/2}\exp\left\{ (y-\mu)^2/2 \right\}\; \text{d}y \\
+%          &= \mu(\mu - \mu/2) = \mu^2 /2
+%        \end{align*}
+%  \end{block}
+%
+%\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Verifying Weak Consistency: $\mu \neq 0$}
+
+  \begin{block}{KL Divergence for $M_0$ and $M_1$}
+$KL(g;M_0) = \mu^2/2, \quad KL(g;M_1) = 0$
+  \end{block}
 
   \begin{block}{Condition on KL-Divergence}
   \small
@@ -368,7 +399,7 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Case II: $\mu = 0$}
+  \frametitle{Verifying Consistency: $\mu = 0$}
 
   \begin{block}{What's different?}
   \begin{itemize}
@@ -492,106 +523,106 @@ MSE risk times $T$ to get risk relative to minimax rate: $1/T$.
   \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Simplifying the Risk Function}
-  \framesubtitle{$\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$}
-
-  \footnotesize
-
-  Let $X = \mathbf{1}\left\{ A \right\}$ where $A = \left\{|\sqrt{T}\mu + Z|\geq \sqrt{d_T}  \right\}$ \pause
-  \begin{eqnarray*}
-    R(\mu, \widehat{\mu}) &=& \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] \\ \pause
-  &=& \mathbb{E}\left\{ \left[ \left( \sqrt{T}\mu + Z \right)X - \sqrt{T}\mu \right]^2 \right\}\\ \pause
-  &=& \mathbb{P}(A)\; \mathbb{E}\left\{ \left.\left[ \left(\sqrt{T}\mu + Z\right) - \sqrt{T}\mu\right]^2\right| X = 1 \right\} + \left[ 1 - \mathbb{P}(A) \right]\left( \sqrt{T}\mu \right)^2\\ \pause
-  &=& \mathbb{P}(A)\; \mathbb{E}
-  \left[ Z^2 |X = 1 \right] + \left[ 1 - \mathbb{P}(A) \right]T\mu^2
-\end{eqnarray*}
-
-\alert{So we need to calculate $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ and $\mathbb{P}(A)$.}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Calculating $\mathbb{P}(A)$}
-  Define $a = (-\sqrt{d_T} - \sqrt{T}\mu)$ and $b = (\sqrt{d_T} - \sqrt{T}\mu)$ 
-
-  \pause
-
-  \begin{eqnarray*}
-    \mathbb{P}(A) &=& \mathbb{P}\left( |\sqrt{T}\mu + Z| \geq \sqrt{d_T} \right) \\ \pause
-    &=& \mathbb{P}\left( \sqrt{T}\mu + Z \geq \sqrt{d_T} \right) + \mathbb{P}\left( \sqrt{T}\mu + Z \leq -\sqrt{d_T} \right) \\ \pause
-    &=& \mathbb{P}(Z\geq b) + \mathbb{P}(Z \leq a)\\ \pause
-    &=& 1 - \Phi(b) + \Phi(a) \pause
-  \end{eqnarray*}
-
-
-  And hence:
-  \[
-    1 - \mathbb{P}(A) = \Phi(b) - \Phi(a)
-  \]
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 1}
-  \begin{block}{Conditional Density of $Z|X=1$}
-    \vspace{-1em}
-    \[f(z|x=1) = \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \quad \text{where } \varphi \text{ is the } N(0,1) \text{ density} \]
-  \end{block}
-
-  \pause
-
-  \begin{block}{Therefore:}
-    \begin{eqnarray*}
-      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=& \mathbb{P}(A) \int_{\mathbb{R}} z^2 \left[ \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \right]\; \text{d}z\\ \pause 
-       &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\ 
-    \end{eqnarray*}
-  \end{block}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Calculating $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ -- Step 2}
-  \begin{block}{Unconditional Expectation: $\mathbb{E}[Z^2]$}
-    \[
-      1 = \mathbb{E}[Z^2]  = 
-      \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z +
-      \int_{a}^b z^2 \varphi(z)\; \text{d}z +
-      \int_{b}^\infty z^2 \varphi(z)\; \text{d}z
-    \]
-  \end{block}
-
-  \pause
-
-  \begin{block}{Therefore:}
-    \begin{eqnarray*}
-      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\\pause 
-       &=& 1 - \int_a^b z^2 \varphi(z)\; \text{d}z
-    \end{eqnarray*}
-  \end{block}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 3}
-
-  \vspace{1em}
-
-  \begin{block}{Integration By Parts}
-  \small 
-Take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
-
-	$$\frac{d}{dz} \left(\exp\left\{-z^2/2\right\}\right) = -z\exp\left\{-z^2/2\right\}$$
-
-  \vspace{0.5em}
-
-  \pause
-
-Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and 
-\begin{eqnarray*}
-  \int_a^b z^2 \phi(z) \; dz &=& \left( 2\pi \right)^{-1/2} \int_a^b z^2 \exp\left\{-z^2/2 \; \right\} \;\text{d}z\\ \pause
-  &=& \left( 2\pi \right)^{-1/2}\left[-z \exp\left\{ \left.-z^2/2\right\}\right|_a^b+ \int_a^b \exp\left\{-\frac{z^2}{2}\right\}  \; dz \right]\\ \pause
-		&=& a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a)
-\end{eqnarray*}
-  \end{block}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Simplifying the Risk Function}
+%  \framesubtitle{$\sqrt{T} \bar{Y} = \sqrt{T}\mu +Z$ where $Z\sim N(0,1)$}
+%
+%  \footnotesize
+%
+%  Let $X = \mathbf{1}\left\{ A \right\}$ where $A = \left\{|\sqrt{T}\mu + Z|\geq \sqrt{d_T}  \right\}$ \pause
+%  \begin{eqnarray*}
+%    R(\mu, \widehat{\mu}) &=& \mathbb{E}\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)^2\right] \\ \pause
+%  &=& \mathbb{E}\left\{ \left[ \left( \sqrt{T}\mu + Z \right)X - \sqrt{T}\mu \right]^2 \right\}\\ \pause
+%  &=& \mathbb{P}(A)\; \mathbb{E}\left\{ \left.\left[ \left(\sqrt{T}\mu + Z\right) - \sqrt{T}\mu\right]^2\right| X = 1 \right\} + \left[ 1 - \mathbb{P}(A) \right]\left( \sqrt{T}\mu \right)^2\\ \pause
+%  &=& \mathbb{P}(A)\; \mathbb{E}
+%  \left[ Z^2 |X = 1 \right] + \left[ 1 - \mathbb{P}(A) \right]T\mu^2
+%\end{eqnarray*}
+%
+%\alert{So we need to calculate $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ and $\mathbb{P}(A)$.}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Calculating $\mathbb{P}(A)$}
+%  Define $a = (-\sqrt{d_T} - \sqrt{T}\mu)$ and $b = (\sqrt{d_T} - \sqrt{T}\mu)$ 
+%
+%  \pause
+%
+%  \begin{eqnarray*}
+%    \mathbb{P}(A) &=& \mathbb{P}\left( |\sqrt{T}\mu + Z| \geq \sqrt{d_T} \right) \\ \pause
+%    &=& \mathbb{P}\left( \sqrt{T}\mu + Z \geq \sqrt{d_T} \right) + \mathbb{P}\left( \sqrt{T}\mu + Z \leq -\sqrt{d_T} \right) \\ \pause
+%    &=& \mathbb{P}(Z\geq b) + \mathbb{P}(Z \leq a)\\ \pause
+%    &=& 1 - \Phi(b) + \Phi(a) \pause
+%  \end{eqnarray*}
+%
+%
+%  And hence:
+%  \[
+%    1 - \mathbb{P}(A) = \Phi(b) - \Phi(a)
+%  \]
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 1}
+%  \begin{block}{Conditional Density of $Z|X=1$}
+%    \vspace{-1em}
+%    \[f(z|x=1) = \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \quad \text{where } \varphi \text{ is the } N(0,1) \text{ density} \]
+%  \end{block}
+%
+%  \pause
+%
+%  \begin{block}{Therefore:}
+%    \begin{eqnarray*}
+%      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=& \mathbb{P}(A) \int_{\mathbb{R}} z^2 \left[ \frac{\mathbf{1}(A)\varphi(z)}{\mathbb{P}(A)} \right]\; \text{d}z\\ \pause 
+%       &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\ 
+%    \end{eqnarray*}
+%  \end{block}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Calculating $\mathbb{P}(A)\; \mathbb{E}[Z^2|X=1]$ -- Step 2}
+%  \begin{block}{Unconditional Expectation: $\mathbb{E}[Z^2]$}
+%    \[
+%      1 = \mathbb{E}[Z^2]  = 
+%      \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z +
+%      \int_{a}^b z^2 \varphi(z)\; \text{d}z +
+%      \int_{b}^\infty z^2 \varphi(z)\; \text{d}z
+%    \]
+%  \end{block}
+%
+%  \pause
+%
+%  \begin{block}{Therefore:}
+%    \begin{eqnarray*}
+%      \mathbb{P}(A)\; \mathbb{E}[Z^2|X=1] &=&  \int_{-\infty}^a z^2 \varphi(z)\; \text{d}z + \int_{b}^\infty z^2 \varphi(z)\; \text{d}z\\\pause 
+%       &=& 1 - \int_a^b z^2 \varphi(z)\; \text{d}z
+%    \end{eqnarray*}
+%  \end{block}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Calculating $\mathbb{P}(A)\;\mathbb{E}[Z^2|X=1]$ -- Step 3}
+%
+%  \vspace{1em}
+%
+%  \begin{block}{Integration By Parts}
+%  \small 
+%Take $u = -z$ and $dv = -z \exp\{-z^2/2\}$ since
+%
+%	$$\frac{d}{dz} \left(\exp\left\{-z^2/2\right\}\right) = -z\exp\left\{-z^2/2\right\}$$
+%
+%  \vspace{0.5em}
+%
+%  \pause
+%
+%Thus, $v = \exp\{-z^2/2\}$, $du = -1$ and 
+%\begin{eqnarray*}
+%  \int_a^b z^2 \phi(z) \; dz &=& \left( 2\pi \right)^{-1/2} \int_a^b z^2 \exp\left\{-z^2/2 \; \right\} \;\text{d}z\\ \pause
+%  &=& \left( 2\pi \right)^{-1/2}\left[-z \exp\left\{ \left.-z^2/2\right\}\right|_a^b+ \int_a^b \exp\left\{-\frac{z^2}{2}\right\}  \; dz \right]\\ \pause
+%		&=& a\phi(a) - b\phi(b) + \Phi(b) - \Phi(a)
+%\end{eqnarray*}
+%  \end{block}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{The Simplifed MSE Risk Function}
 	\begin{eqnarray*}
@@ -605,17 +636,6 @@ where
 	\end{eqnarray*}
 
 \url{https://fditraglia.shinyapps.io/CH\_Figure\_4\_2/}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Punchline: Risk of the Post-Selection Estimator}
-
-Need to add explanation of the pointwise adaptivity and the minimax adaptivity vis-a-vis the preceding example.
-Easy for the minimax, since we can just read it off of the interactive figure.
-Harder for the pointwise, although it's easy for AIC since we know that it can't consistently select $M_0$ when $\mu$ is indeed zero, so it can't acheive the pointwise risk lower bound here.
-Need to explain about BIC.
-Also explain about consistency and unbounded minimax risk.
-
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
