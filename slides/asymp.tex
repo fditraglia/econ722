@@ -2,15 +2,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Overview}
+
+  \begin{block}{Asymptotic Properties}
+   What happens as the sample size increases?
+  \end{block}
+
+  \begin{block}{Consistency}
+    Choose ``best'' model with probability approaching 1 in the limit.
+  \end{block}
+
+  \begin{block}{Efficiency}
+    Post-model selection estimator with low risk.
+  \end{block}
+
+  \begin{block}{Some References}
+      Sin and White (1992, 1996), P\"{o}tscher (1991), Leeb \& P\"{o}tscher (2005), Yang (2005) and Yang (2007).
+  \end{block}
   
-  \begin{itemize}
-    \item What happens as $T\rightarrow \infty$?
-    \item Consistency: choose ``best'' model wpa 1
-    \item Efficiency: procedure with good risk properties
-    \item Can't have both at once.
-    \item Large, fairly technical literature: only a brief overview today. 
-    \item More details: Sin and White (1992, 1996), P\"{o}tscher (1991), Leeb \& P\"{o}tscher (2005), Yang (2005) and Yang (2007).
-  \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Penalizing the Likelihood}
@@ -149,20 +157,67 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
 \section{Efficiency}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Efficiency}
+  \frametitle{Efficiency: Risk Properties of Post-selection Estimator}
+
+
+  \begin{block}{Setup}
+   \begin{itemize}
+      \item Models $M_0$ and $M_1$; corresponding estimators $\widehat{\theta}_{0,T}$ and $\widehat{\theta}_{1,T}$
+      \item Model Selection: If $\widehat{M} = 0$ choose $M_0$; if $\widehat{M} = 0$ choose $M_1$.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Post-selection Estimator}
+    \vspace{-1.5em}
+    \[\widehat{\theta}_{\widehat{M},T} \equiv \mathbf{1}_{\{ \widehat{M} = 0 \}} \widehat{\theta}_{0,T} + \mathbf{1}_{\{ \widehat{M} = 1 \}}\widehat{\theta}_{1,T}\]
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{block}{Two Sources of Randomness}
+    Variability in $\widehat{\theta}_{\widehat{M},T}$ arises both from $\left(\widehat{\theta}_{0,T}, \widehat{\theta}_{1,T} \right)$ and from $\widehat{M}$.
+  \end{block}
+
+  \begin{alertblock}{Question}
+    How does the risk of $\widehat{\theta}_{\widehat{M},T}$ compare to that of other estimators?
+  \end{alertblock}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Efficiency: Risk Properties of Post-selection Estimator}
+
+  \begin{block}{Pointwise-risk Adaptivity}
+    $\widehat{\theta}_{\widehat{M},T}$ is \textbf{pointwise-risk adaptive} if for any fixed $\theta \in \Theta$,
+    \[
+      \frac{R(\theta, \widehat{\theta}_{\widehat{M},T})}{\min\left\{ R(\theta, \widehat{\theta}_{0,T}),\, R(\theta, \widehat{\theta}_{1,T}) \right\}} \rightarrow 1, \quad \mbox{as } T\rightarrow \infty
+    \]
+  \end{block}
+
+  \begin{block}{Minimax-rate Adaptivity}
+    $\widehat{\theta}_{\widehat{M},T}$ is \textbf{minimax-rate adaptive} if
+    \[
+      \sup_{T} \left[\frac{\displaystyle\sup_{\theta\in \Theta} R(\theta, \widehat{\theta}_{\widehat{M},T})}{\displaystyle\inf_{\widetilde{\theta}_{T}}\sup_{\theta \in \Theta} R(\theta, \widetilde{\theta}_{T})}\right] < \infty
+    \]
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Strengths of AIC and BIC Cannot be Shared}
+
   \begin{itemize}
-    \item Roughly speaking, a model selection criterion is called efficient if it performs ``nearly as well'' as the theoretical optimum relative to some loss function.\pause 
-    \item More broadly, an efficient/conservative criterion is one that has ``good risk properties.''\pause
-    \item We don't have time to go into detail, so we'll look at a particular example\dots
+    \item BIC is pointwise-risk adaptive but AIC is not. (This is effectively identical to consistency.)
+    \item AIC is minimax-rate adaptive, but BIC is not.
+    \item \textbf{Theorem}: no model selection criterion can be both pointwise-risk adaptive and minimax-rate adaptive at the same time.
+    \item Further Reading: Yang (2005), Yang (2007)
   \end{itemize}
 
-  
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{AIC versus BIC in a Simple Example}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Consistency versus Efficiency in a Simple Example}
+  \frametitle{Consistency and Efficiency in a Simple Example}
 
   \begin{block}{Information Criteria}
     Consider criteria of the form $\text{IC}_m = 2\ell(\theta) - d_T \times \text{length}(\theta)$.
@@ -559,3 +614,4 @@ where
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
