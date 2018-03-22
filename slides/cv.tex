@@ -257,39 +257,6 @@ So it suffices to show that
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Remaining Steps in the Proof}
- 
-
-  \begin{block}{Step 1}
-    Let $\widehat{G}$ denote the empirical CDF based on $y_1, \dots, y_T$. Then:
-    \vspace{-1em}
-
-   \[
-     \left( \widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T} \text{infl}(\widehat{G}, y_t) + o_p(1)
-   \]
-  \end{block}
-
-  \vspace{-1em}
-
-  \begin{block}{Step 2}
-    For ML estimation: $\text{infl}(G,y) = J^{-1} \frac{\partial}{\partial \theta}\log f(y|\theta_0)$.
-  \end{block}
-
-
-
-  \begin{block}{Step 3}
-    Evaluating Step 2 at $\widehat{G}$ and substituting into Step 2
-
-    \vspace{-1em}
-
-\[
-  \alert{\left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1} \left[\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right] + o_p(1)}
-\]
-  \end{block}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
   \frametitle{What is an Influence Function?}
 
   \begin{block}{Statistical Functional}
@@ -314,7 +281,7 @@ So it suffices to show that
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Intuition for Step 1}
+  \frametitle{Relating Influence Functions to $\widehat{\theta}_{(t)}$}
 
   \begin{block}{Empirical CDF $\widehat{G}$}
     \vspace{-1em}
@@ -339,7 +306,7 @@ So it suffices to show that
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Intuition for Step 1 Continued\dots}
+  \frametitle{Relating Influence Functions to $\widehat{\theta}_{(t)}$}
   Some algebra, followed by taking $\varepsilon = 1/T$ to zero gives:
   \begin{align*}
       \mathbb{T}(\widehat{G}) &= \mathbb{T}\left( (1 - 1/T) \widehat{G}_{(t)} + \delta_{y_t}/T\right)\\
@@ -350,6 +317,39 @@ So it suffices to show that
     \end{align*}
 
     \alert{Last step: difference between having $\widehat{G}$ vs.\ $\widehat{G}_{(t)}$ in $\mbox{infl}$ is negligible}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Steps for Last part of TIC/LOO-CV Equivalence Proof} 
+ 
+
+  \begin{block}{Step 1}
+    Let $\widehat{G}$ denote the empirical CDF based on $y_1, \dots, y_T$. Then:
+    \vspace{-1em}
+
+   \[
+     \left( \widehat{\theta}_{(t)} - \widehat{\theta} \right) = -\frac{1}{T} \text{infl}(\widehat{G}, y_t) + o_p(1)
+   \]
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{block}{Step 2}
+    For ML estimation it turns out that: $\text{infl}(G,y) = J^{-1} \frac{\partial}{\partial \theta}\log f(y|\theta_0)$.
+  \end{block}
+
+
+
+  \begin{block}{Step 3}
+    Evaluating Step 2 at $\widehat{G}$ and substituting into Step 2
+
+    \vspace{-1em}
+
+\[
+  \alert{\left( \widehat{\theta}_{(t)} - \widehat{\theta}  \right) = -\frac{1}{T} \widehat{J}^{-1} \left[\frac{\partial \log f(y_t|\widehat{\theta})}{\partial \theta}\right] + o_p(1)}
+\]
+  \end{block}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
