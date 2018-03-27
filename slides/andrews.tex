@@ -1,4 +1,4 @@
-\section{Lighting Review of GMM}
+\section{Lightning Review of GMM}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Generalized Method of Moments (GMM) Estimation}
@@ -115,7 +115,7 @@ $f\colon \mathcal{V}\times \Theta \rightarrow \mathbb{R}^q$ satisfies:
 \section{The J-test Statistic Under Correct Specification}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Case I: Correct Specification} 
-  Suppose that all of the preceding assumptions hold, in particular taht the model is \alert{correctly specified:}
+  Suppose that all of the preceding assumptions hold, in particular that the model is \alert{correctly specified:}
   \[
     \mathbb{E}[f(v_t, \theta_0)] = 0
   \]
@@ -319,12 +319,12 @@ Let $\widehat{\theta}_T(c)$ be the efficient two-step GMM estimator based on the
   \begin{align*}
     \mbox{GMM-BIC}(c) &= J_T(c) - \left( |c|-p \right)\log(T)\\
     \mbox{GMM-HQ}(c) &= J_T(c) - 2.01\left( |c|-p \right)\log\big(\log(T)\big)\\
-    \mbox{GMM-AIC}(c) &= J_T(c) - 2\left( |c|-p \right)\log(T)
+    \mbox{GMM-AIC}(c) &= J_T(c) - 2\left( |c|-p \right)
   \end{align*}
 \end{block}
 
-\begin{alertblock}{Corollary}
-  GMM-AIC is \emph{not} consistent, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$.
+\begin{alertblock}{How do these examples behave?}
+  GMM-AIC doesn't satisfy the theorem, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$.
   GMM-BIC and GMM-HQ are consistent since $\lim_{T\rightarrow \infty} \log(T)/T =0$ and $\lim_{T\rightarrow \infty} \log\big(\log(T)\big)/T = 0$.
 \end{alertblock}
 
