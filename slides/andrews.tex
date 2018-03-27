@@ -1,0 +1,333 @@
+\section{Lighting Review of GMM}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Generalized Method of Moments (GMM) Estimation}
+
+  \begin{block}{Notation}
+  Let $v_t$ be a $(r\times 1)$ random vector, $\theta$ be a $(p\times 1)$ parameter vector, and $f$ be a $(q\times 1)$ vector of real-valued functions.
+\end{block}
+
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{block}{Popn.\ Moment Conditions}
+      \vspace{-1em}
+      \[
+        \mathbb{E}\left[ f(v_t, \theta_0) \right] = 0
+      \]
+    \end{block}
+
+    \column{0.45\textwidth}
+    \begin{block}{Sample Moment Conditions}
+      \vspace{-1em}
+      \[
+        \bar{g}_T(\theta) = \frac{1}{T}\sum_{t=1}^T f(v_t, \theta)
+      \]
+    \end{block}
+  \end{columns}
+
+  \begin{block}{GMM Estimator}
+    \vspace{-1em}
+    \[
+      \widehat{\theta}_T = \underset{\theta \in \Theta}{\arg \min} \,\,\, \bar{g}_T(\theta)' \, \underset{(q\times q)}{W_T} \, \bar{g}_T(\theta), \quad W_T \rightarrow_p W \mbox{ (psd)}
+    \]
+  \end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Key Assumptions for GMM I}
+
+  \begin{block}{Stationarity}
+    The sequence $\left\{ v_t\colon -\infty < t < \infty \right\}$ is strictly stationary.
+    This implies that \emph{any} functions of $v_t$ are constant over $t$.
+  \end{block}
+
+  \begin{block}{Global Identification}
+    $\mathbb{E}[f(v_t,\theta_0)]=0$ but $\mathbb{E}[f(v_t, \widetilde{\theta})] \neq 0$ for any $\widetilde{\theta} \neq \theta_0$.
+  \end{block}
+
+  \begin{block}{Regularity Conditions for Moment Functions}
+$f\colon \mathcal{V}\times \Theta \rightarrow \mathbb{R}^q$ satisfies: 
+	\begin{enumerate}[(i)]
+		\item $f$ is $v_t$-almost surely continuous on $\Theta$
+		\item $E[f(v_t, \theta)]<\infty$ exists and is continuous on $\Theta$
+	\end{enumerate}
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Key Assumptions for GMM I}
+  \begin{block}{Regularity Conditions for Derivative Matrix}
+	\begin{enumerate}[(i)]
+		\item $\nabla_{\theta'} f(v_t, \theta)$ exists and is $v_t$-almost continuous on $\Theta$ 
+		\item $E[\nabla_{\theta}f(v_t, \theta_0)]<\infty$ exists and is continuous in a  neighborhood $N_\epsilon$ of $\theta_0$
+		\item $\underset{\theta \in N_\epsilon}{\sup}\left| \left| T^{-1} \sum_{t=1}^T \nabla_\theta f(v_t, \theta) - E[\nabla_\theta f(v_t, \theta)]\right|\right| \overset{p}{\rightarrow} 0$
+	\end{enumerate}
+  \end{block}
+
+  \begin{block}{Regularity Conditions for Variance of Moment Conditions}
+\begin{enumerate}[(i)]
+	\item $E[f(v_t, \theta_0)f(v_t, \theta_0)']$ exists and is finite.
+	\item $\underset{T\rightarrow \infty}{\lim} Var\left[\sqrt{T}\bar{g}_T(\theta_0)\right]=S$ exists and is a finite, positive definite matrix.
+\end{enumerate}
+  \end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Main Results for GMM Estimation}
+  \framesubtitle{Under the Assumptions Described Above}
+
+\begin{alertblock}{Consistency: $\widehat{\theta}_T \overset{p}{\rightarrow} \theta_0$}
+  \end{alertblock}
+
+  \begin{alertblock}{Asymptotic Normality: $\sqrt{T} (\widehat{\theta}_T - \theta_0)\overset{d}{\rightarrow} \mathcal{N}(0,MSM')$}
+    \small
+    \vspace{-1em}
+	\begin{align*}
+		M &= (G_0 W G_0)^{-1} G_0'W\\
+    S &= \underset{T\rightarrow \infty}{\lim} Var\left[\sqrt{T}\bar{g}_T(\theta_0)\right]\\
+		G_0 &= E[\nabla_{\theta'} f(v_t, \theta_0)]\\
+    W &= \mbox{plim}_{T\rightarrow \infty} W_T
+	\end{align*}
+  \end{alertblock}
+  \normalsize
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The J-test Statistic}
+	\[
+    \alert{\boxed{J_T = T\; \bar{g}_T(\widehat{\theta}_T')\; \widehat{S}^{-1} \;\bar{g}_T(\widehat{\theta}_T)}}
+  \]
+  \footnotesize
+  \begin{align*}
+    \widehat{S} \rightarrow_p S &= \underset{T\rightarrow \infty}{\lim} Var\left[\sqrt{T}\bar{g}_T(\theta_0)\right]\\
+    \bar{g}_T(\widehat{\theta}_T) &= \frac{1}{T} \sum_{t=1}^T f(v_t, \widehat{\theta}_T)\\
+    \widehat{\theta}_T &= \mbox{GMM Estimator}
+  \end{align*}
+  \normalsize
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The J-test Statistic Under Correct Specification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Case I: Correct Specification} 
+  Suppose that all of the preceding assumptions hold, in particular taht the model is \alert{correctly specified:}
+  \[
+    \mathbb{E}[f(v_t, \theta_0)] = 0
+  \]
+Recall that under the standard assumptions, the GMM estimator is consistent \alert{regardless of the choice of $W_T$\dots}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Case I: Taylor Expansion under Correct Specification}
+
+	$$W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) = \left[I_q - P(\theta_0) \right]W^{1/2} \sqrt{T} \bar{g}_T(\theta_0) + o_p(1)$$
+\footnotesize
+\vspace{-2em}
+	\begin{eqnarray*}
+	P(\theta_0) &=& F(\theta_0) \left[F(\theta_0)' F(\theta_0) \right]^{-1} F(\theta_0)'\\
+		F(\theta_0) &=& W^{1/2} E[\nabla_\theta f(v_t, \theta_0)]
+	\end{eqnarray*}
+  \normalsize
+
+\begin{block}{Over-identification}
+  If $\mbox{dim}(f) > \mbox{dim}(\theta_0)$, $W^{1/2} \mathbb{E}[f(v_t,\theta_0)]$ is the linear combn.\ used in GMM estimation.
+\end{block}
+
+\begin{block}{Identifying and Over-Identifying Restrictions}
+$P(\theta_0) \equiv$ \textbf{identifying restrictions};\\ $I_q - P(\theta_0) \equiv$ \textbf{over-identifying restrictions}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{J-test Statistic Under Correct Specification}
+	$$W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) = \left[I_q - P(\theta_0) \right]W^{1/2} \sqrt{T} \bar{g}_T(\theta_0) + o_p(1)$$
+
+  \begin{itemize}
+    \item CLT for $\sqrt{T} \bar{g}_T(\theta_0)$
+    \item $I_q - P(\theta_0)$ has rank $(q-p)$, since $P(\theta_0)$ has rank $p$.
+    \item \textbf{Singular} normal distribution
+	  \item $W_T^{1/2} \sqrt{T} \bar{g}_T(\widehat{\theta}_T) \overset{d}{\rightarrow} \mathcal{N}(0, NW^{1/2}S W^{1/2}N')$
+    \item \alert{Substituting $\widehat{S}^{-1}$, $J_T \overset{d}{\rightarrow} \chi^2_{q-p}$}    
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The J-test Statistic Under Mis-specification}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Case II: Fixed Mis-specification} 
+  \[
+    \alert{\boxed{\mathbb{E}[f(v_t,\theta)] = \mu(\theta), \quad \lvert\lvert \mu(\theta)\rvert\rvert >0,\,\, \forall \theta\in \Theta}}
+  \]
+
+  \begin{block}{N.B.}
+    This can \emph{only} occur in the over-identified case, since we can always solve the population moment conditions in the just-identified case. 
+  \end{block}
+
+  \begin{block}{Notation}
+    \vspace{-0.5em}
+    \begin{itemize}
+      \item $\theta^* \equiv $ solution to identifying restrictions ($\widehat{\theta}_T \rightarrow_p \theta^*$)
+      \item $\mu^* = \mu(\theta^*) = \mbox{plim}_{T\rightarrow \infty}\bar{g}_T(\widehat{\theta}_T)$
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Case II: Fixed Mis-specification}
+	$$\frac{1}{T} J_T = \bar{g}_T(\widehat{\theta}_T)' \widehat{S}^{-1}\bar{g}_T(\widehat{\theta}_T) = \mu_*' W \mu_* + o_p(1)$$
+
+  \begin{itemize}
+    \item $W$ positive definite 
+    \item since $\mu(\theta)>0$ for all $\theta\in \Theta$. 
+    \item Hence: $\mu_*' W \mu_*>0$ 
+    \item Fixed mis-specification $\Rightarrow \, J$-test statistic \emph{diverges at rate} $T$:
+      \vspace{-0.5em}
+\[
+  \alert{J_T = T \mu_*' W \mu_* + o_p(T)}
+\]
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary: Correct Specification vs.\ Fixed Mis-specification}
+  
+  \begin{alertblock}{Correct Specification: $J_T\Rightarrow \chi^2_{q-p} = O_p(1)$}
+  \end{alertblock}
+
+  \begin{alertblock}{Fixed Mis-specification: $J_T = O_p(T)$}
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Andrews (1999; Econometrica)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Andrews (1999; Econometrica)}
+  \begin{itemize}
+    \item Family of moment selection criteria (MSC) for GMM
+    \item Aims to \textbf{consistently} choose any and all correct MCs and eliminate incorrect MCs
+    \item AIC/BIC: add a \textbf{penalty} to maximized log-likelihood
+    \item Andrews MSC: add a \textbf{bonus} term to the J-statistic
+      \begin{itemize}
+        \item J-stat shows how well MCs ``fit''
+        \item Compares $\widehat{\theta}_T$ estimated using $P(\theta_0)$ to MCs from $I_q - P(\theta_0)$
+        \item J-stat tends to increase with degree of overidentification even if MCs are correct, since it converges to a $\chi^2_{q-p}$
+      \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Andrews (1999) -- Notation}
+
+  \vspace{-1em}
+  \footnotesize
+  \begin{align*}
+    f_{max} &\equiv (q\times 1)\mbox{ vector of all MCs under consideration}\\
+    c &\equiv (q\times 1) \mbox{ selection vector: zeros and ones indicating which MCs are included}\\
+    \mathcal{C} &\equiv \mbox{set of all candidates } c\\
+    |c| &\equiv \# \mbox{ of MCs in candidate } c
+  \end{align*}
+
+Let $\widehat{\theta}_T(c)$ be the efficient two-step GMM estimator based on the moment conditions $E[f(v_t,\theta, c)]=0$ and define
+\begin{eqnarray*}
+ 	V_\theta(c) &=& \left[G_0(c) S(c)^{-1} G_0(c) \right]^{-1}\\
+ 	G_0(c) &=& E[\nabla_\theta' f(v_t, \theta_0; c)]\\
+ 	S(c) &=& \lim_{T\rightarrow\infty} Var\left[\frac{1}{\sqrt{T}}\sum_{t=1}^T f(v_t, \theta_0;c)\right]\\
+ 	J_T(c) &=& T \bar{g}_T\left(\widehat{\theta}_T(c);c\right)'\widehat{S}_T(c)^{-1}\bar{g}_T\left(\widehat{\theta}_T(c);c\right)
+ \end{eqnarray*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Identification Condition}
+  \begin{itemize}
+    \item Andrews wants maximual set of correct MCs
+      \begin{itemize}
+        \item Consistent, minimum asymptotic variance
+      \end{itemize}
+    \item But different $\theta$ values could solve $\mathbb{E}[f(v_t,\theta,c)]$ for different $c$!
+    \item Which $\theta_0$ are we actually trying to be consistent for?
+  \end{itemize}
+
+  \begin{block}{More Notation}
+    \begin{itemize}
+      \item $\mathcal{Z}^0 \equiv$ set of all $c$ for which $\exists\, \theta$ with $\mathbb{E}[f(v_t,\theta,c)]=0$ 
+      \item $\mathcal{MZ}^0 \equiv$ subset of $\mathcal{Z}^0$ with \textbf{maximal} $|c|$.
+    \end{itemize}
+  \end{block}
+
+  \vspace{-1em}
+  \begin{block}{Assumption}
+    Andrews assumes that $\mathcal{MZ}^0 = \left\{ c_0 \right\}$, a singleton.
+  \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Family of Moment Selection Criteria}
+
+  \footnotesize
+  \begin{itemize}
+    \item Criteria of the form $MSC(c) = J_T(c) - B(T,|c|)$
+    \item $B$ is a \textbf{bonus term} that depends on sample size and \# of MCs
+    \item Choose $\widehat{c}_T = \underset{c \in \mathcal{C}}{\arg\min} MSC(c)$
+    \item Implementation Detail: Andrews suggests using a \textbf{centered} covariance matrix estimator:
+	$$\widehat{S}(c) = \frac{1}{T} \sum_{t=1}^T \left[f(v_t, \widehat{\theta}_T(c);c) - \bar{g}_T(\widehat{\theta}_T(c); c) \right]\left[f(v_t, \widehat{\theta}_T(c);c) - \bar{g}_T(\widehat{\theta}_T(c); c) \right]'$$
+  based on the weighting matrix that \emph{would be} efficient if the moment conditions were correctly specified.  
+  This remains consistent for $S(c)$ even under fixed mis-specification
+  \end{itemize}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+
+  \footnotesize
+
+  \begin{block}{Regularity Conditions for the $J$-test Statistic}
+	\begin{enumerate}[(i)]
+    \item If $\mathbb{E}[f(v_t, \theta;c)] =0$ for a unique $\theta \in \Theta$, then $J_T(c) \overset{d}{\rightarrow} \chi^2_{|c| -p}$
+    \item If $\mathbb{E}[f(v_t, \theta;c)] \neq 0$ for a \emph{all} $\theta \in \Theta$ then $T^{-1} J_T(c) \overset{p}{\rightarrow} a(c)$, a finite, positive constant that may depend on $c$.
+	\end{enumerate}
+\end{block}
+
+
+  \begin{block}{Regularity Conditions for Bonus Term} The bonus term can be written as $B(|c|,T) = \kappa_T h(|c|)$, where
+	\begin{enumerate}[(i)]
+		\item $h(\cdot)$ is strictly increasing
+		\item $\kappa_T \rightarrow \infty$ as $T\rightarrow \infty$ and $\kappa_T =o(T)$
+	\end{enumerate}
+\end{block}
+
+  \begin{block}{Identification Conditions}
+	\begin{enumerate}[(i)]
+		\item $\mathcal{MZ}^0 = \{c_0\}$
+    \item $\mathbb{E}[f(v_t, \theta_0; c_0)] = 0$ and $E[f(v_t, \theta; c_0)]\neq 0$ for any $\theta \neq \theta_0$
+	\end{enumerate}
+\end{block}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Consistency of Moment Selection}
+
+  \small
+\begin{alertblock}{Theorem}
+	Under the preceding assumptions, $MSC(c)$ is a consistent moment selection criterion, i.e.\ $\widehat{c}_T \overset{p}{\rightarrow} c_0$.
+\end{alertblock}
+
+\begin{block}{Some Examples}
+  \vspace{-1em}
+  \begin{align*}
+    \mbox{GMM-BIC}(c) &= J_T(c) - \left( |c|-p \right)\log(T)\\
+    \mbox{GMM-HQ}(c) &= J_T(c) - 2.01\left( |c|-p \right)\log\big(\log(T)\big)\\
+    \mbox{GMM-AIC}(c) &= J_T(c) - 2\left( |c|-p \right)\log(T)
+  \end{align*}
+\end{block}
+
+\begin{alertblock}{Corollary}
+  GMM-AIC is \emph{not} consistent, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$.
+  GMM-BIC and GMM-HQ are consistent since $\lim_{T\rightarrow \infty} \log(T)/T =0$ and $\lim_{T\rightarrow \infty} \log\big(\log(T)\big)/T = 0$.
+\end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
