@@ -13,7 +13,7 @@
   \end{block}
 
   \begin{alertblock}{Problem -- ``Data-snooping''}
-    Standard techniques for statistical inference are only valid under the assumption that the questions were determined \alert{before} we observe data.  
+    Standard techniques for (frequentist) statistical inference assume that we choose our questions \alert{before} observing the data.  
   \end{alertblock}
 
 \end{frame}
@@ -100,3 +100,34 @@
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Selective Inference vs.\ Sample-Splitting}
+
+  \begin{block}{Classical Inference}
+    Control the Type I error under model $M$: $\mathbb{P}_{M,H_0}(\mbox{reject } H_0) \leq \alpha$.
+  \end{block}
+
+  \begin{block}{Selective Inference}
+    Control the Type I error under model $M$, \alert{given} that $M$ and $H_0$ were selected: $\mathbb{P}_{M,H_0}\big(\mbox{reject } H_0|\{M,H_0 \mbox{ selected}\}\big) \leq \alpha$.
+  \end{block}
+
+  \begin{block}{Sample-Splitting}
+    Use different datasets to choose $(M, H_0)$ and carry out inference: $\mathbb{P}_{M,H_0}\big(\mbox{reject } H_0|\{M,H_0 \mbox{ selected}\}\big) = \mathbb{P}_{M,H_0}(\mbox{reject }H_0)$.
+  \end{block}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Some Questions}
+  
+  \begin{enumerate}
+    \item Recipe for selective inference in realistic examples?
+    \item How to construct the ``best'' selective test in a given example?
+    \item How does selective inference compare to sample-splitting?
+  \end{enumerate}
+  
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
