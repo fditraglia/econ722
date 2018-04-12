@@ -1,0 +1,102 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimal Inference After Model Selection (Fithian et al., 2017)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{How Statistics is Done In Reality}
+
+  \begin{block}{Step 1: Selection -- Decide what questions to ask.}
+    ``The analyst chooses a statistical model for the data at hand, and formulates testing, estimation, or other problems in terms of unknown aspects of that model.''
+  \end{block}
+
+  \begin{block}{Step 2: Inference -- Answer the Questions.}
+   ``The analyst investigates the chosen problems using the data and the selected model.''
+  \end{block}
+
+  \begin{alertblock}{Problem -- ``Data-snooping''}
+    Standard techniques for statistical inference are only valid under the assumption that the questions were determined \alert{before} we observe data.  
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simple Example: ``File Drawer Problem''}
+
+  \begin{block}{$Y_i \sim \mbox{iid N}(\mu_i, 1)$ for $i=1, \dots, n$}
+  \begin{itemize}
+    \item I want to know which $\mu_i \neq 0$, but I'm busy and $n$ is big.
+    \item My RA looks at each $Y_i$ and finds the ``interesting'' ones, namely $\widehat{\mathcal{I}} =\left\{ i\colon |Y_i|>1 \right\}$.
+    \item I test $H_{0,i}\colon \mu_i = 0$ against the two-sided alternative at the 5\% significance level for each $i \in \widehat{\mathcal{I}}$.
+  \end{itemize}
+\end{block}
+
+  \begin{alertblock}{Two Questions}
+    \begin{enumerate}
+      \item What is the probability of falsely rejecting $H_{0,i}$?
+      \item Among all $H_{0,i}$ that I test, what fraction are false rejections? 
+    \end{enumerate}
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simple Example: ``File Drawer Problem''}
+
+  \small
+
+  \begin{align*}
+    \mathbb{P}_{H_{0,i}}(\{\mbox{Reject } H_{0,i}\}) &= \mathbb{P}_{H_{0,i}}(\{\mbox{Test } H_{0,i} \}\cap \{ \mbox{Reject } H_{0,i} \})\\
+    &= \mathbb{P}_{H_{0,i}}(\{\mbox{Reject } H_{0,i}\} |\{\mbox{Test } H_{0,i}\})\mathbb{P}_{H_{0,i}}(\{\mbox{Test } H_{0,i}\})\\
+    &= \mathbb{P}_{H_{0,i}}\left(\{|Y_i| > 1.96\}|\{|Y_i|>1\} \right) \mathbb{P}_{H_{0,i}}(\{|Y_i|>1\})\\
+    &= \frac{2 \Phi(-1.96)}{2 \Phi(-1)} \times 2 \Phi(-1)\\
+    &\approx 0.16 \times 0.32 \approx 0.05
+  \end{align*}
+
+  \vspace{-1em}
+
+  \begin{align*}
+  \mathbb{P}_{H_{0,i}}(\{\mbox{Reject } H_{0,i}\} |\{\mbox{Test } H_{0,i}\}) &= \mathbb{P}_{H_{0,i}}\left(\{|Y_i| > 1.96\}|\{|Y_i|>1\} \right)\\
+  &= \frac{\Phi(-1.96)}{\Phi(-1)} \approx 0.16
+  \end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simple Example: ``File Drawer Problem''}
+
+  \begin{block}{Conditional vs.\ Unconditional Type I Error Rates}
+  \begin{itemize}
+    \item The \alert{conditional} probability of falsely rejecting $H_{0,i}$, given that I have tested it, is about 0.16.
+    \item The \alert{unconditional} probability of falsely rejecting $H_{0,i}$ is 0.05 since I only test a false null with probability $0.32$.
+  \end{itemize}
+\end{block}
+
+\begin{block}{Idea for Post-Selection Inference}
+  Control the Type I Error Rate \alert{conditional on selection}: ``The answer must be valid, given that the question was asked.''
+\end{block}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Simple Example: ``File Drawer Problem''}
+
+
+  \begin{block}{Conditional Type I Error Rate}
+  Solve $\mathbb{P}_{H_{0,i}}\left( \{|Y_i| > c\} | \{|Y_i|>1\}\right) = 0.05$ for $c$.
+\end{block}
+
+  \begin{align*}
+    \mathbb{P}_{H_{0,i}}\left( \{|Y_i| > c\} | \{|Y_i|>1\}\right) &= \frac{\Phi(-c)}{\Phi(-1)} = 0.05\\
+    c &= -\Phi^{-1}\big(\Phi(-1) \times 0.05\big)\\
+    c &\approx 2.41 
+  \end{align*}
+
+  \vspace{-2em}
+
+  \begin{alertblock}{Notice:}
+  To account for the first-stage selection step, we need a larger critical value: 2.41 vs.\ 1.96. This means the test is less powerful.
+\end{alertblock}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
