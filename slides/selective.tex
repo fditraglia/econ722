@@ -145,31 +145,223 @@
 \begin{frame}
   \frametitle{A Prototype Example of Selective Inference}
   \framesubtitle{This is my own example, but uses the same idea that underlies Fithian et al.}
-  \small
+
+  \footnotesize
  
   \begin{itemize}
-    \item Choose between models M1 and M2 based on parameter $\delta$. 
+    \item Choose between two models on a parameter $\delta$. 
       \begin{itemize} 
-        \item If $\delta \neq 0$, choose M1 
-        \item If $\delta = 0$, choose M2
+  \footnotesize
+        \item If $\delta \neq 0$, choose M1; if $\delta = 0$, choose M2
         \item E.g.\ $\delta$ is the endogeneity of $X$, M1 is IV and M2 is OLS
   \end{itemize}
-\item Observe $Y_\delta \sim N(\delta, 1)$ and use this to choose a model.
+\item Observe $Y_\delta \sim N(\delta, \sigma_\delta^2)$ and use this to choose a model.
   \begin{itemize}
+  \footnotesize
     \item Selection Event: $A \equiv \left\{ |Y_\delta| >c \right\}$, for some critical value $c$ 
     \item If $A$, then choose M1. Otherwise, choose M2.
   \end{itemize}
 \item After choosing a model, carry out inference for $\beta$.
   \begin{itemize}
-    \item Under a particular model $M$, $Y_\beta \sim N(\beta,1)$
-    \item $\beta$ is a \emph{model-specific} parameter
+  \footnotesize
+    \item Under a particular model $M$, $Y_\beta \sim N(\beta,\sigma_\beta^2)$
+    \item $\beta$ is a \emph{model-specific} parameter: could be meaningless or not even exist under a different model.
+  \end{itemize}
+\item If $Y_\beta$ and $Y_\delta$ are correlated (under model M), we need to account for conditioning on $A$ when carrying out inference for $\beta$.
+
   \end{itemize}
 
-  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{All Calculations are Under a Given Model $M$}
+  \begin{block}{Key Idea}
+Under whichever model $M$ ends up being selected, there is a joint normal distribution for $Y_\beta$ and $Y_\delta$ \emph{without} conditioning on $A$.
+\end{block}
 
-  
-  
+  \begin{block}{WLOG unit variances, $\rho$ known}
+\[
+  \left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \sim \mbox{N}\left( \left[
+\begin{array}{c}
+  \beta \\ \delta
+\end{array}
+\right], \left[
+\begin{array}{cc}
+  1 & \rho \\
+  \rho & 1\\
+\end{array}
+\right]\right)
+\]
 
+As long as we can consistently estimate the variances of $Y_{\beta}$ and $Y_{\delta}$ along with their covariance, this is not a problem.
+  \end{block}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Selective Inference in a Bivariate Normal Example}
+  
+  \vspace{-1em}
+
+  \small
+\[
+  \alert{\boxed{\left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \sim \mbox{N}\left( \left[
+\begin{array}{c}
+  \beta \\ \delta
+\end{array}
+\right], \left[
+\begin{array}{cc}
+  1 & \rho \\
+  \rho & 1\\
+\end{array}
+\right]\right), \quad A \equiv \left\{ |Y_\delta| >c \right\}}}
+\]
+
+
+  \begin{block}{Two Cases}
+    \begin{enumerate}
+      \item Condition on $A$ occurring  
+      \item Condition on $A$ \emph{not} occurring  
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-1em}
+
+  \begin{block}{Problem}
+    If $\delta$ were known, we could directly calculate how conditioning on $A$ affects the distribution of $Y_\beta$, but $\delta$ is unknown!
+  \end{block}
+
+  \begin{alertblock}{Solution}
+    Condition on a sufficient statistic for $\delta$.
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Conditioning on a Sufficient Statistic}
+
+  \small
+
+  \begin{block}{Theorem}
+   If $U$ is a sufficient statistic for $\delta$, then the joint distribution of $(Y_\beta, Y_\delta)$ given $U$ does not depend on $\delta$. 
+  \end{block}
+
+  \begin{block}{In Our Example}
+    Residual $U = Y_\delta - \rho Y_{\beta}$ from a projection of $Y_\delta$ onto $Y_\beta$ is sufficient for $\delta$.
+  \end{block}
+
+  \begin{block}{Straightforward Calculation}
+\begin{equation*}
+  \left.\left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \right| (U=u) 
+ = \left[
+\begin{array}{c}
+  \beta + Z \\ u + \rho (\beta + Z)
+\end{array}
+\right], \quad Z \sim \mbox{N}(0,1)
+\end{equation*}
+\alert{Notice that this is a singular normal distribution}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Distribution of $Y_\beta|(A,U=u)$}
+
+  \small
+\begin{equation*}
+  \alert{\boxed{\left.\left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \right| (U=u) 
+ = \left[
+\begin{array}{c}
+  \beta + Z \\ u + \rho (\beta + Z)
+\end{array}
+\right], \quad Z \sim \mbox{N}(0,1)}}
+\end{equation*}
+
+\vspace{2em}
+  
+Start with case in which $A$ occurs so we select $M1$.
+Under $H_0\colon \beta = \beta_0$,
+\begin{align*}
+  \mathbb{P}_{\beta_0}\left( Y_\beta \leq y  | A, U=u \right) &= \frac{\mathbb{P}_{\beta_0}(\{Y_\beta \leq y\} \cap A|U=u)}{\mathbb{P}_{\beta_0}(A|U=u)} \\  
+  &=\frac{\mathbb{P}\left(\left\{Z\leq y - \beta_0 \right\}\cap \left\{|u + \rho (\beta_0 + Z)| > c\right\}\right)}{\mathbb{P}\left(|u + \rho (\beta_0 + Z)| > c\right)}
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$\mathbb{P}(A|U=u)$ under $H_0\colon \beta = \beta_0$}
+
+\begin{align*}
+  P_D(A) &\equiv P_{\beta_0}(A|U=u)\\
+  &= \mathbb{P}\left(|u + \rho (\beta_0 + Z)| > c\right) \\
+  &= \mathbb{P}\left[ u + \rho(\beta_0 + Z) > c \right]  + \mathbb{P}\left[ u + \rho(\beta_0 + Z) < -c \right] \\
+  &= \mathbb{P}\left[ \rho(\beta_0 + Z) > c-u \right]  + \mathbb{P}\left[ u + \rho(\beta_0 + Z) < -c-u \right] \\ 
+    &= 1 - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left( \displaystyle \frac{-c- u}{\rho} - \beta_0 \right)
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$\mathbb{P}(\{Y_{\beta} \leq y\}\cap A|U=u)$ under $H_0\colon \beta = \beta_0$}
+
+  \footnotesize
+
+\begin{align*}
+ P_N(A) &\equiv \mathbb{P}(\{Y_{\beta} \leq y\}\cap A|U=u)\\
+ &= \mathbb{P}\left(\left\{Z\leq y - \beta_0 \right\}\cap \left\{|u + \rho (\beta_0 + Z)| > c\right\}\right)\\
+ %&= \mathbb{P}\left[\left\{ Z \leq (y - \beta_0) \right\} \cap\left\{Z > \displaystyle \frac{c-u}{\rho} - \beta_0\right\} \right]  + \mathbb{P}\left[\left\{ Z\leq (y - \beta_0) \right\} \cap \left\{Z < \displaystyle\frac{-c-u}{\rho} - \beta_0\right\} \right] \\ 
+ %&= \mathbf{1}\left\{ y > \displaystyle \frac{c - u}{\rho} \right\}\left[ \Phi\left( y - \beta_0 \right) - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) \right] + \Phi\left( \min\left\{y - \beta_0, \, \displaystyle \frac{-c - u}{\rho} - \beta_0  \right\} \right)\\
+ &= \left\{
+ \begin{array}{l}
+   \Phi\left( y - \beta_0 \right), \quad y < (-c - u)/\rho \\
+   \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad (-c - u)/\rho \leq y \leq (c - u)/\rho \\
+   \Phi(y - \beta_0) - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad y > (c - u)/\rho 
+ \end{array}
+ \right.
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$F_{\beta_0}(y|A,U=u)$}
+
+  \footnotesize
+    $F_{\beta_0}(y|A,U=u) = P_N(A) / P_D(A)$ where
+
+  \begin{align*}
+    P_D(A) &\equiv 1 - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left( \displaystyle \frac{-c- u}{\rho} - \beta_0 \right)\\ \\
+    P_N(A) &\equiv  \left\{
+ \begin{array}{l}
+   \Phi\left( y - \beta_0 \right), \quad y < (-c - u)/\rho \\
+   \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad (-c - u)/\rho \leq y \leq (c - u)/\rho \\
+   \Phi(y - \beta_0) - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad y > (c - u)/\rho 
+ \end{array}
+ \right.
+  \end{align*}
+
+  \vspace{1em}
+
+  \alert{Note that $F_{\beta_0}(y|A,U=u)$ is a valid CDF and that it has a \emph{flat region} where $(-c-u)/\rho \leq y \leq (c - u)/\rho$}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$Q_{\beta_0}(p|A,U=u)$}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
