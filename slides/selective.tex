@@ -341,28 +341,108 @@ Under $H_0\colon \beta = \beta_0$,
   \frametitle{$F_{\beta_0}(y|A,U=u)$}
 
   \footnotesize
-    $F_{\beta_0}(y|A,U=u) = P_N(A) / P_D(A)$ where
+    Define $\ell(u) = (-c -u)/\rho$, $r(u) = (c - u)/\rho$. We have:
 
+    \[F_{\beta_0}(y|A,U=u) = P_N(A) / P_D(A) \]
+where
   \begin{align*}
-    P_D(A) &\equiv 1 - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left( \displaystyle \frac{-c- u}{\rho} - \beta_0 \right)\\ \\
+    P_D(A) &\equiv 1 - \Phi\left( r(u) - \beta_0 \right) + \Phi\left( \ell(u) - \beta_0 \right)\\ \\
     P_N(A) &\equiv  \left\{
- \begin{array}{l}
-   \Phi\left( y - \beta_0 \right), \quad y < (-c - u)/\rho \\
-   \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad (-c - u)/\rho \leq y \leq (c - u)/\rho \\
-   \Phi(y - \beta_0) - \Phi\left( \displaystyle \frac{c - u}{\rho} - \beta_0 \right) + \Phi\left(\displaystyle \frac{-c-u}{\rho} - \beta_0 \right), \quad y > (c - u)/\rho 
+ \begin{array}{lr}
+   \Phi\left( y - \beta_0 \right), & y < \ell(u) \\
+   \Phi\left(\ell(u) - \beta_0 \right), &  \ell(u) \leq y \leq r(u) \\
+   \Phi(y - \beta_0) - \Phi\left( r(u) - \beta_0 \right) + \Phi\left(\ell(u) - \beta_0 \right), & y > r(u) 
  \end{array}
  \right.
   \end{align*}
 
   \vspace{1em}
 
-  \alert{Note that $F_{\beta_0}(y|A,U=u)$ is a valid CDF and that it has a \emph{flat region} where $(-c-u)/\rho \leq y \leq (c - u)/\rho$}
+  \alert{Note that $F_{\beta_0}(y|A,U=u)$ has a \emph{flat region} where $\ell(u) \leq y \leq r(u)$}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{$Q_{\beta_0}(p|A,U=u)$}
 
+  \scriptsize
+
+Inverting the CDF from the preceding slide:
+\begin{equation*}
+  Q_{\beta_0}(p|A,U=u) = 
+  \left\{
+  \begin{array}{lc}
+    \beta_0 + \Phi^{-1}\left( p \times P_D(A) \right), & p < p^*\\
+    \beta_0 + \Phi^{-1}\left[ p \times P_D(A) + \Phi\left(r(u) - \beta_0 \right) - \Phi\left( \ell(u) - \beta_0 \right) \right], & p \geq p^*
+  \end{array}
+  \right.
+\end{equation*}
+
+where
+\begin{align*}
+  p^* &\equiv \Phi\left( \ell(u) - \beta_0 \right)/P_D(A)\\
+P_D(A) &\equiv 1 - \Phi\left( r(u) - \beta_0 \right) + \Phi\left( \ell(u) - \beta_0 \right)\\
+\ell(u) &\equiv (-c-u)/\rho\\
+r(u) &\equiv (c-u)/\rho
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{The Distribution of $Y_\beta|(A^c,U=u)$}
+
+  \small
+\begin{equation*}
+  \alert{\boxed{\left.\left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \right| (U=u) 
+ = \left[
+\begin{array}{c}
+  \beta + Z \\ u + \rho (\beta + Z)
+\end{array}
+\right], \quad Z \sim \mbox{N}(0,1)}}
+\end{equation*}
+
+\vspace{2em}
+  
+If $A$ does not occur, when we select $M2$.
+Under $H_0\colon \beta = \beta_0$,
+\begin{align*}
+  \mathbb{P}_{\beta_0}\left( Y_\beta \leq y  | A^c, U=u \right) &= \frac{\mathbb{P}_{\beta_0}(\{Y_\beta \leq y\} \cap A^c|U=u)}{\mathbb{P}_{\beta_0}(A^c|U=u)} \\  
+  &= \frac{\mathbb{P}\left(\left\{Z\leq y - \beta_0 \right\}\cap \left\{|u + \rho (\beta_0 + Z)| < c\right\}\right)}{\mathbb{P}\left(|u + \rho (\beta_0 + Z)| < c\right)}
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$F_{\beta_0}(y|A^c,U=u)$}
+
+  \footnotesize
+    As above, define $\ell(u) = (-c -u)/\rho$, $r(u) = (c - u)/\rho$. We have:
+
+    \[F_{\beta_0}(y|A^c,U=u) = P_N(A^c) / P_D(A^c) \]
+where
+\begin{align*}
+  P_D(A^c) &\equiv \Phi\left(r(u) - \beta_0 \right) - \Phi\left( \ell(u) - \beta_0\right) \\
+ P_N(A^c) &\equiv 
+  \left\{
+ \begin{array}{rr}
+   0 ,& y < \ell(u)\\
+   \Phi(y - \beta_0) - \Phi\left( \ell(u) - \beta_0 \right) ,& \ell(u) \leq y \leq r(u)\\
+   \Phi\left(r(u) - \beta_0 \right) - \Phi\left( \ell(u) - \beta_0\right) 
+ ,& y > r(u) \\
+ \end{array}
+ \right.
+\end{align*}
+
+\vspace{1em}
+\alert{Notice that this is a CDF with a bounded support set: $y\in \left[ \ell(u), r(u) \right]$}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{$Q_{\beta_0}(p|A^c,U=u)$}
+
+  \footnotesize
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
