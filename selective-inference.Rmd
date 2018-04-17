@@ -1,0 +1,199 @@
+---
+title: "Selective Inference Example"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+Suppose that:
+$$\left[ \begin{array}{c} Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \sim \mbox{N}\left( \left[
+\begin{array}{c}
+  \beta \\ \delta
+\end{array}
+\right], \left[
+\begin{array}{cc}
+  1 & \rho \\
+  \rho & 1\\
+\end{array}
+\right]\right), \quad A = \{|Y_\delta| > c\} $$
+The quantity $U = Y_\delta - \rho Y_\beta$ is a sufficient statistic for 
+$\delta$ and we have
+$$\left.\left[
+  \begin{array}{c}
+    Y_\beta \\ Y_{\delta}
+  \end{array}
+\right] \right| (U=u) 
+ = \left[
+\begin{array}{c}
+  \beta + Z \\ u + \rho (\beta + Z)
+\end{array}
+\right], \quad Z \sim \mbox{N}(0,1)$$
+
+
+In class we calculated the conditional distribution of $Y_\beta$ under 
+$H_0\colon \beta = \beta_0$ given $U=u$ and $A$ or $A^c$. 
+The following R code implements the corresponding CDF:
+```{r}
+conditionalCDF <- function(y, b, u, rho, crit, A) {
+  L <- (-crit - u) / rho
+  R <- (crit - u) / rho
+  Phi_y <- pnorm(y - b)
+  Phi_R <- pnorm(R - b)
+  Phi_L <- pnorm(L - b)
+
+  if(A) {
+    denom <- 1 - Phi_R + Phi_L
+    num1 <- (y < L) * Phi_y
+    num2 <- ((y >= L) & (y <= R)) * Phi_L
+    num3 <- (y > R) * (Phi_y - Phi_R + Phi_L)
+  } else {
+    denom <- Phi_R - Phi_L
+    num1 <- (y < L) * 0
+    num2 <- ((y >= L) & (y <= R)) * (Phi_y - Phi_L)
+    num3 <- (y > R) * (Phi_R - Phi_L)
+  }
+  return((num1 + num2 + num3) / denom)
+}
+```
+We can easily invert the proceeding to get a quantile function:
+```{r}
+conditionalQuantile <- function(p, b, u, rho, crit, A) {
+  L <- (-crit - u) / rho
+  R <- (crit - u) / rho
+  Phi_R <- pnorm(R - b)
+  Phi_L <- pnorm(L - b)
+
+  if(A) {
+    denom <- 1 - Phi_R + Phi_L
+    pstar <- Phi_L / denom
+    argument <- p * denom + (p > pstar) * (Phi_R - Phi_L)
+  } else {
+    denom <- Phi_R - Phi_L
+    argument <- p * denom + Phi_L
+  }
+  return(b + qnorm(argument))
+}
+```
+Here's a function to plot the CDF:
+```{r}
+plotCDF <- function(b, u, rho, crit, A) {
+  eps <- 0.0001
+  ylower <- conditionalQuantile(p = eps, b, u, rho, crit, A)
+  yupper <- conditionalQuantile(p = 1 - eps, b, u, rho, crit, A)
+  yseq <- seq(ylower, yupper, length.out = 501)
+  Fseq <- conditionalCDF(yseq, b, u, rho, crit, A)
+  plot(yseq, Fseq, type = 'l', xlab = 'y', ylab = 'CDF')
+  abline(v = (-crit - u) / rho, lty = 2, col = 'red')
+  abline(v = (crit - u) / rho, lty = 2, col = 'red')
+}
+```
+and here's one to plot the quantile function:
+```{r}
+plotQuantile <- function(b, u, rho, crit, A) {
+  eps <- 0.0001
+  pseq <- seq(eps, 1 - eps, length.out = 501)
+  Qseq <- conditionalQuantile(pseq, b, u, rho, crit, A)
+  plot(pseq, Qseq, type = 'l', xlab = 'p', ylab = 'Quantile')
+  abline(h = (-crit - u) / rho, lty = 2, col = 'red')
+  abline(h = (crit - u) / rho, lty = 2, col = 'red')
+}
+```
+Now let's make some plots under the null $\beta = 0$. 
+First we'll condition on $A$ and use a critical value of $2$ for the first-stage
+test
+```{r}
+plotCDF(b = 0, u = -10, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = -2, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = -1, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = -0.5, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = -0.1, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 0, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 0.1, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 0.5, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 1, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 2, rho = 0.5, crit = 2, A = TRUE)
+plotCDF(b = 0, u = 10, rho = 0.5, crit = 2, A = TRUE)
+```
+Now the same thing, but conditioning on $A^c$: 
+```{r}
+plotCDF(b = 0, u = -5, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = -2, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = -1, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = -0.5, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = 0, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = 0.5, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = 1, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = 2, rho = 0.5, crit = 2, A = FALSE)
+plotCDF(b = 0, u = 5, rho = 0.5, crit = 2, A = FALSE)
+```
+Now let's try a simple simulation experiment.
+First we'll set values of $\beta$, $\delta$, $\rho$, $c$ and the number of 
+simulation draws:
+```{r}
+b <- 0
+d <- 1
+r <- 0.4
+crit <- qnorm(1 - 0.05 / 2)
+n <- 1000000
+```
+Now we make $n$ bivariate standard normal draws with correlation $\rho$
+```{r}
+set.seed(1234)
+y <- MASS::mvrnorm(n, c(b, d), Sigma = matrix(c(1, r, r, 1), 2, 2, byrow = TRUE))
+Yb <- y[,1]
+Yd <- y[,2]
+```
+The preceding are draws from the *unconditional* joint distribution of $Y_\beta$ 
+and and $Y_\delta$.
+Now we'll condition on the event $A$, by keeping only the subset of draws for
+which $Y_\delta$ is larger in absolute value that $c$.
+```{r}
+yA <- y[abs(Yd) > crit,]
+yA <- yA[sample(1:nrow(yA), 10000),]
+Yb_A <- yA[,1]
+Yd_A <- yA[,2]
+```
+Notice the difference between the conditional and unconditional distributions
+of $Y_\beta$:
+```{r}
+par(mfrow = c(1, 2))
+hist(Yb)
+abline(v = mean(Yb), col = 'red', lty = 2, lwd = 2)
+hist(Yb_A)
+abline(v = mean(Yb_A), col = 'red', lty = 2, lwd = 2)
+par(mfrow = c(1, 1))
+```
+Suppose that we want to test against the one-sided alternative, namely
+$H_0\colon \beta = 0$ versus $H_1\colon \beta > 0$ with $\alpha = 0.05$. 
+Now we'll plot the critical value for a valid selective test.
+This is a function of the observed value of $U$. 
+Let's see how it compares to the critical value we'd get if we hadn't conditioned
+on $A$:
+```{r}
+Useq <- seq(-4, 4, 0.01)
+critical_values <- conditionalQuantile(0.95, b, Useq, rho = r, crit, A = TRUE)
+plot(Useq, critical_values, type = 'l', xlab = 'U', ylab = 'Critical Value')
+abline(h = qnorm(0.95), col = 'red', lty = 2, lwd = 2)
+```
+Now let's check that this works in our simulation study.
+First we'll construct the observed sufficient statistics, and then we'll calculate
+the selective critical value for each one:
+```{r}
+U <- Yd_A - r * Yb_A
+critical_values <- conditionalQuantile(0.95, b, U, rho = r, crit, A = TRUE)
+```
+Now we'll carry out the test: rejecting if $Y_\beta$ exceeds the conditional 
+conditional critical value, given $U=u$.
+Since the null is true, we should reject with probability $\alpha = 0.05$
+```{r}
+mean(Yb_A > critical_values)
+```
+Now compare this to what we would have gotten if we had ignored the effects of
+our first-step selection procedure on subsequent inference:
+```{r}
+mean(Yb_A > qnorm(0.95))
+```
+
