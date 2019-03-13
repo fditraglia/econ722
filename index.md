@@ -1,3 +1,5 @@
+# Econ 722
+
 ## Course Documents        
 - [Syllabus](syllabus/syllabus.pdf)
 - [Problems](problems.pdf)
