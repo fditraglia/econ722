@@ -1,0 +1,9 @@
+# Site Settings
+title: Econ 722 - Econometrics IV 
+author: Francis J. DiTraglia
+email: fditra@sas.upenn.edu
+description: Course website for Econ 722 at UPenn
+
+# Build Settings
+theme: minima
+markdown: kramdown
