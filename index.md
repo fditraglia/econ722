@@ -1,4 +1,7 @@
-# Econ 722
+---
+layout: home
+title: Course Homepage
+---
 
 ## Course Documents        
 - [Syllabus](syllabus/syllabus.pdf)
