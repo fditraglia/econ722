@@ -163,7 +163,7 @@ Both satisfy $T^{-1}c_{T,k} \overset{p}{\rightarrow} 0$.
   \begin{block}{Setup}
    \begin{itemize}
       \item Models $M_0$ and $M_1$; corresponding estimators $\widehat{\theta}_{0,T}$ and $\widehat{\theta}_{1,T}$
-      \item Model Selection: If $\widehat{M} = 0$ choose $M_0$; if $\widehat{M} = 0$ choose $M_1$.
+      \item Model Selection: If $\widehat{M} = 0$ choose $M_0$; if $\widehat{M} = 1$ choose $M_1$.
     \end{itemize}
   \end{block}
 
@@ -383,7 +383,7 @@ $KL(g;M_0) = \mu^2/2, \quad KL(g;M_1) = 0$
   \small
   \vspace{-2em}
   \[
-    \underset{T\rightarrow \infty}{\lim\inf} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; \text{M}_0) - KL(g;\text{M}_1) \right\} = \underset{n\rightarrow \infty}{\lim\inf}\ \frac{1}{T}\sum_{t = 1}^T  \left(\frac{\mu^2}{2} - 0\right) > 0
+    \underset{T\rightarrow \infty}{\lim\inf} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; \text{M}_0) - KL(g;\text{M}_1) \right\} = \underset{T\rightarrow \infty}{\lim\inf}\ \frac{1}{T}\sum_{t = 1}^T  \left(\frac{\mu^2}{2} - 0\right) > 0
   \]
 \end{block}
 

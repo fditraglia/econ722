@@ -34,6 +34,24 @@
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
+  \frametitle{$\text{KL}(g;f) \geq0$ with equality iff $g = f$ almost surely}
+
+  \begin{block}{Jensen's Inequality}
+    If $\varphi$ is convex, then $\varphi(\mathbb{E}[X]) \leq \mathbb{E}[\varphi(X)]$, with strict equality when $\varphi$ is affine or $X$ is constant.
+  \end{block}
+
+  \begin{block}{$\log$ is concave so $(-\log)$ is convex}
+  \begin{align*}
+    \mathbb{E}_G\left[ \log\left\{ \frac{g(Y)}{f(Y)} \right\} \right] &= \mathbb{E}_G\left[ -\log\left\{ \frac{f(Y)}{g(Y)} \right\} \right] \geq -\log \left\{ \mathbb{E}_G\left[ \frac{f(Y)}{g(Y)} \right] \right\}\\
+    &= -\log \left\{ \int_{-\infty}^{\infty} \frac{f(y)}{g(y)} \cdot g(y)\, dy \right\}\\
+    &=-\log \left\{ \int_{-\infty}^{\infty} f(y)\, dy \right\}\\
+    &= -\log(1) = 0
+  \end{align*}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
   \frametitle{KL Divergence and Mis-specified MLE}
 
   \begin{block}{Pseudo-true Parameter Value $\theta_0$}

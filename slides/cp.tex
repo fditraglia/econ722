@@ -31,7 +31,7 @@
     \begin{itemize}
       \item Model index $m$ and regressor matrix $\mathbf{X}_m$
       \item Corresponding OLS estimator $\boldsymbol{\widehat{\beta}}_m$ padded out with zeros
-      \item $\mathbf{X} \widehat{\boldsymbol{\beta}}_m = \mathbf{X}_{(-m)}\mathbf{0} + \mathbf{X}_m\left[ (\mathbf{X}_m'\mathbf{X}_m)^{-1}\mathbf{X}_m' \mathbf{y} \right] = \mathbf{P}_m \mathbf{y}$
+      \item $\mathbf{X} \widehat{\boldsymbol{\beta}}_m = \mathbf{X}_{(-m)}\mathbf{0} + \mathbf{X}_m\left[ (\mathbf{X}_m'\mathbf{X}_m)^{-1}\mathbf{X}_m'\right] \mathbf{y} = \mathbf{P}_m \mathbf{y}$
     \end{itemize}
   \end{block}
 
@@ -103,7 +103,7 @@
 
   \vspace{1em}
   \small
-  \alert{where $k_m$ denotes the number of regressors in $\mathbf{X}_m$ and $\text{tr}(\mathbf{P}_m) = \text{tr}\left\{ \mathbf{X}_m\left( \mathbf{X}_m'\mathbf{X}_m \right)^{-1}\mathbf{X}_m' \right\} = \text{tr}\left\{ \mathbf{X}'_m \mathbf{X}_m \left( \mathbf{X}_m' \mathbf{X}_m \right)^{-1} \right\} = \text{tr}(\mathbf{I}_m)$}
+  \alert{where $k_m$ denotes the number of regressors in $\mathbf{X}_m$ and $\text{tr}(\mathbf{P}_m) = \text{tr}\left\{ \mathbf{X}_m\left( \mathbf{X}_m'\mathbf{X}_m \right)^{-1}\mathbf{X}_m' \right\} = \text{tr}\left\{ \mathbf{X}'_m \mathbf{X}_m \left( \mathbf{X}_m' \mathbf{X}_m \right)^{-1} \right\} = \text{tr}(\mathbf{I}_m) = k_m$}
   \end{block}
 
 \end{frame}
