@@ -62,7 +62,13 @@ $\sqrt{T} (\widehat{\theta}_T - \theta_0)\overset{d}{\rightarrow} \mathcal{N}(0,
 \subsection{The J-test Statistic}
 The $J$-test statistic is given by
 	$$J_T = T\; \bar{g}_T(\widehat{\theta}_T')\; \widehat{S}^{-1} \;\bar{g}_T(\widehat{\theta}_T)$$
-where $\widehat{S}$ is a consistent estimator of $S$, the long-run variance matrix of the GMM sample moment conditions. We will need to consider the asymptotic behavior of this quantity in two settings: when the population moment condition is satisfied, and when it is violated.
+where $\widehat{S}$ is a consistent estimator of $S$, the long-run variance matrix of the GMM sample moment conditions.
+In other words,
+\[
+  S\rightarrow^p S \equiv \lim_{T\rightarrow \infty} \text{Var}\left[ T^{-1/2}\sum_{t=1}^T f(v_t,\theta) \right]
+\]
+
+We will need to consider the asymptotic behavior of this quantity in two settings: when the population moment condition is satisfied, and when it is violated.
 
 \paragraph{Correct Specification}
 Earlier in this document we reviewed the basic asymptotic results for GMM estimation under standard regularity conditions \emph{assuming the population moment condition is correct}. Our main findings were that, regardless of weighting matrix, GMM is consistent and asymptotically normal. The particular choice of $W_T$ \emph{only} affects the asymptotic variance of the estimator. To study the behavior of the $J$-test in this setting, we need to examine an asymptotic expansion for the estimated sample moment. Using Taylor Expansion arguments, we can show that
@@ -117,7 +123,7 @@ The main point of Andrews (1999) is to establish sufficient conditions on the bo
 \paragraph{Regularity Conditions for the $J$-test Statistic}
 	\begin{enumerate}[(i)]
 		\item If $E[f(v_t, \theta;c)] =0$ for a unique $\theta \in \Theta$, then $J_T(c) \overset{d}{\rightarrow} \chi^2_{|c| -p}$
-		\item If $E[f(v_t, \theta;c)] \neq 0$ for a \emph{all} $\theta \in \Theta$ then $T^{-1} J_T(c) \overset{p}{\rightarrow} a(c)$, a finite, positive constant that may depend on $c$.
+		\item If $E[f(v_t, \theta;c)] \neq 0$ for \emph{all} $\theta \in \Theta$ then $T^{-1} J_T(c) \overset{p}{\rightarrow} a(c)$, a finite, positive constant that may depend on $c$.
 	\end{enumerate}
 
 
@@ -150,14 +156,14 @@ Now, we are interested in $\Delta_T(c, c_0)$ \emph{only} for situations in which
 \paragraph{Case 1} Consider $c_1\neq c_0$ such that $E[f(v_t, \theta_1;c_1)]=0$ \emph{for a unique} $\theta_1$. In this case the first Regularity Condition for the $J$-test Statistic applies to \emph{both} $c_1$ \emph{and} $c_0$ and we have 
 	$$J_T(c_1) - J_T(c_0) \overset{d}{\rightarrow} \chi^2_{|c_1| - p} - \chi^2_{|c_0|-p} = O_p(1)$$
 By the first Identification Condition, $c_0$ is the \emph{unique} maximal set of correct moment conditions. Hence $|c_0| > |c_1|$. Now, by the first Regularity Condition for the Bonus Term, $h$ is strictly increasing. It follows that $h(|c_0|) - h(|c_1|)>0$. By the second Regularity Condition for the Bonus Term, $\kappa_T \rightarrow \infty$. Thus, 
-	$$\kappa_T \left[h(|c_0|) - h(|c|) \right] \rightarrow \infty$$ 
+	$$\kappa_T \left[h(|c_0|) - h(|c_1|) \right] \rightarrow \infty$$ 
 It follows that $\Delta_T(c_1, c_0) \rightarrow \infty$ and we obtain our desired result.
 
 
 \paragraph{Case 2} Consider $c_2 \neq c_0$ such that $E[f(v_t, \theta; c_2)]\neq 0$ for any $\theta \in \Theta$. In this case, the \emph{first} Regularity Condition for the $J$-test Statistic applies to $c_0$, while the \emph{second} applies to $c_2$ so we have
 	$$T^{-1}\left[J_T(c_2) - J_T(c_0) \right] = a(c_2) + o_p(1) - T^{-1} O_p(1)$$
 Now, whatever the value $\left[h(|c_0|) - h(|c|) \right]$ happens to be, it is definitely finite since $h$ is strictly increasing by the first Regularity Condition for the Bonus Term, and both $|c|$ and $|c_0|$ are finite. By the second Regularity Condition for the Bonus Term, $\kappa_T = o(T)$. Hence,
-	$$T^{-1} \kappa_T\left[h(|c_0|) - h(|c|) \right] = o(1)$$
+	$$T^{-1} \kappa_T\left[h(|c_0|) - h(|c_2|) \right] = o(1)$$
 Putting the pieces together, we have
 \begin{eqnarray*}
 	T^{-1} \Delta_T(c_2, c_0) &=& a(c_2) + o_p(1) - T^{-1}O_p(1) + o(1)\\

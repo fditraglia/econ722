@@ -223,7 +223,7 @@ Therefore,
 Now we re-introduce the dependence on the model $M_i$. Taking logs of the Laplace Approximation and multiplying by two (again, this is traditional but has no effect on model comparisons)
 	\begin{eqnarray*}
 		2 \log f(y|M_i) &=& 2 \log \left\{ \int f_i(y|\beta_i)\pi(\beta_i)d\beta_i \right\}\\
-		&\approx& 2\ell(\hat{\beta}_i) -p\log(n) + p \log(2\pi)- \pi(\hat{\beta}_i)-\log \left| J(\hat{\beta_i}) \right|
+    &\approx& 2\ell(\hat{\beta}_i) -p\log(n) + p \log(2\pi) + \log[\pi(\hat{\beta}_i)] -\log \left| J(\hat{\beta_i}) \right|
 	\end{eqnarray*}
 The first two terms are $O_p(n)$ and $O_p(\log{n})$, while the last three are $O_p(1)$, hence negligible as $n\rightarrow \infty$. This gives us Schwarz's BIC
 	$$BIC(M_i) = 2\log{f_i(\mathbf{y}|\hat{\beta}_i)} - p\log{n}$$

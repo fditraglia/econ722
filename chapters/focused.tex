@@ -58,7 +58,7 @@ But we almost \emph{never} know the exact sampling distribution of our test stat
 This is where \emph{local alternatives} come in.
 Rather than evaluating our tests against a \emph{fixed} alternative $\mu$, suppose we were to evaluate it against a \emph{sequence} of \emph{local} alternatives that \emph{drift towards the null} at rate $n^{-1/2}$. 
 In other words, our alternative becomes $H_{1,n} \colon \mu = \delta / \sqrt{n}$ where, for this one-sided test, $\delta > 0$. 
-If we substitute $\delta/\sqrt{n}$ for $\mu$ and take the limit as $N\rightarrow \infty$, we find
+If we substitute $\delta/\sqrt{n}$ for $\mu$ and take the limit as $n\rightarrow \infty$, we find
 \begin{eqnarray*}
 \lim_{n\rightarrow \infty} \mbox{Power}(T_{n}) &=& \lim_{n\rightarrow \infty}\left[1 - \Phi\left(z_{1-\alpha} - \frac{\delta}{\sqrt{n}}\sqrt{n}\right) \right]\\
 &=& 1 - \Phi\left(z_{1-\alpha} - \delta \right)
@@ -95,35 +95,35 @@ Now, if we don't know the finite sample distribution of $\widehat{\mu}$, we can'
 So what can we do instead? If $\widehat{\mu}$ is asymptotically normal, then we might try to use the features of its limit distribution to calculate the \emph{asymptotic} mean-squared error and use this as a ``stand-in'' for the exact, finite-sample quantity. 
 Let $\mu_0$ be the probability limit of $\widehat{\mu}$ and $\mu$ be the ``true'' parameter value.
 Suppose that
-$$\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
+$$\sqrt{n}\left(\widehat{\mu} - \mu_0 \right) \overset{d}{\rightarrow} \mathcal{N}(0,\sigma^2)$$
 In maximum likelihood estimation, $\mu_0$ would be the pseudo-true value that minimizes the KL divergence and $\sigma^2$ would be a diagonal element of $J^{-1}KJ^{-1}$. 
 Now, an obvious idea is estimate $Var(\widehat{\mu})$ using the \emph{asymptotic variance}, namely $\mbox{AVAR}(\widehat{\mu}) = \sigma^2$. 
 But what about the bias term $E[\widehat{\mu} - \mu]$? 
 The limit distribution of $\widehat{\mu}$ is centered around $\mu_0$, the pseudo-true value, but we need to evaluate the bias relative to $\mu$.
-Let's try recentering by adding and subtracting $\sqrt{T}\mu$ as follows:
+Let's try recentering by adding and subtracting $\sqrt{n}\mu$ as follows:
 \begin{eqnarray*}
-\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) &=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0\\
-&=& \sqrt{T}\widehat{\mu} - \sqrt{T} \mu_0 - \sqrt{T} \mu + \sqrt{T} \mu\\
-&=& \sqrt{T}\left( \widehat{\mu} - \mu\right) + \sqrt{T}\left(\mu - \mu_0 \right)
+\sqrt{n}\left(\widehat{\mu} - \mu_0 \right) &=& \sqrt{n}\widehat{\mu} - \sqrt{n} \mu_0\\
+&=& \sqrt{n}\widehat{\mu} - \sqrt{n} \mu_0 - \sqrt{n} \mu + \sqrt{n} \mu\\
+&=& \sqrt{n}\left( \widehat{\mu} - \mu\right) + \sqrt{n}\left(\mu - \mu_0 \right)
 \end{eqnarray*}
 Rearranging, we can write
-$$\sqrt{T}\left( \widehat{\mu} - \mu\right) = \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu - \mu_0 \right)$$
-Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{T}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' 
-Unfortunately, we have a problem. By assumption, the first term $\sqrt{T}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! 
-We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{T}\left(\mu - \mu_0 \right) = O(T^{1/2})$. 
+$$\sqrt{n}\left( \widehat{\mu} - \mu\right) = \sqrt{n}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{n}\left(\mu - \mu_0 \right)$$
+Now we have an expression for $\widehat{\mu}$ centered around $\mu$, so the obvious thing to do is look at the mean of the limiting distribution of $\sqrt{n}\left( \widehat{\mu} - \mu\right) $ and call this the ``asymptotic bias.'' 
+Unfortunately, we have a problem. By assumption, the first term $\sqrt{n}\left(\widehat{\mu} - \mu_0 \right)$ is $O_p(1)$ but the second term \emph{diverges}! 
+We recentered $\widehat{\mu}$ around $\mu$ \emph{precisely because} we thought that $\mu_0$ was potentially different from $\mu$. But if this is the case, then $ \sqrt{n}\left(\mu - \mu_0 \right) = O(n^{1/2})$. 
 So what's going on here? The problem is that the asymptotic variance is of a \emph{different order} than the asymptotic bias. 
-We need to scale $\widehat{\mu}$ up by $\sqrt{T}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. 
+We need to scale $\widehat{\mu}$ up by $\sqrt{n}$ to get a result that has non-zero asymptotic variance, but this same scaling causes the bias to explode. 
 In other words, there is no way to get a meaningful bias-variance tradeoff in the limit under conventional asymptotics.
 
-So how can we fix this problem? Above we had $ \sqrt{T}\left(\mu - \mu_0\right) = O(T^{1/2})$ but what we want is $\sqrt{T}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(T^{-1/2})$. 
+So how can we fix this problem? Above we had $ \sqrt{n}\left(\mu - \mu_0\right) = O(n^{1/2})$ but what we want is $\sqrt{n}\left(\mu - \mu_0 \right) = O(1)$, so somehow or other we need to ensure that $\left(\mu - \mu_0 \right) = O(n^{-1/2})$. 
 This is where local mis-specification makes its grand appearance. 
-Suppose that we have a DGP under which the true parameter value is $\mu_T = \mu_0 + \delta/\sqrt{T}$ where $\delta$ is a constant. 
-That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $T^{-1/2}$. 
+Suppose that we have a DGP under which the true parameter value is $\mu_n = \mu_0 + \delta/\sqrt{n}$ where $\delta$ is a constant. 
+That is, suppose we assume that the true parameter value \emph{changes with sample size} and drifts towards $\mu_0$ at rate $n^{-1/2}$. 
 This may sound like a crazy idea, but there's no arguing with the fact that it solves our problem. We have,
 \begin{eqnarray*}
-\sqrt{T}\left( \widehat{\mu} - \mu_T\right) &=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_T - \mu_0 \right)\\
-&=&\sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{T}\left(\mu_0 + \delta/\sqrt{T} - \mu_0 \right)\\
-&=& \sqrt{T}\left(\widehat{\mu} - \mu_0 \right) - \delta\\
+\sqrt{n}\left( \widehat{\mu} - \mu_n\right) &=& \sqrt{n}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{n}\left(\mu_n - \mu_0 \right)\\
+&=&\sqrt{n}\left(\widehat{\mu} - \mu_0 \right) - \sqrt{n}\left(\mu_0 + \delta/\sqrt{n} - \mu_0 \right)\\
+&=& \sqrt{n}\left(\widehat{\mu} - \mu_0 \right) - \delta\\
 &\overset{d}{\rightarrow}& \mathcal{N}(0, \sigma^2) - \delta
 \end{eqnarray*}
 hence, the asymptotic mean-squared error of $\widehat{\mu}$ is $\mbox{AMSE}(\widehat{\mu}) = \delta^2 + \sigma^2$. 

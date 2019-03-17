@@ -63,7 +63,7 @@ Note: we do \emph{not} assume the data are independent.
 
 
 \paragraph{General Form of Information Criteria}
-We will consider model selection criteria for the following form:
+We will consider model selection criteria of the following form:
 	$$IC(M_k) = 2 \sum_{t=1}^T \log f_{k,t}(Y_t| \widehat{\theta_k}) - c_{T,k}$$
 where $c_{T,k}$ is the penalty term for $M_k$. 
 The question we will explore is how different choices of the penalty term $c_{T,k}$ give rise to criteria that behave in different ways. 
@@ -160,8 +160,8 @@ Let $Y_1, \hdots, Y_T \overset{\mbox{iid}}{\sim} N(\mu,1)$ and consider two mode
 	\end{eqnarray*}
 
 \begin{eqnarray*}
-	\ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{2\pi} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\
-	&\vdots& \boxed{\mbox{fill in later}}\\
+  \ell_T(\mu)&=& \sum_{t=1}^T \log \left( \frac{1}{\sqrt{2\pi}} \exp \left\{-\frac{1}{2}(Y_t - \mu)^2 \right\}\right)\\
+	&\vdots&\\ 
 	&=& -\frac{T}{2} \left\{ \widehat{\sigma}^2 + \log(2\pi)\right\} - \frac{T}{2}\left(\bar{Y} - \mu \right)^2\\
 	&=& C - \frac{T}{2}\left(\bar{Y} - \mu \right)^2
 \end{eqnarray*}
@@ -191,24 +191,21 @@ For the AIC we have $d_T = 2$ while for the BIC we have $d_T = \log(T)$. Now let
 
 \paragraph{Case I: $\mu \neq 0$} In this case, $M_1$ is the true DGP and the unique KL-minimizer. Since it's the true DGP, the KL divergence for $M_1$ is exactly zero. (See Lecture 1.) We can calculate the KL divergence for $M_0$ using similar steps to those we employed to derive the AIC$_c$ in Lecture 2. First, we have
 	\begin{eqnarray*}
-		\log g(y) - \log f_\theta(y) &=& -\frac{1}{2}(y-\mu)^2 + \frac{1}{2} y^2\\
-		&\vdots& \boxed{\mbox{a little algebra}}\\
-		&=& \mu \left(y - \frac{\mu}{2}\right)
+		\log g(y) - \log f_\theta(y) &=& -\frac{1}{2}(y-\mu)^2 + \frac{1}{2} y^2 =  \mu \left(y - \frac{\mu}{2}\right)
 	\end{eqnarray*}
 since the constant $-\log(2\pi)/2$ appears in each term and hence cancels. Thus,
 	\begin{eqnarray*}
-		KL(g;f_\theta) &=& \int \frac{1}{\sqrt{2\pi}} \exp\left\{ -\frac{1}{2} (y-\mu)^2\right\} \mu\left(y - \frac{\mu}{2} \right)\; dy\\
-			&\vdots& \boxed{\mbox{fill in later}}\\
-			&=& \frac{\mu^2}{2}
+		KL(g;f_\theta) &=& \int \frac{1}{\sqrt{2\pi}} \exp\left\{ -\frac{1}{2} (y-\mu)^2\right\} \mu\left(y - \frac{\mu}{2} \right)\; dy 
+			= \frac{\mu^2}{2}
 	\end{eqnarray*}
 To summarize, we have
-	\begin{eqnarray*}
-		KL(g;M_1) &=&0\\
-		KL(g;M_0) &=& \frac{\mu^2}{2}
-	\end{eqnarray*}
+\[
+		KL(g;M_1) = 0, \quad
+		KL(g;M_0) = \frac{\mu^2}{2}
+  \]
 Now let's check our sufficient conditions for weak consistency. First, we have
 	\begin{eqnarray*}
-		\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) &=& \underset{n\rightarrow \infty}{\lim\inf}\ \frac{1}{T}\sum_{t = 1}^T  \left(\frac{\mu^2}{2} - 0\right) \\
+		\underset{T\rightarrow \infty}{\lim\inf}\left(\underset{k \neq k_0}{\min} \frac{1}{T}\sum_{t = 1}^T \left\{ KL(g; f_{k,t}) - KL(g;f_{k_0,t}) \right\} \right) &=& \underset{T\rightarrow \infty}{\lim\inf}\ \frac{1}{T}\sum_{t = 1}^T  \left(\frac{\mu^2}{2} - 0\right) \\
 		&=&  \underset{T\rightarrow \infty}{\lim\inf}\left(\frac{\mu^2}{2}\right) >0
 	\end{eqnarray*}
 as required. Now, the condition on the penalty term is $c_{T,k} = o_p(T)$, in other words $c_{T,k}/T \overset{p}{\rightarrow} 0$ both the AIC and BIC penalties satisfy this condition. Hence, if $M_1$ is the true model, both the AIC and BIC will select it with probability approaching 1 as $T\rightarrow \infty$.
@@ -241,8 +238,8 @@ Using the exact same steps as for the AIC except with $\sqrt{\log(T)}$ in the pl
 		P\left(\widehat{M}_{BIC} = M_1\right) &=& P\left(\left|\sqrt{T}\bar{Y} \right| \geq \sqrt{\log(T)}  \right)\\
 			&=& \Phi\left(-\sqrt{\log(T)} - \sqrt{T}\mu\right) + \left[1 -  \Phi\left(\sqrt{\log(T)} - \sqrt{T} \mu \right)\right]
 	\end{eqnarray*}
-
-\todo[inline]{Shiny App: \url{http://glimmer.rstudio.com/fditraglia/CH_Figure_4_1/}}
+You can view an interactive plot of the preceding expression online at the following url:
+\url{http://fditraglia.shinyapps.io/CH_Figure_4_1/}.
 
 \paragraph{What is the probability of overfitting?} Suppose $\mu = 0$. In this case both models are KL-minimizers but we'd prefer $M_0$ since it's more parsimonious. For a generic information criterion of the form we're considering here, we calculate the ``probability of overfitting'' as follows
 \begin{eqnarray*}
@@ -261,7 +258,6 @@ Consider MSE risk, scaling up by $T$ since variances for well-behaved problems a
 \begin{eqnarray*}
 	R_T(\mu) &=& T E_\mu\left[\left( \widehat{\mu} - \mu\right)\right] = E_\mu\left[\left(\sqrt{T} \widehat{\mu} - \sqrt{T} \mu\right)\right]\\
 		&=& E\left\{\left[ \left(\sqrt{T}\mu + Z \right)\mathbf{1}\left\{\sqrt{T}\mu + Z \geq \sqrt{d_T}\right\}- \sqrt{T}\mu \right]^2 \right\}\\
-		&\vdots& \boxed{\mbox{fill in later}}\\
 		&=& 1 - \int_{a}^{b} z^2 \phi(z)\; dz + T\mu^2 \left[\Phi(b) - \Phi(a) \right]
 \end{eqnarray*}
 where
@@ -287,7 +283,8 @@ where
 		a &=& -\sqrt{d_T} - \sqrt{T}\mu\\
 		b &=& \sqrt{d_T} - \sqrt{T}\mu
 	\end{eqnarray*}
-\todo[inline]{Shiny App: \url{http://glimmer.rstudio.com/fditraglia/CH_Figure_4_2/}}
+You can view an interactive plot of the preceding expression online at the following url:
+\url{http://fditraglia.shiny.io/fditraglia/CH_Figure_4_2/}.
 
 What we see from the picture is that, in exchange for low risk in a small neighborhood of $\mu=0$, BIC has max risk that \emph{diverges} as the sample size increases. In contrast, AIC has bounded max risk. This isn't just a problem with BIC: \emph{any} consistent selection criterion will suffer from this defect.
 

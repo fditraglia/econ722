@@ -116,6 +116,7 @@ The SVD allows us to express \emph{any} $m \times n$ matrix $A$ of arbitrary ran
 	 	\item $V$ is an $n\times n$ orthogonal matrix whose columns contain the eigenvectors of $A'A$
 	 	\item $D$ is an $m\times n$ matrix whose first $r$ main diagonal elements are the  \emph{singular values} $d_1, \hdots, d_r$. All other elements of $D$ are zero.
 	 	\item The singular values $d_1, \hdots, d_r$ are the positive eigenvalues of $A'A$ which are \emph{identical} to the positive eigenvalues of $AA'$.
+      (In other words, some of the eigenvalues are zero, but the rest are positive: these are the singular values.)
 	 \end{itemize} 
 
 It turns out that the SVD provides orthonormal bases for each of the so-called ``fundamental subspaces'' of a matrix $A$.
@@ -143,7 +144,7 @@ For this reason is it a very important result linear algebra.
   Thus, when $A$ is symmetric the SVD reduces to $U = V = Q$ and $D =  \Lambda^2$ so that \emph{negative} eigenvalues become \emph{positive} singular values.
 
 \paragraph{The ``Economical'' SVD}
-The number of singular values equals $r$, the rank of $A$, which is at most $\max\{m,n\}$.
+The number of singular values equals $r$, the rank of $A$, which is at most $\min\{m,n\}$.
 This means that some of the columns of $U$ or $V$ will be \emph{irrelevant} since they will be multiplied by zeros in $D$.
 Accordingly, most linear algebra libraries provide an ``economical'' SVD that only calculate the columns of $U$ and $V$ that are multiplied by non-zero values in $D$.
 In Armadillo, for example, the command is \texttt{svd\_econ}. 
