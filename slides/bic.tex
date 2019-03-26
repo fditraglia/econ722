@@ -149,10 +149,11 @@
 
   \vspace{-2em}
 
-\small
+\footnotesize
   \[
-    \int_\Theta \pi(\boldsymbol{\theta})f(\mathbf{y}|\boldsymbol{\theta})\;\text{d}\boldsymbol{\theta} \approx \left( \frac{2\pi}{T} \right)^{p/2}\exp\left\{ \ell(\widehat{\boldsymbol{\theta}}_{MLE})\right\} \pi(\widehat{\boldsymbol{\theta}}_{MLE})  \left|J_T(\widehat{\boldsymbol{\theta}}_{MLE})\right|^{-1/2}
+    f(y|m) = \int_\Theta \pi(\boldsymbol{\theta})f(\mathbf{y}|\boldsymbol{\theta})\;\text{d}\boldsymbol{\theta} \approx \left( \frac{2\pi}{T} \right)^{p/2}\exp\left\{ \ell(\widehat{\boldsymbol{\theta}}_{MLE})\right\} \pi(\widehat{\boldsymbol{\theta}}_{MLE})  \left|J_T(\widehat{\boldsymbol{\theta}}_{MLE})\right|^{-1/2}
   \]
+  \small
 
   \vspace{1em}
 
@@ -162,7 +163,7 @@
 
     \vspace{-2em}
     \small
-    \[2 \log f(\mathbf{y}|\boldsymbol{\theta}) \approx \underbrace{2 \ell(\widehat{\boldsymbol{\theta}}_{MLE})}_{O_p(T)} - \underbrace{p \log(T)}_{O(\log T)} + \underbrace{p \log (2\pi) + 2\log \pi(\widehat{\theta}) - \log |J_T(\widehat{\boldsymbol{\theta}})|}_{O_p(1)}\]
+    \[2 \log f(\mathbf{y}|m) \approx \underbrace{2 \ell(\widehat{\boldsymbol{\theta}}_{MLE})}_{O_p(T)} - \underbrace{p \log(T)}_{O(\log T)} + \underbrace{p \log (2\pi) + 2\log \pi(\widehat{\theta}) - \log |J_T(\widehat{\boldsymbol{\theta}})|}_{O_p(1)}\]
   \end{block}
 
   \pause
