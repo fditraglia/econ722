@@ -273,7 +273,7 @@ So it suffices to show that
   
 
   \begin{block}{Influence Function}
-    Let $\delta_y$ be a \alert{point mass} at $y$: $\delta_y(y) = 1$, $\delta_y(y')=0$ for $y'\neq y$.
+    Let $\delta_y$ be the CDF of a \alert{point mass} at $y$:  $\delta_y(a) = \mathbbm{1}\left\{ y \leq a \right\}$.
     Influence function = functional derivative: how does a small change in $G$ affect $\mathbb{T}$?
 
     \[\text{infl}(G,y) = \lim_{\epsilon \rightarrow 0} \frac{\mathbb{T}\left[\left(1-\epsilon\right)G + \epsilon \delta_y\right] - \mathbb{T}(G)}{\epsilon}\]
@@ -285,7 +285,7 @@ So it suffices to show that
 
   \begin{block}{Empirical CDF $\widehat{G}$}
     \vspace{-1em}
-    \[\widehat{G}(a) = \displaystyle\frac{1}{T}\sum_{t=1}^T \mathbf{1}\left\{ y_t \leq a \right\} = \displaystyle\frac{1}{T} \sum_{t=1}^T \delta_{y_t}(a)\]
+    \[\widehat{G}(a) = \displaystyle\frac{1}{T}\sum_{t=1}^T \mathbbm{1}\left\{ y_t \leq a \right\} = \displaystyle\frac{1}{T} \sum_{t=1}^T \delta_{y_t}(a)\]
   \end{block}
 
   \vspace{-1em}
