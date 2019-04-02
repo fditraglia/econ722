@@ -40,7 +40,7 @@
 
   \begin{block}{Stationarity}
     The sequence $\left\{ v_t\colon -\infty < t < \infty \right\}$ is strictly stationary.
-    This implies that \emph{any} functions of $v_t$ are constant over $t$.
+    This implies that \emph{any} moments of $v_t$ are constant over $t$.
   \end{block}
 
   \begin{block}{Global Identification}
@@ -324,10 +324,72 @@ Let $\widehat{\theta}_T(c)$ be the efficient two-step GMM estimator based on the
 \end{block}
 
 \begin{alertblock}{How do these examples behave?}
-  GMM-AIC doesn't satisfy the theorem, since $\kappa_T = 2$ does not diverge as $T\rightarrow \infty$.
-  GMM-BIC and GMM-HQ are consistent since $\lim_{T\rightarrow \infty} \log(T)/T =0$ and $\lim_{T\rightarrow \infty} \log\big(\log(T)\big)/T = 0$.
+  \vspace{-1em}
+  \begin{itemize}
+    \item GMM-AIC: $\kappa_T = 2$ 
+    \item GMM-BIC: $\lim_{T\rightarrow \infty} \log(T)/T =0$ \alert{\checkmark}
+    \item GMM-HQ: $\lim_{T\rightarrow \infty} \log\big(\log(T)\big)/T = 0$ \alert{\checkmark}
+  \end{itemize}
 \end{alertblock}
 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Proof}
+  \begin{alertblock}{Need to show}
+  \vspace{-1.5em}
+  \[
+    \lim_{T\rightarrow \infty} \mathbbm{P}\left[ \underbrace{\text{MSC}_T(c) - MSE_T(c_0)}_{\Delta_T(c)} >0 \right] = 1 \quad \text{for any } c \neq c_0
+  \]
+\end{alertblock}
+
+\begin{block}{Defintion of $\text{MSC}_T(c)$}
+  \vspace{-1.5em}
+\[\Delta_T(c) = \left[ J_T(c) - J_T(c_0)  \right] + \kappa_T \left[h(|c_0|) - h(|c|)  \right]\]
+\end{block}
+
+\begin{block}{Two Cases}
+  \begin{enumerate}
+    \item[I.] Unique $\theta_1$ such that $\mathbbm{E}\left[ f\left( v_t,\theta_1;c_1 \right) \right] = 0\quad$ $(c_1 \neq c_0)$ 
+  \item[II.] For all $\theta \in \Theta$ we have $\mathbbm{E}\left[ f\left( v_t, \theta;c_2 \right) \right]\neq 0\quad$ $(c_2 \neq c_0)$ 
+  \end{enumerate}
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Case I: $c_1 \neq c_0$ is ``correctly specified''}
+
+  \small
+
+\begin{enumerate}
+  \item Regularity Condition (i) for J-stat.\ applies to $c_0$ and $c_1$
+  \[
+    \alert{J_T(c_1) - J_T(c_0) \rightarrow^{\text{d}} \chi^2_{|c_1|-p} - \chi^2_{|c_0| - p} = O_p(1)}
+  \]
+\item Identification Condition (i) says $c_0$ is the unique, maximal set of correct moment conditions $\implies \alert{|c_0|>|c_1|}$
+\item Bonus Term Condition (i): $h$ is strictly increasing $\implies \alert{h(|c_0|) - h(|c_1|) > 0}$
+\item Bonus Term Condition (ii): $\kappa_T$ diverges to infinity $\implies \alert{\kappa,_T\left[ h(|c_0| - h(|c_1|) \right] \rightarrow \infty}$
+\item Therefore: $\alert{\Delta_T(c_1) = O_p(1) + \kappa_T\left[ h(|c_0| - h(|c_1|) \right] \rightarrow \infty}$ \checkmark 
+\end{enumerate}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Case II: $c_2 \neq c_0$ is mis-specified}
+  \small
+  \begin{enumerate}
+    \item Regularity Condition (i) for J-stat.\ applies to $c_0$; (ii) applies to $c_2$
+      \[
+        \alert{\frac{1}{T} \left[J_T(c_2) - J_T(c_0)\right] = [a(c_2) + o_p(1)] + \left[\frac{1}{T} \chi^2_{|c_0|-p}\right] = a(c_2) + o_p(1)}
+      \]
+    \item Bonus Term Condition (ii): $h$ is strictly increasing. Since $|c_0|$ and $|c_2|$ are finite $\implies \alert{\left[h(|c_0|)-h(|c_1|)\right] \text{ is finite}}$ 
+    \item Bonus Term Condition (i): $\kappa_T = o(T)$. Combined with prev.\ step:
+      \[
+        \alert{\frac{1}{T}\left[ \kappa_T\left\{ h(|c_0|) - h(|c_2|) \right\} \right] = \frac{1}{T}\left[ o(T) \times \text{Constant} \right] = o(1)}
+      \]
+    \item (1 and 3) $ \implies \alert{\frac{1}{T} \Delta_T(c_2) = a(c_2) + o_p(1) + o(1) \rightarrow^p a(c_2) > 0}$
+    \item Therefore $\Delta_T(c_2) \rightarrow \infty$ wpa 1 as $T\rightarrow \infty$.
+  \end{enumerate}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
