@@ -1,0 +1,79 @@
+\documentclass{beamer}  
+\usepackage{setspace}
+\linespread{1.3}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{appendixnumberbeamer}
+
+% A simple slide counter at the bottom of the slide
+\setbeamertemplate{footline}{
+   \begin{beamercolorbox}[ht=4ex,leftskip=0.3cm,rightskip=0.3cm]{author in head/foot}
+    \vspace{0.1cm}
+    \hfill \insertframenumber / \inserttotalframenumber
+  \end{beamercolorbox}
+   \vspace*{0.1cm}
+} 
+
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+\setbeameroption{show notes}
+%\setbeameroption{show only notes}
+%\setbeameroption{hide notes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[Edgeworth-98]{Improving on 97th-order Edgeworth Expansions for the Mean of a Normal Population}
+\author[Hyde \& Nosferatu]{Jekyll N.\ Hyde\inst{1,3}  \and Archibald W.\ Nosferatu\inst{2}}
+\institute[UTran]{\inst{1} Center for the Study of Dark Arts, University of Transylvania, \and %
+                      \inst{2} Transylvania Federal Reserve Bank \and %
+                      \inst{3} NBER} 
+
+\date
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document} 
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Best Practices for Slides}
+  \begin{itemize}
+    \item Use a clean, simple template.
+    \item Use \alert{color} effectively.
+    \item Don't put too much text or math on a slide.
+    \item Format graphics and tables specifically for your talk.
+    \item Read the Beamer manual!
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{This slide is about blocks}
+
+  \begin{block}{This is a block}
+    And this is the content of the box, where you add details.
+  \end{block}
+
+  \begin{alertblock}{This is an alertblock}
+    And this is the content of the alertblock, where you add details.
+  \end{alertblock}
+
+
+  \alert{This is an alert! It's just like regular text but more emphatic!}
+
+\end{frame} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{How can I remember what to say?}
+
+  There is almost nothing on this slide, but there are hidden notes to remind me what to say! 
+
+  \note[item]{Don't forget to mention that my favorite color is blue.}
+
+  \note[item]{Explain Fermat's last theorem}
+
+  \note[item]{Buy toothpaste}
+\end{frame}
+
+\end{document}
+
