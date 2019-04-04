@@ -1,0 +1,85 @@
+\documentclass{beamer}  
+\usepackage{framed}
+\usepackage{cancel}
+\usepackage{appendixnumberbeamer}
+%\setbeameroption{show notes}
+%\setbeameroption{show only notes}
+\setbeameroption{hide notes}
+\defbeamertemplate{description item}{align left}{\insertdescriptionitem\hfill}
+
+\usepackage{setspace}
+\linespread{1.3}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{centernot} 
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{synttree}
+\usepackage{verbatim}
+\usepackage{fancybox}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{mathrsfs}
+\usepackage{lmodern}
+\usepackage{subcaption}
+\usepackage{diagbox}
+\usepackage{appendixnumberbeamer}
+\usetikzlibrary{shapes,backgrounds,trees}
+
+%\setbeamertemplate{blocks}[rounded][shadow=true] 
+%gets rid of bottom navigation bars
+\setbeamertemplate{footline}{
+   \begin{beamercolorbox}[ht=4ex,leftskip=0.3cm,rightskip=0.3cm]{author in head/foot}
+%    \usebeamercolor{UniBlue}
+    \vspace{0.1cm}
+    %\insertshorttitle \ - \insertdate 
+    \hfill \insertframenumber / \inserttotalframenumber
+   \end{beamercolorbox}
+   \vspace*{0.1cm}
+} 
+
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}}
+{\setlength{\belowdisplayskip}{0pt}}
+
+
+%gets rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+
+%Include or exclude the notes?
+%\setbeameroption{show notes}
+%\setbeameroption{hide notes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[Network Effects]{Identifying Causal Effects in Experiments with Social Interactions and Non-compliance}
+\author[DiTraglia et al]{\textbf{Francis J.\ DiTraglia}\inst{1}  \and Camilo Garc\'{i}a-Jimeno\inst{2} \\ \and Rossa O'Keefe-O'Donovan\inst{3} \and Alejandro Sanchez\inst{1}}
+\institute[Penn]{\inst{1} University of Pennsylvania \and %
+                      \inst{2} Emory University \and %
+                      \inst{3} University of Oxford}
+
+\date{November 18th, 2018}
+
+\begin{document} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[plain]
+	\titlepage 
+
+  \note[item]{Joint work with co-authors\dots}
+  \note[item]{Very preliminary: comments greatly appreciated.}
+  \note[item]{This talk: identify causal effects in settings violation of SUTVA: \emph{social interactions} / \emph{interference} / \emph{spillovers}}
+  \note[item]{Two kinds of causal effects: \emph{direct} (my treatment affects my outcome) and \emph{indirect} (my treatment affects your outcome).}
+  \note[item]{Consider data from a particular kind of randomized experiment popular for studying spillovers: randomized saturation.}
+  \note[item]{Key question: how to handle \emph{non-compliance}? (Some people offered treatment don't take it up; some not offered treatment obtain it).}
+
+\end{frame} 
+\begin{frame}
+  \frametitle{This is the Frame Title}
+  \framesubtitle{This is the Frame Subtitle}
+  Something
+  \note[item]{Hi there!}
+  \note[item]{Don't forget to talk about this!}
+\end{frame}
+
+
