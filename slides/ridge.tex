@@ -242,31 +242,67 @@ For implementation details, see Murphy (2012; Section 7.5.2).
   \end{itemize}
 
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Principal Components Regression}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Principal Components Regression (PCR)}
+  \frametitle{Comparing the MSE of OLS and Ridge}
 
-  \small
+  \begin{block}{Assumptions}
+    $y = X\beta + \varepsilon$, Fixed $X$, iid data, homoskedasticity
+  \end{block}
 
-Instead of ``smooth weights'' as in Ridge, truncate the PCs:
-	\begin{enumerate}
-    \item Calculate SVD $X=UDV'$ of \alert{centered} data matrix $X$
-		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
-		\item Throw away all but first $k$ principal components, where $k <p$.
-		\item Regress \textbf{y} on $\mathbf{z}_1, \hdots, \mathbf{z}_M$. 
-	\end{enumerate}
+  \begin{block}{OLS Estimator: $\widehat{\beta}$} 
+    $\widehat{\beta} = (X'X)^{-1}X'y \implies \text{Bias}(\widehat{\beta}) = 0 \quad \text{Var}(\widehat{\beta}) = \sigma (X'X)^{-1}$
+  \end{block}
+
+  \begin{block}{Ridge Estimator: $\widetilde{\beta}_\lambda$}
+    $\widehat{\beta}_\lambda = (X'X + \lambda I)^{-1}X'y \implies \alert{\text{Bias}(\widetilde{\beta}_\lambda) = ? \quad\text{Var}(\widetilde{\beta}_\lambda) = ?}$ 
+  \end{block}
 
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{PCR versus Ridge}
-  \begin{itemize}
-    \item PCR is a much less smooth version of Ridge
-    \item Conventional wisdom is that PCR will perform worse since it shrinks low variance directions too much and doesn't shrink high variance directions at all.
-  \item However, Dhillon et al.\ (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression while there are situations in which Ridge can be arbitrarily worse than PCR in terms of MSE. 
-    \item In practice, which is better depends on the DGP
-  \end{itemize}
+  \frametitle{Calculating The Bias of Ridge Regression}
+  \framesubtitle{X fixed (or condition or X)}
+
+  \begin{align*}
+    \text{Bias}(\widetilde{\beta}_\lambda ) &= \mathbbm{E}\left[ (X'X + \lambda I)^{-1} X'(X\beta + \varepsilon) - \beta \right]\\
+    &= (X'X + \lambda I)^{-1} X'X\beta  + (X'X + \lambda I)^{-1}\underbrace{\mathbbm{E}[X'\varepsilon]}_{0} - \beta\\
+    &= (X'X + \lambda I)^{-1}\left[ (X'X + \lambda I)\beta - \lambda \beta \right] - \beta\\
+    &= \beta - \lambda (X'X + \lambda I)^{-1} \beta - \beta\\
+    &= - \lambda(X'X + \lambda I)^{-1} \beta
+  \end{align*}
+
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Calculating The Variance of Ridge Regression}
+  \framesubtitle{X fixed (or condition or X)}
+
+  \begin{align*}
+    \text{Var}(\widetilde{\beta}_\lambda ) &= \text{Var}\left[ (X'X + \lambda I)^{-1} X'(X\beta + \varepsilon) - \beta \right]\\
+    &= \text{Var}\left[ (X'X + \lambda I)^{-1}X' \varepsilon \right]\\
+    &= \mathbbm{E}\left[ \left\{(X'X + \lambda I)^{-1}X' \varepsilon \right\}\left\{ (X'X + \lambda I)^{-1}X' \varepsilon \right\}'\right]\\
+    &= \left[(X'X + \lambda I)^{-1} X'\right] \underbrace{\mathbbm{E}[\varepsilon \varepsilon']}_{\sigma^2 I} \left[(X'X + \lambda I)^{-1} X'\right]'\\
+    &= \sigma^2 (X'X + \lambda I)^{-1} X'X \left( X'X + \lambda I \right)^{-1}
+  \end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing the MSE of OLS and Ridge}
+  \scriptsize
+\begin{align*}
+  \text{MSE}(\widehat{\beta}) - \text{MSE}(\widetilde{\beta}_{\lambda}) &= \left\{ \text{Bias}^2(\widehat{\beta}) + \text{Var}(\widehat{\beta}) \right\} - \left\{ \text{Bias}^2(\widetilde{\beta}_\lambda) + \text{Var}(\widetilde{\beta}_\lambda) \right\}\\
+  &\vdots \\
+  &= \lambda \underbrace{(X'X + \lambda I)^{-1}}_{M'}\underbrace{\left[\sigma^2 \left\{ 2I + \lambda(X'X)^{-1} \right\} - \lambda \beta \beta'  \right]}_{A}\underbrace{\left( X'X + \lambda I \right)^{-1}}_{M}
+\end{align*}
+\normalsize
+
+\begin{itemize}
+  \item $\lambda > 0$ and $M$ is symmetric
+  \item $M$ is full rank $\implies Mv \neq 0$ unless $v = 0$
+  \item Hence: $v'[\lambda M'AM] v = \lambda (Mv)'$
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

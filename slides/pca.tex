@@ -174,3 +174,30 @@
   
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Principal Components Regression}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Principal Components Regression (PCR)}
+
+  \small
+
+Instead of ``smooth weights'' as in Ridge, truncate the PCs:
+	\begin{enumerate}
+    \item Calculate SVD $X=UDV'$ of \alert{centered} data matrix $X$
+		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
+		\item Throw away all but first $k$ principal components, where $k <p$.
+		\item Regress \textbf{y} on $\mathbf{z}_1, \hdots, \mathbf{z}_M$. 
+	\end{enumerate}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{PCR versus Ridge}
+  \begin{itemize}
+    \item PCR is a much less smooth version of Ridge
+    \item Conventional wisdom is that PCR will perform worse since it shrinks low variance directions too much and doesn't shrink high variance directions at all.
+  \item However, Dhillon et al.\ (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression while there are situations in which Ridge can be arbitrarily worse than PCR in terms of MSE. 
+    \item In practice, which is better depends on the DGP
+  \end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
