@@ -170,6 +170,8 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comparing OLS and Ridge}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Model Complexity of Ridge Versus OLS}
 
@@ -289,7 +291,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Comparing the MSE of OLS and Ridge}
+  \frametitle{For $\lambda$ Sufficiently Small, MSE(OLS)$>$MSE(Ridge)}
   \scriptsize
 \begin{align*}
   \text{MSE}(\widehat{\beta}) - \text{MSE}(\widetilde{\beta}_{\lambda}) &= \left\{ \text{Bias}^2(\widehat{\beta}) + \text{Var}(\widehat{\beta}) \right\} - \left\{ \text{Bias}^2(\widetilde{\beta}_\lambda) + \text{Var}(\widetilde{\beta}_\lambda) \right\}\\
@@ -301,7 +303,9 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 \begin{itemize}
   \item $\lambda > 0$ and $M$ is symmetric
   \item $M$ is full rank $\implies Mv \neq 0$ unless $v = 0$
-  \item Hence: $v'[\lambda M'AM] v = \lambda (Mv)'$
+  \item $\implies v'[\lambda M'AM] v = \lambda (Mv)' A (MV)$
+  \item MSE(OLS) - MSE(Ridge) is PD iff $M$ is PD
+  \item To ensure $M$ is PD, make $\lambda$ small, e.g.\ $0 < \lambda < 2\sigma^2/\beta'\beta$
 \end{itemize}
 
 \end{frame}
