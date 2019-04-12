@@ -454,51 +454,51 @@ $$\underset{(k\times 1)}{x_t} = \Psi'\underset{(r\times 1)}{F_t} + u_t \quad \qu
 
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
-
-\small
-
-$$\boxed{
-	y_t = x_t' \beta + \epsilon_t, \quad \quad
-	x_t = \Psi'F_t + u_t, \quad \quad
-	z_{it} = \lambda_i' F_t + e_{it}
-}$$
-
-\begin{block}
-	{Procedure}
-	\begin{enumerate}
-		\item Calculate the PCs of Z
-		\item Calculate $\widetilde{F}_t$ using the first $r$ PCs of Z
-		\item Use $\widetilde{F}_t$ in place of $F_t$ for IV estimation
-	\end{enumerate}
-\end{block}
-
-\vspace{-1em}
-
-\begin{block}
-	{Main Result}
-	Under certain assumptions, as $(N,T) \rightarrow \infty$ ``estimation and inference can proceed as though $F_t$ were known.'' The resulting estimator is consistent and asymptotically normal.
-\end{block}
-
-\normalsize
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
-    
-\begin{block}
-	{Why Might This be Helpful?}
-	\begin{enumerate}
-		\item Avoid many instruments bias
-		\item Avoid bias from irrelevant instruments
-		\item Allow more observed instruments $z_{it}$ than sample size $T$
-		\item Provided that $\sqrt{T}/N \rightarrow 0$, all of the observed instruments $z_{it}$ can be \emph{endogenous} as long as $F_t$ is exogenous
-	\end{enumerate}
-\end{block}
-
-\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
+%
+%\small
+%
+%$$\boxed{
+%	y_t = x_t' \beta + \epsilon_t, \quad \quad
+%	x_t = \Psi'F_t + u_t, \quad \quad
+%	z_{it} = \lambda_i' F_t + e_{it}
+%}$$
+%
+%\begin{block}
+%	{Procedure}
+%	\begin{enumerate}
+%		\item Calculate the PCs of Z
+%		\item Calculate $\widetilde{F}_t$ using the first $r$ PCs of Z
+%		\item Use $\widetilde{F}_t$ in place of $F_t$ for IV estimation
+%	\end{enumerate}
+%\end{block}
+%
+%\vspace{-1em}
+%
+%\begin{block}
+%	{Main Result}
+%	Under certain assumptions, as $(N,T) \rightarrow \infty$ ``estimation and inference can proceed as though $F_t$ were known.'' The resulting estimator is consistent and asymptotically normal.
+%\end{block}
+%
+%\normalsize
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}[c]\frametitle{Factors as Instruments -- Bai \& Ng (2010)}
+%    
+%\begin{block}
+%	{Why Might This be Helpful?}
+%	\begin{enumerate}
+%		\item Avoid many instruments bias
+%		\item Avoid bias from irrelevant instruments
+%		\item Allow more observed instruments $z_{it}$ than sample size $T$
+%		\item Provided that $\sqrt{T}/N \rightarrow 0$, all of the observed instruments $z_{it}$ can be \emph{endogenous} as long as $F_t$ is exogenous
+%	\end{enumerate}
+%\end{block}
+%
+%\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{frame}[c]\frametitle{FAVARs -- Bernanke, Boivin \& Eliasz (2005)}
 %

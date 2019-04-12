@@ -201,7 +201,7 @@
 \section{Comparing OLS, Ridge, and PCR}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+  \frametitle{Comparing PCR, OLS and Ridge Predictions}
 
   \begin{block}{Assumption}
     Centered data matrix $\underset{(n\times p)}{X}$ with rank $p$ so OLS estimator is unique.
@@ -221,75 +221,119 @@
     &=& \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
   &=& 
   %\left[ \sum_{j=1}^p \mathbf{u}_j  \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\right]\mathbf{y} =  
-  \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\mathbf{y}
+  \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
   \end{eqnarray*}
 \end{block}
 
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+%
+%\begin{block}{OLS Predictions}
+%  \vspace{-1em}
+%  \[
+%    \widehat{\mathbf{y}}_{\text{OLS}} = \widehat{\mathbf{y}}_{\text{Ridge}}(0) = \sum_{j=1}^p   \mathbf{u}_j\mathbf{u}_j'\mathbf{y} 
+%  \]
+%\end{block}
+%
+%\begin{block}{PCR Predictions}
+%  \begin{align*}
+%    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j = \sum_{j=1}^{m} \mathbf{z}_j \left[\frac{\mathbf{z}_j' \mathbf{y}}{\mathbf{z}_j' \mathbf{z}_j}\right] = \sum_{j=1}^m d_j \mathbf{u}_j \left[ \frac{(d_j \mathbf{u}_j)' \mathbf{y}}{(d_j \mathbf{u}_j)'(d_j \mathbf{u}_j)} \right]\\
+%    &= \sum_{j=1}^m \mathbf{u}_j \left[ \frac{\mathbf{u}_j' \mathbf{y}}{\mathbf{u}_j'\mathbf{u}_j} \right] = \sum_{j=1}^m \mathbf{u}_j \mathbf{u}_j' \mathbf{y}
+%      \end{align*}
+%since $U$ has orthonormal columns.
+%\end{block}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+%
+%  Since $U$ has orthonormal columns, $\widehat{\gamma}_j \equiv \mathbf{u}_j' \mathbf{y} = \mathbf{u}_j' \mathbf{y}/\mathbf{u}_j' \mathbf{u}_j$ is the $j$th coefficient from a regression of $\mathbf{y}$ on $(\mathbf{u}_1, \dots, \mathbf{u}_p)$.
+%
+%  \begin{align*}
+%    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\widehat{\gamma}_j\\
+%    \widehat{\mathbf{y}}_{\text{OLS}} &= \sum_{j=1}^p   \mathbf{u}_j \widehat{\gamma}_j\\ 
+%    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j=1}^m \mathbf{u}_j \widehat{\gamma}_j 
+%  \end{align*}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+  \frametitle{Relating OLS and Ridge to PCR}
 
-\begin{block}{OLS Predictions}
+  \begin{block}{Recall: $U$ is Orthonormal}
+    \vspace{-1em}
+      \[
+        \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  =
+        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} =
+        \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = \mathbf{z}_j \widehat{\theta}_j
+      \]
+\end{block}
+
+\begin{alertblock}{Substituting}
   \vspace{-1em}
-  \[
-    \widehat{\mathbf{y}}_{\text{OLS}} = \widehat{\mathbf{y}}_{\text{Ridge}}(0) = \sum_{j=1}^p   \mathbf{u}_j\mathbf{u}_j'\mathbf{y} 
-  \]
-\end{block}
-
-\begin{block}{PCR Predictions}
   \begin{align*}
-    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j = \sum_{j=1}^{m} \mathbf{z}_j \left[\frac{\mathbf{z}_j' \mathbf{y}}{\mathbf{z}_j' \mathbf{z}_j}\right] = \sum_{j=1}^m d_j \mathbf{u}_j \left[ \frac{(d_j \mathbf{u}_j)' \mathbf{y}}{(d_j \mathbf{u}_j)'(d_j \mathbf{u}_j)} \right]\\
-    &= \sum_{j=1}^m \mathbf{u}_j \left[ \frac{\mathbf{u}_j' \mathbf{y}}{\mathbf{u}_j'\mathbf{u}_j} \right] = \sum_{j=1}^m \mathbf{u}_j \mathbf{u}_j' \mathbf{y}
+        \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^m \left( \frac{d_j^2}{d_j^2 + \lambda} \right) \mathbf{u}_j \mathbf{u}_j' \mathbf{y} = \sum_{j=1}^m \left( \frac{d_j^2}{d_j^2 + \lambda} \right) \mathbf{z}_j \widehat{\theta}_j \\
+        %\widehat{\mathbf{y}}_{\text{PCR}}(m) &=\sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j \\
+        \widehat{\mathbf{y}}_{\text{OLS}} &= \widehat{\mathbf{y}}_{\text{Ridge}}(0) = \sum_{j=1}^p \mathbf{z}_j \widehat{\theta}_j 
       \end{align*}
-since $U$ has orthonormal columns.
-\end{block}
+    \end{alertblock}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
-
-  Since $U$ has orthonormal columns, $\widehat{\gamma}_j \equiv \mathbf{u}_j' \mathbf{y} = \mathbf{u}_j' \mathbf{y}/\mathbf{u}_j' \mathbf{u}_j$ is the $j$th coefficient from a regression of $\mathbf{y}$ on $(\mathbf{u}_1, \dots, \mathbf{u}_p)$.
-
-  \begin{align*}
-    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\widehat{\gamma}_j\\
-    \widehat{\mathbf{y}}_{\text{OLS}} &= \sum_{j=1}^p   \mathbf{u}_j \widehat{\gamma}_j\\ 
-    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j=1}^m \mathbf{u}_j \widehat{\gamma}_j 
-  \end{align*}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Comparing OLS and Ridge Predictions}
+  \frametitle{Comparing PCR, OLS, and Ridge Predictions}
+  
   \small
 
-  \begin{eqnarray*}
-  \widehat{y}(\lambda) &=&
-   \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
-  \end{eqnarray*}
+  \[
+        \widehat{\mathbf{y}}_{\text{PCR}}(m) =\sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j, \quad
+    \widehat{\mathbf{y}}_{\text{OLS}} = \sum_{j=1}^p \mathbf{z}_j \widehat{\theta}_j, \quad
+        \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) = \sum_{j=1}^m \left( \frac{d_j^2}{d_j^2 + \lambda} \right) \mathbf{z}_j \widehat{\theta}_j
+  \]
 
   \begin{itemize}
-    \item Since $X$ is centered, $\mathbf{z}_j = d_j\mathbf{u}_j$ is the $j$th sample PC
-    \item $d_j^2$ is proportional to the \alert{variance} of the $j$th sample PC
-    \item Prediction from regression of $\mathbf{y}$ on $\mathbf{z}_j$ is: 
-      \[ \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = 
-        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} = \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  
-      \]
-    \item Ridge equivalent to regressing $y$ on sample PCs of $X$ but shrinking predictions to zero: higher variance PCs are shrunk less.
-    \item OLS doesn't shrink.
+    \item $\mathbf{z}_j$ is the $j$th sample PC
+    \item $d_j^2/n$ is the variance of the $j$th sample PC
+    \item Ridge regresses $y$ on sample PCs but \alert{shrinks} predictions towards zero: higher variance PCs are shrunk \alert{less}.
+    \item PCR \alert{truncates} the PCs with the smallest variance. 
+    \item OLS neither shrinks nor truncates: is uses all the PCs. 
   \end{itemize}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{PCR versus Ridge}
-  \begin{itemize}
-    \item PCR is a much less smooth version of Ridge
-    \item Conventional wisdom is that PCR will perform worse since it shrinks low variance directions too much and doesn't shrink high variance directions at all.
-  \item However, Dhillon et al.\ (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression while there are situations in which Ridge can be arbitrarily worse than PCR in terms of MSE. 
-    \item In practice, which is better depends on the DGP
-  \end{itemize}
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{Comparing OLS and Ridge Predictions}
+%  \small
+%
+%  \begin{eqnarray*}
+%  \widehat{y}(\lambda) &=&
+%   \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
+%  \end{eqnarray*}
+%
+%  \begin{itemize}
+%    \item Since $X$ is centered, $\mathbf{z}_j = d_j\mathbf{u}_j$ is the $j$th sample PC
+%    \item $d_j^2$ is proportional to the \alert{variance} of the $j$th sample PC
+%    \item Prediction from regression of $\mathbf{y}$ on $\mathbf{z}_j$ is: 
+%      \[ \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = 
+%        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} = \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  
+%      \]
+%    \item Ridge equivalent to regressing $y$ on sample PCs of $X$ but shrinking predictions to zero: higher variance PCs are shrunk less.
+%    \item OLS doesn't shrink.
+%  \end{itemize}
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}
+%  \frametitle{PCR versus Ridge}
+%  \begin{itemize}
+%    \item PCR is a much less smooth version of Ridge
+%    \item Conventional wisdom is that PCR will perform worse since it shrinks low variance directions too much and doesn't shrink high variance directions at all.
+%  \item However, Dhillon et al.\ (2013) show that the MSE risk of PCR is always within a constant factor of that of Ridge Regression while there are situations in which Ridge can be arbitrarily worse than PCR in terms of MSE. 
+%    \item In practice, which is better depends on the DGP
+%  \end{itemize}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
