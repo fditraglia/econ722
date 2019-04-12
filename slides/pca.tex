@@ -1,4 +1,4 @@
-\section{Review of Principal Component Analysis (PCA)}
+\section{Principal Component Analysis (PCA)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Principal Component Analysis (PCA)}
@@ -14,7 +14,7 @@
 
   \begin{block}{First Principal Component}
     The linear combination $\boldsymbol{\alpha}_1' \mathbf{x}$ is the \alert{first principal component} of $\mathbf{x}$.
-    It is the direction along with $\mathbf{x}$ has \alert{maximal variation}
+    The random vector $\mathbf{x}$ has \alert{maximal variation} in the direction $\mathbf{\alpha}_1$.
   \end{block}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,15 +179,106 @@
 \begin{frame}
   \frametitle{Principal Components Regression (PCR)}
 
+	\begin{enumerate}
+    \item Start with centered $X$ and $\mathbf{y}$.
+    \item SVD of $X \implies$ PC scores: $\mathbf{z}_j = X \mathbf{v}_j =  d_j \mathbf{u}_j$.
+    \item Regress \textbf{y} on $[\begin{array}{ccc} \mathbf{z}_1 & \hdots & \mathbf{z}_m\end{array}]$ where $m < p$.
+      \vspace{-0.5em}
+      \[
+        \widehat{\mathbf{y}}_{\text{PCR}}(m) =\sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j, \quad 
+        \widehat{\theta}_j = \frac{\mathbf{z}_j' \mathbf{y}}{\mathbf{z}_j' \mathbf{z}_j} \quad \text{(PCs orthogonal)} 
+      \]
+	\end{enumerate}
+
+\begin{alertblock}{Standardizing $X$}
+  Because PCR is not scale invariant, it is common to standardize $X$. This amounts to PCA performed on a \alert{correlation} matrix.
+\end{alertblock}
+
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comparing OLS, Ridge, and PCR}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+
+  \begin{block}{Assumption}
+    Centered data matrix $\underset{(n\times p)}{X}$ with rank $p$ so OLS estimator is unique.
+  \end{block}
+
+  \begin{block}{SVD}
+    \vspace{-1em}
+    \[
+      \underset{(n\times p)}{X} = \underset{(n\times p)}{U} \underset{(p\times p)}{D} \underset{(p \times p)}{V'}, \quad U'U = V'V = I_p, \quad VV' = I_p
+    \]
+  \end{block}
+
+\begin{block}{Ridge Predictions}
+  \vspace{-1em}
+  \begin{eqnarray*}
+    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &=&  X\widehat{\beta}_{\text{Ridge}}(\lambda) = X\left( X'X + \lambda I_p \right)^{-1}X'\mathbf{y} \\
+    &=& \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
+  &=& 
+  %\left[ \sum_{j=1}^p \mathbf{u}_j  \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\right]\mathbf{y} =  
+  \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\mathbf{y}
+  \end{eqnarray*}
+\end{block}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+
+\begin{block}{OLS Predictions}
+  \vspace{-1em}
+  \[
+    \widehat{\mathbf{y}}_{\text{OLS}} = \widehat{\mathbf{y}}_{\text{Ridge}}(0) = \sum_{j=1}^p   \mathbf{u}_j\mathbf{u}_j'\mathbf{y} 
+  \]
+\end{block}
+
+\begin{block}{PCR Predictions}
+  \begin{align*}
+    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j = 1}^m \mathbf{z}_j\widehat{\theta}_j = \sum_{j=1}^{m} \mathbf{z}_j \left[\frac{\mathbf{z}_j' \mathbf{y}}{\mathbf{z}_j' \mathbf{z}_j}\right] = \sum_{j=1}^m d_j \mathbf{u}_j \left[ \frac{(d_j \mathbf{u}_j)' \mathbf{y}}{(d_j \mathbf{u}_j)'(d_j \mathbf{u}_j)} \right]\\
+    &= \sum_{j=1}^m \mathbf{u}_j \left[ \frac{\mathbf{u}_j' \mathbf{y}}{\mathbf{u}_j'\mathbf{u}_j} \right] = \sum_{j=1}^m \mathbf{u}_j \mathbf{u}_j' \mathbf{y}
+      \end{align*}
+since $U$ has orthonormal columns.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS, Ridge, and PCR Predictions}
+
+  \small
+  \begin{align*}
+    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\mathbf{y}\\
+    \widehat{\mathbf{y}}_{\text{OLS}} &= \sum_{j=1}^p   \mathbf{u}_j\mathbf{u}_j'\mathbf{y}\\ 
+    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j=1}^m \mathbf{u}_j \mathbf{u}_j' \mathbf{y}
+  \end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Comparing OLS and Ridge Predictions}
   \small
 
-Instead of ``smooth weights'' as in Ridge, truncate the PCs:
-	\begin{enumerate}
-    \item Calculate SVD $X=UDV'$ of \alert{centered} data matrix $X$
-		\item Construct the sample principal components: $\mathbf{z}_i = d_j \mathbf{u}_j$.
-		\item Throw away all but first $k$ principal components, where $k <p$.
-		\item Regress \textbf{y} on $\mathbf{z}_1, \hdots, \mathbf{z}_M$. 
-	\end{enumerate}
+  \begin{eqnarray*}
+  \widehat{y}(\lambda) &=&
+   \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
+  \end{eqnarray*}
+
+  \begin{itemize}
+    \item Since $X$ is centered, $\mathbf{z}_j = d_j\mathbf{u}_j$ is the $j$th sample PC
+    \item $d_j^2$ is proportional to the \alert{variance} of the $j$th sample PC
+    \item Prediction from regression of $\mathbf{y}$ on $\mathbf{z}_j$ is: 
+      \[ \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = 
+        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} = \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  
+      \]
+    \item Ridge equivalent to regressing $y$ on sample PCs of $X$ but shrinking predictions to zero: higher variance PCs are shrunk less.
+    \item OLS doesn't shrink.
+  \end{itemize}
 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -34,7 +34,7 @@ $$\widehat{\beta}_{Ridge} = \underset{\beta}{\arg \min}\;(\mathbf{y} - X\beta)' 
 \begin{frame}
   \frametitle{Ridge as Bayesian Linear Regression}
 
-If we ignore the intercept, which is unpenalized), Ridge Regression gives the \alert{posterior mode} from the Bayesian regression model:
+If we ignore the intercept, which is unpenalized, Ridge Regression gives the \alert{posterior mode} from the Bayesian regression model:
 	\begin{eqnarray*}
 		y|X, \beta, \sigma^2 &\sim& N(X\beta,\sigma^2 I_n) \\
 		\beta &\sim& N(\mathbf{0}, \tau^2 I_p)
@@ -212,38 +212,6 @@ For implementation details, see Murphy (2012; Section 7.5.2).
   \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Comparing OLS and Ridge Predictions}
-
-  \begin{eqnarray*}
-    \widehat{y}(\lambda) &=&  X\widehat{\beta}(\lambda) = X\left( X'X + \lambda I_p \right)^{-1}X'\mathbf{y} \\
-    &=& H(\lambda) \mathbf{y}=  \left[ UD\left( D^2 + \lambda I_p \right)^{-1}DU' \right]\mathbf{y} \\
-  &=& \left[ \sum_{j=1}^p \mathbf{u}_j  \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\right]\mathbf{y} =  \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
-  \end{eqnarray*}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{Comparing OLS and Ridge Predictions}
-  \small
-
-  \begin{eqnarray*}
-  \widehat{y}(\lambda) &=&
-   \sum_{j=1}^p   \left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j\mathbf{u}_j'\mathbf{y}
-  \end{eqnarray*}
-
-  \begin{itemize}
-    \item Since $X$ is centered, $\mathbf{z}_j = d_j\mathbf{u}_j$ is the $j$th sample PC
-    \item $d_j^2$ is proportional to the \alert{variance} of the $j$th sample PC
-    \item Prediction from regression of $\mathbf{y}$ on $\mathbf{z}_j$ is: 
-      \[ \mathbf{z}_j(\mathbf{z}_j'\mathbf{z}_j)^{-1}\mathbf{z}_j' \mathbf{y} = 
-        d_j \mathbf{u}_j\left( d_j^2 \mathbf{u}_j' \mathbf{u}_j \right)^{-1} d_j \mathbf{u}_j'\mathbf{y} = \mathbf{u}_j\mathbf{u}_j'\mathbf{y}  
-      \]
-    \item Ridge equivalent to regressing $y$ on sample PCs of $X$ but shrinking predictions to zero: higher variance PCs are shrunk less.
-    \item OLS doesn't shrink.
-  \end{itemize}
-
-\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
   \frametitle{Comparing the MSE of OLS and Ridge}
@@ -277,11 +245,11 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Calculating The Variance of Ridge Regression}
+  \frametitle{Calculating the Variance of Ridge Regression}
   \framesubtitle{X fixed (or condition or X)}
 
   \begin{align*}
-    \text{Var}(\widetilde{\beta}_\lambda ) &= \text{Var}\left[ (X'X + \lambda I)^{-1} X'(X\beta + \varepsilon) - \beta \right]\\
+    \text{Var}(\widetilde{\beta}_\lambda ) &= \text{Var}\left[ (X'X + \lambda I)^{-1} X'(X\beta + \varepsilon) \right]\\
     &= \text{Var}\left[ (X'X + \lambda I)^{-1}X' \varepsilon \right]\\
     &= \mathbbm{E}\left[ \left\{(X'X + \lambda I)^{-1}X' \varepsilon \right\}\left\{ (X'X + \lambda I)^{-1}X' \varepsilon \right\}'\right]\\
     &= \left[(X'X + \lambda I)^{-1} X'\right] \underbrace{\mathbbm{E}[\varepsilon \varepsilon']}_{\sigma^2 I} \left[(X'X + \lambda I)^{-1} X'\right]'\\
@@ -303,7 +271,7 @@ For implementation details, see Murphy (2012; Section 7.5.2).
 \begin{itemize}
   \item $\lambda > 0$ and $M$ is symmetric
   \item $M$ is full rank $\implies Mv \neq 0$ unless $v = 0$
-  \item $\implies v'[\lambda M'AM] v = \lambda (Mv)' A (MV)$
+  \item $\implies v'[\lambda M'AM] v = \lambda (Mv)' A (Mv)$
   \item MSE(OLS) - MSE(Ridge) is PD iff $M$ is PD
   \item To ensure $M$ is PD, make $\lambda$ small, e.g.\ $0 < \lambda < 2\sigma^2/\beta'\beta$
 \end{itemize}
