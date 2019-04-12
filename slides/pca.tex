@@ -251,11 +251,12 @@ since $U$ has orthonormal columns.
 \begin{frame}
   \frametitle{Comparing OLS, Ridge, and PCR Predictions}
 
-  \small
+  Since $U$ has orthonormal columns, $\widehat{\gamma}_j \equiv \mathbf{u}_j' \mathbf{y} = \mathbf{u}_j' \mathbf{y}/\mathbf{u}_j' \mathbf{u}_j$ is the $j$th coefficient from a regression of $\mathbf{y}$ on $(\mathbf{u}_1, \dots, \mathbf{u}_p)$.
+
   \begin{align*}
-    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\mathbf{u}_j'\mathbf{y}\\
-    \widehat{\mathbf{y}}_{\text{OLS}} &= \sum_{j=1}^p   \mathbf{u}_j\mathbf{u}_j'\mathbf{y}\\ 
-    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j=1}^m \mathbf{u}_j \mathbf{u}_j' \mathbf{y}
+    \widehat{\mathbf{y}}_{\text{Ridge}}(\lambda) &= \sum_{j=1}^p   \mathbf{u}_j\left( \frac{d_j^2}{d_j^2 + \lambda} \right)\widehat{\gamma}_j\\
+    \widehat{\mathbf{y}}_{\text{OLS}} &= \sum_{j=1}^p   \mathbf{u}_j \widehat{\gamma}_j\\ 
+    \widehat{\mathbf{y}}_{\text{PCR}}(m) &= \sum_{j=1}^m \mathbf{u}_j \widehat{\gamma}_j 
   \end{align*}
 
 \end{frame}
