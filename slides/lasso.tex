@@ -193,18 +193,43 @@ Interior solution:
   $\boldsymbol{\beta} \leftarrow \mbox{ridge}(X, \mathbf{y}, \lambda)$
  
 
-  \Repeat{$\sum_{j=1}^p |\beta_j^{prev} - \beta_j|< \varepsilon$}{
+  \Repeat{$\lvert \boldsymbol{\beta} - \boldsymbol{\beta}^{\text{prev}}\rvert < \varepsilon$}{
     $\boldsymbol{\beta}^{prev} \leftarrow \boldsymbol{\beta}$
 
    \For{$j = 1, \dots, p$}{
-     $a_j \leftarrow 2 \sum_{i=1}^n x_{ij}^2$
+     $a_j \leftarrow 2 \sum_{i} x_{ij}^2$
 
-     $c_j \leftarrow 2\sum_{i=1}^n x_{ij}(y_i - \mathbf{x}_i' \mathbf{\beta} + \beta_j x_{ij})$
+     $c_j \leftarrow 2\sum_{i} x_{ij}(y_i - \mathbf{x}_i' \mathbf{\beta} + \beta_j x_{ij})$
 
      $\beta_j \leftarrow \mbox{sign}(c_j/a_j) \max \left\{0, |c_j/a_j| - \lambda/a_j \right\}$ 
 
    }}
 \end{algorithm}
 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Coordinate Updates in the Shooting Algorithm}
+
+\[
+\frac{\partial}{\partial \beta_j} \left( \mathbf{y} - X \boldsymbol{\beta} \right)'\left( \mathbf{y} - X \boldsymbol{\beta} \right) = a_j \beta_j - c_j
+\]
+
+\vspace{-1em}
+
+  \begin{align*}
+    a_j &\equiv 2\sum_{i=1}^n x_{ij}^2\\
+    c_j &\equiv 2\sum_{i=1}^n x_{ij}\big(\underbrace{y_i - \mathbf{x}_i'\boldsymbol{\beta} + \beta_j x_{ij}}_{\text{Residual excluding } x_{ij}}\big)
+  \end{align*}
+
+  \[
+    \beta_j^{\text{New}} = \left\{
+    \begin{array}{rl}
+      (c_j + \lambda)/a_j, & c_j < -\lambda\\
+      0, & c_j \in [-\lambda, \lambda]\\
+      (c_j - \lambda)/a_j, & c_j > \lambda
+    \end{array}
+  \right.
+  \]
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
