@@ -197,11 +197,11 @@ Interior solution:
     $\boldsymbol{\beta}^{prev} \leftarrow \boldsymbol{\beta}$
 
    \For{$j = 1, \dots, p$}{
-     $a_j \leftarrow 2 \sum_{i} x_{ij}^2$
+     $\alert{a_j \leftarrow 2 \sum_{i} x_{ij}^2}$
 
-     $c_j \leftarrow 2\sum_{i} x_{ij}(y_i - \mathbf{x}_i' \mathbf{\beta} + \beta_j x_{ij})$
+     $\alert{c_j \leftarrow 2\sum_{i} x_{ij}(y_i - \mathbf{x}_i' \mathbf{\beta} + \beta_j x_{ij})}$
 
-     $\beta_j \leftarrow \mbox{sign}(c_j/a_j) \max \left\{0, |c_j/a_j| - \lambda/a_j \right\}$ 
+     $\alert{\beta_j \leftarrow \mbox{sign}(c_j/a_j) \max \left\{0, |c_j/a_j| - \lambda/a_j \right\}}$ 
 
    }}
 \end{algorithm}
@@ -231,5 +231,56 @@ Interior solution:
     \end{array}
   \right.
   \]
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Prediction Error of LASSO}
+
+  \begin{block}{Punchline}
+    With the appropriate choice of $\lambda$, Lasso can make very good predictions even when $p$ is much larger than $n$, so long as $\sum_{j=1}^p |\beta_j|$ is small.
+  \end{block}
+
+  \begin{block}{Sparsity?}
+    One way to have small $\sum_{j=1}^p |\beta_j|$ is if $\boldsymbol{\beta}$ is \emph{sparse}, i.e.\ $\beta_j = 0$ for most $j$, but sparsity is not required.
+  \end{block}
+
+  \vspace{1em}
+  \alert{We'll look at a simple example\dots}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Predication Error of LASSO: Simple Example}
+  \begin{block}{Suppose that:}
+    \begin{itemize}
+      \item $X$ and $\mathbf{y}$ are centered
+      \item $X$ is fixed and scaled so that $\mathbf{x}_j'\mathbf{x}_j = n$
+      \item $\mathbf{y} = X\boldsymbol{\beta}_0 + \boldsymbol{\varepsilon}$, $\quad \boldsymbol{\varepsilon} \sim N(0,\sigma^2 I)$.
+      \item $\lambda = c \sigma \sqrt{\log(p)/n}\,$ where $c$ is a constant
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{Theorem}
+    Let $\widehat{\boldsymbol{\beta}} = \arg \min_{\boldsymbol{\beta}} \frac{1}{2n} \left\Vert \mathbf{y} - X\boldsymbol{\beta}\right\Vert_2^2 +  \lambda \left\Vert \boldsymbol{\beta}_0\right\Vert_1$.
+    Then, 
+    \[
+      \mathbbm{P}\left(\frac{1}{n}\left\Vert X\boldsymbol{\beta_0} - X\widehat{\boldsymbol{\beta}} \right\Vert_2^2 \leq 4 \lambda \left \Vert \boldsymbol{\beta}_0 \right\Vert_1\right) \geq 1 - p^{-(c^2/2 - 1)}
+    \]
+  \end{alertblock}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{What Does This Mean?}
+
+  \begin{block}{Notation}
+    $\left\Vert \mathbf{z} \right\Vert_2^2 \equiv \mathbf{z}'\mathbf{z}, \quad \left\Vert \boldsymbol{\alpha} \right\Vert_1 \equiv \sum_{j=1}^p \left| \alpha_j \right|$
+  \end{block}
+
+  \begin{block}{Convenient Scaling} 
+    Divide RSS by $2n\colon \quad \widehat{\boldsymbol{\beta}} = \arg \min_{\boldsymbol{\beta}} \displaystyle\frac{1}{2n} \left\Vert \mathbf{y} - X\boldsymbol{\beta}\right\Vert_2^2 +  \lambda \left\Vert \boldsymbol{\beta}_0\right\Vert_1$
+  \end{block}
+
+  
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
