@@ -29,7 +29,7 @@ Data-dependent, one-to-one mapping between $\lambda$ and $t$.
 \end{block}
 
 \begin{block}{Bayesian Posterior Mode}
-    Ignoring the intercept, LASSO is the posterior model for $\beta$ under
+  Ignoring the intercept, LASSO is the posterior \emph{mode} for $\beta$ under
 		\[\mathbf{y}|X,\beta, \sigma^2 \sim N(X\beta,\sigma^2 I_n), \quad
     \beta\sim \prod_{j=1}^p \mbox{Lap}(\beta_j|0, \tau)\]
   where  
@@ -145,7 +145,7 @@ Because of its diamond-shaped constraint set, however, LASSO favors a \alert{spa
 Optimization problem becomes
 \[\widehat{\beta}^{Lasso}_j = \underset{\beta_j}{\arg \min} \; \beta_j^2 - 2 \beta_j \widehat{\beta}^{MLE}_j + \lambda\beta_j\]
 Interior solution:
-\[\widehat{\beta}_j = \widehat{\beta}^{MLE}_j - \frac{\lambda}{2}\]
+\[\beta^*_j = \widehat{\beta}^{MLE}_j - \frac{\lambda}{2}\]
   Can't have $\beta_j<0$: corner solution sets $\beta_j = 0$
 \[\widehat{\beta}^{Lasso}_j = \max\left\{0,\widehat{\beta}^{MLE}_j - \frac{\lambda}{2}\right\}\] 
   \end{block}
